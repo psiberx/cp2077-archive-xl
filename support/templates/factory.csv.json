@@ -1,0 +1,30 @@
+{
+  "Chunks": {
+    "0": {
+      "Type": "C2dArray",
+      "ParentIndex": -1,
+      "Properties": {
+        "cookingPlatform": [
+          "PLATFORM_PC"
+        ],
+        "headers": [
+          "name",
+          "path",
+          "preload"
+        ],
+        "data": [
+          [
+            "player_face_item",
+            "base\\gameplay\\items\\equipment\\face\\player_face_item.ent",
+            "true"
+          ],
+          [
+            "bestmod_item_001",
+            "base\\gameplay\\items\\equipment\\face\\bestmod_item_001.ent",
+            "true"
+          ]
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "Extension": ".json",
+  "Chunks": {
+    "0": {
+      "Type": "JsonResource",
+      "ParentIndex": -1,
+      "Properties": {
+        "cookingPlatform": [
+          "PLATFORM_PC"
+        ],
+        "root": 2
+      }
+    },
+    "1": {
+      "Type": "localizationPersistenceOnScreenEntries",
+      "ParentIndex": -1,
+      "Properties": {
+        "entries": [
+          {
+            "primaryKey": 300001,
+            "femaleVariant": "Samurai Mask & Aviators"
+          },
+          {
+            "primaryKey": 300002,
+            "secondaryKey": "Some-Human-Readable-Key",
+            "femaleVariant": "Lorem ipsum dolor sit amet",
+            "maleVariant": "Sed ut perspiciatis unde omnis"
+          }
+        ]
+      }
+    }
+  }
+}

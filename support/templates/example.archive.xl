@@ -1,0 +1,9 @@
+factories:
+  - base\gameplay\factories\bestmod\clothing.csv
+  - base\gameplay\factories\bestmod\weapons.csv
+localization:
+  onscreens:
+    en-us: base\localization\en-us\bestmod.json
+    de-de:
+      - base\localization\de-de\bestmod-1.json
+      - base\localization\de-de\bestmod-2.json
