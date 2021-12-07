@@ -44,8 +44,20 @@ void AXL::LocalizationExtension::AppendOnscreensEntries(OnScreenEntriesHandle& a
     OnScreenEntriesHandle resource;
     CallLoadOnscreens(&resource, &aResourcePath);
 
-    for (const auto& entry : *(&resource->entries))
+    for (auto& entry : *(&resource->entries))
     {
+        if (entry.primaryKey == 0)
+        {
+            if (entry.secondaryKey.Length() == 0)
+                continue;
+
+            entry.primaryKey = RED4ext::FNV1a64(entry.secondaryKey.c_str());
+        }
+        else if (entry.primaryKey <= MinCustomPrimaryID)
+        {
+            continue;
+        }
+
         aResult->entries.EmplaceBack(entry);
     }
 }

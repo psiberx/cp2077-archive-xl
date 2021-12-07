@@ -15,6 +15,8 @@ public:
     void Attach() override;
 
 private:
+    static constexpr uint64_t MinCustomPrimaryID = 200000;
+
     using OnScreenEntriesHandle = RED4ext::Handle<RED4ext::loc::alization::PersistenceOnScreenEntries>;
 
     inline static uint64_t (*CallLoadOnscreens)(OnScreenEntriesHandle* aResult, ResourcePath* aResourcePath);
