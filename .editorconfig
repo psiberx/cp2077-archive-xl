@@ -9,7 +9,7 @@ trim_trailing_whitespace = true
 indent_style = space
 indent_size = 4
 
-[*.{yml,xl}]
+[*.{yml,yaml,xl}]
 indent_style = space
 indent_size = 2
 

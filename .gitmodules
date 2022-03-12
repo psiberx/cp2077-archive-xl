@@ -1,6 +1,6 @@
 [submodule "vendor/RED4ext.SDK"]
 	path = vendor/RED4ext.SDK
-	url = git@github.com:WopsS/RED4ext.SDK.git
-[submodule "vendor/yaml-cpp"]
-	path = vendor/yaml-cpp
-	url = git@github.com:jbeder/yaml-cpp.git
+	url = git@github.com:psiberx/RED4ext.SDK.git
+[submodule "vendor/wil"]
+	path = vendor/wil
+	url = git@github.com:microsoft/wil.git

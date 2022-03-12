@@ -11,7 +11,7 @@ KeepEmptyLinesAtTheStartOfBlocks: false
 NamespaceIndentation: Inner
 PointerAlignment: Left
 SpaceAfterTemplateKeyword: false
-
+IndentCaseLabels: false
 BreakBeforeBraces: Custom
 BraceWrapping:
     AfterCaseLabel: true

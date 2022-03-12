@@ -1,0 +1,25 @@
+#pragma once
+
+#include "stdafx.hpp"
+#include "Core/Foundation/Feature.hpp"
+#include "Core/Logging/LoggingAgent.hpp"
+#include "Engine/Scripting/RTTIClass.hpp"
+
+namespace App
+{
+class ArchiveExtender
+    : public Core::Feature
+    , public Core::LoggingAgent
+    , public Engine::RTTIClass<ArchiveExtender>
+{
+public:
+    void Bootstrap() override;
+    void Shutdown() override;
+
+private:
+    friend Descriptor;
+    static void OnRegister(Descriptor* aType);
+    static void OnBuild(Descriptor* aType, RED4ext::CRTTISystem* aRtti);
+    static void Reload();
+};
+}

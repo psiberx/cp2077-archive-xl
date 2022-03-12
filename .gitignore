@@ -3,5 +3,5 @@
 /.vscode
 /.xmake
 /build
-/vsxmake*
+/dev
 CMakeLists.txt

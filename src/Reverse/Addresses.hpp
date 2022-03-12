@@ -1,27 +1,11 @@
 #pragma once
 
-#include "stdafx.hpp"
+#include <cstdint>
 
-namespace AXL
+namespace Reverse::Addresses
 {
-namespace Addresses
-{
-    constexpr uintptr_t ImageBase = RED4ext::Addresses::ImageBase;
+    constexpr uintptr_t ImageBase = 0x140000000;
 
-    // Loads and processes factory csv file in async context.
-    // Pattern: 48 89 5C 24 10 48 89 74 24 18 48 89 7C 24 20 55 41 54 41 55 41 56 41 57 48 8D 6C 24 C9 48 81 EC E0 00 00 00 48 8B 02 45 33 ED 4D 8B E0 44 89 6D
-    // Signature: void (*)(uintptr_t aThis, uint64_t* aResourceHash, uintptr_t aContext)
-    constexpr uintptr_t FactoryIndex_LoadFactoryAsync = 0x1410FD790 - ImageBase;
-
-    // Loads onscreens json file and returns unserialized data.
-    // Pattern: 40 55 56 57 48 8B EC 48 81 EC 80 00 00 00 48 83 3A 00 0F 57 C0 F3 0F 7F 45 A0 48 8B F9 75 17 33 F6 48 8B C1 48 89 31 48 89 71 08 48 81 C4 80 00
-    // Signature: uint64_t (*)(Handle<PersistenceOnScreenEntries>* aResult, uint64_t* aResourceHash)
-    constexpr uintptr_t Localization_LoadOnscreens = 0x140744360 - ImageBase;
-
-    // Sanitizes string input and calculates FNV1a64 hash.
-    // I'll reverse the sanitation logic later and move it to RED4ext.SDK.
-    // Pattern: 41 56 48 81 EC F0 00 00 00 44 8B 42 08 4C 8B F1 45 85 C0 75 14 48 C7 01 00 00 00 00 48 8B C1 48
-    // Signature: uint64_t (*)(uint64_t* aResourceHash, std::string_view* aResourcePath)
-    constexpr uintptr_t Resource_MakeHash = 0x14022D370 - ImageBase;
-}
+    constexpr uintptr_t FactoryIndex_LoadFactoryAsync = 0x141042B40 - ImageBase; // 48 89 5C 24 18 55 56 57 41 56 41 57 48 8D 6C 24 C9 48 81 EC A0 00 00 00 45 33 FF 48 89 55 DF 4D 8B F0 44 89 7D FB 48 8B D9 4C 89 7D E7, expected: 1, index: 0
+    constexpr uintptr_t Localization_LoadOnScreens = 0x1406E5640 - ImageBase; // 40 55 53 57 48 8B EC 48 81 EC 80 00 00 00 0F 57 C0 48 8B D9 F3 0F 7F 45 A0 48 85 D2 75 17 33 FF 48 8B C1 48 89 39 48 89 79 08 48 81 C4 80 00 00, expected: 2, index: 0
 }

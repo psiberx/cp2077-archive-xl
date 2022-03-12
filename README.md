@@ -1,6 +1,7 @@
 # ArchiveXL
 
-Archive Extension Loader allows you to expand game resources that are currently not suitable for modifications without conflicts.
+ArchiveXL is a modding tool that allows you to load certain game resources without overwriting original game files,
+thus allowing multiple mods expand the same resource without conflicts.
 
 ## Installation
 
