@@ -161,9 +161,3 @@ Language codes used by the game:
 | `es-mx` | Latin American Spanish | `hu-hu` | Hungarian |
 | `kr-kr` | Korean | `tr-tr` | Turkish |
 | `zh-cn` | Simplified Chinese | `th-th` | Thai |
-
-## Next steps
-
-- Generate TweakDB records from simple definitions (might be implemented as a part of TweakDBext)
-- Add localized subtitles
-- Collect feedback
