@@ -5,7 +5,7 @@
 
 namespace Engine::Raw
 {
-using Core::RawFunc;
-
-using Main = RawFunc<Addresses::Engine_Main, int32_t (*)()>;
+using Main = Core::RawFunc<
+    /* address = */ Addresses::Engine_Main,
+    /* signature = */ int32_t (*)()>;
 }

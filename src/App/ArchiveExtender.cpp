@@ -9,7 +9,7 @@ namespace
 Core::UniquePtr<App::ModuleLoader> s_loader;
 }
 
-void App::ArchiveExtender::Bootstrap()
+void App::ArchiveExtender::OnBootstrap()
 {
     RegisterRTTI();
 
@@ -22,7 +22,7 @@ void App::ArchiveExtender::Bootstrap()
     s_loader->Load();
 }
 
-void App::ArchiveExtender::Shutdown()
+void App::ArchiveExtender::OnShutdown()
 {
     s_loader->Unload();
     s_loader = nullptr;

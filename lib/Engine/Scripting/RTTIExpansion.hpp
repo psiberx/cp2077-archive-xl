@@ -88,7 +88,7 @@ private:
 };
 
 template<class T, typename B = void, RED4ext::CName N = B::NAME>
-class RTTIExpansion
+class RTTIExpansion : public B
 {
 public:
     using Descriptor = RTTIClassExpander<T, N>;

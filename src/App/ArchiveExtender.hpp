@@ -12,9 +12,9 @@ class ArchiveExtender
     , public Core::LoggingAgent
     , public Engine::RTTIClass<ArchiveExtender>
 {
-public:
-    void Bootstrap() override;
-    void Shutdown() override;
+protected:
+    void OnBootstrap() override;
+    void OnShutdown() override;
 
 private:
     friend Descriptor;

@@ -2,7 +2,7 @@
 
 namespace
 {
-std::vector<Engine::RTTIRegistrar*> s_queued;
+std::vector<Engine::RTTIRegistrar*> s_pending;
 }
 
 Engine::RTTIRegistrar::RTTIRegistrar(CallbackFunc aRegFunc, CallbackFunc aBuildFunc)
@@ -10,7 +10,7 @@ Engine::RTTIRegistrar::RTTIRegistrar(CallbackFunc aRegFunc, CallbackFunc aBuildF
     , m_regFunc(aRegFunc)
     , m_buildFunc(aBuildFunc)
 {
-    s_queued.push_back(this);
+    s_pending.push_back(this);
 }
 
 void Engine::RTTIRegistrar::Register()
@@ -24,8 +24,8 @@ void Engine::RTTIRegistrar::Register()
 
 void Engine::RTTIRegistrar::RegisterPending()
 {
-    for (const auto& pending : s_queued)
+    for (const auto& pending : s_pending)
         pending->Register();
 
-    s_queued.clear();
+    s_pending.clear();
 }

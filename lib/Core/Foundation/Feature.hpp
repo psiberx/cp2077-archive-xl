@@ -1,8 +1,13 @@
 #pragma once
 
+#include "Registrar.hpp"
+#include "RegistrarProxy.hpp"
+
 namespace Core
 {
-class Feature
+class Application;
+
+class Feature : public RegistrarProxy<Feature>
 {
 public:
     Feature() = default;
@@ -11,7 +16,12 @@ public:
     Feature(Feature&& aOther) = delete;
     Feature(const Feature& aOther) = delete;
 
-    virtual void Bootstrap() {};
-    virtual void Shutdown() {};
+protected:
+    virtual void OnRegister() {};
+    virtual void OnBootstrap() {};
+    virtual void OnShutdown() {};
+
+    friend class Application;
+    friend class Registrar<Feature>;
 };
 }

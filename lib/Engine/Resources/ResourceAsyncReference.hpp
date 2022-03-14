@@ -8,10 +8,9 @@ namespace Engine
 struct ResourceAsyncReference
 {
     explicit ResourceAsyncReference(ResourcePath aPath = "")
-        : path(aPath)
-    {
-    }
+        : path(aPath) {}
 
     ResourcePath path;
 };
+static_assert(sizeof(ResourceAsyncReference) == 0x8);
 }
