@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ResourcePath.hpp"
-#include "ResourceTokenPtr.hpp"
 #include "Engine/Addresses.hpp"
 
 #include <RED4ext/Relocation.hpp>
@@ -12,9 +11,20 @@ namespace Engine
 // TODO: Move to RED4ext.SDK
 struct ResourceReference
 {
-    explicit ResourceReference(ResourcePath aPath = "")
+    ResourceReference()
+        : path(0ull)
+    {
+    }
+
+    explicit ResourceReference(ResourcePath aPath)
         : path(aPath)
-        , token() {}
+    {
+    }
+
+    ~ResourceReference()
+    {
+        Reset();
+    }
 
     /**
      * Load the resource.
@@ -39,8 +49,30 @@ struct ResourceReference
         return Fetch_(this);
     }
 
+    /**
+     * Reset the path and associated token.
+     */
+    void Reset()
+    {
+        using Reset_t = void (*)(ResourceReference*);
+        static RED4ext::RelocFunc<Reset_t> Reset_(Addresses::ResourceReference_Reset);
+
+        Reset_(this);
+    }
+
+    // This seems to be a smart pointer using the same counter used in Handle and WeakHandle,
+    // but the instance can be anything, not just ISerializable. With a reversed token type
+    // it'd be something like SharedPtr<ResourceToken>.
+    // Until then we can keep it here and use Load() and Reset() to control the token.
+    struct ResourceTokenPtr
+    {
+        void* instance{ nullptr };
+        RED4ext::RefCnt* refCount{ nullptr };
+    };
+
     ResourcePath path;
-    ResourceTokenPtr token; // Filled after Load or Fetch
+    ResourceTokenPtr token; // Filled after Load() or Fetch()
 };
 static_assert(sizeof(ResourceReference) == 0x18);
+static_assert(sizeof(ResourceReference::ResourceTokenPtr) == 0x10);
 }
