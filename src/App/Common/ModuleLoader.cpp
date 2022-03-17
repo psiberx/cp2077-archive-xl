@@ -106,11 +106,11 @@ void App::ModuleLoader::Load()
         }
         catch (const std::exception& ex)
         {
-            LogError("[{}] {}", module->GetName(), ex.what());
+            LogError("|{}| {}", module->GetName(), ex.what());
         }
         catch (...)
         {
-            LogError("[{}] Failed to load. An unknown error has occurred.", module->GetName());
+            LogError("|{}| Failed to load. An unknown error has occurred.", module->GetName());
         }
     }
 
@@ -130,11 +130,11 @@ void App::ModuleLoader::Unload()
         }
         catch (const std::exception& ex)
         {
-            LogError("[{}] {}", module->GetName(), ex.what());
+            LogError("|{}| {}", module->GetName(), ex.what());
         }
         catch (...)
         {
-            LogError("[{}] Failed to unload. An unknown error has occurred.", module->GetName());
+            LogError("|{}| Failed to unload. An unknown error has occurred.", module->GetName());
         }
     }
 

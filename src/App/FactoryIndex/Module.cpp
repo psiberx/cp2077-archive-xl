@@ -15,7 +15,7 @@ bool App::FactoryIndexModule::Attach()
 {
     if (!Hook<Raw::LoadFactoryAsync>(&FactoryIndexModule::OnLoadFactoryAsync, &FactoryIndexModule::LoadFactoryAsync))
     {
-        LogError("[{}] Failed to hook factory index loader.", ModuleName);
+        LogError("|{}| Failed to hook factory index loader.", ModuleName);
         return false;
     }
 
@@ -26,7 +26,7 @@ bool App::FactoryIndexModule::Detach()
 {
     if (!Unhook<Raw::LoadFactoryAsync>())
     {
-        LogError("[{}] Failed to unhook factory index loader.", ModuleName);
+        LogError("|{}| Failed to unhook factory index loader.", ModuleName);
         return false;
     }
 
@@ -39,17 +39,17 @@ void App::FactoryIndexModule::OnLoadFactoryAsync(uintptr_t aIndex, Engine::Resou
 
     if (aPath == LastFactory)
     {
-        LogInfo("[{}] The factory index is initializing...", ModuleName);
+        LogInfo("|{}| The factory index is initializing...", ModuleName);
 
         if (!m_units.empty())
         {
             for (const auto& unit : m_units)
             {
-                LogInfo("[{}] Processing [{}]...", ModuleName, unit.name);
+                LogInfo("|{}| Processing [{}]...", ModuleName, unit.name);
 
                 for (const auto& path : unit.factories)
                 {
-                    LogInfo("[{}] Adding factory [{}]...", ModuleName, path);
+                    LogInfo("|{}| Adding factory [{}]...", ModuleName, path);
 
                     LoadFactoryAsync(aIndex, path.c_str(), aContext);
 
@@ -57,11 +57,11 @@ void App::FactoryIndexModule::OnLoadFactoryAsync(uintptr_t aIndex, Engine::Resou
                 }
             }
 
-            LogInfo("[{}] All factories added to the index.", ModuleName);
+            LogInfo("|{}| All factories added to the index.", ModuleName);
         }
         else
         {
-            LogInfo("[{}] No factories to add to the index.", ModuleName);
+            LogInfo("|{}| No factories to add to the index.", ModuleName);
         }
     }
 }

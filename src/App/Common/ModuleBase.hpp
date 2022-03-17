@@ -21,7 +21,7 @@ public:
         if (unit.HasIssues())
         {
             for (const auto& issue : unit.issues)
-                LogError("[{}] {}", GetName(), issue);
+                LogError("|{}| {}", GetName(), issue);
 
             return false;
         }

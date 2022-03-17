@@ -6,6 +6,11 @@
 
 namespace App
 {
+using OnScreenEntry = RED4ext::loc::alization::PersistenceOnScreenEntry;
+using OnScreenEntries = RED4ext::loc::alization::PersistenceOnScreenEntries;
+using OnScreenEntryList = decltype(std::declval<OnScreenEntries>().entries);
+using OnScreenEntryMap = Core::Map<decltype(std::declval<OnScreenEntry>().primaryKey), OnScreenEntry*>;
+
 class LocalizationModule : public ConfigurableUnitModule<LocalizationUnit>
 {
 public:
@@ -14,10 +19,11 @@ public:
     std::string_view GetName() override;
 
 private:
-    using OnScreenEntries = RED4ext::loc::alization::PersistenceOnScreenEntries;
 
     uint64_t OnLoadOnScreens(RED4ext::Handle<OnScreenEntries>* aOnScreens, Engine::ResourcePath aPath);
-    static bool AppendEntries(RED4ext::Handle<OnScreenEntries>& aOnScreens, const std::string& aPath);
+    static bool AppendEntries(const std::string& aPath, OnScreenEntryList& aFinalList, OnScreenEntryMap& aUsedKeyMap,
+                              uint32_t aOriginalCount, uint64_t aOriginalMaxKey);
+    static OnScreenEntry* FindEntry(OnScreenEntry& aEntry, OnScreenEntryList& aList, uint32_t aCount);
 
     inline static Raw::LoadOnScreens::type LoadOnScreens;
 };
