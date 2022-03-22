@@ -14,6 +14,8 @@
 
 #include <RED4ext/Api/EMainReason.hpp>
 #include <RED4ext/Api/Sdk.hpp>
+#include <RED4ext/Api/Runtime.hpp>
+#include <RED4ext/Api/SemVer.hpp>
 #include <RED4ext/Api/Version.hpp>
 
 #include "Core/Stl.hpp"

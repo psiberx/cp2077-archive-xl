@@ -12,14 +12,16 @@ class ArchiveExtender
     , public Core::LoggingAgent
     , public Engine::RTTIClass<ArchiveExtender>
 {
-protected:
+public:
+    static void Reload();
+    static RED4ext::CString Version();
+
+private:
     void OnBootstrap() override;
     void OnShutdown() override;
 
-private:
     friend Descriptor;
     static void OnRegister(Descriptor* aType);
-    static void OnBuild(Descriptor* aType, RED4ext::CRTTISystem* aRtti);
-    static void Reload();
+    static void OnDescribe(Descriptor* aType, RED4ext::CRTTISystem* aRtti);
 };
 }

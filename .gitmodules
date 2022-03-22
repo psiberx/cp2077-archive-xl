@@ -4,3 +4,6 @@
 [submodule "vendor/wil"]
 	path = vendor/wil
 	url = git@github.com:microsoft/wil.git
+[submodule "vendor/semver"]
+	path = vendor/semver
+	url = git@github.com:Neargye/semver
