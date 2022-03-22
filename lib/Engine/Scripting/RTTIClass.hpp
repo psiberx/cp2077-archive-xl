@@ -120,7 +120,7 @@ private:
 
         auto* desc = reinterpret_cast<FinalDescriptor*>(s_class);
 
-        T::OnBuild(desc, rtti);
+        T::OnDescribe(desc, rtti);
 
         // Force native flag
         s_class->flags.isNative = true;
@@ -146,29 +146,39 @@ public:
         return Descriptor::Get();
     }
 
-    inline static RED4ext::Handle<T> NewInstance()
+    inline static RED4ext::Handle<T> NewInstance(RED4ext::CClass* aDerived = nullptr)
     {
+        // 1. Internal Handle
         // All IScriptable instances inherit WeakHandle .ref field from ISerializable.
         // This field is required for instance to be recognized by scripting engine.
         // Without this field initialized the scripted `this` will always be null.
         // When instantiated from scripts with `new Class()` the .ref is initialized
         // using the Handle constructed and returned by the `new` operator.
+        // 2. Internal Class Pointer
+        // Also IScriptable instances must have .unk30 set to the RTTI class instance.
+        // This property is used by the engine when accessing class members.
 
         // TODO: Move to RED4ext::Handle? Or RED4ext::CClass::CreateHandle?
 
         // Resolve the type
         auto type = Descriptor::Get();
 
+        if (aDerived && aDerived->IsA(type))
+            type = aDerived;
+
         // Allocate and construct the instance
         auto instance = type->AllocInstance();
         type->ConstructCls(instance);
 
         // Construct the handle
-        auto scriptable = reinterpret_cast<RED4ext::ISerializable*>(instance);
-        auto handle = RED4ext::Handle<RED4ext::ISerializable>(scriptable);
+        auto scriptable = reinterpret_cast<T*>(instance);
+        auto handle = RED4ext::Handle<T>(scriptable);
 
         // Assign the handle to the instance
-        scriptable->ref = RED4ext::WeakHandle(handle);
+        scriptable->ref = RED4ext::WeakHandle(*reinterpret_cast<RED4ext::Handle<RED4ext::ISerializable>*>(&handle));
+
+        // Assign the type to the instance
+        scriptable->unk30 = type;
 
         return std::move(handle);
     }
@@ -192,6 +202,6 @@ private:
     friend Descriptor;
 
     static void OnRegister(Descriptor* aType) {}
-    static void OnBuild(Descriptor* aType, RED4ext::CRTTISystem* aRtti) {}
+    static void OnDescribe(Descriptor* aType, RED4ext::CRTTISystem* aRtti) {}
 };
 }
