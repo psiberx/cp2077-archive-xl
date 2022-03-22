@@ -10,10 +10,10 @@ App::Application::Application(HMODULE aHandle, const RED4ext::Sdk* aSdk)
     Register<Core::RuntimeProvider>({ .handle = aHandle, .exePathDepth = 2 });
 
     Register<Vendor::MinHookProvider>();
+    Register<Vendor::SpdlogProvider>();
+
     if (aSdk)
-        Register<Vendor::RED4extProvider>({ .plugin = aHandle, .sdk = aSdk, .logging = true });
-    else
-        Register<Vendor::SpdlogProvider>();
+        Register<Vendor::RED4extProvider>({ .plugin = aHandle, .sdk = aSdk, .logging = false });
 
     Register<App::ArchiveExtender>();
 }

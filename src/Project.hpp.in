@@ -17,7 +17,7 @@ constexpr auto Version = []() {
 
         // v1.2.3 => 1.2.3
         // v1.2.3-type => 1.2.3-type
-        if (appendix == std::string::npos || tag[appendix + 1] > 'a')
+        if (appendix == std::string::npos || tag.find('-', appendix + 1) == std::string::npos)
         {
             version.from_string(tag.substr(1));
         }

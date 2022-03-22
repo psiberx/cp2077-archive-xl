@@ -6,4 +6,4 @@
 	url = git@github.com:microsoft/wil.git
 [submodule "vendor/semver"]
 	path = vendor/semver
-	url = git@github.com:Neargye/semver
+	url = git@github.com:Neargye/semver.git
