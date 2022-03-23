@@ -11,7 +11,7 @@ constexpr auto Version = []() {
     auto version = semver::version(0, 1, 0);
 
     const std::string_view tag = "${GIT_TAG}";
-    if (tag[0] == 'v')
+    if (tag.starts_with('v'))
     {
         const size_t appendix = tag.find('-');
 
