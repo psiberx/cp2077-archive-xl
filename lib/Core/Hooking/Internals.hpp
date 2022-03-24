@@ -88,6 +88,29 @@ struct BeforeCapture : BaseCapture<F>
 };
 
 template<typename F, typename R, typename... Args>
+struct BeforeOnceCapture : BaseCapture<F>
+{
+    inline static OriginalFunc<R, Args...> original;
+    inline static NoReturnCallback<Args...> callback;
+    inline static Core::HookingDriver* driver;
+
+    static R Handle(Args... aArgs)
+    {
+        callback(aArgs...);
+        R result = original(aArgs...);
+
+        if (driver->HookDetach(F::RelocAddr()))
+        {
+            original = nullptr;
+            callback = nullptr;
+            driver = nullptr;
+        }
+
+        return result;
+    }
+};
+
+template<typename F, typename R, typename... Args>
 struct AfterCapture : BaseCapture<F>
 {
     inline static OriginalFunc<R, Args...> original;

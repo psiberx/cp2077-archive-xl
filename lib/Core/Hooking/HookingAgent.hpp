@@ -66,7 +66,7 @@ protected:
 
     template<typename F, typename R, typename... Args,
              typename = std::enable_if_t<std::is_same_v<typename F::type, detail::OriginalFunc<R, Args...>>>>
-    bool HookWrap(detail::WrappedCallback<R, Args...> aCallback)
+    static bool HookWrap(detail::WrappedCallback<R, Args...> aCallback)
     {
         using Capture = detail::WrappedCapture<F, R, Args...>;
 
@@ -86,7 +86,7 @@ protected:
 
     template<typename F, typename R, typename... Args,
              typename = std::enable_if_t<std::is_same_v<typename F::type, detail::OriginalFunc<R, Args...>>>>
-    bool HookOnce(detail::WrappedCallback<R, Args...> aCallback)
+    static bool HookOnce(detail::WrappedCallback<R, Args...> aCallback)
     {
         using Capture = detail::WrappedOnceCapture<F, R, Args...>;
 
@@ -99,8 +99,8 @@ protected:
         if (!driver.HookAttach(address, &Capture::Handle, reinterpret_cast<void**>(&Capture::original)))
             return false;
 
-        Capture::driver = GetHookingDriver();
         Capture::callback = aCallback;
+        Capture::driver = &driver;
         Capture::hooked = true;
 
         return true;
@@ -109,7 +109,7 @@ protected:
     template<typename F, typename... Args,
              typename R = typename F::return_type,
              typename = std::enable_if_t<std::is_same_v<typename F::type, detail::OriginalFunc<R, Args...>>>>
-    bool HookBefore(detail::NoReturnCallback<Args...> aCallback)
+    static bool HookBefore(detail::NoReturnCallback<Args...> aCallback)
     {
         using Capture = detail::BeforeCapture<F, R, Args...>;
 
@@ -130,7 +130,30 @@ protected:
     template<typename F, typename... Args,
              typename R = typename F::return_type,
              typename = std::enable_if_t<std::is_same_v<typename F::type, detail::OriginalFunc<R, Args...>>>>
-    bool HookAfter(detail::NoReturnCallback<Args...> aCallback)
+    static bool HookOnceBefore(detail::NoReturnCallback<Args...> aCallback)
+    {
+        using Capture = detail::BeforeOnceCapture<F, R, Args...>;
+
+        if (Capture::hooked)
+            return false;
+
+        auto& driver = GetHookingDriver();
+        const auto address = F::RelocAddr();
+
+        if (!driver.HookAttach(address, &Capture::Handle, reinterpret_cast<void**>(&Capture::original)))
+            return false;
+
+        Capture::callback = aCallback;
+        Capture::driver = &driver;
+        Capture::hooked = true;
+
+        return true;
+    }
+
+    template<typename F, typename... Args,
+             typename R = typename F::return_type,
+             typename = std::enable_if_t<std::is_same_v<typename F::type, detail::OriginalFunc<R, Args...>>>>
+    static bool HookAfter(detail::NoReturnCallback<Args...> aCallback)
     {
         using Capture = detail::AfterCapture<F, R, Args...>;
 
@@ -149,7 +172,7 @@ protected:
     }
 
     template<typename F>
-    bool Unhook()
+    static bool Unhook()
     {
         using Capture = detail::BaseCapture<F>;
 

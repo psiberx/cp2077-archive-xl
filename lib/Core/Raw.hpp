@@ -36,6 +36,11 @@ struct RawFunc<A, R (*)(Args...)>
 
         return addr;
     }
+
+    static R Call(Args... aArgs)
+    {
+        return reinterpret_cast<type>(RelocAddr())(std::forward<Args>(aArgs)...);
+    }
 };
 
 template<uintptr_t A, typename T>
@@ -70,6 +75,11 @@ struct RawPtr
         static uintptr_t addr = offset ? offset + reinterpret_cast<uintptr_t>(GetModuleHandleW(nullptr)) : 0;
 
         return addr;
+    }
+
+    static T* Get()
+    {
+        return reinterpret_cast<T*>(RelocAddr());
     }
 };
 }
