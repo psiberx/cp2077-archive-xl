@@ -129,18 +129,20 @@ bool App::LocalizationModule::AppendEntries(const std::string& aPath, OnScreenEn
             }
 
             aFinalList.EmplaceBack(newEntry);
-            aUsedKeyMap.emplace(newEntry.primaryKey, &newEntry);
+            aUsedKeyMap.emplace(newEntry.primaryKey, aFinalList.End() - 1);
         }
         else
         {
-            if (newEntry.secondaryKey.Length() == 0)
+            auto* originalEntry = existingIt.value();
+
+            if (originalEntry->secondaryKey.Length() == 0)
                 LogWarning("|{}| Item #{} overwrites entry [{}].",
-                           ModuleName, i, newEntry.primaryKey);
+                           ModuleName, i, originalEntry->primaryKey);
             else
                 LogWarning("|{}| Item #{} overwrites entry [{}] aka [{}].",
-                           ModuleName, i, newEntry.primaryKey, newEntry.secondaryKey.c_str());
+                           ModuleName, i, originalEntry->primaryKey, originalEntry->secondaryKey.c_str());
 
-            *existingIt.value() = newEntry;
+            *originalEntry = newEntry;
         }
     }
 
