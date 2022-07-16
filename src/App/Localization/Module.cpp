@@ -59,7 +59,8 @@ uint64_t App::LocalizationModule::OnLoadOnScreens(RED4ext::Handle<OnScreenEntrie
             else
             {
                 paths = unit.onscreens.find(unit.fallback);
-                LogInfo("|{}| Processing [{}] using fallback language [{}]...", ModuleName, unit.name, unit.fallback);
+                LogInfo("|{}| Processing [{}] using fallback language [{}]...",
+                        ModuleName, unit.name, unit.fallback.ToString());
             }
 
             for (const auto& path : paths->second)
