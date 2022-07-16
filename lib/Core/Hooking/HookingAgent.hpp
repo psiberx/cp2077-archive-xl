@@ -171,6 +171,29 @@ protected:
         return true;
     }
 
+    template<typename F, typename... Args,
+             typename R = typename F::return_type,
+             typename = std::enable_if_t<std::is_same_v<typename F::type, detail::OriginalFunc<R, Args...>>>>
+    static bool HookOnceAfter(detail::NoReturnCallback<Args...> aCallback)
+    {
+        using Capture = detail::AfterOnceCapture<F, R, Args...>;
+
+        if (Capture::hooked)
+            return false;
+
+        auto& driver = GetHookingDriver();
+        const auto address = F::RelocAddr();
+
+        if (!driver.HookAttach(address, &Capture::Handle, reinterpret_cast<void**>(&Capture::original)))
+            return false;
+
+        Capture::callback = aCallback;
+        Capture::driver = &driver;
+        Capture::hooked = true;
+
+        return true;
+    }
+
     template<typename F>
     static bool Unhook()
     {

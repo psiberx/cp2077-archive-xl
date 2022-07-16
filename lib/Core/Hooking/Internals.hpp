@@ -48,7 +48,7 @@ struct WrappedCapture : BaseCapture<F>
 
     static R Handle(Args... aArgs)
     {
-        return callback(aArgs..., original);
+        return callback(original, aArgs...);
     }
 };
 
@@ -68,6 +68,7 @@ struct WrappedOnceCapture : BaseCapture<F>
             original = nullptr;
             callback = nullptr;
             driver = nullptr;
+            BaseCapture<F>::hooked = false;
         }
 
         return result;
@@ -104,6 +105,7 @@ struct BeforeOnceCapture : BaseCapture<F>
             original = nullptr;
             callback = nullptr;
             driver = nullptr;
+            BaseCapture<F>::hooked = false;
         }
 
         return result;
@@ -129,6 +131,30 @@ struct AfterCapture : BaseCapture<F>
             callback(aArgs...);
             return result;
         }
+    }
+};
+
+template<typename F, typename R, typename... Args>
+struct AfterOnceCapture : BaseCapture<F>
+{
+    inline static OriginalFunc<R, Args...> original;
+    inline static NoReturnCallback<Args...> callback;
+    inline static Core::HookingDriver* driver;
+
+    static R Handle(Args... aArgs)
+    {
+        R result = original(aArgs...);
+        callback(aArgs...);
+
+        if (driver->HookDetach(F::RelocAddr()))
+        {
+            original = nullptr;
+            callback = nullptr;
+            driver = nullptr;
+            BaseCapture<F>::hooked = false;
+        }
+
+        return result;
     }
 };
 }
