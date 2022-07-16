@@ -1,3 +1,7 @@
+// This file is generated. DO NOT MODIFY IT!
+// Created on 2022-07-16 for Cyberpunk 2077 v.1.52.
+// Define patterns in "patterns.py" and run "scan.py" to update.
+
 #pragma once
 
 #include <cstdint>
