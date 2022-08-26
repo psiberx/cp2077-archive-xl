@@ -43,6 +43,12 @@ struct RawFunc<A, R (*)(Args...)>
     }
 };
 
+template<uintptr_t A, typename C, typename R, typename... Args>
+struct RawFunc<A, R (C::*)(Args...)> : RawFunc<A, R (*)(C*, Args...)>
+{
+    using context_type = C;
+};
+
 template<uintptr_t A, typename T>
 struct RawPtr
 {

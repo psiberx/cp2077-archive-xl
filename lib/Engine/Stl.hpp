@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Resources/ResourcePath.hpp"
-
 #include <functional>
 #include <RED4ext/NativeTypes.hpp>
+#include <RED4ext/ResourcePath.hpp>
 
 template<>
 struct std::hash<RED4ext::CName>
@@ -24,9 +23,9 @@ struct std::hash<RED4ext::TweakDBID>
 };
 
 template<>
-struct std::hash<Engine::ResourcePath>
+struct std::hash<RED4ext::ResourcePath>
 {
-    std::size_t operator()(Engine::ResourcePath aKey) const
+    std::size_t operator()(RED4ext::ResourcePath aKey) const
     {
         return static_cast<size_t>(aKey.hash);
     }

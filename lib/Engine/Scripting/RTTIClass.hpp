@@ -12,7 +12,9 @@ template<class T>
 class RTTIClassDescriptor : public RED4ext::TTypedClass<T>, public detail::TypeDescriptor<T>
 {
 public:
-    RTTIClassDescriptor() : RED4ext::TTypedClass<T>(0ull) {}
+    RTTIClassDescriptor() : RED4ext::TTypedClass<T>({})
+    {
+    }
 
     void SetName(const char* aName)
     {

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <tuple>
 #include <type_traits>
 
 #include <RED4ext/NativeTypes.hpp>
@@ -292,7 +293,7 @@ consteval RED4ext::CName ResolveConstTypeName()
         return RED4ext::FNV1a64(T::NAME, Prefix);
 
     if constexpr (IsRedSpecialization<T>)
-        return ResolveConstTypeName<RedSpecialization<T>::argument_type,
+        return ResolveConstTypeName<typename RedSpecialization<T>::argument_type,
                                     RED4ext::FNV1a64(RedSpecialization<T>::prefix, Prefix)>();
 
     return MatchTypeCase<
@@ -325,7 +326,7 @@ std::string BuildDynamicTypeName()
 
     if constexpr (IsRedSpecialization<T>)
         return std::string(RedSpecialization<T>::prefix)
-            .append(BuildDynamicTypeName<RedSpecialization<T>::argument_type>());
+            .append(BuildDynamicTypeName<typename RedSpecialization<T>::argument_type>());
 
     auto type = TypeDescriptor<T>::GetType();
     if (type)
@@ -360,25 +361,7 @@ constexpr RED4ext::CName ResolveTypeName()
 template<typename T>
 inline void ExtractArg(RED4ext::CStackFrame* aFrame, T* aArg)
 {
-    // TODO: Move to RED4ext.SDK as GetParameterRef()
-    if constexpr (std::is_pointer_v<T>)
-    {
-        // Set "grab by reference" flag
-        *(reinterpret_cast<uint8_t*>(aFrame) + 0x63) = 1;
-
-        RED4ext::GetParameter(aFrame, aArg);
-
-        // Reset "grab by reference" flag
-        *(reinterpret_cast<uint8_t*>(aFrame) + 0x63) = 0;
-
-        // 0x30 is the pointer to the original value instance
-        if (aFrame->unk30)
-            *aArg = reinterpret_cast<T>(aFrame->unk30);
-    }
-    else
-    {
-        RED4ext::GetParameter(aFrame, aArg);
-    }
+    RED4ext::GetParameter(aFrame, aArg);
 }
 
 template<typename... Args, std::size_t... I>
