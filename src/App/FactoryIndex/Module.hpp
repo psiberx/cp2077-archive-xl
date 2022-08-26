@@ -14,7 +14,7 @@ public:
     std::string_view GetName() override;
 
 private:
-    void OnLoadFactoryAsync(uintptr_t aIndex, Engine::ResourcePath aPath, uintptr_t aContext);
+    void OnLoadFactoryAsync(uintptr_t aIndex, RED4ext::ResourcePath aPath, uintptr_t aContext);
 
     inline static Raw::LoadFactoryAsync::type LoadFactoryAsync;
 };

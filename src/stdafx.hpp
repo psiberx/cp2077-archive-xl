@@ -11,6 +11,7 @@
 
 #include <RED4ext/CName.hpp>
 #include <RED4ext/Handle.hpp>
+#include <RED4ext/ResourcePath.hpp>
 
 #include <RED4ext/Api/EMainReason.hpp>
 #include <RED4ext/Api/Sdk.hpp>
@@ -20,7 +21,6 @@
 
 #include "Core/Stl.hpp"
 #include "Engine/Stl.hpp"
-#include "Engine/Resources/ResourcePath.hpp"
 
 #ifdef VERBOSE
 #include "Engine/Log.hpp"

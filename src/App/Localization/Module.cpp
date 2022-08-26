@@ -34,7 +34,7 @@ bool App::LocalizationModule::Detach()
 }
 
 uint64_t App::LocalizationModule::OnLoadOnScreens(RED4ext::Handle<OnScreenEntries>* aOnScreens,
-                                                  Engine::ResourcePath aPath)
+                                                  RED4ext::ResourcePath aPath)
 {
     auto result = LoadOnScreens(aOnScreens, aPath);
     auto language = Language::ResolveFromResource(aPath);

@@ -20,7 +20,7 @@ public:
 
 private:
 
-    uint64_t OnLoadOnScreens(RED4ext::Handle<OnScreenEntries>* aOnScreens, Engine::ResourcePath aPath);
+    uint64_t OnLoadOnScreens(RED4ext::Handle<OnScreenEntries>* aOnScreens, RED4ext::ResourcePath aPath);
     static bool AppendEntries(const std::string& aPath, OnScreenEntryList& aFinalList, OnScreenEntryMap& aUsedKeyMap,
                               uint32_t aOriginalCount, uint64_t aOriginalMaxKey);
     static OnScreenEntry* FindEntry(OnScreenEntry& aEntry, OnScreenEntryList& aList, uint32_t aCount);

@@ -3,7 +3,7 @@
 namespace
 {
 constexpr auto ModuleName = "FactoryIndex";
-constexpr auto LastFactory = Engine::ResourcePath(R"(base\gameplay\factories\vehicles\vehicles.csv)");
+constexpr auto LastFactory = RED4ext::ResourcePath(R"(base\gameplay\factories\vehicles\vehicles.csv)");
 }
 
 std::string_view App::FactoryIndexModule::GetName()
@@ -33,7 +33,7 @@ bool App::FactoryIndexModule::Detach()
     return true;
 }
 
-void App::FactoryIndexModule::OnLoadFactoryAsync(uintptr_t aIndex, Engine::ResourcePath aPath, uintptr_t aContext)
+void App::FactoryIndexModule::OnLoadFactoryAsync(uintptr_t aIndex, RED4ext::ResourcePath aPath, uintptr_t aContext)
 {
     LoadFactoryAsync(aIndex, aPath, aContext);
 

@@ -27,5 +27,5 @@ enum Code : uint64_t
 };
 
 bool IsKnown(RED4ext::CName aLanguage);
-RED4ext::CName ResolveFromResource(Engine::ResourcePath aPath);
+RED4ext::CName ResolveFromResource(RED4ext::ResourcePath aPath);
 }
