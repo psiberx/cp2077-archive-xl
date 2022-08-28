@@ -23,6 +23,7 @@ private:
     void LogInfo(const std::string& aMessage) override;
     void LogWarning(const std::string& aMessage) override;
     void LogError(const std::string& aMessage) override;
+    void LogDebug(const std::string& aMessage) override;
     void LogFlush() override;
 };
 }

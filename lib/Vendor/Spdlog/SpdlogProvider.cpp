@@ -40,6 +40,11 @@ void Vendor::SpdlogProvider::LogError(const std::string& aMessage)
     spdlog::default_logger_raw()->error(aMessage);
 }
 
+void Vendor::SpdlogProvider::LogDebug(const std::string& aMessage)
+{
+    spdlog::default_logger_raw()->debug(aMessage);
+}
+
 void Vendor::SpdlogProvider::LogFlush()
 {
     spdlog::default_logger_raw()->flush();
