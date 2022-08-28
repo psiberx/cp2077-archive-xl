@@ -14,10 +14,9 @@ public:
     Module() = default;
     virtual ~Module() = default;
 
-    virtual bool Attach() = 0;
-    virtual bool Detach() = 0;
-
     virtual std::string_view GetName() = 0;
+    virtual bool Load() = 0;
+    virtual bool Unload() = 0;
 };
 
 class ConfigurableModule : public Module

@@ -14,9 +14,9 @@ using OnScreenEntryMap = Core::Map<decltype(std::declval<OnScreenEntry>().primar
 class LocalizationModule : public ConfigurableUnitModule<LocalizationUnit>
 {
 public:
-    bool Attach() override;
-    bool Detach() override;
     std::string_view GetName() override;
+    bool Load() override;
+    bool Unload() override;
 
 private:
 

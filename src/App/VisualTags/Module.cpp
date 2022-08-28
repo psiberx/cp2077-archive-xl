@@ -15,24 +15,17 @@ std::string_view App::VisualTagsModule::GetName()
     return ModuleName;
 }
 
-bool App::VisualTagsModule::Attach()
+bool App::VisualTagsModule::Load()
 {
     if (!HookAfter<Raw::GetVisualTags>(&OnGetVisualTags))
-    {
-        LogError("|{}| Failed to hook visual tags getter.", ModuleName);
-        return false;
-    }
+        throw std::runtime_error("Failed to hook [AppearanceNameVisualTagsPreset::GetVisualTags].");
 
     return true;
 }
 
-bool App::VisualTagsModule::Detach()
+bool App::VisualTagsModule::Unload()
 {
-    if (!Unhook<Raw::GetVisualTags>())
-    {
-        LogError("|{}| Failed to unhook visual tags getter.", ModuleName);
-        return false;
-    }
+    Unhook<Raw::GetVisualTags>();
 
     return true;
 }

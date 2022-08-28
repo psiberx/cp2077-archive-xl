@@ -11,24 +11,17 @@ std::string_view App::FactoryIndexModule::GetName()
     return ModuleName;
 }
 
-bool App::FactoryIndexModule::Attach()
+bool App::FactoryIndexModule::Load()
 {
     if (!Hook<Raw::LoadFactoryAsync>(&FactoryIndexModule::OnLoadFactoryAsync, &FactoryIndexModule::LoadFactoryAsync))
-    {
-        LogError("|{}| Failed to hook factory index loader.", ModuleName);
-        return false;
-    }
+        throw std::runtime_error("Failed to hook [FactoryIndex::LoadFactoryAsync].");
 
     return true;
 }
 
-bool App::FactoryIndexModule::Detach()
+bool App::FactoryIndexModule::Unload()
 {
-    if (!Unhook<Raw::LoadFactoryAsync>())
-    {
-        LogError("|{}| Failed to unhook factory index loader.", ModuleName);
-        return false;
-    }
+    Unhook<Raw::LoadFactoryAsync>();
 
     return true;
 }

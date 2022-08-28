@@ -102,15 +102,17 @@ void App::ModuleLoader::Load()
     {
         try
         {
-            module->Attach();
+            module->Load();
         }
         catch (const std::exception& ex)
         {
             LogError("|{}| {}", module->GetName(), ex.what());
+            module->Unload();
         }
         catch (...)
         {
             LogError("|{}| Failed to load. An unknown error has occurred.", module->GetName());
+            module->Unload();
         }
     }
 
@@ -126,7 +128,7 @@ void App::ModuleLoader::Unload()
     {
         try
         {
-            module->Detach();
+            module->Unload();
         }
         catch (const std::exception& ex)
         {

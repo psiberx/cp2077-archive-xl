@@ -11,24 +11,17 @@ std::string_view App::LocalizationModule::GetName()
     return ModuleName;
 }
 
-bool App::LocalizationModule::Attach()
+bool App::LocalizationModule::Load()
 {
     if (!Hook<Raw::LoadOnScreens>(&LocalizationModule::OnLoadOnScreens, &LocalizationModule::LoadOnScreens))
-    {
-        LogError("|{}| Failed to hook localization loader.", ModuleName);
-        return false;
-    }
+        throw std::runtime_error("Failed to hook [Localization::LoadOnScreens].");
 
     return true;
 }
 
-bool App::LocalizationModule::Detach()
+bool App::LocalizationModule::Unload()
 {
-    if (!Unhook<Raw::LoadOnScreens>())
-    {
-        LogError("|{}| Failed to unhook localization loader.", ModuleName);
-        return false;
-    }
+    Unhook<Raw::LoadOnScreens>();
 
     return true;
 }

@@ -8,9 +8,9 @@ namespace App
 class VisualTagsModule : public Module
 {
 public:
-    bool Attach() override;
-    bool Detach() override;
     std::string_view GetName() override;
+    bool Load() override;
+    bool Unload() override;
 
 private:
     static void OnGetVisualTags(RED4ext::game::AppearanceNameVisualTagsPreset& aPreset,

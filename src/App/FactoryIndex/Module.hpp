@@ -9,9 +9,9 @@ namespace App
 class FactoryIndexModule : public ConfigurableUnitModule<FactoryIndexUnit>
 {
 public:
-    bool Attach() override;
-    bool Detach() override;
     std::string_view GetName() override;
+    bool Load() override;
+    bool Unload() override;
 
 private:
     void OnLoadFactoryAsync(uintptr_t aIndex, RED4ext::ResourcePath aPath, uintptr_t aContext);
