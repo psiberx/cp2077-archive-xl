@@ -10,7 +10,9 @@
 #include <yaml-cpp/yaml.h>
 
 #include <RED4ext/CName.hpp>
+#include <RED4ext/DynArray.hpp>
 #include <RED4ext/Handle.hpp>
+#include <RED4ext/HashMap.hpp>
 #include <RED4ext/ResourcePath.hpp>
 
 #include <RED4ext/Api/EMainReason.hpp>

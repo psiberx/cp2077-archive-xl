@@ -3,6 +3,7 @@
 #include "App/Common/ModuleLoader.hpp"
 #include "App/FactoryIndex/Module.hpp"
 #include "App/Localization/Module.hpp"
+#include "App/PartsOverrides/Module.hpp"
 #include "App/VisualTags/Module.hpp"
 #include "Project.hpp"
 
@@ -19,6 +20,7 @@ void App::ArchiveExtender::OnBootstrap()
 
     s_loader->Add<FactoryIndexModule>();
     s_loader->Add<LocalizationModule>();
+    s_loader->Add<PartsOverridesModule>();
     s_loader->Add<VisualTagsModule>();
 
     s_loader->Configure();
