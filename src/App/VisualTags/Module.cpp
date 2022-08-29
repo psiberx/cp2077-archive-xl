@@ -55,10 +55,7 @@ void App::VisualTagsModule::OnGetVisualTags(RED4ext::game::AppearanceNameVisualT
     auto entityToken = loader->FindToken<RED4ext::ent::EntityTemplate>(aEntityPath);
 
     if (!entityToken || !entityToken->IsLoaded())
-    {
-        s_autoTagsCache.emplace(cacheKey, s_emptyTags);
         return;
-    }
 
     auto appearance = Utils::FindAppearanceTemplate(*entityToken, aAppearanceName);
 
@@ -72,10 +69,7 @@ void App::VisualTagsModule::OnGetVisualTags(RED4ext::game::AppearanceNameVisualT
     auto appearanceToken = loader->FindToken<RED4ext::appearance::AppearanceResource>(appearancePath);
 
     if (!appearanceToken || !appearanceToken->IsLoaded())
-    {
-        s_autoTagsCache.emplace(cacheKey, s_emptyTags);
         return;
-    }
 
     auto appearanceDefinition = Utils::FindAppearanceDefinition(*appearanceToken, appearance->appearanceName);
 
