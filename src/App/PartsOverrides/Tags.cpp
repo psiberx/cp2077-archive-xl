@@ -10,11 +10,11 @@ App::OverrideTagManager::OverrideTagManager() noexcept
                   {"heb_", 0},
                   {"ht_", 0},
                   {"hx_", 0},
-                  {"i1_", 0},
+                  {"i1_", 0}, // accessories
                   {"MorphTargetSkinnedMesh3637", 0},
                   {"MorphTargetSkinnedMesh6675", 0},
                   {"MorphTargetSkinnedMesh7243", 0},
-                  {"MorphTargetSkinnedMesh0531", 0},
+                  {"MorphTargetSkinnedMesh7561", 0},
               }
           },
           {
@@ -22,17 +22,18 @@ App::OverrideTagManager::OverrideTagManager() noexcept
               {
                   {"n0_", 0},
                   {"tx_", 0},
-                  {"body", ~0b1111},
                   {"t0_000_pma_base__full", ~0b1111},
+                  {"t0_000_pma_base__full_seamfix", 0},
                   {"t0_000_pwa_base__full", ~0b1111},
                   {"t0_000_pwa_base__full_seamfix", 0},
                   {"t0_000_pwa_fpp__torso", ~0b1111},
+                  {"MorphTargetSkinnedMesh0531", 0}, // nipples
               }
           },
           {
               "hide_Arms",
               {
-                  {"a0_", ~0b1111},
+                  {"a0_", 0},
                   {"left_arm", 0},
                   {"right_arm", 0},
               }
@@ -41,10 +42,19 @@ App::OverrideTagManager::OverrideTagManager() noexcept
               "hide_Legs",
               {
                   {"l0_", 0},
-                  {"s0_", 0},
+                  {"s0_", 0}, // ankles
                   {"t0_000_pma_base__full", ~0b11110000},
                   {"t0_000_pwa_base__full", ~0b11110000},
                   {"t0_000_pwa_fpp__torso", ~0b11110000},
+              }
+          },
+          {
+              "hide_Feet",
+              {
+                  {"t0_000_pma_base__full", ~0b10000000},
+                  {"t0_000_pwa_base__full", ~0b10000000},
+                  {"t0_000_pwa_fpp__torso", ~0b10000000},
+                  {"l0_000_pwa_base__cs_flat", ~0b100},
               }
           },
       })
