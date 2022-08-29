@@ -1,6 +1,6 @@
 #include "RTTILocator.hpp"
 
-Engine::RTTILocator::RTTILocator(RED4ext::CName aName)
+Engine::RTTILocator::RTTILocator(RED4ext::CName aName) noexcept
     : m_name(aName)
     , m_type(nullptr)
 {

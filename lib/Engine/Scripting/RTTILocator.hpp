@@ -8,7 +8,7 @@ namespace Engine
 struct RTTILocator
 {
 public:
-    RTTILocator(RED4ext::CName aName);
+    RTTILocator(RED4ext::CName aName) noexcept;
 
     operator const RED4ext::CBaseRTTIType*();
     operator const RED4ext::CClass*();
