@@ -13,6 +13,19 @@ Engine::RTTILocator s_MeshComponentRttiType{"entMeshComponent"};
 Engine::RTTILocator s_SkinnedMeshComponentRttiType{"entSkinnedMeshComponent"};
 Engine::RTTILocator s_SkinnedClothComponentRttiType{"entSkinnedClothComponent"};
 Engine::RTTILocator s_MorphTargetSkinnedMeshComponentRttiType{"entMorphTargetSkinnedMeshComponent"};
+
+template<class T>
+inline uint64_t GetComponentChunkMask(T* aComponent)
+{
+    return aComponent->chunkMask;
+}
+
+template<class T>
+inline bool SetComponentChunkMask(T* aComponent, uint64_t aChunkMask)
+{
+    aComponent->chunkMask = aChunkMask;
+    return true;
+}
 }
 
 App::ComponentWrapper::ComponentWrapper(RED4ext::Handle<RED4ext::ent::IComponent>& aComponent)
@@ -47,75 +60,40 @@ bool App::ComponentWrapper::IsSupported() const
 
 uint64_t App::ComponentWrapper::GetChunkMask() const
 {
-    uint64_t mask = 0;
-
     switch (m_type)
     {
     case ComponentType::MeshComponent:
-    {
-        mask = m_component.GetPtr<RED4ext::ent::MeshComponent>()->chunkMask;
-        break;
-    }
+        return GetComponentChunkMask(m_component.GetPtr<RED4ext::ent::MeshComponent>());
     case ComponentType::SkinnedMeshComponent:
-    {
-        mask = m_component.GetPtr<RED4ext::ent::SkinnedMeshComponent>()->chunkMask;
-        break;
-    }
+        return GetComponentChunkMask(m_component.GetPtr<RED4ext::ent::SkinnedMeshComponent>());
     case ComponentType::SkinnedClothComponent:
-    {
-        mask = m_component.GetPtr<RED4ext::ent::SkinnedClothComponent>()->chunkMask;
-        break;
-    }
+        return GetComponentChunkMask(m_component.GetPtr<RED4ext::ent::SkinnedClothComponent>());
     case ComponentType::MorphTargetSkinnedMeshComponent:
-    {
-        mask = m_component.GetPtr<RED4ext::ent::MorphTargetSkinnedMeshComponent>()->chunkMask;
-        break;
-    }
+        return GetComponentChunkMask(m_component.GetPtr<RED4ext::ent::MorphTargetSkinnedMeshComponent>());
     case ComponentType::Unsupported:
         break;
     }
 
-    return mask;
+    return 0;
 }
 
 bool App::ComponentWrapper::SetChunkMask(uint64_t aChunkMask) const
 {
-    if (GetChunkMask() == aChunkMask)
-        return true;
-
-    bool success = false;
-
     switch (m_type)
     {
     case ComponentType::MeshComponent:
-    {
-        m_component.GetPtr<RED4ext::ent::MeshComponent>()->chunkMask = aChunkMask;
-        success = true;
-        break;
-    }
+        return SetComponentChunkMask(m_component.GetPtr<RED4ext::ent::MeshComponent>(), aChunkMask);
     case ComponentType::SkinnedMeshComponent:
-    {
-        m_component.GetPtr<RED4ext::ent::SkinnedMeshComponent>()->chunkMask = aChunkMask;
-        success = true;
-        break;
-    }
+        return SetComponentChunkMask(m_component.GetPtr<RED4ext::ent::SkinnedMeshComponent>(), aChunkMask);
     case ComponentType::SkinnedClothComponent:
-    {
-        m_component.GetPtr<RED4ext::ent::SkinnedClothComponent>()->chunkMask = aChunkMask;
-        success = true;
-        break;
-    }
+        return SetComponentChunkMask(m_component.GetPtr<RED4ext::ent::SkinnedClothComponent>(), aChunkMask);
     case ComponentType::MorphTargetSkinnedMeshComponent:
-    {
-        m_component.GetPtr<RED4ext::ent::MorphTargetSkinnedMeshComponent>()->chunkMask = aChunkMask;
-        success = true;
-        break;
-    }
+        return SetComponentChunkMask(m_component.GetPtr<RED4ext::ent::MorphTargetSkinnedMeshComponent>(), aChunkMask);
     case ComponentType::Unsupported:
         break;
     }
 
-    return success;
+    return false;
 }
 
 uint64_t App::ComponentWrapper::GetUniqueId()

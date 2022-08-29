@@ -151,7 +151,7 @@ void App::PartsOverridesModule::ApplyOverrides(Core::SharedPtr<EntityState>& aEn
     {
         aEntityState->ApplyOverrides(component);
 
-        if (aVerbose)
+        if (aVerbose && component->isEnabled)
         {
             LogDebug("|{}| [entity={} index={} component={} type={}].",
                      ModuleName,
