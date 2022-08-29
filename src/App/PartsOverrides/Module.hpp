@@ -24,9 +24,10 @@ private:
 
     static void RegisterOverrides(Core::SharedPtr<EntityState>&, ItemHash, ItemAppearance&);
     static void UnregisterOverrides(Core::SharedPtr<EntityState>&, ItemHash);
-    static void ApplyOverrides(Core::SharedPtr<EntityState>&, RED4ext::DynArray<RED4ext::Handle<RED4ext::ent::IComponent>>&);
+    static void ApplyOverrides(Core::SharedPtr<EntityState>&, RED4ext::DynArray<RED4ext::Handle<RED4ext::ent::IComponent>>&, bool aVerbose = false);
+    static void ApplyOverrides(Core::SharedPtr<EntityState>&, bool aVerbose = false);
 
-    static inline Core::UniquePtr<StateStorage> s_states;
+    static inline Core::UniquePtr<OverrideStateManager> s_states;
     static inline std::mutex s_lock;
 };
 }

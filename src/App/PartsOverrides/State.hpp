@@ -1,41 +1,19 @@
 #pragma once
 
 #include "stdafx.hpp"
-#include "Garment.hpp"
+#include "Prefix.hpp"
+#include "Tags.hpp"
+#include "Wrapper.hpp"
 
 #include <RED4ext/Scripting/Natives/Generated/ent/Entity.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/IComponent.hpp>
 
 namespace App
 {
-enum class ComponentType
-{
-    Unsupported,
-    MeshComponent,
-    SkinnedMeshComponent,
-    SkinnedClothComponent,
-    MorphTargetSkinnedMeshComponent,
-};
-
-class ComponentWrapper
-{
-public:
-    ComponentWrapper(RED4ext::Handle<RED4ext::ent::IComponent>& aComponent);
-
-    [[nodiscard]] bool IsSupported() const;
-    [[nodiscard]] uint64_t GetChunkMask() const;
-    bool SetChunkMask(uint64_t aChunkMask) const;
-    [[nodiscard]] RED4ext::CName GetAppearanceName() const;
-
-private:
-    RED4ext::Handle<RED4ext::ent::IComponent>& m_component;
-    ComponentType m_type;
-};
-
 class ComponentState
 {
 public:
-    ComponentState(RED4ext::CName aName);
+    ComponentState(RED4ext::CName aName) noexcept;
     ComponentState(const ComponentState&) = delete;
     ComponentState(ComponentState&&) noexcept = default;
 
@@ -44,32 +22,44 @@ public:
 
     void AddChunkMaskOverride(uint64_t aHash, uint64_t aChunkMask);
     bool RemoveChunkMaskOverride(uint64_t aHash);
-    bool ApplyChunkMask(RED4ext::Handle<RED4ext::ent::IComponent>&);
+    uint64_t GetOverriddenChunkMask();
 
 private:
     std::string m_name;
-    Core::Map<ItemHash, uint64_t> m_overridenChunkMasks;
-    Core::Map<RED4ext::CName, uint64_t> m_initialChunkMasks;
+    Core::Map<uint64_t, uint64_t> m_overridenChunkMasks;
 };
 
 class EntityState
 {
 public:
-    EntityState(RED4ext::ent::Entity* aEntity);
+    EntityState(RED4ext::ent::Entity* aEntity) noexcept;
     EntityState(const EntityState&) = delete;
     EntityState(EntityState&&) noexcept = default;
 
     [[nodiscard]] const char* GetName() const;
+    [[nodiscard]] RED4ext::ent::Entity* GetEntity() const;
+
     [[nodiscard]] Core::Map<RED4ext::CName, Core::SharedPtr<ComponentState>>& GetComponentStates();
     [[nodiscard]] Core::SharedPtr<ComponentState>& GetComponentState(RED4ext::CName aComponentName);
     [[nodiscard]] Core::SharedPtr<ComponentState>& FindComponentState(RED4ext::CName aComponentName);
 
+    void AddOverride(uint64_t aHash, RED4ext::CName aComponentName, uint64_t aChunkMask);
+    void AddOverrideTag(uint64_t aHash, RED4ext::CName aTag);
+    void RemoveOverrides(uint64_t aHash);
+    bool ApplyOverrides(RED4ext::Handle<RED4ext::ent::IComponent>& aComponent);
+
 private:
+    uint64_t GetOriginalChunkMask(ComponentWrapper& aComponent);
+
     std::string m_name;
+    RED4ext::ent::Entity* m_entity;
     Core::Map<RED4ext::CName, Core::SharedPtr<ComponentState>> m_componentStates;
+    Core::Map<uint64_t, uint64_t> m_originalChunkMasks;
+    Core::SharedPtr<ComponentPrefixResolver> m_prefixResolver;
+    Core::SharedPtr<OverrideTagManager> m_tagManager;
 };
 
-class StateStorage
+class OverrideStateManager
 {
 public:
     Core::SharedPtr<EntityState>& GetEntityState(RED4ext::ent::Entity* aEntity);

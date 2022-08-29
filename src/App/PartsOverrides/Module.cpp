@@ -31,7 +31,7 @@ bool App::PartsOverridesModule::Load()
     if (!HookBefore<Raw::Entity::ReassembleAppearance>(&OnReassembleAppearance))
         throw std::runtime_error("Failed to hook [Entity::ReassembleAppearance].");
 
-    s_states = Core::MakeUnique<StateStorage>();
+    s_states = Core::MakeUnique<OverrideStateManager>();
 
     return true;
 }
@@ -93,9 +93,9 @@ void App::PartsOverridesModule::OnComputeGarment(RED4ext::Handle<RED4ext::ent::E
                                                  RED4ext::SharedPtr<GarmentComputeData>& aData, uintptr_t,
                                                  uintptr_t, uintptr_t, bool)
 {
-    std::lock_guard _(s_lock);
     if (auto& entityState = s_states->FindEntityState(aEntity))
     {
+        std::lock_guard _(s_lock);
         ApplyOverrides(entityState, aData->components);
     }
 }
@@ -103,12 +103,10 @@ void App::PartsOverridesModule::OnComputeGarment(RED4ext::Handle<RED4ext::ent::E
 void App::PartsOverridesModule::OnReassembleAppearance(RED4ext::ent::Entity* aEntity, uintptr_t, uintptr_t, uintptr_t,
                                                        uintptr_t, uintptr_t)
 {
-    std::lock_guard _(s_lock);
     if (auto& entityState = s_states->FindEntityState(aEntity))
     {
-        auto& components = Raw::Entity::GetComponents::Call(aEntity);
-
-        ApplyOverrides(entityState, components);
+        std::lock_guard _(s_lock);
+        ApplyOverrides(entityState, true);
     }
 }
 
@@ -121,50 +119,51 @@ void App::PartsOverridesModule::OnGameDetach(uintptr_t)
 void App::PartsOverridesModule::RegisterOverrides(Core::SharedPtr<EntityState>& aEntityState, ItemHash aHash,
                                                   ItemAppearance& aApperance)
 {
-    for (const auto& partsOverride : aApperance->partsOverrides)
+    for (const auto& partOverrides : aApperance->partsOverrides)
     {
-        if (partsOverride.partResource.path)
-            continue;
-
-        for (const auto& componentOverride : partsOverride.componentsOverrides)
+        if (!partOverrides.partResource.path)
         {
-            auto& componentState = aEntityState->GetComponentState(componentOverride.componentName);
-            componentState->AddChunkMaskOverride(aHash, componentOverride.chunkMask);
-
-            // LogDebug("|{}| Override added [entity={} component={} item={} mask={}].",
-            //          ModuleName, aEntityState->GetName(), componentState->GetName(), aHash, componentOverride.chunkMask);
+            for (const auto& componentOverride : partOverrides.componentsOverrides)
+            {
+                aEntityState->AddOverride(aHash, componentOverride.componentName, componentOverride.chunkMask);
+            }
         }
+    }
+
+    for (const auto& visualTag : aApperance->visualTags.tags)
+    {
+        aEntityState->AddOverrideTag(aHash, visualTag);
     }
 }
 
 void App::PartsOverridesModule::UnregisterOverrides(Core::SharedPtr<EntityState>& aEntityState, ItemHash aHash)
 {
-    for (auto& [_, componentState] : aEntityState->GetComponentStates())
+    aEntityState->RemoveOverrides(aHash);
+}
+
+void App::PartsOverridesModule::ApplyOverrides(Core::SharedPtr<EntityState>& aEntityState,
+                                               RED4ext::DynArray<RED4ext::Handle<RED4ext::ent::IComponent>>& aComponents,
+                                               bool aVerbose)
+{
+    auto index = 0;
+
+    for (auto& component : aComponents)
     {
-        if (componentState->RemoveChunkMaskOverride(aHash))
+        aEntityState->ApplyOverrides(component);
+
+        if (aVerbose)
         {
-            // LogDebug("|{}| Override removed [entity={} component={} item={}].",
-            //          ModuleName, aEntityState->GetName(), componentState->GetName(), aHash);
+            LogDebug("|{}| [entity={} index={} component={} type={}].",
+                     ModuleName,
+                     aEntityState->GetName(),
+                     index++,
+                     component->name.ToString(),
+                     component->GetType()->GetName().ToString());
         }
     }
 }
 
-void App::PartsOverridesModule::ApplyOverrides(Core::SharedPtr<EntityState>& aEntityState,
-                                               RED4ext::DynArray<RED4ext::Handle<RED4ext::ent::IComponent>>& aComponents)
+void App::PartsOverridesModule::ApplyOverrides(Core::SharedPtr<EntityState>& aEntityState, bool aVerbose)
 {
-    auto index = 0;
-    for (auto& component : aComponents)
-    {
-        // LogDebug("|{}| [entity={} index={} component={} type={}].",
-        //          ModuleName,
-        //          aEntityState->GetName(),
-        //          index++,
-        //          component->name.ToString(),
-        //          component->GetType()->GetName().ToString());
-
-        if (auto& componentState = aEntityState->FindComponentState(component->name))
-        {
-            componentState->ApplyChunkMask(component);
-        }
-    }
+    ApplyOverrides(aEntityState, Raw::Entity::GetComponents::Call(aEntityState->GetEntity()), aVerbose);
 }
