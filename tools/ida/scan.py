@@ -58,6 +58,10 @@ def patterns():
                      expected=2,
                      index=1),
             ]),
+            Group(name="InkSpawner", functions=[
+                Item(name="SpawnFromExternal",
+                     pattern="48 89 5C 24 08 48 89 74 24 10 48 89 7C 24 18 55 41 56 41 57 48 8D 6C 24 C1 48 81 EC F0 00 00 00"),
+            ]),
             Group(name="Localization", functions=[
                 Item(name="LoadOnScreens",
                      pattern="40 55 53 57 48 8B EC 48 81 EC 80 00 00 00 0F 57 C0 48 8B D9 F3 0F 7F 45 A0 48 85 D2 75 17 33 FF 48 8B C1 48 89 39 48 89 79 08 48 81 C4 80 00 00",

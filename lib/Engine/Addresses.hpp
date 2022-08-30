@@ -1,5 +1,5 @@
 // This file is generated. DO NOT MODIFY IT!
-// Created on 2022-08-28 for Cyberpunk 2077 v.1.52.
+// Created on 2022-08-30 for Cyberpunk 2077 v.1.52.
 // Define patterns in "patterns.py" and run "scan.py" to update.
 
 #pragma once

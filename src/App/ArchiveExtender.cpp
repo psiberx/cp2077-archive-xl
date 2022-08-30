@@ -2,6 +2,7 @@
 #include "App/Configuration.hpp"
 #include "App/Common/ModuleLoader.hpp"
 #include "App/FactoryIndex/Module.hpp"
+#include "App/InkSpawner/Module.hpp"
 #include "App/Localization/Module.hpp"
 #include "App/PartsOverrides/Module.hpp"
 #include "App/VisualTags/Module.hpp"
@@ -22,6 +23,7 @@ void App::ArchiveExtender::OnBootstrap()
     s_loader->Add<LocalizationModule>();
     s_loader->Add<PartsOverridesModule>();
     s_loader->Add<VisualTagsModule>();
+    s_loader->Add<InkSpawnerModule>();
 
     s_loader->Configure();
     s_loader->Load();

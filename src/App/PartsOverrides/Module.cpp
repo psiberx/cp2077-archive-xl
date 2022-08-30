@@ -4,6 +4,7 @@
 namespace
 {
 constexpr auto ModuleName = "PartsOverrides";
+constexpr auto EnableDebugOutput = false;
 }
 
 std::string_view App::PartsOverridesModule::GetName()
@@ -151,7 +152,7 @@ void App::PartsOverridesModule::ApplyOverrides(Core::SharedPtr<EntityState>& aEn
     {
         aEntityState->ApplyOverrides(component);
 
-        if (aVerbose && component->isEnabled)
+        if (EnableDebugOutput && aVerbose && component->isEnabled)
         {
             LogDebug("|{}| [entity={} index={} component={} type={}].",
                      ModuleName,
