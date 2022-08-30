@@ -12,7 +12,7 @@ std::string_view App::InkSpawnerModule::GetName()
 
 bool App::InkSpawnerModule::Load()
 {
-    if (!HookAfter<Raw::InkSpawner::SpawnFromExternal>(&OnSpawnExternal))
+    if (!HookBefore<Raw::InkSpawner::SpawnFromExternal>(&OnSpawnExternal))
         throw std::runtime_error("Failed to hook [InkSpawner::SpawnFromExternal].");
 
     return true;
