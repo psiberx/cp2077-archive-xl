@@ -5,56 +5,66 @@ App::OverrideTagManager::OverrideTagManager() noexcept
           {
               "hide_Head",
               {
-                  {"h0_", 0},
-                  {"he_", 0},
-                  {"heb_", 0},
-                  {"ht_", 0},
-                  {"hx_", 0},
-                  {"i1_", 0}, // accessories
-                  {"MorphTargetSkinnedMesh3637", 0},
-                  {"MorphTargetSkinnedMesh6675", 0},
-                  {"MorphTargetSkinnedMesh7243", 0},
-                  {"MorphTargetSkinnedMesh7561", 0},
-              }
-          },
-          {
-              "hide_Torso",
-              {
-                  {"n0_", 0},
-                  {"tx_", 0},
-                  {"t0_000_pma_base__full", ~0b1111},
-                  {"t0_000_pma_base__full_seamfix", 0},
-                  {"t0_000_pwa_base__full", ~0b1111},
-                  {"t0_000_pwa_base__full_seamfix", 0},
-                  {"t0_000_pwa_fpp__torso", ~0b1111},
-                  {"MorphTargetSkinnedMesh0531", 0}, // nipples
+                  {"h0_", {}},
+                  {"he_", {}},
+                  {"heb_", {}},
+                  {"ht_", {}},
+                  {"hx_", {}},
+                  {"i1_", {}}, // accessories
+                  {"MorphTargetSkinnedMesh3637", {}},
+                  {"MorphTargetSkinnedMesh6675", {}},
+                  {"MorphTargetSkinnedMesh7243", {}},
+                  {"MorphTargetSkinnedMesh7561", {}},
               }
           },
           {
               "hide_Arms",
               {
-                  {"a0_", 0},
-                  {"left_arm", 0},
-                  {"right_arm", 0},
+                  {"a0_", {}},
+                  {"left_arm", {}},
+                  {"right_arm", {}},
+              }
+          },
+          {
+              "hide_Torso",
+              {
+                  {"n0_", {}},
+                  {"tx_", {}},
+                  {"t0_000_pma_base__full", {0, 1, 2, 3}},
+                  {"t0_000_pma_base__full_seamfix", {}},
+                  {"t0_000_pwa_base__full", {0, 1, 2, 3}},
+                  {"t0_000_pwa_base__full_seamfix", {}},
+                  {"t0_000_pwa_fpp__torso", {0, 1, 2, 3}},
+                  {"MorphTargetSkinnedMesh0531", {}}, // nipples
               }
           },
           {
               "hide_Legs",
               {
-                  {"l0_", 0},
-                  {"s0_", 0}, // ankles
-                  {"t0_000_pma_base__full", ~0b11110000},
-                  {"t0_000_pwa_base__full", ~0b11110000},
-                  {"t0_000_pwa_fpp__torso", ~0b11110000},
+                  {"l0_", {}},
+                  {"s0_", {}},
+                  {"t0_000_pma_base__full", {4, 5, 6, 7}},
+                  {"t0_000_pwa_base__full", {4, 5, 6, 7}},
+                  {"t0_000_pwa_fpp__torso", {4, 5, 6, 7}},
+              }
+          },
+          {
+              "hide_Ankles",
+              {
+                  {"s0_", {}},
+                  {"t0_000_pma_base__full", {6}},
+                  {"t0_000_pwa_base__full", {6}},
+                  {"t0_000_pwa_fpp__torso", {6}},
+                  {"l0_000_pwa_base__cs_flat", {1}},
               }
           },
           {
               "hide_Feet",
               {
-                  {"t0_000_pma_base__full", ~0b10000000},
-                  {"t0_000_pwa_base__full", ~0b10000000},
-                  {"t0_000_pwa_fpp__torso", ~0b10000000},
-                  {"l0_000_pwa_base__cs_flat", ~0b100},
+                  {"t0_000_pma_base__full", {7}},
+                  {"t0_000_pwa_base__full", {7}},
+                  {"t0_000_pwa_fpp__torso", {7}},
+                  {"l0_000_pwa_base__cs_flat", {2}},
               }
           },
       })
