@@ -1,6 +1,5 @@
 #pragma once
 
-#include "stdafx.hpp"
 #include "Core/Raw.hpp"
 #include "Reverse/Addresses.hpp"
 

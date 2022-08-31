@@ -1,6 +1,5 @@
 #pragma once
 
-#include "stdafx.hpp"
 #include "Core/Foundation/Feature.hpp"
 #include "Core/Logging/LoggingAgent.hpp"
 #include "Engine/Scripting/RTTIClass.hpp"

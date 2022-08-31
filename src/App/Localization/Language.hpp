@@ -1,7 +1,5 @@
 #pragma once
 
-#include "stdafx.hpp"
-
 namespace App::Language
 {
 enum Code : uint64_t

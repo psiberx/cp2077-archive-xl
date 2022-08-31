@@ -1,6 +1,5 @@
 #pragma once
 
-#include "stdafx.hpp"
 #include "Prefix.hpp"
 #include "Tags.hpp"
 #include "Wrapper.hpp"

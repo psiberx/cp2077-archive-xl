@@ -1,6 +1,5 @@
 #pragma once
 
-#include "stdafx.hpp"
 #include "Core/Foundation/Application.hpp"
 
 namespace App

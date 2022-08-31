@@ -1,6 +1,5 @@
 #pragma once
 
-#include "stdafx.hpp"
 #include "Core/Facades/Runtime.hpp"
 
 namespace App::Configuration

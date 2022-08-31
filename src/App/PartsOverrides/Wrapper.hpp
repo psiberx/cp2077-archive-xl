@@ -1,7 +1,5 @@
 #pragma once
 
-#include "stdafx.hpp"
-
 #include <RED4ext/Scripting/Natives/Generated/ent/IComponent.hpp>
 
 namespace App

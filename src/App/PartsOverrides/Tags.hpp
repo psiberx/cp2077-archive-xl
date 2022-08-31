@@ -1,9 +1,5 @@
 #pragma once
 
-#include "stdafx.hpp"
-
-#include <bitset>
-
 namespace App
 {
 struct ChunkMask

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "stdafx.hpp"
-
 namespace App
 {
 class ComponentPrefixResolver

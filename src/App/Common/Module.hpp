@@ -1,6 +1,5 @@
 #pragma once
 
-#include "stdafx.hpp"
 #include "Core/Hooking/HookingAgent.hpp"
 #include "Core/Logging/LoggingAgent.hpp"
 
