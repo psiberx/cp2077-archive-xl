@@ -7,6 +7,7 @@ namespace Core
 class OwnerMutex
 {
 public:
+    explicit OwnerMutex(std::string_view aName);
     explicit OwnerMutex(std::wstring_view aName);
     ~OwnerMutex();
 
@@ -15,7 +16,8 @@ public:
     bool IsOwner();
 
 private:
-    std::wstring_view m_name;
+    std::string_view m_aname;
+    std::wstring_view m_wname;
     HANDLE m_mutex;
 };
 }

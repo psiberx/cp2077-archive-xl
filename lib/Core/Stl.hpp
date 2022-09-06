@@ -3,27 +3,21 @@
 #include <TiltedCore/StlAllocator.hpp>
 #include <tsl/hopscotch_map.h>
 #include <tsl/hopscotch_set.h>
-#include <map>
-#include <memory>
-#include <type_traits>
-#include <vector>
 
 namespace Core
 {
 // Pretty much the same as TiltedCore with StlAllocator,
 // but unique ptr allows implicit casting to the base.
 
-namespace detail
+namespace Detail
 {
-template<class T, class U>
-concept ChildOf = std::is_base_of<U, T>::value;
-
 template<class T>
 struct UniqueDeleter
 {
     constexpr UniqueDeleter() noexcept = default;
 
-    template<ChildOf<T> U>
+    template<class U>
+    requires std::is_base_of_v<T, U>
     UniqueDeleter(const UniqueDeleter<U>& d) noexcept {}
 
     void operator()(std::conditional_t<std::is_array_v<T>, T, T*> aData)
@@ -49,7 +43,10 @@ template<class T>
 using SharedPtr = std::shared_ptr<T>;
 
 template<class T>
-using UniquePtr = std::unique_ptr<T, detail::UniqueDeleter<T>>;
+using WeakPtr = std::weak_ptr<T>;
+
+template<class T>
+using UniquePtr = std::unique_ptr<T, Detail::UniqueDeleter<T>>;
 
 template<typename T, typename... Args>
 auto MakeShared(Args&&... args)

@@ -5,7 +5,9 @@
 
 namespace Vendor
 {
-class MinHookProvider : public Core::Feature, public Core::HookingDriver
+class MinHookProvider
+    : public Core::Feature
+    , public Core::HookingDriver
 {
 public:
     MinHookProvider();

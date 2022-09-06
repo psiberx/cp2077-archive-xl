@@ -1,20 +1,24 @@
 #include "RED4extProvider.hpp"
 
-#include <cassert>
-
-Vendor::RED4extProvider::RED4extProvider(Vendor::RED4extProvider::Options&& aOptions)
+Vendor::RED4extProvider::RED4extProvider(RED4ext::PluginHandle aPlugin, const RED4ext::Sdk* aSdk) noexcept
+    : m_plugin(aPlugin)
+    , m_sdk(aSdk)
+    , m_logging(false)
+    , m_hooking(false)
 {
-    assert(aOptions.plugin);
-    assert(aOptions.sdk);
+}
 
-    m_plugin = aOptions.plugin;
-    m_sdk = aOptions.sdk;
-
-    if (aOptions.logging)
+void Vendor::RED4extProvider::OnInitialize()
+{
+    if (m_logging)
+    {
         LoggingDriver::SetDefault(*this);
+    }
 
-    if (aOptions.hooking)
+    if (m_hooking)
+    {
         HookingDriver::SetDefault(*this);
+    }
 }
 
 void Vendor::RED4extProvider::LogInfo(const std::string& aMessage)

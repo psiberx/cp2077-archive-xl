@@ -1,21 +1,18 @@
 #include "SpdlogProvider.hpp"
-#include "Core/Stl.hpp"
 #include "Core/Facades/Runtime.hpp"
+#include "Core/Stl.hpp"
 
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
 
-Vendor::SpdlogProvider::SpdlogProvider()
-    : SpdlogProvider(Options{})
+void Vendor::SpdlogProvider::OnInitialize()
 {
-}
+    if (m_logPath.empty())
+    {
+        m_logPath = Core::Runtime::GetModulePath().replace_extension(L".log");
+    }
 
-Vendor::SpdlogProvider::SpdlogProvider(Vendor::SpdlogProvider::Options&& aOptions)
-{
-    if (aOptions.logPath.empty())
-        aOptions.logPath = Core::Runtime::GetModulePath().replace_extension(L".log");
-
-    auto sink = Core::MakeShared<spdlog::sinks::basic_file_sink_mt>(aOptions.logPath.string(), true);
+    auto sink = Core::MakeShared<spdlog::sinks::basic_file_sink_mt>(m_logPath.string(), true);
     auto logger = Core::MakeShared<spdlog::logger>("", spdlog::sinks_init_list{sink});
     logger->flush_on(spdlog::level::trace);
 

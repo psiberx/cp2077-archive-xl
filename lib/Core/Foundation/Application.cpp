@@ -7,8 +7,12 @@ void Core::Application::Bootstrap()
 
     m_booted = true;
 
-    for (const auto& registered : GetRegistered())
-        registered->OnBootstrap();
+    for (const auto& feature : GetRegistered())
+    {
+        feature->OnBootstrap();
+    }
+
+    OnBootstrap();
 }
 
 void Core::Application::Shutdown()
@@ -16,14 +20,22 @@ void Core::Application::Shutdown()
     if (!m_booted)
         return;
 
-    for (const auto& registered : GetRegistered())
-        registered->OnShutdown();
+    OnShutdown();
+
+    for (const auto& feature : GetRegistered())
+    {
+        feature->OnShutdown();
+    }
 
     m_booted = false;
 }
 
-void Core::Application::OnRegistered(const Core::UniquePtr<Core::Feature>& aRegistered)
+void Core::Application::OnRegistered(const Core::SharedPtr<Core::Feature>& aFeature)
 {
+    aFeature->OnRegister();
+
     if (m_booted)
-        aRegistered->OnBootstrap();
+    {
+        aFeature->OnBootstrap();
+    }
 }

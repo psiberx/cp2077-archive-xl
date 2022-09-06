@@ -1,21 +1,29 @@
 #pragma once
 
-#include <cstdint>
-
 namespace Core
 {
+class RawBase
+{
+public:
+    inline static uintptr_t GetImageBase()
+    {
+        static const uintptr_t addr = reinterpret_cast<uintptr_t>(GetModuleHandleW(nullptr));
+        return addr;
+    }
+};
+
 template<uintptr_t A, typename F>
 struct RawFunc {};
 
 template<uintptr_t A, typename R, typename... Args>
-struct RawFunc<A, R (*)(Args...)>
+struct RawFunc<A, R (*)(Args...)> : private RawBase
 {
-    using type = R (*)(Args...);
-    using return_type = R;
+    using Callable = R (*)(Args...);
+    using ReturnType = R;
 
     static constexpr uintptr_t offset = A;
 
-    inline operator type() const
+    inline operator Callable() const
     {
         return GetPtr();
     }
@@ -25,34 +33,32 @@ struct RawFunc<A, R (*)(Args...)>
         return GetPtr() != nullptr;
     }
 
-    [[nodiscard]] inline type GetPtr() const noexcept
+    [[nodiscard]] inline Callable GetPtr() const noexcept
     {
-        return reinterpret_cast<type>(RelocAddr());
+        return reinterpret_cast<Callable>(GetAddress());
     }
 
-    inline static uintptr_t RelocAddr() noexcept
+    inline static uintptr_t GetAddress() noexcept
     {
-        static uintptr_t addr = offset ? offset + reinterpret_cast<uintptr_t>(GetModuleHandleW(nullptr)) : 0;
-
+        static uintptr_t addr = offset ? offset + GetImageBase() : 0;
         return addr;
     }
 
-    static R Call(Args... aArgs)
+    static R Invoke(Args... aArgs)
     {
-        return reinterpret_cast<type>(RelocAddr())(std::forward<Args>(aArgs)...);
+        return reinterpret_cast<Callable>(GetAddress())(std::forward<Args>(aArgs)...);
     }
 };
 
 template<uintptr_t A, typename C, typename R, typename... Args>
 struct RawFunc<A, R (C::*)(Args...)> : RawFunc<A, R (*)(C*, Args...)>
 {
-    using context_type = C;
 };
 
 template<uintptr_t A, typename T>
-struct RawPtr
+struct RawPtr : private RawBase
 {
-    using type = T;
+    using Type = T;
 
     static constexpr uintptr_t offset = A;
 
@@ -73,19 +79,18 @@ struct RawPtr
 
     [[nodiscard]] inline T* GetPtr() const noexcept
     {
-        return reinterpret_cast<T*>(RelocAddr());
+        return reinterpret_cast<T*>(GetAddress());
     }
 
-    inline static uintptr_t RelocAddr() noexcept
+    inline static uintptr_t GetAddress() noexcept
     {
-        static uintptr_t addr = offset ? offset + reinterpret_cast<uintptr_t>(GetModuleHandleW(nullptr)) : 0;
-
+        static uintptr_t addr = offset ? offset + GetImageBase() : 0;
         return addr;
     }
 
     static T* Get()
     {
-        return reinterpret_cast<T*>(RelocAddr());
+        return reinterpret_cast<T*>(GetAddress());
     }
 };
 }

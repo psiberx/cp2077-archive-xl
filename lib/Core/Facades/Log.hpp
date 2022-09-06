@@ -21,4 +21,10 @@ constexpr void Error(std::string_view aFormat, Args&&... aArgs)
 {
     LoggingDriver::GetDefault().LogError(fmt::vformat(aFormat, fmt::make_format_args(std::forward<Args>(aArgs)...)));
 }
+
+template<typename... Args>
+constexpr void Debug(std::string_view aFormat, Args&&... aArgs)
+{
+    LoggingDriver::GetDefault().LogDebug(fmt::vformat(aFormat, fmt::make_format_args(std::forward<Args>(aArgs)...)));
+}
 }

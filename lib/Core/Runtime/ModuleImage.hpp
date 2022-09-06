@@ -2,8 +2,6 @@
 
 #include "Core/Win.hpp"
 
-#include <filesystem>
-
 namespace Core
 {
 class ModuleImage

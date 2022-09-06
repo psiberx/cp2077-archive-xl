@@ -1,211 +1,133 @@
 #pragma once
 
-#include "Internals.hpp"
-#include "HookingDriver.hpp"
+#include "Core/Hooking/Detail.hpp"
+#include "Core/Hooking/Internals.hpp"
+#include "Core/Hooking/HookingDriver.hpp"
 
 namespace Core
 {
 class HookingAgent
 {
 protected:
-    template<typename F, typename R, typename... Args,
-             typename = std::enable_if_t<std::is_same_v<typename F::type, detail::OriginalFunc<R, Args...>>>>
-    static bool Hook(detail::StaticCallback<R, Args...> aCallback,
-                     detail::OriginalFunc<R, Args...>* aOriginal = nullptr)
+    template<typename TTarget, typename TCallback, HookFlow TFlow = HookFlow::Original, HookRun TRun = HookRun::Default>
+    requires Detail::HookFlowTraits<TFlow, TTarget, TCallback>::IsCompatibleNotMember
+    inline static bool Hook(TCallback&& aCallback, typename TTarget::Callable* aOriginal = nullptr)
     {
-        using Capture = detail::BaseCapture<F>;
-
-        if (Capture::hooked)
-            return false;
-
-        detail::OriginalFunc<R, Args...> original;
-        const auto address = F::RelocAddr();
-
-        if (!GetHookingDriver().HookAttach(address, aCallback, reinterpret_cast<void**>(&original)))
-            return false;
-
-        if (aOriginal)
-            *aOriginal = original;
-
-        Capture::hooked = true;
-
-        return true;
+        using Wrapper = Detail::HookWrapper<TCallback>;
+        using Handler = Detail::HookHandler<TTarget, Wrapper, TFlow, TRun>;
+        return Handler::Attach(HookingDriver::GetDefault(), Wrapper(std::move(aCallback)), aOriginal);
+    }
+    
+    template<typename TTarget, typename TCallback, HookRun TRun = HookRun::Default>
+    requires Detail::HookFlowTraits<HookFlow::Before, TTarget, TCallback>::IsCompatibleNotMember
+    inline static bool HookBefore(TCallback&& aCallback)
+    {
+        using Wrapper = Detail::HookWrapper<TCallback>;
+        using Handler = Detail::HookHandler<TTarget, Wrapper, HookFlow::Before, TRun>;
+        return Handler::Attach(HookingDriver::GetDefault(), Wrapper(std::move(aCallback)));
+    }
+    
+    template<typename TTarget, typename TCallback>
+    requires Detail::HookFlowTraits<HookFlow::Before, TTarget, TCallback>::IsCompatibleNotMember
+    inline static bool HookBeforeOnce(TCallback&& aCallback)
+    {
+        return HookBefore<TTarget, TCallback, HookRun::Once>(std::move(aCallback));
+    }
+    
+    template<typename TTarget, typename TCallback, HookRun TRun = HookRun::Default>
+    requires Detail::HookFlowTraits<HookFlow::After, TTarget, TCallback>::IsCompatibleNotMember
+    inline static bool HookAfter(TCallback&& aCallback)
+    {
+        using Wrapper = Detail::HookWrapper<TCallback>;
+        using Handler = Detail::HookHandler<TTarget, Wrapper, HookFlow::After, TRun>;
+        return Handler::Attach(HookingDriver::GetDefault(), Wrapper(std::move(aCallback)));
+    }
+    
+    template<typename TTarget, typename TCallback>
+    requires Detail::HookFlowTraits<HookFlow::After, TTarget, TCallback>::IsCompatibleNotMember
+    inline static bool HookAfterOnce(TCallback&& aCallback)
+    {
+        return HookAfter<TTarget, TCallback, HookRun::Once>(std::move(aCallback));
+    }
+    
+    template<typename TTarget, typename TCallback, HookRun TRun = HookRun::Default>
+    requires Detail::HookFlowTraits<HookFlow::Wrap, TTarget, TCallback>::IsCompatibleNotMember
+    inline static bool HookWrap(TCallback&& aCallback)
+    {
+        using Wrapper = Detail::HookWrapper<TCallback>;
+        using Handler = Detail::HookHandler<TTarget, Wrapper, HookFlow::Wrap, TRun>;
+        return Handler::Attach(HookingDriver::GetDefault(), Wrapper(std::move(aCallback)));
+    }
+    
+    template<typename TTarget, typename TCallback>
+    requires Detail::HookFlowTraits<HookFlow::Wrap, TTarget, TCallback>::IsCompatibleNotMember
+    inline static bool HookWrapOnce(TCallback&& aCallback)
+    {
+        return HookWrap<TTarget, TCallback, HookRun::Once>(std::move(aCallback));
     }
 
-    template<typename F, typename C, typename R, typename... Args,
-             typename = std::enable_if_t<std::is_same_v<typename F::type, detail::OriginalFunc<R, Args...>>>>
-    static bool Hook(C* aContext, detail::MemberCallback<C, R, Args...> aCallback,
-                     detail::OriginalFunc<R, Args...>* aOriginal = nullptr)
+    template<typename TTarget, typename TCallback, HookFlow TFlow = HookFlow::Original, HookRun TRun = HookRun::Default>
+    requires Detail::HookFlowTraits<TFlow, TTarget, TCallback>::IsCompatibleMember
+    inline bool Hook(const TCallback& aCallback, typename TTarget::Callable* aOriginal = nullptr)
     {
-        using Capture = detail::MemberCapture<F, C, R, Args...>;
-
-        if (Capture::hooked)
-            return false;
-
-        const auto address = F::RelocAddr();
-
-        if (!GetHookingDriver().HookAttach(address, &Capture::Handle, reinterpret_cast<void**>(&Capture::original)))
-            return false;
-
-        if (aOriginal)
-            *aOriginal = Capture::original;
-
-        Capture::callback = aCallback;
-        Capture::context = aContext;
-        Capture::hooked = true;
-
-        return true;
+        using Wrapper = Detail::HookWrapper<TCallback>;
+        using Handler = Detail::HookHandler<TTarget, Wrapper, TFlow, TRun>;
+        return Handler::Attach(HookingDriver::GetDefault(), Wrapper(aCallback, this), aOriginal);
+    }
+    
+    template<typename TTarget, typename TCallback, HookRun TRun = HookRun::Default>
+    requires Detail::HookFlowTraits<HookFlow::Before, TTarget, TCallback>::IsCompatibleMember
+    inline bool HookBefore(const TCallback& aCallback)
+    {
+        using Wrapper = Detail::HookWrapper<TCallback>;
+        using Handler = Detail::HookHandler<TTarget, Wrapper, HookFlow::Before, TRun>;
+        return Handler::Attach(HookingDriver::GetDefault(), Wrapper(aCallback, this));
+    }
+    
+    template<typename TTarget, typename TCallback>
+    requires Detail::HookFlowTraits<HookFlow::Before, TTarget, TCallback>::IsCompatibleMember
+    inline bool HookBeforeOnce(const TCallback& aCallback)
+    {
+        return HookBefore<TTarget, TCallback, HookRun::Once>(aCallback);
+    }
+    
+    template<typename TTarget, typename TCallback, HookRun TRun = HookRun::Default>
+    requires Detail::HookFlowTraits<HookFlow::After, TTarget, TCallback>::IsCompatibleMember
+    inline bool HookAfter(const TCallback& aCallback)
+    {
+        using Wrapper = Detail::HookWrapper<TCallback>;
+        using Handler = Detail::HookHandler<TTarget, Wrapper, HookFlow::After, TRun>;
+        return Handler::Attach(HookingDriver::GetDefault(), Wrapper(aCallback, this));
+    }
+    
+    template<typename TTarget, typename TCallback>
+    requires Detail::HookFlowTraits<HookFlow::After, TTarget, TCallback>::IsCompatibleMember
+    inline bool HookAfterOnce(const TCallback& aCallback)
+    {
+        return HookAfter<TTarget, TCallback, HookRun::Once>(aCallback);
+    }
+    
+    template<typename TTarget, typename TCallback, HookRun TRun = HookRun::Default>
+    requires Detail::HookFlowTraits<HookFlow::Wrap, TTarget, TCallback>::IsCompatibleMember
+    inline bool HookWrap(const TCallback& aCallback)
+    {
+        using Wrapper = Detail::HookWrapper<TCallback>;
+        using Handler = Detail::HookHandler<TTarget, Wrapper, HookFlow::Wrap, TRun>;
+        return Handler::Attach(HookingDriver::GetDefault(), Wrapper(aCallback, this));
+    }
+    
+    template<typename TTarget, typename TCallback>
+    requires Detail::HookFlowTraits<HookFlow::Wrap, TTarget, TCallback>::IsCompatibleMember
+    inline bool HookWrapOnce(const TCallback& aCallback)
+    {
+        return HookWrap<TTarget, TCallback, HookRun::Once>(aCallback);
     }
 
-    template<typename F, typename C, typename R, typename... Args,
-             typename = std::enable_if_t<std::is_same_v<typename F::type, detail::OriginalFunc<R, Args...>>>>
-    bool Hook(detail::MemberCallback<C, R, Args...> aCallback, detail::OriginalFunc<R, Args...>* aOriginal = nullptr)
+    template<class TTarget>
+    inline static bool Unhook()
     {
-        return Hook<F>(static_cast<C*>(this), aCallback, aOriginal);
-    }
-
-    template<typename F, typename R, typename... Args,
-             typename = std::enable_if_t<std::is_same_v<typename F::type, detail::OriginalFunc<R, Args...>>>>
-    static bool HookWrap(detail::WrappedCallback<R, Args...> aCallback)
-    {
-        using Capture = detail::WrappedCapture<F, R, Args...>;
-
-        if (Capture::hooked)
-            return false;
-
-        const auto address = F::RelocAddr();
-
-        if (!GetHookingDriver().HookAttach(address, &Capture::Handle, reinterpret_cast<void**>(&Capture::original)))
-            return false;
-
-        Capture::callback = aCallback;
-        Capture::hooked = true;
-
-        return true;
-    }
-
-    template<typename F, typename R, typename... Args,
-             typename = std::enable_if_t<std::is_same_v<typename F::type, detail::OriginalFunc<R, Args...>>>>
-    static bool HookOnce(detail::WrappedCallback<R, Args...> aCallback)
-    {
-        using Capture = detail::WrappedOnceCapture<F, R, Args...>;
-
-        if (Capture::hooked)
-            return false;
-
-        auto& driver = GetHookingDriver();
-        const auto address = F::RelocAddr();
-
-        if (!driver.HookAttach(address, &Capture::Handle, reinterpret_cast<void**>(&Capture::original)))
-            return false;
-
-        Capture::callback = aCallback;
-        Capture::driver = &driver;
-        Capture::hooked = true;
-
-        return true;
-    }
-
-    template<typename F, typename... Args,
-             typename R = typename F::return_type,
-             typename = std::enable_if_t<std::is_same_v<typename F::type, detail::OriginalFunc<R, Args...>>>>
-    static bool HookBefore(detail::NoReturnCallback<Args...> aCallback)
-    {
-        using Capture = detail::BeforeCapture<F, R, Args...>;
-
-        if (Capture::hooked)
-            return false;
-
-        const auto address = F::RelocAddr();
-
-        if (!GetHookingDriver().HookAttach(address, &Capture::Handle, reinterpret_cast<void**>(&Capture::original)))
-            return false;
-
-        Capture::callback = aCallback;
-        Capture::hooked = true;
-
-        return true;
-    }
-
-    template<typename F, typename... Args,
-             typename R = typename F::return_type,
-             typename = std::enable_if_t<std::is_same_v<typename F::type, detail::OriginalFunc<R, Args...>>>>
-    static bool HookOnceBefore(detail::NoReturnCallback<Args...> aCallback)
-    {
-        using Capture = detail::BeforeOnceCapture<F, R, Args...>;
-
-        if (Capture::hooked)
-            return false;
-
-        auto& driver = GetHookingDriver();
-        const auto address = F::RelocAddr();
-
-        if (!driver.HookAttach(address, &Capture::Handle, reinterpret_cast<void**>(&Capture::original)))
-            return false;
-
-        Capture::callback = aCallback;
-        Capture::driver = &driver;
-        Capture::hooked = true;
-
-        return true;
-    }
-
-    template<typename F, typename... Args,
-             typename R = typename F::return_type,
-             typename = std::enable_if_t<std::is_same_v<typename F::type, detail::OriginalFunc<R, Args...>>>>
-    static bool HookAfter(detail::NoReturnCallback<Args...> aCallback)
-    {
-        using Capture = detail::AfterCapture<F, R, Args...>;
-
-        if (Capture::hooked)
-            return false;
-
-        const auto address = F::RelocAddr();
-
-        if (!GetHookingDriver().HookAttach(address, &Capture::Handle, reinterpret_cast<void**>(&Capture::original)))
-            return false;
-
-        Capture::callback = aCallback;
-        Capture::hooked = true;
-
-        return true;
-    }
-
-    template<typename F, typename... Args,
-             typename R = typename F::return_type,
-             typename = std::enable_if_t<std::is_same_v<typename F::type, detail::OriginalFunc<R, Args...>>>>
-    static bool HookOnceAfter(detail::NoReturnCallback<Args...> aCallback)
-    {
-        using Capture = detail::AfterOnceCapture<F, R, Args...>;
-
-        if (Capture::hooked)
-            return false;
-
-        auto& driver = GetHookingDriver();
-        const auto address = F::RelocAddr();
-
-        if (!driver.HookAttach(address, &Capture::Handle, reinterpret_cast<void**>(&Capture::original)))
-            return false;
-
-        Capture::callback = aCallback;
-        Capture::driver = &driver;
-        Capture::hooked = true;
-
-        return true;
-    }
-
-    template<typename F>
-    static bool Unhook()
-    {
-        using Capture = detail::BaseCapture<F>;
-
-        if (!Capture::hooked)
-            return false;
-
-        if (!GetHookingDriver().HookDetach(F::RelocAddr()))
-            return false;
-
-        return true;
+        using Instance = Detail::HookInstance<TTarget>;
+        return Instance::Detach();
     }
 
     static HookingDriver& GetHookingDriver();

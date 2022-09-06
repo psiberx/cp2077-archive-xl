@@ -1,7 +1,13 @@
 #include "OwnerMutex.hpp"
 
+Core::OwnerMutex::OwnerMutex(std::string_view aName)
+    : m_aname(aName)
+    , m_mutex(nullptr)
+{
+}
+
 Core::OwnerMutex::OwnerMutex(std::wstring_view aName)
-    : m_name(aName)
+    : m_wname(aName)
     , m_mutex(nullptr)
 {
 }
@@ -13,7 +19,9 @@ Core::OwnerMutex::~OwnerMutex()
 
 bool Core::OwnerMutex::Obtain()
 {
-    const auto mutex = CreateMutexW(NULL, TRUE, m_name.data());
+    const auto mutex = !m_wname.empty()
+        ? CreateMutexW(NULL, TRUE, m_wname.data())
+        : CreateMutexA(NULL, TRUE, m_aname.data());
 
     if (!mutex)
         return false;
