@@ -5,7 +5,7 @@ from pathlib import Path
 # Defines patterns and output files
 def patterns():
     return [
-        Output(filename="src/App/Addresses.hpp", namespace="Reverse::Addresses", groups=[
+        Output(filename="src/App/Addresses.hpp", namespace="App::Addresses", groups=[
             Group(name="AppearanceChanger", functions=[
                 Item(name="ComputePlayerGarment",
                      pattern="48 89 5C 24 08 48 89 74 24 10 48 89 7C 24 18 4C 89 64 24 20 55 41 56 41 57 48 8D 6C 24 C0"),
@@ -25,7 +25,7 @@ def patterns():
             Group(name="Entity", functions=[
                 Item(name="GetComponents",
                      pattern="48 83 C1 70 E9",
-                     expected=9,
+                     expected=7,
                      index=1),
                 Item(name="ReassembleAppearance",
                      pattern="40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 88 48 81 EC 78 01 00 00 4C 8B EA 49 8B D9"),

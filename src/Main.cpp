@@ -84,8 +84,9 @@ BOOL APIENTRY DllMain(HMODULE aHandle, DWORD aReason, LPVOID)
 
             if (g_mutex->Obtain())
             {
-                Core::Hook::Before<GameMain>([aHandle]() {
-                    g_app = Core::MakeUnique<App::Application>(aHandle);
+                g_app = Core::MakeUnique<App::Application>(aHandle);
+
+                Core::Hook::Before<GameMain>(+[]() {
                     g_app->Bootstrap();
                 });
             }
