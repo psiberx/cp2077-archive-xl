@@ -5,7 +5,11 @@ from pathlib import Path
 # Defines patterns and output files
 def patterns():
     return [
-        Output(filename="src/App/Addresses.hpp", namespace="App::Addresses", groups=[
+        Output(filename="src/Red/Addresses.hpp", namespace="Red::Addresses", groups=[
+            Group(functions=[
+                Item(name="Main",
+                     pattern="40 53 48 81 EC ? ? ? ? FF 15 ? ? ? ? E8 ? ? ? ? E8 ? ? ? ?"),
+            ]),
             Group(name="AppearanceChanger", functions=[
                 Item(name="ComputePlayerGarment",
                      pattern="48 89 5C 24 08 48 89 74 24 10 48 89 7C 24 18 4C 89 64 24 20 55 41 56 41 57 48 8D 6C 24 C0"),
@@ -17,10 +21,6 @@ def patterns():
             Group(name="AppearanceResource", functions=[
                 Item(name="FindAppearanceDefinition",
                      pattern="48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 41 56 41 57 48 83 EC 20 48 8B F1 45 8B F9 48 81 C1 F0 00 00 00 49 8B D8 4C 8B F2"),
-            ]),
-            Group(name="Engine", functions=[
-                Item(name="Main",
-                     pattern="40 53 48 81 EC ? ? ? ? FF 15 ? ? ? ? E8 ? ? ? ? E8 ? ? ? ?"),
             ]),
             Group(name="Entity", functions=[
                 Item(name="GetComponents",

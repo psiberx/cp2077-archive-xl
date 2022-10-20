@@ -1,5 +1,5 @@
 #include "Module.hpp"
-#include "Engine/Scripting/RTTILocator.hpp"
+#include "Red/Entity.hpp"
 
 namespace
 {
@@ -51,8 +51,8 @@ bool App::PartsOverridesModule::Unload()
     return true;
 }
 
-void App::PartsOverridesModule::OnAddGarmentItem(uintptr_t, RED4ext::WeakHandle<RED4ext::ent::Entity>& aEntityWeak,
-                                                 GarmentItemAddRequest& aRequest)
+void App::PartsOverridesModule::OnAddGarmentItem(uintptr_t, Red::WeakHandle<Red::ent::Entity>& aEntityWeak,
+                                                 Red::GarmentItemAddRequest& aRequest)
 {
     if (auto entity = aEntityWeak.Lock())
     {
@@ -64,8 +64,8 @@ void App::PartsOverridesModule::OnAddGarmentItem(uintptr_t, RED4ext::WeakHandle<
     }
 }
 
-void App::PartsOverridesModule::OnOverrideGarmentItem(uintptr_t, RED4ext::WeakHandle<RED4ext::ent::Entity>& aEntityWeak,
-                                                      GarmentItemOverrideRequest& aRequest)
+void App::PartsOverridesModule::OnOverrideGarmentItem(uintptr_t, Red::WeakHandle<Red::ent::Entity>& aEntityWeak,
+                                                      Red::GarmentItemOverrideRequest& aRequest)
 {
     if (auto entity = aEntityWeak.Lock())
     {
@@ -77,8 +77,8 @@ void App::PartsOverridesModule::OnOverrideGarmentItem(uintptr_t, RED4ext::WeakHa
     }
 }
 
-void App::PartsOverridesModule::OnRemoveGarmentItem(uintptr_t, RED4ext::WeakHandle<RED4ext::ent::Entity>& aEntityWeak,
-                                                    GarmentItemRemoveRequest& aRequest)
+void App::PartsOverridesModule::OnRemoveGarmentItem(uintptr_t, Red::WeakHandle<Red::ent::Entity>& aEntityWeak,
+                                                    Red::GarmentItemRemoveRequest& aRequest)
 {
     if (auto entity = aEntityWeak.Lock())
     {
@@ -90,8 +90,8 @@ void App::PartsOverridesModule::OnRemoveGarmentItem(uintptr_t, RED4ext::WeakHand
     }
 }
 
-void App::PartsOverridesModule::OnComputeGarment(RED4ext::Handle<RED4ext::ent::Entity>& aEntity, uintptr_t,
-                                                 RED4ext::SharedPtr<GarmentComputeData>& aData, uintptr_t,
+void App::PartsOverridesModule::OnComputeGarment(Red::Handle<Red::ent::Entity>& aEntity, uintptr_t,
+                                                 Red::SharedPtr<Red::GarmentComputeData>& aData, uintptr_t,
                                                  uintptr_t, uintptr_t, bool)
 {
     if (auto& entityState = s_states->FindEntityState(aEntity))
@@ -101,7 +101,7 @@ void App::PartsOverridesModule::OnComputeGarment(RED4ext::Handle<RED4ext::ent::E
     }
 }
 
-void App::PartsOverridesModule::OnReassembleAppearance(RED4ext::ent::Entity* aEntity, uintptr_t, uintptr_t, uintptr_t,
+void App::PartsOverridesModule::OnReassembleAppearance(Red::ent::Entity* aEntity, uintptr_t, uintptr_t, uintptr_t,
                                                        uintptr_t, uintptr_t)
 {
     if (auto& entityState = s_states->FindEntityState(aEntity))
@@ -117,8 +117,8 @@ void App::PartsOverridesModule::OnGameDetach(uintptr_t)
     s_states->Reset();
 }
 
-void App::PartsOverridesModule::RegisterOverrides(Core::SharedPtr<EntityState>& aEntityState, ItemHash aHash,
-                                                  ItemAppearance& aApperance)
+void App::PartsOverridesModule::RegisterOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
+                                                  Red::Handle<Red::AppearanceDefinition>& aApperance)
 {
     for (const auto& partOverrides : aApperance->partsOverrides)
     {
@@ -137,13 +137,13 @@ void App::PartsOverridesModule::RegisterOverrides(Core::SharedPtr<EntityState>& 
     }
 }
 
-void App::PartsOverridesModule::UnregisterOverrides(Core::SharedPtr<EntityState>& aEntityState, ItemHash aHash)
+void App::PartsOverridesModule::UnregisterOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash)
 {
     aEntityState->RemoveOverrides(aHash);
 }
 
 void App::PartsOverridesModule::ApplyOverrides(Core::SharedPtr<EntityState>& aEntityState,
-                                               RED4ext::DynArray<RED4ext::Handle<RED4ext::ent::IComponent>>& aComponents,
+                                               Red::DynArray<Red::Handle<Red::ent::IComponent>>& aComponents,
                                                bool aVerbose)
 {
     auto index = 0;
@@ -166,5 +166,5 @@ void App::PartsOverridesModule::ApplyOverrides(Core::SharedPtr<EntityState>& aEn
 
 void App::PartsOverridesModule::ApplyOverrides(Core::SharedPtr<EntityState>& aEntityState, bool aVerbose)
 {
-    ApplyOverrides(aEntityState, Raw::Entity::GetComponents::Invoke(aEntityState->GetEntity()), aVerbose);
+    ApplyOverrides(aEntityState, Raw::Entity::GetComponents(aEntityState->GetEntity()), aVerbose);
 }

@@ -1,7 +1,7 @@
 set_xmakever("2.5.9")
 
 set_project("ArchiveXL")
-set_version("1.1.3")
+set_version("1.1.4")
 
 set_arch("x64")
 set_languages("cxx20", "cxx2a")
@@ -35,7 +35,7 @@ target("ArchiveXL")
     set_default(true)
     set_kind("shared")
     set_filename("ArchiveXL.dll")
-    set_pcxxheader("src/stdafx.hpp")
+    set_pcxxheader("src/pch.hpp")
     add_files("src/**.cpp", "lib/**.cpp")
     add_headerfiles("src/**.hpp", "lib/**.hpp")
     add_includedirs("src/", "lib/")

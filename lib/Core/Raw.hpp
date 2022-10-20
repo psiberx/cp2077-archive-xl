@@ -5,32 +5,37 @@ namespace Core
 class RawBase
 {
 public:
+    constexpr RawBase() = default;
+
     inline static uintptr_t GetImageBase()
     {
-        static const uintptr_t addr = reinterpret_cast<uintptr_t>(GetModuleHandleW(nullptr));
-        return addr;
+        static const auto base = reinterpret_cast<uintptr_t>(GetModuleHandleW(nullptr));
+        return base;
     }
 };
 
-template<uintptr_t A, typename F>
-struct RawFunc {};
+template<uintptr_t A, typename T>
+class RawFunc {};
 
 template<uintptr_t A, typename R, typename... Args>
-struct RawFunc<A, R (*)(Args...)> : private RawBase
+class RawFunc<A, R (*)(Args...)> : public RawBase
 {
-    using Callable = R (*)(Args...);
-    using ReturnType = R;
+public:
+    using Type = R (*)(Args...);
+    using Callable = Type;
 
     static constexpr uintptr_t offset = A;
 
-    inline operator Callable() const
-    {
-        return GetPtr();
-    }
+    constexpr RawFunc() = default;
 
     operator bool() const noexcept
     {
         return GetPtr() != nullptr;
+    }
+
+    [[nodiscard]] inline operator Callable() const
+    {
+        return GetPtr();
     }
 
     [[nodiscard]] inline Callable GetPtr() const noexcept
@@ -40,41 +45,71 @@ struct RawFunc<A, R (*)(Args...)> : private RawBase
 
     inline static uintptr_t GetAddress() noexcept
     {
-        static uintptr_t addr = offset ? offset + GetImageBase() : 0;
-        return addr;
+        if (!address)
+        {
+            ResetAddress();
+        }
+
+        return address;
     }
 
-    static R Invoke(Args... aArgs)
+    inline static void ResetAddress() noexcept
+    {
+        address = offset ? offset + GetImageBase() : 0;
+    }
+
+    inline static void SetAddress(uintptr_t aAddress) noexcept
+    {
+        address = aAddress;
+    }
+
+    inline static R Invoke(Args... aArgs)
     {
         return reinterpret_cast<Callable>(GetAddress())(std::forward<Args>(aArgs)...);
     }
+
+private:
+    inline static uintptr_t address = 0;
 };
 
 template<uintptr_t A, typename C, typename R, typename... Args>
-struct RawFunc<A, R (C::*)(Args...)> : RawFunc<A, R (*)(C*, Args...)>
+class RawFunc<A, R (C::*)(Args...)> : public RawFunc<A, R (*)(C*, Args...)>
 {
+public:
+    using Base = RawFunc<A, R (*)(C*, Args...)>;
+    using Base::Base;
 };
 
 template<uintptr_t A, typename T>
-struct RawPtr : private RawBase
+class RawPtr : public RawBase
 {
-    using Type = T;
+public:
+    using Type = std::conditional_t<std::is_pointer_v<T>, std::remove_pointer_t<T>, T>;
+    using Ptr = Type*;
 
     static constexpr uintptr_t offset = A;
+
+    constexpr RawPtr() = default;
+
+    operator bool() const noexcept
+    {
+        return GetPtr() != nullptr;
+    }
+
+    [[nodiscard]] inline operator T() const
+    {
+        return GetPtr();
+    }
 
     [[nodiscard]] inline T* operator->() const
     {
         return GetPtr();
     }
 
-    [[nodiscard]] inline operator T*() const
+    const RawPtr& operator=(T aRhs) const noexcept
     {
-        return GetPtr();
-    }
-
-    operator bool() const noexcept
-    {
-        return GetPtr() != nullptr;
+        *GetPtr() = aRhs;
+        return *this;
     }
 
     [[nodiscard]] inline T* GetPtr() const noexcept
@@ -88,7 +123,7 @@ struct RawPtr : private RawBase
         return addr;
     }
 
-    static T* Get()
+    inline static T* Get()
     {
         return reinterpret_cast<T*>(GetAddress());
     }

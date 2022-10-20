@@ -1,4 +1,5 @@
 #include "Module.hpp"
+#include "Red/InkSpawner.hpp"
 
 namespace
 {
@@ -25,11 +26,11 @@ bool App::InkSpawnerModule::Unload()
     return true;
 }
 
-void App::InkSpawnerModule::OnSpawnExternal(RED4ext::Handle<RED4ext::ink::WidgetLibraryItemInstance>&,
-                                            RED4ext::Handle<RED4ext::ink::Widget>&,
-                                            RED4ext::Handle<RED4ext::ink::WidgetLibraryResource>& aLocalLibrary,
-                                            RED4ext::ResourcePath aExternalLibraryPath,
-                                            RED4ext::CName)
+void App::InkSpawnerModule::OnSpawnExternal(Red::Handle<Red::ink::WidgetLibraryItemInstance>&,
+                                            Red::Handle<Red::ink::Widget>&,
+                                            Red::Handle<Red::ink::WidgetLibraryResource>& aLocalLibrary,
+                                            Red::ResourcePath aExternalLibraryPath,
+                                            Red::CName)
 {
     // Check if the external library is in the list and do nothing if it is
     for (const auto& externalLibrary : aLocalLibrary->externalLibraries)

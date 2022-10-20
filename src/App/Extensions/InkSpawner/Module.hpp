@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Raws.hpp"
-#include "App/Module/ModuleBase.hpp"
+#include "App/Extensions/ModuleBase.hpp"
 
 namespace App
 {
@@ -13,10 +12,10 @@ public:
     bool Unload() override;
 
 private:
-    static void OnSpawnExternal(RED4ext::Handle<RED4ext::ink::WidgetLibraryItemInstance>&,
-                                RED4ext::Handle<RED4ext::ink::Widget>&,
-                                RED4ext::Handle<RED4ext::ink::WidgetLibraryResource>& aLocalLibrary,
-                                RED4ext::ResourcePath aExternalLibraryPath,
-                                RED4ext::CName);
+    static void OnSpawnExternal(Red::Handle<Red::ink::WidgetLibraryItemInstance>&,
+                                Red::Handle<Red::ink::Widget>&,
+                                Red::Handle<Red::ink::WidgetLibraryResource>& aLocalLibrary,
+                                Red::ResourcePath aExternalLibraryPath,
+                                Red::CName);
 };
 }

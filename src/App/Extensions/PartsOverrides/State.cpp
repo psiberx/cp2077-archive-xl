@@ -1,5 +1,4 @@
 #include "State.hpp"
-#include "Raws.hpp"
 
 namespace
 {
@@ -7,7 +6,7 @@ Core::SharedPtr<App::EntityState> s_nullEntityState;
 Core::SharedPtr<App::ComponentState> s_nullComponentState;
 }
 
-Core::SharedPtr<App::EntityState>& App::OverrideStateManager::GetEntityState(RED4ext::ent::Entity* aEntity)
+Core::SharedPtr<App::EntityState>& App::OverrideStateManager::GetEntityState(Red::ent::Entity* aEntity)
 {
     if (!aEntity)
         return s_nullEntityState;
@@ -20,7 +19,7 @@ Core::SharedPtr<App::EntityState>& App::OverrideStateManager::GetEntityState(RED
     return it.value();
 }
 
-Core::SharedPtr<App::EntityState>& App::OverrideStateManager::FindEntityState(RED4ext::ent::Entity* aEntity)
+Core::SharedPtr<App::EntityState>& App::OverrideStateManager::FindEntityState(Red::ent::Entity* aEntity)
 {
     if (!aEntity)
         return s_nullEntityState;
@@ -38,7 +37,7 @@ void App::OverrideStateManager::Reset()
     m_entityStates.clear();
 }
 
-App::EntityState::EntityState(RED4ext::ent::Entity* aEntity) noexcept
+App::EntityState::EntityState(Red::ent::Entity* aEntity) noexcept
     : m_entity(aEntity)
     , m_prefixResolver(ComponentPrefixResolver::Get())
     , m_tagManager(OverrideTagManager::Get())
@@ -48,12 +47,12 @@ App::EntityState::EntityState(RED4ext::ent::Entity* aEntity) noexcept
     m_name.append(std::to_string(*reinterpret_cast<uint64_t*>(aEntity->unk40 + 8)));
 }
 
-Core::Map<RED4ext::CName, Core::SharedPtr<App::ComponentState>>& App::EntityState::GetComponentStates()
+Core::Map<Red::CName, Core::SharedPtr<App::ComponentState>>& App::EntityState::GetComponentStates()
 {
     return m_componentStates;
 }
 
-Core::SharedPtr<App::ComponentState>& App::EntityState::GetComponentState(const RED4ext::CName aComponentName)
+Core::SharedPtr<App::ComponentState>& App::EntityState::GetComponentState(const Red::CName aComponentName)
 {
     if (!aComponentName)
         return s_nullComponentState;
@@ -66,7 +65,7 @@ Core::SharedPtr<App::ComponentState>& App::EntityState::GetComponentState(const 
     return it.value();
 }
 
-Core::SharedPtr<App::ComponentState>& App::EntityState::FindComponentState(const RED4ext::CName aComponentName)
+Core::SharedPtr<App::ComponentState>& App::EntityState::FindComponentState(const Red::CName aComponentName)
 {
     if (!aComponentName)
         return s_nullComponentState;
@@ -84,12 +83,12 @@ const char* App::EntityState::GetName() const
     return m_name.c_str();
 }
 
-RED4ext::ent::Entity* App::EntityState::GetEntity() const
+Red::ent::Entity* App::EntityState::GetEntity() const
 {
     return m_entity;
 }
 
-void App::EntityState::AddOverride(uint64_t aHash, RED4ext::CName aComponentName, uint64_t aChunkMask)
+void App::EntityState::AddOverride(uint64_t aHash, Red::CName aComponentName, uint64_t aChunkMask)
 {
     if (auto& componentState = GetComponentState(aComponentName))
     {
@@ -97,7 +96,7 @@ void App::EntityState::AddOverride(uint64_t aHash, RED4ext::CName aComponentName
     }
 }
 
-void App::EntityState::AddOverrideTag(uint64_t aHash, RED4ext::CName aTag)
+void App::EntityState::AddOverrideTag(uint64_t aHash, Red::CName aTag)
 {
     for (auto& [componentName, chunkMask] : m_tagManager->GetOverrides(aTag))
     {
@@ -116,7 +115,7 @@ void App::EntityState::RemoveOverrides(uint64_t aHash)
     }
 }
 
-bool App::EntityState::ApplyOverrides(RED4ext::Handle<RED4ext::ent::IComponent>& aComponent)
+bool App::EntityState::ApplyOverrides(Red::Handle<Red::ent::IComponent>& aComponent)
 {
     auto& componentState = FindComponentState(aComponent->name);
     auto& prefixState = FindComponentState(m_prefixResolver->GetPrefix(aComponent->name));
@@ -151,7 +150,7 @@ uint64_t App::EntityState::GetOriginalChunkMask(ComponentWrapper& aComponent)
     return originalChunkMaskIt.value();
 }
 
-App::ComponentState::ComponentState(RED4ext::CName aName) noexcept
+App::ComponentState::ComponentState(Red::CName aName) noexcept
     : m_name(aName.ToString())
 {
 }

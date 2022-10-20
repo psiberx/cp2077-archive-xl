@@ -2,19 +2,19 @@
 
 #include "Core/Foundation/Feature.hpp"
 #include "Core/Logging/LoggingAgent.hpp"
-#include "Engine/Scripting/RTTIClass.hpp"
+#include "Red/Rtti/Class.hpp"
 
 namespace App
 {
-class Facade : public Engine::RTTIClass<Facade>
+class Facade : public Red::Rtti::Class<Facade>
 {
 public:
     static void Reload();
-    static RED4ext::CString GetVersion();
+    static Red::CString GetVersion();
 
 private:
     friend Descriptor;
     static void OnRegister(Descriptor* aType);
-    static void OnDescribe(Descriptor* aType, RED4ext::CRTTISystem* aRtti);
+    static void OnDescribe(Descriptor* aType, Red::CRTTISystem* aRtti);
 };
 }

@@ -24,13 +24,13 @@ public:
     bool HookAttach(uintptr_t aAddress, void* aCallback, void** aOriginal) override;
     bool HookDetach(uintptr_t aAddress) override;
 
-    auto WithLogging() noexcept
+    auto EnableLogging() noexcept
     {
         m_logging = true;
         return Defer(this);
     }
 
-    auto WithHooking() noexcept
+    auto EnableHooking() noexcept
     {
         m_hooking = true;
         return Defer(this);

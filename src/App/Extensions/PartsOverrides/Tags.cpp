@@ -71,7 +71,7 @@ App::OverrideTagManager::OverrideTagManager() noexcept
 {
 }
 
-App::OverrideTagDefinition& App::OverrideTagManager::GetOverrides(RED4ext::CName aTag)
+App::OverrideTagDefinition& App::OverrideTagManager::GetOverrides(Red::CName aTag)
 {
     static OverrideTagDefinition s_emptyDefinition;
 

@@ -1,18 +1,12 @@
 #include "Wrapper.hpp"
-#include "Engine/Scripting/RTTILocator.hpp"
-
-#include <RED4ext/Hashing/FNV1a.hpp>
-#include <RED4ext/Scripting/Natives/Generated/ent/MeshComponent.hpp>
-#include <RED4ext/Scripting/Natives/Generated/ent/MorphTargetSkinnedMeshComponent.hpp>
-#include <RED4ext/Scripting/Natives/Generated/ent/SkinnedClothComponent.hpp>
-#include <RED4ext/Scripting/Natives/Generated/ent/SkinnedMeshComponent.hpp>
+#include "Red/Rtti/Locator.hpp"
 
 namespace
 {
-Engine::RTTILocator s_MeshComponentRttiType{"entMeshComponent"};
-Engine::RTTILocator s_SkinnedMeshComponentRttiType{"entSkinnedMeshComponent"};
-Engine::RTTILocator s_SkinnedClothComponentRttiType{"entSkinnedClothComponent"};
-Engine::RTTILocator s_MorphTargetSkinnedMeshComponentRttiType{"entMorphTargetSkinnedMeshComponent"};
+Red::Rtti::ClassLocator<Red::ent::MeshComponent> s_MeshComponentRttiType;
+Red::Rtti::ClassLocator<Red::ent::SkinnedMeshComponent> s_SkinnedMeshComponentRttiType;
+Red::Rtti::ClassLocator<Red::ent::SkinnedClothComponent> s_SkinnedClothComponentRttiType;
+Red::Rtti::ClassLocator<Red::ent::MorphTargetSkinnedMeshComponent> s_MorphTargetSkinnedMeshComponentRttiType;
 
 template<class T>
 inline uint64_t GetComponentChunkMask(T* aComponent)
@@ -28,7 +22,7 @@ inline bool SetComponentChunkMask(T* aComponent, uint64_t aChunkMask)
 }
 }
 
-App::ComponentWrapper::ComponentWrapper(RED4ext::Handle<RED4ext::ent::IComponent>& aComponent)
+App::ComponentWrapper::ComponentWrapper(Red::Handle<Red::ent::IComponent>& aComponent)
     : m_component(aComponent)
     , m_type(ComponentType::Unsupported)
     , m_uniqueId(0)
@@ -63,13 +57,13 @@ uint64_t App::ComponentWrapper::GetChunkMask() const
     switch (m_type)
     {
     case ComponentType::MeshComponent:
-        return GetComponentChunkMask(m_component.GetPtr<RED4ext::ent::MeshComponent>());
+        return GetComponentChunkMask(m_component.GetPtr<Red::ent::MeshComponent>());
     case ComponentType::SkinnedMeshComponent:
-        return GetComponentChunkMask(m_component.GetPtr<RED4ext::ent::SkinnedMeshComponent>());
+        return GetComponentChunkMask(m_component.GetPtr<Red::ent::SkinnedMeshComponent>());
     case ComponentType::SkinnedClothComponent:
-        return GetComponentChunkMask(m_component.GetPtr<RED4ext::ent::SkinnedClothComponent>());
+        return GetComponentChunkMask(m_component.GetPtr<Red::ent::SkinnedClothComponent>());
     case ComponentType::MorphTargetSkinnedMeshComponent:
-        return GetComponentChunkMask(m_component.GetPtr<RED4ext::ent::MorphTargetSkinnedMeshComponent>());
+        return GetComponentChunkMask(m_component.GetPtr<Red::ent::MorphTargetSkinnedMeshComponent>());
     case ComponentType::Unsupported:
         break;
     }
@@ -82,13 +76,13 @@ bool App::ComponentWrapper::SetChunkMask(uint64_t aChunkMask) const
     switch (m_type)
     {
     case ComponentType::MeshComponent:
-        return SetComponentChunkMask(m_component.GetPtr<RED4ext::ent::MeshComponent>(), aChunkMask);
+        return SetComponentChunkMask(m_component.GetPtr<Red::ent::MeshComponent>(), aChunkMask);
     case ComponentType::SkinnedMeshComponent:
-        return SetComponentChunkMask(m_component.GetPtr<RED4ext::ent::SkinnedMeshComponent>(), aChunkMask);
+        return SetComponentChunkMask(m_component.GetPtr<Red::ent::SkinnedMeshComponent>(), aChunkMask);
     case ComponentType::SkinnedClothComponent:
-        return SetComponentChunkMask(m_component.GetPtr<RED4ext::ent::SkinnedClothComponent>(), aChunkMask);
+        return SetComponentChunkMask(m_component.GetPtr<Red::ent::SkinnedClothComponent>(), aChunkMask);
     case ComponentType::MorphTargetSkinnedMeshComponent:
-        return SetComponentChunkMask(m_component.GetPtr<RED4ext::ent::MorphTargetSkinnedMeshComponent>(), aChunkMask);
+        return SetComponentChunkMask(m_component.GetPtr<Red::ent::MorphTargetSkinnedMeshComponent>(), aChunkMask);
     case ComponentType::Unsupported:
         break;
     }
@@ -102,8 +96,8 @@ uint64_t App::ComponentWrapper::GetUniqueId()
     {
         // Component Name + Appearance Name + Appearance Resource Path
         m_uniqueId = m_component->name;
-        m_uniqueId = RED4ext::FNV1a64(m_component->unk48, sizeof(uint64_t), m_uniqueId);
-        m_uniqueId = RED4ext::FNV1a64(m_component->unk68, sizeof(uint64_t), m_uniqueId);
+        m_uniqueId = Red::FNV1a64(m_component->unk48, sizeof(uint64_t), m_uniqueId);
+        m_uniqueId = Red::FNV1a64(m_component->unk68, sizeof(uint64_t), m_uniqueId);
     }
 
     return m_uniqueId;

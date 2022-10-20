@@ -43,6 +43,18 @@ protected:
         return m_registered;
     }
 
+    template<typename T>
+    inline static Core::SharedPtr<T> Resolve()
+    {
+        return Container::Get<T>();
+    }
+
+    template<typename T>
+    inline static bool Resolvable()
+    {
+        return Container::Get<T>();
+    }
+
     virtual void OnRegistered(const Core::SharedPtr<R>& aRegistred) {}
 
 private:

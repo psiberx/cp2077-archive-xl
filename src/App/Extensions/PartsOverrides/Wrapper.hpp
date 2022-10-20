@@ -1,7 +1,5 @@
 #pragma once
 
-#include <RED4ext/Scripting/Natives/Generated/ent/IComponent.hpp>
-
 namespace App
 {
 enum class ComponentType
@@ -16,7 +14,7 @@ enum class ComponentType
 class ComponentWrapper
 {
 public:
-    ComponentWrapper(RED4ext::Handle<RED4ext::ent::IComponent>& aComponent);
+    ComponentWrapper(Red::Handle<Red::ent::IComponent>& aComponent);
 
     [[nodiscard]] bool IsSupported() const;
     [[nodiscard]] uint64_t GetUniqueId();
@@ -24,7 +22,7 @@ public:
     bool SetChunkMask(uint64_t aChunkMask) const;
 
 private:
-    RED4ext::Handle<RED4ext::ent::IComponent>& m_component;
+    Red::Handle<Red::ent::IComponent>& m_component;
     ComponentType m_type;
     uint64_t m_uniqueId;
 };

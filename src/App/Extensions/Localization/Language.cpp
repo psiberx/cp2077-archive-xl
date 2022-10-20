@@ -1,6 +1,6 @@
 #include "Language.hpp"
 
-bool App::Language::IsKnown(RED4ext::CName aLanguage)
+bool App::Language::IsKnown(Red::CName aLanguage)
 {
     switch (aLanguage)
     {
@@ -28,9 +28,9 @@ bool App::Language::IsKnown(RED4ext::CName aLanguage)
     }
 }
 
-RED4ext::CName App::Language::ResolveFromResource(RED4ext::ResourcePath aPath)
+Red::CName App::Language::ResolveFromResource(Red::ResourcePath aPath)
 {
-    static Core::Map<RED4ext::ResourcePath, RED4ext::CName> s_codes {
+    static Core::Map<Red::ResourcePath, Red::CName> s_codes {
         { R"(base\localization\ar-ar\onscreens\onscreens.json)", "ar-ar" },
         { R"(base\localization\cz-cz\onscreens\onscreens.json)", "cz-cz" },
         { R"(base\localization\db-db\onscreens\onscreens.json)", "db-db" },

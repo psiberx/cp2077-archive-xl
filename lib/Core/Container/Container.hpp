@@ -42,16 +42,4 @@ private:
         inline static Core::WeakPtr<T> s_instance;
     };
 };
-
-template<typename T>
-inline Core::SharedPtr<T> Resolve()
-{
-    return Container::Get<T>();
-}
-
-template<typename T>
-inline bool Resolvable()
-{
-    return Container::Get<T>();
-}
 }

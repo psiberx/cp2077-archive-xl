@@ -1,6 +1,6 @@
 #pragma once
 
-#include "App/Module/ModuleBase.hpp"
+#include "App/Extensions/ModuleBase.hpp"
 
 namespace App
 {
@@ -11,8 +11,8 @@ struct LocalizationUnit : ConfigurableUnit
     bool IsDefined() override;
     void LoadYAML(const YAML::Node& aNode) override;
 
-    RED4ext::CName fallback;
-    Core::Map<RED4ext::CName, Core::Vector<std::string>> onscreens;
-    Core::Map<RED4ext::CName, Core::Vector<std::string>> subtitles;
+    Red::CName fallback;
+    Core::Map<Red::CName, Core::Vector<std::string>> onscreens;
+    Core::Map<Red::CName, Core::Vector<std::string>> subtitles;
 };
 }

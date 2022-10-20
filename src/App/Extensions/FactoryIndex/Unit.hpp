@@ -1,6 +1,6 @@
 #pragma once
 
-#include "App/Module/ModuleBase.hpp"
+#include "App/Extensions/ModuleBase.hpp"
 
 namespace App
 {

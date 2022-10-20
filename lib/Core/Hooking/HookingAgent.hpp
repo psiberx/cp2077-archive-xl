@@ -10,32 +10,32 @@ class HookingAgent
 {
 protected:
     template<typename TTarget, typename TCallback, HookFlow TFlow = HookFlow::Original, HookRun TRun = HookRun::Default>
-    requires Detail::HookFlowTraits<TFlow, TTarget, TCallback>::IsCompatibleNotMember
+    requires Detail::HookFlowTraits<TFlow, TTarget, TCallback>::IsCompatibleNonMember
     inline static bool Hook(TCallback&& aCallback, typename TTarget::Callable* aOriginal = nullptr)
     {
         using Wrapper = Detail::HookWrapper<TCallback>;
         using Handler = Detail::HookHandler<TTarget, Wrapper, TFlow, TRun>;
         return Handler::Attach(HookingDriver::GetDefault(), Wrapper(std::move(aCallback)), aOriginal);
     }
-    
+
     template<typename TTarget, typename TCallback, HookRun TRun = HookRun::Default>
-    requires Detail::HookFlowTraits<HookFlow::Before, TTarget, TCallback>::IsCompatibleNotMember
+    requires Detail::HookFlowTraits<HookFlow::Before, TTarget, TCallback>::IsCompatibleNonMember
     inline static bool HookBefore(TCallback&& aCallback)
     {
         using Wrapper = Detail::HookWrapper<TCallback>;
         using Handler = Detail::HookHandler<TTarget, Wrapper, HookFlow::Before, TRun>;
         return Handler::Attach(HookingDriver::GetDefault(), Wrapper(std::move(aCallback)));
     }
-    
+
     template<typename TTarget, typename TCallback>
-    requires Detail::HookFlowTraits<HookFlow::Before, TTarget, TCallback>::IsCompatibleNotMember
-    inline static bool HookBeforeOnce(TCallback&& aCallback)
+    requires Detail::HookFlowTraits<HookFlow::Before, TTarget, TCallback>::IsCompatibleNonMember
+    inline static bool HookOnceBefore(TCallback&& aCallback)
     {
         return HookBefore<TTarget, TCallback, HookRun::Once>(std::move(aCallback));
     }
     
     template<typename TTarget, typename TCallback, HookRun TRun = HookRun::Default>
-    requires Detail::HookFlowTraits<HookFlow::After, TTarget, TCallback>::IsCompatibleNotMember
+    requires Detail::HookFlowTraits<HookFlow::After, TTarget, TCallback>::IsCompatibleNonMember
     inline static bool HookAfter(TCallback&& aCallback)
     {
         using Wrapper = Detail::HookWrapper<TCallback>;
@@ -44,14 +44,14 @@ protected:
     }
     
     template<typename TTarget, typename TCallback>
-    requires Detail::HookFlowTraits<HookFlow::After, TTarget, TCallback>::IsCompatibleNotMember
-    inline static bool HookAfterOnce(TCallback&& aCallback)
+    requires Detail::HookFlowTraits<HookFlow::After, TTarget, TCallback>::IsCompatibleNonMember
+    inline static bool HookOnceAfter(TCallback&& aCallback)
     {
         return HookAfter<TTarget, TCallback, HookRun::Once>(std::move(aCallback));
     }
     
     template<typename TTarget, typename TCallback, HookRun TRun = HookRun::Default>
-    requires Detail::HookFlowTraits<HookFlow::Wrap, TTarget, TCallback>::IsCompatibleNotMember
+    requires Detail::HookFlowTraits<HookFlow::Wrap, TTarget, TCallback>::IsCompatibleNonMember
     inline static bool HookWrap(TCallback&& aCallback)
     {
         using Wrapper = Detail::HookWrapper<TCallback>;
@@ -60,7 +60,7 @@ protected:
     }
     
     template<typename TTarget, typename TCallback>
-    requires Detail::HookFlowTraits<HookFlow::Wrap, TTarget, TCallback>::IsCompatibleNotMember
+    requires Detail::HookFlowTraits<HookFlow::Wrap, TTarget, TCallback>::IsCompatibleNonMember
     inline static bool HookWrapOnce(TCallback&& aCallback)
     {
         return HookWrap<TTarget, TCallback, HookRun::Once>(std::move(aCallback));
@@ -86,7 +86,7 @@ protected:
     
     template<typename TTarget, typename TCallback>
     requires Detail::HookFlowTraits<HookFlow::Before, TTarget, TCallback>::IsCompatibleMember
-    inline bool HookBeforeOnce(const TCallback& aCallback)
+    inline bool HookOnceBefore(const TCallback& aCallback)
     {
         return HookBefore<TTarget, TCallback, HookRun::Once>(aCallback);
     }
@@ -102,7 +102,7 @@ protected:
     
     template<typename TTarget, typename TCallback>
     requires Detail::HookFlowTraits<HookFlow::After, TTarget, TCallback>::IsCompatibleMember
-    inline bool HookAfterOnce(const TCallback& aCallback)
+    inline bool HookOnceAfter(const TCallback& aCallback)
     {
         return HookAfter<TTarget, TCallback, HookRun::Once>(aCallback);
     }
@@ -123,11 +123,115 @@ protected:
         return HookWrap<TTarget, TCallback, HookRun::Once>(aCallback);
     }
 
-    template<class TTarget>
+    template<typename TTarget>
     inline static bool Unhook()
     {
         using Instance = Detail::HookInstance<TTarget>;
         return Instance::Detach();
+    }
+
+    template<RawFunc TTarget, typename TCallback, HookFlow TFlow = HookFlow::Original, HookRun TRun = HookRun::Default>
+    requires Detail::HookFlowTraits<TFlow, decltype(TTarget), TCallback>::IsCompatibleNonMember
+    inline static bool Hook(TCallback&& aCallback, typename decltype(TTarget)::Callable* aOriginal = nullptr)
+    {
+        return Hook<decltype(TTarget), TCallback, TFlow, TRun>(std::move(aCallback), aOriginal);
+    }
+
+    template<RawFunc TTarget, typename TCallback, HookRun TRun = HookRun::Default>
+    requires Detail::HookFlowTraits<HookFlow::Before, decltype(TTarget), TCallback>::IsCompatibleNonMember
+    inline static bool HookBefore(TCallback&& aCallback)
+    {
+        return HookBefore<decltype(TTarget), TCallback, TRun>(std::move(aCallback));
+    }
+
+    template<RawFunc TTarget, typename TCallback>
+    requires Detail::HookFlowTraits<HookFlow::Before, decltype(TTarget), TCallback>::IsCompatibleNonMember
+    inline static bool HookOnceBefore(TCallback&& aCallback)
+    {
+        return HookBefore<decltype(TTarget), TCallback, HookRun::Once>(std::move(aCallback));
+    }
+
+    template<RawFunc TTarget, typename TCallback, HookRun TRun = HookRun::Default>
+    requires Detail::HookFlowTraits<HookFlow::After, decltype(TTarget), TCallback>::IsCompatibleNonMember
+    inline static bool HookAfter(TCallback&& aCallback)
+    {
+        return HookAfter<decltype(TTarget), TCallback, TRun>(std::move(aCallback));
+    }
+
+    template<RawFunc TTarget, typename TCallback>
+    requires Detail::HookFlowTraits<HookFlow::After, decltype(TTarget), TCallback>::IsCompatibleNonMember
+    inline static bool HookOnceAfter(TCallback&& aCallback)
+    {
+        return HookAfter<decltype(TTarget), TCallback, HookRun::Once>(std::move(aCallback));
+    }
+
+    template<RawFunc TTarget, typename TCallback, HookRun TRun = HookRun::Default>
+    requires Detail::HookFlowTraits<HookFlow::Wrap, decltype(TTarget), TCallback>::IsCompatibleNonMember
+    inline static bool HookWrap(TCallback&& aCallback)
+    {
+        return HookWrap<decltype(TTarget), TCallback, TRun>(std::move(aCallback));
+    }
+
+    template<RawFunc TTarget, typename TCallback>
+    requires Detail::HookFlowTraits<HookFlow::Wrap, decltype(TTarget), TCallback>::IsCompatibleNonMember
+    inline static bool HookWrapOnce(TCallback&& aCallback)
+    {
+        return HookWrap<decltype(TTarget), TCallback, HookRun::Once>(std::move(aCallback));
+    }
+
+    template<RawFunc TTarget, typename TCallback, HookFlow TFlow = HookFlow::Original, HookRun TRun = HookRun::Default>
+    requires Detail::HookFlowTraits<TFlow, decltype(TTarget), TCallback>::IsCompatibleMember
+    inline bool Hook(const TCallback& aCallback, typename decltype(TTarget)::Callable* aOriginal = nullptr)
+    {
+        return Hook<decltype(TTarget), TCallback, TFlow, TRun>(aCallback, aOriginal);
+    }
+
+    template<RawFunc TTarget, typename TCallback, HookRun TRun = HookRun::Default>
+    requires Detail::HookFlowTraits<HookFlow::Before, decltype(TTarget), TCallback>::IsCompatibleMember
+    inline bool HookBefore(const TCallback& aCallback)
+    {
+        return HookBefore<decltype(TTarget), TCallback, TRun>(aCallback);
+    }
+
+    template<RawFunc TTarget, typename TCallback>
+    requires Detail::HookFlowTraits<HookFlow::Before, decltype(TTarget), TCallback>::IsCompatibleMember
+    inline bool HookOnceBefore(const TCallback& aCallback)
+    {
+        return HookBefore<decltype(TTarget), TCallback, HookRun::Once>(aCallback);
+    }
+
+    template<RawFunc TTarget, typename TCallback, HookRun TRun = HookRun::Default>
+    requires Detail::HookFlowTraits<HookFlow::After, decltype(TTarget), TCallback>::IsCompatibleMember
+    inline bool HookAfter(const TCallback& aCallback)
+    {
+        return HookAfter<decltype(TTarget), TCallback, TRun>(aCallback);
+    }
+
+    template<RawFunc TTarget, typename TCallback>
+    requires Detail::HookFlowTraits<HookFlow::After, decltype(TTarget), TCallback>::IsCompatibleMember
+    inline bool HookOnceAfter(const TCallback& aCallback)
+    {
+        return HookAfter<decltype(TTarget), TCallback, HookRun::Once>(aCallback);
+    }
+
+    template<RawFunc TTarget, typename TCallback, HookRun TRun = HookRun::Default>
+    requires Detail::HookFlowTraits<HookFlow::Wrap, decltype(TTarget), TCallback>::IsCompatibleMember
+    inline bool HookWrap(const TCallback& aCallback)
+    {
+        return HookWrap<decltype(TTarget), TCallback, TRun>(aCallback);
+    }
+
+    template<RawFunc TTarget, typename TCallback>
+    requires Detail::HookFlowTraits<HookFlow::Wrap, decltype(TTarget), TCallback>::IsCompatibleMember
+    inline bool HookWrapOnce(const TCallback& aCallback)
+    {
+        return HookWrap<decltype(TTarget), TCallback, HookRun::Once>(aCallback);
+    }
+
+    template<RawFunc TTarget>
+    inline static bool Unhook()
+    {
+        return Unhook<decltype(TTarget)>();
     }
 
     static HookingDriver& GetHookingDriver();

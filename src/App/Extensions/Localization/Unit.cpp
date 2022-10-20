@@ -34,7 +34,7 @@ void App::LocalizationUnit::LoadYAML(const YAML::Node& aNode)
             for (const auto& it : onscreensNode)
             {
                 const auto& key = it.first.Scalar();
-                const auto language = RED4ext::CName(key.c_str());
+                const auto language = Red::CName(key.c_str());
 
                 if (!Language::IsKnown(language))
                 {

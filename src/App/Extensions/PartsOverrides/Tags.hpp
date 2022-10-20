@@ -27,18 +27,18 @@ struct ChunkMask
     uint64_t mask;
 };
 
-using OverrideTagDefinition = Core::Map<RED4ext::CName, ChunkMask>;
+using OverrideTagDefinition = Core::Map<Red::CName, ChunkMask>;
 
 class OverrideTagManager
 {
 public:
     OverrideTagManager() noexcept;
 
-    [[nodiscard]] OverrideTagDefinition& GetOverrides(RED4ext::CName aTag);
+    [[nodiscard]] OverrideTagDefinition& GetOverrides(Red::CName aTag);
 
     [[nodiscard]] static Core::SharedPtr<OverrideTagManager>& Get();
 
 private:
-    Core::Map<RED4ext::CName, OverrideTagDefinition> m_definitions;
+    Core::Map<Red::CName, OverrideTagDefinition> m_definitions;
 };
 }

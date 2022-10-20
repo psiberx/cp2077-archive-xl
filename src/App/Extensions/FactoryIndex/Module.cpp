@@ -1,9 +1,10 @@
 #include "Module.hpp"
+#include "Red/FactoryIndex.hpp"
 
 namespace
 {
 constexpr auto ModuleName = "FactoryIndex";
-constexpr auto LastFactory = RED4ext::ResourcePath(R"(base\gameplay\factories\vehicles\vehicles.csv)");
+constexpr auto LastFactory = Red::ResourcePath(R"(base\gameplay\factories\vehicles\vehicles.csv)");
 }
 
 std::string_view App::FactoryIndexModule::GetName()
@@ -13,7 +14,7 @@ std::string_view App::FactoryIndexModule::GetName()
 
 bool App::FactoryIndexModule::Load()
 {
-    if (!Hook<Raw::LoadFactoryAsync>(&FactoryIndexModule::OnLoadFactoryAsync, &FactoryIndexModule::LoadFactoryAsync))
+    if (!HookAfter<Raw::FactoryIndex::LoadFactoryAsync>(&FactoryIndexModule::OnLoadFactoryAsync))
         throw std::runtime_error("Failed to hook [FactoryIndex::LoadFactoryAsync].");
 
     return true;
@@ -21,15 +22,13 @@ bool App::FactoryIndexModule::Load()
 
 bool App::FactoryIndexModule::Unload()
 {
-    Unhook<Raw::LoadFactoryAsync>();
+    Unhook<Raw::FactoryIndex::LoadFactoryAsync>();
 
     return true;
 }
 
-void App::FactoryIndexModule::OnLoadFactoryAsync(uintptr_t aIndex, RED4ext::ResourcePath aPath, uintptr_t aContext)
+void App::FactoryIndexModule::OnLoadFactoryAsync(uintptr_t aIndex, Red::ResourcePath aPath, uintptr_t aContext)
 {
-    LoadFactoryAsync(aIndex, aPath, aContext);
-
     if (aPath == LastFactory)
     {
         LogInfo("|{}| The factory index is initializing...", ModuleName);
@@ -44,9 +43,8 @@ void App::FactoryIndexModule::OnLoadFactoryAsync(uintptr_t aIndex, RED4ext::Reso
                 {
                     LogInfo("|{}| Adding factory [{}]...", ModuleName, path);
 
-                    LoadFactoryAsync(aIndex, path.c_str(), aContext);
-
                     // TODO: Check if factory resource exists...
+                    Raw::FactoryIndex::LoadFactoryAsync(aIndex, path.c_str(), aContext);
                 }
             }
 

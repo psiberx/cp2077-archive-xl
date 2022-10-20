@@ -1,9 +1,6 @@
 #include "Prefix.hpp"
 
-#include <RED4ext/CNamePool.hpp>
-#include <RED4ext/Hashing/FNV1a.hpp>
-
-RED4ext::CName App::ComponentPrefixResolver::GetPrefix(RED4ext::CName aComponentName)
+Red::CName App::ComponentPrefixResolver::GetPrefix(Red::CName aComponentName)
 {
     if (!aComponentName)
         return {};
@@ -21,7 +18,7 @@ RED4ext::CName App::ComponentPrefixResolver::GetPrefix(RED4ext::CName aComponent
 
         uint64_t prefixHash = 0;
         if (prefixEnd < prefixMaxLen && nameStr[prefixEnd] == '_')
-            prefixHash = RED4ext::CNamePool::Add(std::string().append(nameStr, prefixEnd + 1).c_str());
+            prefixHash = Red::CNamePool::Add(std::string().append(nameStr, prefixEnd + 1).c_str());
 
         it = m_resolved.emplace(aComponentName, prefixHash).first;
     }

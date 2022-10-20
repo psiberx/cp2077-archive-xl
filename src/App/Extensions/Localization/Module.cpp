@@ -1,5 +1,6 @@
 #include "Module.hpp"
-#include "Language.hpp"
+#include "App/Extensions/Localization/Language.hpp"
+#include "Red/Localization.hpp"
 
 namespace
 {
@@ -13,7 +14,7 @@ std::string_view App::LocalizationModule::GetName()
 
 bool App::LocalizationModule::Load()
 {
-    if (!Hook<Raw::LoadOnScreens>(&LocalizationModule::OnLoadOnScreens, &LocalizationModule::LoadOnScreens))
+    if (!HookAfter<Raw::Localization::LoadOnScreens>(&LocalizationModule::OnLoadOnScreens))
         throw std::runtime_error("Failed to hook [Localization::LoadOnScreens].");
 
     return true;
@@ -21,15 +22,14 @@ bool App::LocalizationModule::Load()
 
 bool App::LocalizationModule::Unload()
 {
-    Unhook<Raw::LoadOnScreens>();
+    Unhook<Raw::Localization::LoadOnScreens>();
 
     return true;
 }
 
-uint64_t App::LocalizationModule::OnLoadOnScreens(RED4ext::Handle<OnScreenEntries>* aOnScreens,
-                                                  RED4ext::ResourcePath aPath)
+void App::LocalizationModule::OnLoadOnScreens(Red::Handle<OnScreenEntries>& aOnScreens,
+                                              Red::ResourcePath aPath)
 {
-    auto result = LoadOnScreens(aOnScreens, aPath);
     auto language = Language::ResolveFromResource(aPath);
 
     LogInfo("|{}| The localization system is initializing for the language [{}]...", ModuleName, language.ToString());
@@ -37,7 +37,7 @@ uint64_t App::LocalizationModule::OnLoadOnScreens(RED4ext::Handle<OnScreenEntrie
     if (!m_units.empty())
     {
         auto successAll = true;
-        auto& entryList = (*aOnScreens)->entries;
+        auto& entryList = aOnScreens->entries;
         auto originalCount = entryList.size;
         auto originalMaxKey = (entryList.End() - 1)->primaryKey;
         auto usedKeyMap = OnScreenEntryMap();
@@ -69,16 +69,14 @@ uint64_t App::LocalizationModule::OnLoadOnScreens(RED4ext::Handle<OnScreenEntrie
     {
         LogInfo("|{}| No localization entries to merge.", ModuleName);
     }
-
-    return result;
 }
 
 bool App::LocalizationModule::AppendEntries(const std::string& aPath, OnScreenEntryList& aFinalList,
                                             OnScreenEntryMap& aUsedKeyMap, uint32_t aOriginalCount,
                                             uint64_t aOriginalMaxKey)
 {
-    RED4ext::Handle<OnScreenEntries> resource;
-    LoadOnScreens(&resource, aPath.c_str());
+    Red::Handle<OnScreenEntries> resource;
+    Raw::Localization::LoadOnScreens(resource, aPath.c_str());
 
     if (!resource.instance)
     {
@@ -104,7 +102,7 @@ bool App::LocalizationModule::AppendEntries(const std::string& aPath, OnScreenEn
                 continue;
             }
 
-            newEntry.primaryKey = RED4ext::FNV1a64(newEntry.secondaryKey.c_str());
+            newEntry.primaryKey = Red::FNV1a64(newEntry.secondaryKey.c_str());
         }
 
         const auto& existingIt = aUsedKeyMap.find(newEntry.primaryKey);
@@ -113,7 +111,7 @@ bool App::LocalizationModule::AppendEntries(const std::string& aPath, OnScreenEn
         {
             if (newEntry.primaryKey <= aOriginalMaxKey)
             {
-                auto* originalEntry = FindEntry(newEntry, aFinalList, aOriginalCount);
+                auto* originalEntry = FindSameEntry(newEntry, aFinalList, aOriginalCount);
                 if (originalEntry)
                 {
                     *originalEntry = newEntry;
@@ -143,7 +141,8 @@ bool App::LocalizationModule::AppendEntries(const std::string& aPath, OnScreenEn
     return success;
 }
 
-App::OnScreenEntry* App::LocalizationModule::FindEntry(OnScreenEntry& aEntry, OnScreenEntryList& aList, uint32_t aCount)
+App::OnScreenEntry* App::LocalizationModule::FindSameEntry(OnScreenEntry& aEntry, OnScreenEntryList& aList,
+                                                           uint32_t aCount)
 {
     auto end = aList.Begin() + aCount;
     auto it = std::lower_bound(aList.Begin(), end, aEntry,

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "App/Module/ModuleLoader.hpp"
+#include "App/Extensions/ModuleLoader.hpp"
 #include "Core/Foundation/Feature.hpp"
 #include "Core/Logging/LoggingAgent.hpp"
 

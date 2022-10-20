@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Raws.hpp"
-#include "Unit.hpp"
-#include "App/Module/ModuleBase.hpp"
+#include "App/Extensions/ModuleBase.hpp"
+#include "App/Extensions/FactoryIndex/Unit.hpp"
 
 namespace App
 {
@@ -14,8 +13,6 @@ public:
     bool Unload() override;
 
 private:
-    void OnLoadFactoryAsync(uintptr_t aIndex, RED4ext::ResourcePath aPath, uintptr_t aContext);
-
-    inline static Raw::LoadFactoryAsync::Callable LoadFactoryAsync;
+    void OnLoadFactoryAsync(uintptr_t aIndex, Red::ResourcePath aPath, uintptr_t aContext);
 };
 }

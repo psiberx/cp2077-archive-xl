@@ -117,7 +117,7 @@ struct HookFlowTraits
                                           || (TFlow == HookFlow::Wrap && IsWrapCompatible);
 
     static constexpr bool IsCompatibleMember = IsCompatible && std::is_member_pointer_v<TCallback>;
-    static constexpr bool IsCompatibleNotMember = IsCompatible && !std::is_member_pointer_v<TCallback>;
+    static constexpr bool IsCompatibleNonMember = IsCompatible && !std::is_member_pointer_v<TCallback>;
 };
 
 template<typename TCallback>
@@ -212,6 +212,13 @@ class HookWrapper<TCallback> : public HookWrapper<decltype(&TCallback::operator(
     using Fallback::Fallback;
 };
 
+template<typename T>
+concept CanOverrideAddress = requires(T, uintptr_t A)
+{
+    T::SetAddress(A);
+    T::ResetAddress();
+};
+
 template<typename TRaw>
 class HookInstance
 {
@@ -220,10 +227,8 @@ public:
     using OriginalFunc = typename Raw::Callable;
     using HandleFunc = OriginalFunc;
     using DisposeFunc = void(*)();
-    using SuccessFunc = void(*)(OriginalFunc);
 
-    inline static bool Attach(HookingDriver& aDriver, HandleFunc aHandler, DisposeFunc aDisposer,
-                              SuccessFunc aInitializer = nullptr)
+    inline static bool Attach(HookingDriver& aDriver, HandleFunc aHandler, DisposeFunc aDisposer)
     {
         if (s_attached)
             return false;
@@ -231,7 +236,9 @@ public:
         s_driver = &aDriver;
         s_handler = aHandler;
         s_disposer = aDisposer;
-        s_attached = s_driver->HookAttach(Raw::GetAddress(),
+        s_address = Raw::GetAddress();
+
+        s_attached = s_driver->HookAttach(s_address,
             reinterpret_cast<void*>(s_handler),
             reinterpret_cast<void**>(&s_original));
 
@@ -243,8 +250,10 @@ public:
             return false;
         }
 
-        if (aInitializer)
-            aInitializer(s_original);
+        if constexpr (CanOverrideAddress<TRaw>)
+        {
+            TRaw::SetAddress(reinterpret_cast<uintptr_t>(s_original));
+        }
 
         return true;
     }
@@ -257,7 +266,7 @@ public:
         if (aHandler && s_handler != aHandler)
             return false;
 
-        s_attached = !s_driver->HookDetach(Raw::GetAddress());
+        s_attached = !s_driver->HookDetach(s_address);
 
         if (s_attached)
             return false;
@@ -269,6 +278,12 @@ public:
         s_disposer = nullptr;
         s_original = nullptr;
         s_driver = nullptr;
+        s_address = 0;
+
+        if constexpr (CanOverrideAddress<TRaw>)
+        {
+            TRaw::ResetAddress();
+        }
 
         return true;
     }
@@ -288,6 +303,7 @@ private:
     inline static DisposeFunc s_disposer = nullptr;
     inline static OriginalFunc s_original = nullptr;
     inline static HookingDriver* s_driver = nullptr;
+    inline static uintptr_t s_address = 0;
     inline static bool s_attached = false;
 };
 
@@ -302,7 +318,7 @@ class HookHandler<TRaw<TOffset, TRet(*)(TArgs...)>, TWrapper, TFlow, TRun>
 {
 public:
     using Raw = TRaw<TOffset, TRet(*)(TArgs...)>;
-    using OriginalFunc = typename Raw::Callable;
+    using Original = typename Raw::Callable;
     using Wrapper = TWrapper;
     using Traits = HookTraits<Raw, typename Wrapper::Callback>;
 
@@ -347,13 +363,13 @@ public:
             {
                 if constexpr (Traits::IsFullWrapper)
                 {
-                    s_callback(s_original, std::forward<TArgs>(aArgs)...);
+                    s_callback(std::forward<Original>(s_original), std::forward<TArgs>(aArgs)...);
                 }
             }
 
             if constexpr (TRun == HookRun::Once)
             {
-                HookInstance<Raw>::Detach();
+                Detach();
             }
 
             return;
@@ -415,20 +431,20 @@ public:
             {
                 if constexpr (Traits::IsFullWrapper)
                 {
-                    ret = s_callback(s_original, std::forward<TArgs>(aArgs)...);
+                    ret = s_callback(std::forward<Original>(s_original), std::forward<TArgs>(aArgs)...);
                 }
             }
 
             if constexpr (TRun == HookRun::Once)
             {
-                HookInstance<Raw>::Detach();
+                Detach();
             }
 
             return ret;
         }
     }
 
-    inline static bool Attach(HookingDriver& aDriver, TWrapper aCallback, OriginalFunc* aOriginal = nullptr)
+    inline static bool Attach(HookingDriver& aDriver, TWrapper aCallback, Original* aOriginal = nullptr)
     {
         using Instance = HookInstance<Raw>;
 
@@ -462,6 +478,6 @@ public:
 
 private:
     static inline Wrapper s_callback;
-    static inline OriginalFunc s_original;
+    static inline Original s_original;
 };
 }
