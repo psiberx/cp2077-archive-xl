@@ -17,7 +17,7 @@ public:
         auto module = Core::MakeShared<T>(std::forward<Args>(aArgs)...);
 
         if constexpr (std::is_base_of_v<ConfigurableModule, T>)
-            m_configurable.emplace_back(module);
+            m_configurables.emplace_back(module);
 
         m_modules.emplace_back(module);
     }
@@ -27,13 +27,13 @@ public:
     void Unload();
 
 private:
-    bool ConfigDirExists();
-    bool ReadConfig(const std::filesystem::path& aPath);
+    bool ExtraConfigDirExists();
+    bool ReadConfig(const std::filesystem::path& aPath, const std::filesystem::path& aDir);
 
     Core::Vector<Core::SharedPtr<Module>> m_modules;
-    Core::Vector<Core::SharedPtr<ConfigurableModule>> m_configurable;
-    std::filesystem::path m_configDir;
-    std::wstring m_configExt;
+    Core::Vector<Core::SharedPtr<ConfigurableModule>> m_configurables;
+    std::filesystem::path m_extraConfigDir;
+    std::wstring m_customConfigExt;
     bool m_loaded;
 };
 }

@@ -1,45 +1,67 @@
 #include "ModuleLoader.hpp"
 
 App::ModuleLoader::ModuleLoader(std::filesystem::path aConfigDir, std::wstring aConfigExt)
-    : m_configDir(std::move(aConfigDir))
-    , m_configExt(std::move(aConfigExt))
+    : m_extraConfigDir(std::move(aConfigDir))
+    , m_customConfigExt(std::move(aConfigExt))
     , m_loaded(false)
 {
 }
 
-bool App::ModuleLoader::ConfigDirExists()
+bool App::ModuleLoader::ExtraConfigDirExists()
 {
     std::error_code error;
 
-    return std::filesystem::exists(m_configDir, error);
+    return !m_extraConfigDir.empty() && std::filesystem::exists(m_extraConfigDir, error);
 }
 
 void App::ModuleLoader::Configure()
 {
-    if (m_configurable.empty() || !ConfigDirExists())
+    if (m_configurables.empty())
         return;
 
     try
     {
         LogInfo("Scanning for archive extensions...");
 
-        for (const auto& module : m_configurable)
+        for (const auto& module : m_configurables)
             module->Reset();
 
         bool foundAny = false;
         bool successAll = true;
 
-        auto dirIt = std::filesystem::recursive_directory_iterator(
-            m_configDir, std::filesystem::directory_options::follow_directory_symlink);
+        Core::Vector<std::filesystem::path> configDirs;
 
-        for (const auto& entry : dirIt)
         {
-            const auto ext = entry.path().extension();
+            auto depot = Red::ResourceDepot::Get();
 
-            if (entry.is_regular_file() && (ext == m_configExt || ext == L".yml" || ext == L".yaml"))
+            for (const auto& group : depot->groups)
             {
-                successAll &= ReadConfig(entry.path());
-                foundAny = true;
+                if (group.scope == Red::ArchiveScope::Mod)
+                {
+                    configDirs.emplace_back(group.basePath.c_str());
+                }
+            }
+        }
+
+        if (ExtraConfigDirExists())
+        {
+            configDirs.emplace_back(m_extraConfigDir);
+        }
+
+        for (const auto& configDir : configDirs)
+        {
+            auto configDirIt = std::filesystem::recursive_directory_iterator(
+                configDir, std::filesystem::directory_options::follow_directory_symlink);
+
+            for (const auto& entry : configDirIt)
+            {
+                const auto ext = entry.path().extension();
+
+                if (entry.is_regular_file() && (ext == m_customConfigExt || ext == L".yml" || ext == L".yaml"))
+                {
+                    successAll &= ReadConfig(entry.path(), configDir);
+                    foundAny = true;
+                }
             }
         }
 
@@ -65,18 +87,18 @@ void App::ModuleLoader::Configure()
     }
 }
 
-bool App::ModuleLoader::ReadConfig(const std::filesystem::path& aPath)
+bool App::ModuleLoader::ReadConfig(const std::filesystem::path& aPath, const std::filesystem::path& aDir)
 {
     bool success = true;
 
     try
     {
-        LogInfo("Reading \"{}\"...", std::filesystem::relative(aPath, m_configDir).string());
+        LogInfo("Reading \"{}\"...", std::filesystem::relative(aPath, aDir).string());
 
         const auto name = aPath.filename().string();
         const auto config = YAML::LoadFile(aPath.string());
 
-        for (const auto& module : m_configurable)
+        for (const auto& module : m_configurables)
             success &= module->Configure(name, config);
     }
     catch (const std::exception& ex)

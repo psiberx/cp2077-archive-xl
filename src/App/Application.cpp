@@ -1,5 +1,4 @@
 #include "Application.hpp"
-#include "App/Config.hpp"
 #include "App/Facade.hpp"
 #include "App/Extensions/ExtensionService.hpp"
 #include "Core/Foundation/RuntimeProvider.hpp"
@@ -14,5 +13,5 @@ App::Application::Application(HMODULE aHandle, const RED4ext::Sdk* aSdk)
     Register<Vendor::MinHookProvider>();
     Register<Vendor::SpdlogProvider>();
     Register<Red::RttiProvider>();
-    Register<App::ExtensionService>(Config::GetModArchiveDir());
+    Register<App::ExtensionService>();
 }

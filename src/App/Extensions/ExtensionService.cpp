@@ -4,15 +4,11 @@
 #include "App/Extensions/Localization/Module.hpp"
 #include "App/Extensions/PartsOverrides/Module.hpp"
 #include "App/Extensions/VisualTags/Module.hpp"
-
-App::ExtensionService::ExtensionService(std::filesystem::path aModDir)
-    : m_archiveModDir(std::move(aModDir))
-{
-}
+#include "Red/GameApplication.hpp"
 
 void App::ExtensionService::OnBootstrap()
 {
-    m_loader = Core::MakeUnique<ModuleLoader>(m_archiveModDir, L".xl");
+    m_loader = Core::MakeUnique<ModuleLoader>("", L".xl");
 
     m_loader->Add<FactoryIndexModule>();
     m_loader->Add<LocalizationModule>();
@@ -20,8 +16,10 @@ void App::ExtensionService::OnBootstrap()
     m_loader->Add<VisualTagsModule>();
     m_loader->Add<InkSpawnerModule>();
 
-    m_loader->Configure();
-    m_loader->Load();
+    HookOnceAfter<Raw::GameApplication::InitResourceDepot>([&]() {
+        m_loader->Configure();
+        m_loader->Load();
+    });
 }
 
 void App::ExtensionService::OnShutdown()

@@ -38,6 +38,10 @@ def patterns():
                 Item(name="LoadFactoryAsync",
                      pattern="48 89 5C 24 18 55 56 57 41 56 41 57 48 8D 6C 24 C9 48 81 EC A0 00 00 00 45 33 FF 48 89 55 DF 4D 8B F0 44 89 7D FB 48 8B D9 4C 89 7D E7"),
             ]),
+            Group(name="GameApplication", functions=[
+                Item(name="InitResourceDepot",
+                     pattern="48 89 74 24 18 55 48 8D 6C 24 A9 48 81 EC C0 00 00 00"),
+            ]),
             Group(name="GarmentAssembler", functions=[
                 Item(name="AddItem",
                      pattern="48 89 5C 24 08 57 48 83 EC 60 49 8B F8 4C 8B C2 48 8D 54 24 40 E8 ? ? ? ? 48 8B 07",
