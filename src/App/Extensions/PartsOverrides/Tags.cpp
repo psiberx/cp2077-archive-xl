@@ -49,6 +49,22 @@ App::OverrideTagManager::OverrideTagManager() noexcept
               }
           },
           {
+              "hide_Thighs",
+              {
+                  {"t0_000_pma_base__full", {4}},
+                  {"t0_000_pwa_base__full", {4}},
+                  {"t0_000_pwa_fpp__torso", {4}},
+              }
+          },
+          {
+              "hide_Calves",
+              {
+                  {"t0_000_pma_base__full", {5}},
+                  {"t0_000_pwa_base__full", {5}},
+                  {"t0_000_pwa_fpp__torso", {5}},
+              }
+          },
+          {
               "hide_Ankles",
               {
                   {"s0_", {}},
