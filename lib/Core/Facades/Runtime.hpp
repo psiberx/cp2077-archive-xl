@@ -11,6 +11,7 @@ void Initialize(const Core::HostImage& aHost, const Core::ModuleImage& aModule);
 [[nodiscard]] std::filesystem::path GetImagePath();
 [[nodiscard]] std::filesystem::path GetRootDir();
 [[nodiscard]] std::filesystem::path GetModulePath();
+[[nodiscard]] std::filesystem::path GetModuleDir();
 [[nodiscard]] std::string GetModuleName();
 [[nodiscard]] bool IsASI();
 [[nodiscard]] bool IsASI(HMODULE aHandle);

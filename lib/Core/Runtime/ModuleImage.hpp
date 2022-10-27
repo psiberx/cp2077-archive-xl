@@ -11,6 +11,7 @@ public:
     ~ModuleImage() = default;
 
     [[nodiscard]] std::filesystem::path GetPath() const;
+    [[nodiscard]] std::filesystem::path GetDir() const;
     [[nodiscard]] std::string GetName() const;
     [[nodiscard]] bool IsASI() const;
 

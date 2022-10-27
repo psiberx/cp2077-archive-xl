@@ -15,6 +15,6 @@ public:
 private:
     friend Descriptor;
     static void OnRegister(Descriptor* aType);
-    static void OnDescribe(Descriptor* aType, Red::CRTTISystem* aRtti);
+    static void OnDescribe(Descriptor* aType);
 };
 }

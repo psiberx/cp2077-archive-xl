@@ -19,7 +19,7 @@ void App::Facade::OnRegister(Descriptor* aType)
     aType->SetFlags({ .isAbstract = true });
 }
 
-void App::Facade::OnDescribe(Descriptor* aType, Red::CRTTISystem*)
+void App::Facade::OnDescribe(Descriptor* aType)
 {
     aType->AddFunction<&Reload>("Reload");
     aType->AddFunction<&GetVersion>("Version");

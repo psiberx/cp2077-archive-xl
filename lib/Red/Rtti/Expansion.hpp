@@ -80,7 +80,7 @@ private:
 
         if (type)
         {
-            T::OnExpand(reinterpret_cast<FinalDescriptor*>(type), rtti);
+            T::OnExpand(reinterpret_cast<FinalDescriptor*>(type));
         }
     }
 
@@ -101,6 +101,6 @@ public:
 private:
     friend Descriptor;
 
-    static void OnExpand(Descriptor* aType, RED4ext::CRTTISystem* aRtti) {}
+    static void OnExpand(Descriptor* aType) {}
 };
 }

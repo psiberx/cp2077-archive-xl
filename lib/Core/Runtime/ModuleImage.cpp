@@ -13,6 +13,11 @@ std::filesystem::path Core::ModuleImage::GetPath() const
     return m_path;
 }
 
+std::filesystem::path Core::ModuleImage::GetDir() const
+{
+    return m_path.parent_path();
+}
+
 std::string Core::ModuleImage::GetName() const
 {
     return m_path.stem().string();

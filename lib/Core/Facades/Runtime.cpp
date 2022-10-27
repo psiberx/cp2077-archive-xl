@@ -37,6 +37,12 @@ std::filesystem::path Core::Runtime::GetModulePath()
     return s_module->GetPath();
 }
 
+std::filesystem::path Core::Runtime::GetModuleDir()
+{
+    assert(s_module);
+    return s_module->GetDir();
+}
+
 std::string Core::Runtime::GetModuleName()
 {
     assert(s_module);
