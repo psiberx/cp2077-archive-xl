@@ -1,9 +1,9 @@
 # ArchiveXL
 
-ArchiveXL is a modding tool that allows you to load game resources without touching original game files,
+ArchiveXL is a modding tool that allows you to load custom resources without touching original game files,
 thus allowing multiple mods to expand same resources without conflicts.
 
-With the loader you can:
+With the mod you can:
 
 - Load custom entity factories (necessary for item additions)
 - Add localization texts that can be used in scripts, resources and TweakDB
@@ -27,7 +27,7 @@ With the loader you can:
 
 ### Extending resources
 
-The loader doesn't modify original files such as `factories.csv` and `onscreens.json` and doesn't produce new archives,
+The mod doesn't modify original files such as `factories.csv` and `onscreens.json` and doesn't produce new archives,
 instead it merges your own resources with the originals at runtime.
 
 The workflow is pretty simple:
@@ -187,7 +187,7 @@ Known visual tags defined by the game:
 | `hide_Hair`     | Hides hair.                                                                 |
 | `hide_Genitals` | Hides genitals in uncensored mode and underware in censored mode.           |
 
-Custom visual tags defined by the loader:
+Custom visual tags defined by the mod:
 
 | Tag           | Effect                |
 |:--------------|:----------------------|
@@ -202,8 +202,8 @@ Custom visual tags defined by the loader:
 
 ### Spawning widgets
 
-With the loader you can spawn any widget without the need to register it as dependency.
+You can spawn any widget without the need to register it as dependency.
 
 ```swift
-controller.SpawnFromExternal(parentWidget, r"base\\gameplay\\gui\\fullscreen\\settings\\settings_main.inkwidget", n"settingsSelectorBool");
+controller.SpawnFromExternal(parentWidget, r"path\\to\\library.inkwidget", n"WidgetItem");
 ```
