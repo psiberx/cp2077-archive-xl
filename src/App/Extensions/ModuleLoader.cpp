@@ -26,9 +26,6 @@ void App::ModuleLoader::Configure()
         for (const auto& module : m_configurables)
             module->Reset();
 
-        bool foundAny = false;
-        bool successAll = true;
-
         Core::Vector<std::filesystem::path> configDirs;
 
         {
@@ -43,13 +40,20 @@ void App::ModuleLoader::Configure()
             }
         }
 
-        if (ExtraConfigDirExists())
+        if (!m_extraConfigDir.empty())
         {
             configDirs.emplace_back(m_extraConfigDir);
         }
 
+        bool foundAny = false;
+        bool successAll = true;
+        std::error_code error;
+
         for (const auto& configDir : configDirs)
         {
+            if (!std::filesystem::exists(configDir, error))
+                continue;
+
             auto configDirIt = std::filesystem::recursive_directory_iterator(
                 configDir, std::filesystem::directory_options::follow_directory_symlink);
 
