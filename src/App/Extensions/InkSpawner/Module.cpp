@@ -1,9 +1,12 @@
 #include "Module.hpp"
 #include "Red/InkSpawner.hpp"
+#include "Red/Threads.hpp"
 
 namespace
 {
 constexpr auto ModuleName = "InkSpawner";
+constexpr auto WaitTimeout = std::chrono::milliseconds(200);
+constexpr auto WaitTick = std::chrono::milliseconds(2);
 }
 
 std::string_view App::InkSpawnerModule::GetName()
@@ -37,9 +40,28 @@ void App::InkSpawnerModule::OnSpawnExternal(Red::Handle<Red::ink::WidgetLibraryI
         if (externalLibrary.path == aExternalLibraryPath)
             return;
 
-    // Add the requested library to the list.
+    // Add the requested library to the list
     aLocalLibrary->externalLibraries.EmplaceBack(aExternalLibraryPath);
 
-    // Load requested library for the spawner.
-    (aLocalLibrary->externalLibraries.End() - 1)->Load();
+    // Load requested library for the spawner
+    auto externalLibrary = aLocalLibrary->externalLibraries.End() - 1;
+
+    if (Raw::IsMainThread())
+    {
+        externalLibrary->Load();
+    }
+    else
+    {
+        externalLibrary->LoadAsync();
+
+        const auto start = std::chrono::steady_clock::now();
+
+        while (!externalLibrary->IsLoaded() && !externalLibrary->IsFailed())
+        {
+            std::this_thread::sleep_for(WaitTick);
+
+            if (std::chrono::steady_clock::now() - start >= WaitTimeout)
+                break;
+        }
+    }
 }

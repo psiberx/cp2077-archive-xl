@@ -473,7 +473,7 @@ public:
     inline static void Dispose()
     {
         s_callback = {};
-        s_original = nullptr;
+        //s_original = nullptr;
     }
 
 private:

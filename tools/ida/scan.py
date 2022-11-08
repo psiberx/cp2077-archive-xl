@@ -9,6 +9,8 @@ def patterns():
             Group(functions=[
                 Item(name="Main",
                      pattern="40 53 48 81 EC ? ? ? ? FF 15 ? ? ? ? E8 ? ? ? ? E8 ? ? ? ?"),
+                Item(name="IsMainThread",
+                     pattern="83 3D  ?  ? ? ? 00 74 17 65 48 8B 04 25 30 00 00 00 8B 48 48 39 0D ? ? ? ? 74 03 32 C0 C3"),
             ]),
             Group(name="AppearanceChanger", functions=[
                 Item(name="ComputePlayerGarment",
