@@ -16,7 +16,7 @@ With the mod you can:
 
 ### Prerequisites
 
-- [RED4ext](https://docs.red4ext.com/getting-started/installing-red4ext) 1.8.0+
+- [RED4ext](https://docs.red4ext.com/getting-started/installing-red4ext) 1.9.0+
 
 ### Installation
 
@@ -183,7 +183,7 @@ Known visual tags defined by the game:
 | `hide_T2`       | Hides an item in the `Torso` slot.                                          |
 | `hide_L1`       | Hides an item in the `Legs` slot.                                           |
 | `hide_S1`       | Hides an item in the `Feet` slot.                                           |
-| `hide_T1part`   | Controls the partial suffix (`&Full`/`&Part`) when applied to `Torso` item. |
+| `hide_T1part`   | Toggles the partial suffix (`&Full` →`&Part`) when applied to `Torso` item. |
 | `hide_Hair`     | Hides hair.                                                                 |
 | `hide_Genitals` | Hides genitals in uncensored mode and underware in censored mode.           |
 
