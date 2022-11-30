@@ -4,6 +4,7 @@ namespace
 {
 Core::SharedPtr<App::EntityState> s_nullEntityState;
 Core::SharedPtr<App::ComponentState> s_nullComponentState;
+Core::SharedPtr<App::ResourceState> s_nullResourceState;
 }
 
 Core::SharedPtr<App::EntityState>& App::OverrideStateManager::GetEntityState(Red::ent::Entity* aEntity)
@@ -47,12 +48,22 @@ App::EntityState::EntityState(Red::ent::Entity* aEntity) noexcept
     m_name.append(std::to_string(*reinterpret_cast<uint64_t*>(aEntity->unk40 + 8)));
 }
 
-Core::Map<Red::CName, Core::SharedPtr<App::ComponentState>>& App::EntityState::GetComponentStates()
+const char* App::EntityState::GetName() const
+{
+    return m_name.c_str();
+}
+
+Red::ent::Entity* App::EntityState::GetEntity() const
+{
+    return m_entity;
+}
+
+const Core::Map<Red::CName, Core::SharedPtr<App::ComponentState>>& App::EntityState::GetComponentStates() const
 {
     return m_componentStates;
 }
 
-Core::SharedPtr<App::ComponentState>& App::EntityState::GetComponentState(const Red::CName aComponentName)
+const Core::SharedPtr<App::ComponentState>& App::EntityState::GetComponentState(const Red::CName aComponentName)
 {
     if (!aComponentName)
         return s_nullComponentState;
@@ -65,12 +76,12 @@ Core::SharedPtr<App::ComponentState>& App::EntityState::GetComponentState(const 
     return it.value();
 }
 
-Core::SharedPtr<App::ComponentState>& App::EntityState::FindComponentState(const Red::CName aComponentName)
+const Core::SharedPtr<App::ComponentState>& App::EntityState::FindComponentState(const Red::CName aComponentName) const
 {
     if (!aComponentName)
         return s_nullComponentState;
 
-    auto it = m_componentStates.find(aComponentName);
+    const auto& it = m_componentStates.find(aComponentName);
 
     if (it == m_componentStates.end())
         return s_nullComponentState;
@@ -78,14 +89,43 @@ Core::SharedPtr<App::ComponentState>& App::EntityState::FindComponentState(const
     return it.value();
 }
 
-const char* App::EntityState::GetName() const
+const Core::Map<Red::ResourcePath, Core::SharedPtr<App::ResourceState>>& App::EntityState::GetResourceStates() const
 {
-    return m_name.c_str();
+    return m_resourceStates;
 }
 
-Red::ent::Entity* App::EntityState::GetEntity() const
+const Core::SharedPtr<App::ResourceState>& App::EntityState::GetResourceState(Red::ResourcePath aResourcePath)
 {
-    return m_entity;
+    if (!aResourcePath)
+        return s_nullResourceState;
+
+    auto it = m_resourceStates.find(aResourcePath);
+
+    if (it == m_resourceStates.end())
+        it = m_resourceStates.emplace(aResourcePath, Core::MakeShared<ResourceState>(aResourcePath)).first;
+
+    return it.value();
+}
+
+const Core::SharedPtr<App::ResourceState>& App::EntityState::FindResourceState(Red::ResourcePath aResourcePath) const
+{
+    if (!aResourcePath)
+        return s_nullResourceState;
+
+    const auto& it = m_resourceStates.find(aResourcePath);
+
+    if (it == m_resourceStates.end())
+        return s_nullResourceState;
+
+    return it.value();
+}
+
+void App::EntityState::AddOverride(uint64_t aHash, Red::ResourcePath aResourcePath, int32_t aOffset)
+{
+    if (auto& resourceState = GetResourceState(aResourcePath))
+    {
+        resourceState->AddOffsetOverride(aHash, aOffset);
+    }
 }
 
 void App::EntityState::AddOverride(uint64_t aHash, Red::CName aComponentName, uint64_t aChunkMask)
@@ -96,9 +136,9 @@ void App::EntityState::AddOverride(uint64_t aHash, Red::CName aComponentName, ui
     }
 }
 
-void App::EntityState::AddOverrideTag(uint64_t aHash, Red::CName aTag)
+void App::EntityState::AddOverride(uint64_t aHash, Red::CName aVisualTag)
 {
-    for (auto& [componentName, chunkMask] : m_tagManager->GetOverrides(aTag))
+    for (auto& [componentName, chunkMask] : m_tagManager->GetOverrides(aVisualTag))
     {
         if (auto& componentState = GetComponentState(componentName))
         {
@@ -113,9 +153,14 @@ void App::EntityState::RemoveOverrides(uint64_t aHash)
     {
         componentState->RemoveChunkMaskOverride(aHash);
     }
+
+    for (auto& [_, resourceState] : m_resourceStates)
+    {
+        resourceState->RemoveOffsetOverride(aHash);
+    }
 }
 
-bool App::EntityState::ApplyOverrides(Red::Handle<Red::ent::IComponent>& aComponent)
+bool App::EntityState::ApplyChunkMasks(Red::Handle<Red::ent::IComponent>& aComponent)
 {
     auto& componentState = FindComponentState(aComponent->name);
     auto& prefixState = FindComponentState(m_prefixResolver->GetPrefix(aComponent->name));
@@ -148,6 +193,16 @@ uint64_t App::EntityState::GetOriginalChunkMask(ComponentWrapper& aComponent)
         originalChunkMaskIt = m_originalChunkMasks.emplace(componentId, aComponent.GetChunkMask()).first;
 
     return originalChunkMaskIt.value();
+}
+
+int32_t App::EntityState::GetOrderOffset(Red::ResourcePath aResourcePath)
+{
+    auto& resourceState = FindResourceState(aResourcePath);
+
+    if (!resourceState)
+        return 0;
+
+    return resourceState->GetOverriddenOffset();
 }
 
 App::ComponentState::ComponentState(Red::CName aName) noexcept
@@ -188,4 +243,39 @@ uint64_t App::ComponentState::GetOverriddenChunkMask()
         finalChunkMask &= overridenChunkMask;
 
     return finalChunkMask;
+}
+
+App::ResourceState::ResourceState(Red::ResourcePath aPath) noexcept
+    : m_path(aPath)
+{
+}
+
+const Red::ResourcePath& App::ResourceState::GetPath() const
+{
+    return m_path;
+}
+
+bool App::ResourceState::IsOverridden() const
+{
+    return !m_overridenOffsets.empty();
+}
+
+void App::ResourceState::AddOffsetOverride(uint64_t aHash, int32_t aOffset)
+{
+    auto it = m_overridenOffsets.find(aOffset);
+
+    if (it == m_overridenOffsets.end())
+        it = m_overridenOffsets.emplace(aHash, 0).first;
+
+    it.value() = aOffset;
+}
+
+bool App::ResourceState::RemoveOffsetOverride(uint64_t aHash)
+{
+    return m_overridenOffsets.erase(aHash);
+}
+
+int32_t App::ResourceState::GetOverriddenOffset()
+{
+    return !m_overridenOffsets.empty() ? m_overridenOffsets.begin()->second :  0;
 }

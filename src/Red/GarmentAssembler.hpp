@@ -12,7 +12,7 @@ struct GarmentItemAddRequest
 {
     Handle<AppearanceDefinition> apperance; // 00
     uint64_t hash;                          // 10
-    int32_t unk18;                          // 18
+    int32_t offset;                         // 18
 };
 RED4EXT_ASSERT_SIZE(GarmentItemAddRequest, 0x20);
 RED4EXT_ASSERT_OFFSET(GarmentItemAddRequest, apperance, 0x00);
@@ -23,7 +23,7 @@ struct GarmentItemOverrideRequest
     Handle<AppearanceDefinition> apperance;      // 00
     DynArray<AppearancePartOverrides> overrides; // 10
     uint64_t hash;                               // 20
-    int32_t unk28;                               // 28
+    int32_t offset;                              // 28
 };
 RED4EXT_ASSERT_SIZE(GarmentItemOverrideRequest, 0x30);
 RED4EXT_ASSERT_OFFSET(GarmentItemOverrideRequest, apperance, 0x00);
