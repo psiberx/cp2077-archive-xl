@@ -1,7 +1,7 @@
 set_xmakever("2.5.9")
 
 set_project("ArchiveXL")
-set_version("1.1.6", {build = "%y%m%d%H%M"})
+set_version("1.1.7", {build = "%y%m%d%H%M"})
 
 set_arch("x64")
 set_languages("cxx20", "cxx2a")
