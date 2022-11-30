@@ -1,9 +1,5 @@
 #pragma once
 
-#include <functional>
-#include <RED4ext/NativeTypes.hpp>
-#include <RED4ext/ResourcePath.hpp>
-
 template<>
 struct std::hash<RED4ext::CName>
 {

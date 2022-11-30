@@ -39,6 +39,8 @@ using Map = tsl::hopscotch_map<T, U, std::hash<T>, std::equal_to<T>, TiltedPhoqu
 template<class T, class U>
 using SortedMap = std::map<T, U, std::less<T>, TiltedPhoques::StlAllocator<std::pair<const T, U>>>;
 
+// TODO: OrderedMap
+
 template<class T>
 using SharedPtr = std::shared_ptr<T>;
 
@@ -49,9 +51,9 @@ template<class T>
 using UniquePtr = std::unique_ptr<T, Detail::UniqueDeleter<T>>;
 
 template<typename T, typename... Args>
-auto MakeShared(Args&&... args)
+auto MakeShared(Args&&... aArgs)
 {
-    return std::allocate_shared<T>(TiltedPhoques::StlAllocator<T>(), std::forward<Args>(args)...);
+    return std::allocate_shared<T>(TiltedPhoques::StlAllocator<T>(), std::forward<Args>(aArgs)...);
 }
 
 template<typename T, typename... Args>

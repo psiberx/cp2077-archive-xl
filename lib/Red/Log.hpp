@@ -1,17 +1,13 @@
 #pragma once
 
-#include <string>
-#include <string_view>
-#include <utility>
 #include <fmt/format.h>
-#include <RED4ext/CName.hpp>
 
 namespace Red::Log
 {
-void Channel(RED4ext::CName aChannel, const std::string& aMessage);
+void Channel(CName aChannel, const std::string& aMessage);
 
 template<typename... Args>
-constexpr void Channel(RED4ext::CName aChannel, std::string_view aFormat, Args&&... aArgs)
+constexpr void Channel(CName aChannel, std::string_view aFormat, Args&&... aArgs)
 {
     Channel(aChannel, fmt::vformat(aFormat, fmt::make_format_args(std::forward<Args>(aArgs)...)));
 }
