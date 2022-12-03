@@ -84,7 +84,7 @@ void App::VisualTagsModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset&
 
 Red::TemplateAppearance* App::VisualTagsModule::FindAppearance(Red::EntityTemplate* aResource, Red::CName aName)
 {
-    return Raw::EntityTemplate::FindAppearanceTemplate(aResource, aName);
+    return Raw::EntityTemplate::FindAppearance(aResource, aName);
 }
 
 Red::Handle<Red::AppearanceDefinition> App::VisualTagsModule::FindDefinition(Red::AppearanceResource* aResource,
