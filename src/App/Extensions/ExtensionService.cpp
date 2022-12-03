@@ -1,4 +1,6 @@
 #include "ExtensionService.hpp"
+#include "App/Extensions/AppearanceSwap/Module.hpp"
+#include "App/Extensions/AttachmentSlots/Module.hpp"
 #include "App/Extensions/FactoryIndex/Module.hpp"
 #include "App/Extensions/InkSpawner/Module.hpp"
 #include "App/Extensions/Localization/Module.hpp"
@@ -10,6 +12,8 @@ void App::ExtensionService::OnBootstrap()
 {
     m_loader = Core::MakeUnique<ModuleLoader>("", L".xl");
 
+    m_loader->Add<AppearanceSwapModule>();
+    m_loader->Add<AttachmentSlotsModule>();
     m_loader->Add<FactoryIndexModule>();
     m_loader->Add<LocalizationModule>();
     m_loader->Add<PartsOverridesModule>();
