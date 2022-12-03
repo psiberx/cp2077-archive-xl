@@ -16,6 +16,10 @@ def patterns():
                 Item(name="ComputePlayerGarment",
                      pattern="48 89 5C 24 08 48 89 74 24 10 48 89 7C 24 18 4C 89 64 24 20 55 41 56 41 57 48 8D 6C 24 C0"),
             ]),
+            Group(name="AppearanceChangeRequest", functions=[
+                Item(name="LoadEntityTemplate",
+                     pattern="48 89 5C 24 18 48 89 74 24 20 55 57 41 56 48 8D 6C 24 B9 48 81 EC C0 00 00 00 45 32 F6 48 8B F9"),
+            ]),
             Group(name="AppearanceNameVisualTagsPreset", functions=[
                 Item(name="GetVisualTags",
                      pattern="48 89 74 24 18 48 89 54 24 10 57 48 83 EC 40 49 8B F8 48 8D 54 24 20 4C 8D 44 24 58 48 83 C1 40 49 8B F1"),
@@ -23,6 +27,18 @@ def patterns():
             Group(name="AppearanceResource", functions=[
                 Item(name="FindAppearanceDefinition",
                      pattern="48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 41 56 41 57 48 83 EC 20 48 8B F1 45 8B F9 48 81 C1 F0 00 00 00 49 8B D8 4C 8B F2"),
+            ]),
+            Group(name="AttachmentSlots", functions=[
+                Item(name="InitializeSlots",
+                     pattern="48 8B C4 55 57 48 8D 68 B8 48 81 EC 38 01 00 00 83 7A 0C 00 48 8B FA"),
+                Item(name="IsSlotEmpty",
+                     pattern="48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 20 48 8B F1 48 8B DA 48 81 C1 00 01 00 00",
+                     expected=4,
+                     index=1),
+                Item(name="IsSlotSpawning",
+                     pattern="48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 20 48 8B F1 48 8B DA 48 81 C1 00 01 00 00",
+                     expected=4,
+                     index=2),
             ]),
             Group(name="Entity", functions=[
                 Item(name="GetComponents",
@@ -39,6 +55,8 @@ def patterns():
             Group(name="FactoryIndex", functions=[
                 Item(name="LoadFactoryAsync",
                      pattern="48 89 5C 24 18 55 56 57 41 56 41 57 48 8D 6C 24 C9 48 81 EC A0 00 00 00 45 33 FF 48 89 55 DF 4D 8B F0 44 89 7D FB 48 8B D9 4C 89 7D E7"),
+                Item(name="ResolveResource",
+                     pattern="40 53 48 83 EC 10 45 33 C9 48 8B DA 4C 8B D1 44 39 49 70"),
             ]),
             Group(name="GameApplication", functions=[
                 Item(name="InitResourceDepot",
@@ -49,8 +67,16 @@ def patterns():
                      pattern="48 89 5C 24 08 57 48 83 EC 60 49 8B F8 4C 8B C2 48 8D 54 24 40 E8 ? ? ? ? 48 8B 07",
                      expected=2,
                      index=0),
-                Item(name="OverrideItem",
+                Item(name="AddCustomItem",
                      pattern="48 89 5C 24 08 57 48 83 EC 60 49 8B F8 4C 8B C2 48 8D 54 24 40 E8 ? ? ? ? 48 8B 07",
+                     expected=2,
+                     index=1),
+                Item(name="ChangeItem",
+                     pattern="48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 48 83 EC 50 49 8B F8 4C 8B C2 48 8D 54 24 30 E8",
+                     expected=2,
+                     index=0),
+                Item(name="ChangeCustomItem",
+                     pattern="48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 48 83 EC 50 49 8B F8 4C 8B C2 48 8D 54 24 30 E8",
                      expected=2,
                      index=1),
                 Item(name="RemoveItem",
