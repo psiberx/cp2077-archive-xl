@@ -25,3 +25,10 @@ constexpr auto ComputePlayerGarment = Core::RawFunc<
     /* type = */ void (*)(Red::Handle<Red::ent::Entity>&, Red::DynArray<int32_t>&,
                           Red::SharedPtr<Red::GarmentComputeData>&, uintptr_t, uintptr_t, uintptr_t, bool)>();
 }
+
+namespace Raw::AppearanceChangeRequest
+{
+constexpr auto LoadEntityTemplate = Core::RawFunc<
+    /* addr = */ Red::Addresses::AppearanceChangeRequest_LoadEntityTemplate,
+    /* type = */ bool (*)(uintptr_t)>();
+}
