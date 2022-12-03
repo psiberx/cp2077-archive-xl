@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/Hooking/Detail.hpp"
-#include "Core/Hooking/Internals.hpp"
 #include "Core/Hooking/HookingDriver.hpp"
 
 namespace Core

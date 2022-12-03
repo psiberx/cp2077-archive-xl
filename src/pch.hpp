@@ -35,6 +35,7 @@
 #include <RED4ext/RTTISystem.hpp>
 #include <RED4ext/RTTITypes.hpp>
 #include <RED4ext/SortedArray.hpp>
+#include <RED4ext/TweakDB.hpp>
 #include <RED4ext/Hashing/FNV1a.hpp>
 #include <RED4ext/Memory/Allocators.hpp>
 #include <RED4ext/Memory/SharedPtr.hpp>
@@ -51,6 +52,7 @@
 #include <RED4ext/Scripting/Natives/Generated/ent/TemplateAppearance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/VisualControllerComponent.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/AppearanceNameVisualTagsPreset.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/AttachmentSlots.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/Widget.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/WidgetLibraryItemInstance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/WidgetLibraryResource.hpp>
