@@ -120,15 +120,7 @@ const Core::SharedPtr<App::ResourceState>& App::EntityState::FindResourceState(R
     return it.value();
 }
 
-void App::EntityState::AddOverride(uint64_t aHash, Red::ResourcePath aResourcePath, int32_t aOffset)
-{
-    if (auto& resourceState = GetResourceState(aResourcePath))
-    {
-        resourceState->AddOffsetOverride(aHash, aOffset);
-    }
-}
-
-void App::EntityState::AddOverride(uint64_t aHash, Red::CName aComponentName, uint64_t aChunkMask)
+void App::EntityState::AddChunkMaskOverride(uint64_t aHash, Red::CName aComponentName, uint64_t aChunkMask)
 {
     if (auto& componentState = GetComponentState(aComponentName))
     {
@@ -136,7 +128,7 @@ void App::EntityState::AddOverride(uint64_t aHash, Red::CName aComponentName, ui
     }
 }
 
-void App::EntityState::AddOverride(uint64_t aHash, Red::CName aVisualTag)
+void App::EntityState::AddChunkMaskOverride(uint64_t aHash, Red::CName aVisualTag)
 {
     for (auto& [componentName, chunkMask] : m_tagManager->GetOverrides(aVisualTag))
     {
@@ -147,17 +139,34 @@ void App::EntityState::AddOverride(uint64_t aHash, Red::CName aVisualTag)
     }
 }
 
-void App::EntityState::RemoveOverrides(uint64_t aHash)
+void App::EntityState::RemoveChunkMaskOverrides(uint64_t aHash)
 {
     for (auto& [_, componentState] : m_componentStates)
     {
         componentState->RemoveChunkMaskOverride(aHash);
     }
+}
 
+void App::EntityState::AddOffsetOverride(uint64_t aHash, Red::ResourcePath aResourcePath, int32_t aOffset)
+{
+    if (auto& resourceState = GetResourceState(aResourcePath))
+    {
+        resourceState->AddOffsetOverride(aHash, aOffset);
+    }
+}
+
+void App::EntityState::RemoveOffsetOverrides(uint64_t aHash)
+{
     for (auto& [_, resourceState] : m_resourceStates)
     {
         resourceState->RemoveOffsetOverride(aHash);
     }
+}
+
+void App::EntityState::RemoveAllOverrides(uint64_t aHash)
+{
+    RemoveChunkMaskOverrides(aHash);
+    RemoveOffsetOverrides(aHash);
 }
 
 bool App::EntityState::ApplyChunkMasks(Red::Handle<Red::ent::IComponent>& aComponent)

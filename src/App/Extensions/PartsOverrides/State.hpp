@@ -62,13 +62,16 @@ public:
     [[nodiscard]] const Core::SharedPtr<ResourceState>& GetResourceState(Red::ResourcePath aResourcePath);
     [[nodiscard]] const Core::SharedPtr<ResourceState>& FindResourceState(Red::ResourcePath aResourcePath) const;
 
-    void AddOverride(uint64_t aHash, Red::ResourcePath aResourcePath, int32_t aOffset);
-    void AddOverride(uint64_t aHash, Red::CName aComponentName, uint64_t aChunkMask);
-    void AddOverride(uint64_t aHash, Red::CName aVisualTag);
-    void RemoveOverrides(uint64_t aHash);
-
     bool ApplyChunkMasks(Red::Handle<Red::ent::IComponent>& aComponent);
+    void AddChunkMaskOverride(uint64_t aHash, Red::CName aComponentName, uint64_t aChunkMask);
+    void AddChunkMaskOverride(uint64_t aHash, Red::CName aVisualTag);
+    void RemoveChunkMaskOverrides(uint64_t aHash);
+
     int32_t GetOrderOffset(Red::ResourcePath aResourcePath);
+    void AddOffsetOverride(uint64_t aHash, Red::ResourcePath aResourcePath, int32_t aOffset);
+    void RemoveOffsetOverrides(uint64_t aHash);
+
+    void RemoveAllOverrides(uint64_t aHash);
 
 private:
     uint64_t GetOriginalChunkMask(ComponentWrapper& aComponent);

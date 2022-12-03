@@ -17,18 +17,40 @@ struct GarmentItemAddRequest
 RED4EXT_ASSERT_SIZE(GarmentItemAddRequest, 0x20);
 RED4EXT_ASSERT_OFFSET(GarmentItemAddRequest, apperance, 0x00);
 RED4EXT_ASSERT_OFFSET(GarmentItemAddRequest, hash, 0x10);
+RED4EXT_ASSERT_OFFSET(GarmentItemAddRequest, offset, 0x18);
 
-struct GarmentItemOverrideRequest
+struct GarmentItemAddCustomRequest
 {
     Handle<AppearanceDefinition> apperance;      // 00
     DynArray<AppearancePartOverrides> overrides; // 10
     uint64_t hash;                               // 20
     int32_t offset;                              // 28
 };
-RED4EXT_ASSERT_SIZE(GarmentItemOverrideRequest, 0x30);
-RED4EXT_ASSERT_OFFSET(GarmentItemOverrideRequest, apperance, 0x00);
-RED4EXT_ASSERT_OFFSET(GarmentItemOverrideRequest, overrides, 0x10);
-RED4EXT_ASSERT_OFFSET(GarmentItemOverrideRequest, hash, 0x20);
+RED4EXT_ASSERT_SIZE(GarmentItemAddCustomRequest, 0x30);
+RED4EXT_ASSERT_OFFSET(GarmentItemAddCustomRequest, apperance, 0x00);
+RED4EXT_ASSERT_OFFSET(GarmentItemAddCustomRequest, overrides, 0x10);
+RED4EXT_ASSERT_OFFSET(GarmentItemAddCustomRequest, hash, 0x20);
+RED4EXT_ASSERT_OFFSET(GarmentItemAddCustomRequest, offset, 0x28);
+
+struct GarmentItemChangeRequest
+{
+    Handle<AppearanceDefinition> apperance; // 00
+    uint64_t hash;                          // 10
+};
+RED4EXT_ASSERT_SIZE(GarmentItemChangeRequest, 0x18);
+RED4EXT_ASSERT_OFFSET(GarmentItemChangeRequest, apperance, 0x00);
+RED4EXT_ASSERT_OFFSET(GarmentItemChangeRequest, hash, 0x10);
+
+struct GarmentItemChangeCustomRequest
+{
+    Handle<AppearanceDefinition> apperance;      // 00
+    DynArray<AppearancePartOverrides> overrides; // 10
+    uint64_t hash;                               // 20
+};
+RED4EXT_ASSERT_SIZE(GarmentItemChangeCustomRequest, 0x28);
+RED4EXT_ASSERT_OFFSET(GarmentItemChangeCustomRequest, apperance, 0x00);
+RED4EXT_ASSERT_OFFSET(GarmentItemChangeCustomRequest, overrides, 0x10);
+RED4EXT_ASSERT_OFFSET(GarmentItemChangeCustomRequest, hash, 0x20);
 
 struct GarmentItemRemoveRequest
 {
@@ -44,9 +66,17 @@ constexpr auto AddItem = Core::RawFunc<
     /* addr = */ Red::Addresses::GarmentAssembler_AddItem,
     /* type = */ bool (*)(uintptr_t, Red::WeakHandle<Red::ent::Entity>&, Red::GarmentItemAddRequest&)>();
 
-constexpr auto OverrideItem = Core::RawFunc<
-    /* addr = */ Red::Addresses::GarmentAssembler_OverrideItem,
-    /* type = */ bool (*)(uintptr_t, Red::WeakHandle<Red::ent::Entity>&, Red::GarmentItemOverrideRequest&)>();
+constexpr auto AddCustomItem = Core::RawFunc<
+    /* addr = */ Red::Addresses::GarmentAssembler_AddCustomItem,
+    /* type = */ bool (*)(uintptr_t, Red::WeakHandle<Red::ent::Entity>&, Red::GarmentItemAddCustomRequest&)>();
+
+constexpr auto ChangeItem = Core::RawFunc<
+    /* addr = */ Red::Addresses::GarmentAssembler_ChangeItem,
+    /* type = */ bool (*)(uintptr_t, Red::WeakHandle<Red::ent::Entity>&, Red::GarmentItemChangeRequest&)>();
+
+constexpr auto ChangeCustomItem = Core::RawFunc<
+    /* addr = */ Red::Addresses::GarmentAssembler_ChangeCustomItem,
+    /* type = */ bool (*)(uintptr_t, Red::WeakHandle<Red::ent::Entity>&, Red::GarmentItemChangeCustomRequest&)>();
 
 constexpr auto RemoveItem = Core::RawFunc<
     /* addr = */ Red::Addresses::GarmentAssembler_RemoveItem,
