@@ -39,6 +39,7 @@
 #include <RED4ext/Hashing/FNV1a.hpp>
 #include <RED4ext/Memory/Allocators.hpp>
 #include <RED4ext/Memory/SharedPtr.hpp>
+#include <RED4ext/Scripting/CProperty.hpp>
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearanceDefinition.hpp>
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearancePartOverrides.hpp>
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearanceResource.hpp>
@@ -56,6 +57,8 @@
 #include <RED4ext/Scripting/Natives/Generated/ink/Widget.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/WidgetLibraryItemInstance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/WidgetLibraryResource.hpp>
+#include <RED4ext/Scripting/Natives/Generated/ink/WidgetLogicController.hpp>
+#include <RED4ext/Scripting/Natives/Generated/ink/IWidgetController.hpp>
 #include <RED4ext/Scripting/Natives/Generated/loc/alization/PersistenceOnScreenEntries.hpp>
 #include <RED4ext/Scripting/Natives/Generated/red/TagList.hpp>
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearanceDefinition.hpp>

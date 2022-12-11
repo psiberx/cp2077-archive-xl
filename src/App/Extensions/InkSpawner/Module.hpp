@@ -1,6 +1,7 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
+#include "Red/InkSpawner.hpp"
 
 namespace App
 {
@@ -12,10 +13,37 @@ public:
     bool Unload() override;
 
 private:
-    static void OnSpawnExternal(Red::Handle<Red::ink::WidgetLibraryItemInstance>&,
-                                Red::Handle<Red::ink::Widget>&,
-                                Red::Handle<Red::ink::WidgetLibraryResource>& aLocalLibrary,
-                                Red::ResourcePath aExternalLibraryPath,
-                                Red::CName);
+    static uintptr_t OnSpawnLocal(Red::ink::WidgetLibraryResource& aLibrary,
+                                  Red::Handle<Red::ink::WidgetLibraryItemInstance>& aInstance,
+                                  Red::CName aItemName);
+
+    static uintptr_t OnSpawnExternal(Red::ink::WidgetLibraryResource& aLibrary,
+                                     Red::Handle<Red::ink::WidgetLibraryItemInstance>& aInstance,
+                                     Red::ResourcePath aExternalPath,
+                                     Red::CName aItemName);
+
+    static bool OnAsyncSpawnLocal(Red::ink::WidgetLibraryResource& aLibrary,
+                                  Red::InkSpawningInfo& aSpawningInfo,
+                                  Red::CName aItemName,
+                                  uint8_t aParam);
+
+    static bool OnAsyncSpawnExternal(Red::ink::WidgetLibraryResource& aLibrary,
+                                     Red::InkSpawningInfo& aSpawningInfo,
+                                     Red::ResourcePath aExternalPath,
+                                     Red::CName aItemName,
+                                     uint8_t aParam);
+
+    static void OnFinishAsyncSpawn(Red::InkSpawningContext& aContext,
+                                   Red::Handle<Red::ink::WidgetLibraryItemInstance>& aInstance);
+
+    inline static void InjectDependency(Red::ink::WidgetLibraryResource& aLibrary,
+                                        Red::ResourcePath aExternalPath);
+
+    inline static void InjectController(Red::Handle<Red::ink::WidgetLibraryItemInstance>& aInstance,
+                                        Red::CName aControllerName);
+
+    inline static void InheritProperties(Red::IScriptable* aTarget, Red::IScriptable* aSource);
+
+    inline static std::shared_mutex s_mutex;
 };
 }
