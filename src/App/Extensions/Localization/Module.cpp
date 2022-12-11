@@ -41,6 +41,7 @@ void App::LocalizationModule::OnLoadOnScreens(Red::Handle<OnScreenEntries>& aOnS
         auto originalCount = entryList.size;
         auto originalMaxKey = (entryList.End() - 1)->primaryKey;
         auto usedKeyMap = OnScreenEntryMap();
+        auto fallback = false;
 
         for (const auto& unit : m_units)
         {
@@ -51,13 +52,14 @@ void App::LocalizationModule::OnLoadOnScreens(Red::Handle<OnScreenEntries>& aOnS
             }
             else
             {
+                fallback = true;
                 paths = unit.onscreens.find(unit.fallback);
                 LogInfo("|{}| Processing [{}] using fallback language [{}]...",
                         ModuleName, unit.name, unit.fallback.ToString());
             }
 
             for (const auto& path : paths->second)
-                successAll &= AppendEntries(path, entryList, usedKeyMap, originalCount, originalMaxKey);
+                successAll &= AppendEntries(path, entryList, usedKeyMap, originalCount, originalMaxKey, fallback);
         }
 
         if (successAll)
@@ -73,7 +75,7 @@ void App::LocalizationModule::OnLoadOnScreens(Red::Handle<OnScreenEntries>& aOnS
 
 bool App::LocalizationModule::AppendEntries(const std::string& aPath, OnScreenEntryList& aFinalList,
                                             OnScreenEntryMap& aUsedKeyMap, uint32_t aOriginalCount,
-                                            uint64_t aOriginalMaxKey)
+                                            uint64_t aOriginalMaxKey, bool aFallback)
 {
     Red::Handle<OnScreenEntries> resource;
     Raw::Localization::LoadOnScreens(resource, aPath.c_str());
@@ -114,8 +116,11 @@ bool App::LocalizationModule::AppendEntries(const std::string& aPath, OnScreenEn
                 auto* originalEntry = FindSameEntry(newEntry, aFinalList, aOriginalCount);
                 if (originalEntry)
                 {
-                    *originalEntry = newEntry;
-                    aUsedKeyMap.emplace(originalEntry->primaryKey, originalEntry);
+                    if (!aFallback)
+                    {
+                        *originalEntry = newEntry;
+                        //aUsedKeyMap.emplace(originalEntry->primaryKey, originalEntry);
+                    }
                     continue;
                 }
             }
