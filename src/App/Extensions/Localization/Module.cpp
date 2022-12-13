@@ -41,11 +41,12 @@ void App::LocalizationModule::OnLoadOnScreens(Red::Handle<OnScreenEntries>& aOnS
         auto originalCount = entryList.size;
         auto originalMaxKey = (entryList.End() - 1)->primaryKey;
         auto usedKeyMap = OnScreenEntryMap();
-        auto fallback = false;
 
         for (const auto& unit : m_units)
         {
             auto paths = unit.onscreens.find(language);
+            auto fallback = false;
+
             if (paths != unit.onscreens.end())
             {
                 LogInfo("|{}| Processing [{}]...", ModuleName, unit.name);
