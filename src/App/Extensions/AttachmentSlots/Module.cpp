@@ -5,6 +5,11 @@ namespace
 constexpr auto ModuleName = "AttachmentSlots";
 
 constexpr auto ParentSlotFlat = ".parentSlot";
+
+const Red::TweakDBID s_tppAffectedSlots[] = {
+    Red::TweakDBID("AttachmentSlots.Head"),
+    Red::TweakDBID("AttachmentSlots.Eyes"),
+};
 }
 
 std::string_view App::AttachmentSlotsModule::GetName()
@@ -20,6 +25,9 @@ bool App::AttachmentSlotsModule::Load()
     if (!Hook<Raw::AttachmentSlots::IsSlotSpawning>(&OnSlotSpawningCheck))
         throw std::runtime_error("Failed to hook [AttachmentSlots::IsSlotSpawning].");
 
+    if (!HookBefore<Raw::TPPRepresentationComponent::OnInitialize>(&OnInitializeTPP))
+        throw std::runtime_error("Failed to hook [TPPRepresentationComponent::OnInitialize].");
+
     return true;
 }
 
@@ -27,6 +35,7 @@ bool App::AttachmentSlotsModule::Unload()
 {
     Unhook<Raw::AttachmentSlots::InitializeSlots>();
     Unhook<Raw::AttachmentSlots::IsSlotSpawning>();
+    Unhook<Raw::TPPRepresentationComponent::OnInitialize>();
 
     return true;
 }
@@ -76,4 +85,22 @@ bool App::AttachmentSlotsModule::OnSlotSpawningCheck(Red::game::AttachmentSlots*
     }
 
     return result;
+}
+
+void App::AttachmentSlotsModule::OnInitializeTPP(Red::game::TPPRepresentationComponent* aComponent)
+{
+    std::shared_lock _(s_slotsMutex);
+
+    for (const auto slotID : s_tppAffectedSlots)
+    {
+        const auto& subSlots = s_slots.find(slotID);
+
+        if (subSlots != s_slots.end())
+        {
+            for (const auto& subSlotID : subSlots->second)
+            {
+                aComponent->affectedAppearanceSlots.PushBack(subSlotID);
+            }
+        }
+    }
 }

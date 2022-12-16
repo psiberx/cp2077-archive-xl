@@ -115,6 +115,10 @@ def patterns():
                 Item(name="MergeWith",
                      pattern="48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 20 48 8B 1A 48 8B F1 8B 42 0C 48 8D 3C C3 48 3B DF 74"),
             ]),
+            Group(name="TPPRepresentationComponent", functions=[
+                Item(name="OnInitialize",
+                     pattern="48 8B C4 55 56 48 8D 68 98 48 81 EC 58 01 00 00 8B 15 ? ? ? ? 48 89 58 10 48 89 78 E8"),
+            ]),
         ]),
     ]
 

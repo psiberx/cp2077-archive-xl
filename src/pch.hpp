@@ -54,6 +54,7 @@
 #include <RED4ext/Scripting/Natives/Generated/ent/VisualControllerComponent.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/AppearanceNameVisualTagsPreset.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/AttachmentSlots.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/TPPRepresentationComponent.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/Widget.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/WidgetLibraryItemInstance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/WidgetLibraryResource.hpp>
