@@ -405,6 +405,7 @@ inline RED4ext::ScriptingFunction_t<void*> WrapScriptableFunction()
     using Args = typename FunctionPtr<F>::arguments_type;
 
     static const auto s_func = AFunc;
+    static const auto s_retType = !std::is_void_v<R> ? RED4ext::CRTTISystem::Get()->GetType(ResolveTypeName<R>()) : nullptr;
 
     auto f = [](RED4ext::IScriptable* aContext, RED4ext::CStackFrame* aFrame,
                 R* aRet, RED4ext::CBaseRTTIType* aRetType) -> void
@@ -422,13 +423,19 @@ inline RED4ext::ScriptingFunction_t<void*> WrapScriptableFunction()
         else
         {
             R ret;
+
             if constexpr (std::is_void_v<C>)
                 ret = std::apply(s_func, args);
             else
                 ret = std::apply(s_func, std::tuple_cat(std::make_tuple(reinterpret_cast<C*>(aContext)), args));
 
             if (aRet)
-                aRetType->Assign(aRet, &ret);
+            {
+                if (aRetType)
+                    aRetType->Assign(aRet, &ret);
+                else
+                    s_retType->Assign(aRet, &ret);
+            }
         }
     };
 
