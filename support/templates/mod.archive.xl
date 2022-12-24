@@ -1,0 +1,7 @@
+factories:
+  - mymod\factories\clothing.csv
+  - mymod\factories\weapons.csv
+localization:
+  onscreens:
+    en-us: mymod\localization\en-us.json
+    de-de: mymod\localization\de-de.json

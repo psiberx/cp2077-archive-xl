@@ -1,30 +1,28 @@
-{
-  "Chunks": {
-    "0": {
-      "Type": "C2dArray",
-      "ParentIndex": -1,
-      "Properties": {
-        "cookingPlatform": [
-          "PLATFORM_PC"
-        ],
-        "headers": [
-          "name",
-          "path",
-          "preload"
-        ],
-        "data": [
-          [
-            "player_face_item",
-            "base\\gameplay\\items\\equipment\\face\\player_face_item.ent",
-            "true"
-          ],
-          [
-            "bestmod_item_001",
-            "base\\gameplay\\items\\equipment\\face\\bestmod_item_001.ent",
-            "true"
-          ]
+
+  "Header": {
+    "WKitJsonVersion": "0.0.3",
+    "GameVersion": 1600,
+    "DataType": "CR2W"
+  },
+  "Data": {
+    "Version": 195,
+    "BuildVersion": 0,
+    "RootChunk": {
+      "$type": "C2dArray",
+      "compiledData": [
+        [
+          "mymod_item",
+          "mymod\\items\\clothing\\item.ent",
+          "true"
         ]
-      }
-    }
+      ],
+      "compiledHeaders": [
+        "name",
+        "path",
+        "preload"
+      ],
+      "cookingPlatform": "PLATFORM_PC"
+    },
+    "EmbeddedFiles": []
   }
 }
