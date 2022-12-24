@@ -40,6 +40,14 @@ def patterns():
                      expected=4,
                      index=2),
             ]),
+            Group(name="CharacterCustomizationFeetController", functions=[
+                Item(name="CheckState",
+                     pattern="48 8B C4 41 54 48 83 EC 70 48 89 58 20 48 89 78 E0 48 8B F9 4C 89 68 D8 4C 89 70 D0 4D 8B F0"),
+                Item(name="GetOwner",
+                     pattern="48 89 5C 24 10 48 89 6C 24 18 48 89 74 24 20 57 48 83 EC 40 48 8B 79 50 33 ED 89 6C 24 50 48 8B DA 48 85 FF 74",
+                     expected=2,
+                     index=1),
+            ]),
             Group(name="Entity", functions=[
                 Item(name="GetComponents",
                      pattern="48 83 C1 70 E9",
@@ -116,8 +124,14 @@ def patterns():
                      pattern="48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 20 48 8B 1A 48 8B F1 8B 42 0C 48 8D 3C C3 48 3B DF 74"),
             ]),
             Group(name="TPPRepresentationComponent", functions=[
-                Item(name="OnInitialize",
-                     pattern="48 8B C4 55 56 48 8D 68 98 48 81 EC 58 01 00 00 8B 15 ? ? ? ? 48 89 58 10 48 89 78 E8"),
+                Item(name="OnAttach",
+                     pattern="48 89 54 24 10 55 53 56 57 41 56 41 57 48 8D AC 24 E8 FE FF FF 48 81 EC 18 02 00 00 45 33 F6"),
+            ]),
+            Group(name="TransactionSystem", functions=[
+                Item(name="IsSlotSpawning",
+                     pattern="40 53 48 83 EC 30 49 8B D8 4C 8B C2 48 8D 54 24 20 E8 ? ? ? ? 48 8B 4C 24 20 48 85 C9 75 04 32 DB EB ? 48 8B D3 E8 ? ? ? ? 0F B6 D8",
+                     expected=3,
+                     index=1),
             ]),
         ]),
     ]

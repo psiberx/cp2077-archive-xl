@@ -24,6 +24,7 @@
 #include <RED4ext/CString.hpp>
 #include <RED4ext/Common.hpp>
 #include <RED4ext/DynArray.hpp>
+#include <RED4ext/GameEngine.hpp>
 #include <RED4ext/Handle.hpp>
 #include <RED4ext/HashMap.hpp>
 #include <RED4ext/ISerializable.hpp>
@@ -55,6 +56,7 @@
 #include <RED4ext/Scripting/Natives/Generated/game/AppearanceNameVisualTagsPreset.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/AttachmentSlots.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/TPPRepresentationComponent.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/ui/CharacterCustomizationFeetController.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/Widget.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/WidgetLibraryItemInstance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/WidgetLibraryResource.hpp>
@@ -62,7 +64,6 @@
 #include <RED4ext/Scripting/Natives/Generated/ink/IWidgetController.hpp>
 #include <RED4ext/Scripting/Natives/Generated/loc/alization/PersistenceOnScreenEntries.hpp>
 #include <RED4ext/Scripting/Natives/Generated/red/TagList.hpp>
-#include <RED4ext/Scripting/Natives/Generated/appearance/AppearanceDefinition.hpp>
 
 #include <yaml-cpp/yaml.h>
 

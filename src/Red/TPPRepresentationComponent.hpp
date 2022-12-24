@@ -5,7 +5,7 @@
 
 namespace Raw::TPPRepresentationComponent
 {
-constexpr auto OnInitialize = Core::RawFunc<
-    /* addr = */ Red::Addresses::TPPRepresentationComponent_OnInitialize,
-    /* type = */ void (*)(Red::game::TPPRepresentationComponent* aComponent)>();
+constexpr auto OnAttach = Core::RawFunc<
+    /* addr = */ Red::Addresses::TPPRepresentationComponent_OnAttach,
+    /* type = */ void (*)(Red::game::TPPRepresentationComponent* aComponent, uintptr_t a2)>();
 }
