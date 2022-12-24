@@ -60,7 +60,7 @@ void App::LocalizationModule::OnLoadOnScreens(Red::Handle<OnScreenEntries>& aOnS
             }
 
             for (const auto& path : paths->second)
-                successAll &= AppendEntries(path, entryList, usedKeyMap, originalCount, originalMaxKey, fallback);
+                successAll &= MergeResource(path, entryList, usedKeyMap, originalCount, originalMaxKey, fallback);
         }
 
         if (successAll)
@@ -74,7 +74,7 @@ void App::LocalizationModule::OnLoadOnScreens(Red::Handle<OnScreenEntries>& aOnS
     }
 }
 
-bool App::LocalizationModule::AppendEntries(const std::string& aPath, OnScreenEntryList& aFinalList,
+bool App::LocalizationModule::MergeResource(const std::string& aPath, OnScreenEntryList& aFinalList,
                                             OnScreenEntryMap& aUsedKeyMap, uint32_t aOriginalCount,
                                             uint64_t aOriginalMaxKey, bool aFallback)
 {
@@ -105,46 +105,60 @@ bool App::LocalizationModule::AppendEntries(const std::string& aPath, OnScreenEn
                 continue;
             }
 
+            newEntry.primaryKey = Red::FNV1a32(newEntry.secondaryKey.c_str());
+            MergeEntry(aFinalList, newEntry, i, aUsedKeyMap, aOriginalCount, aOriginalMaxKey, aFallback);
+
             newEntry.primaryKey = Red::FNV1a64(newEntry.secondaryKey.c_str());
-        }
-
-        const auto& existingIt = aUsedKeyMap.find(newEntry.primaryKey);
-
-        if (existingIt == aUsedKeyMap.end())
-        {
-            if (newEntry.primaryKey <= aOriginalMaxKey)
-            {
-                auto* originalEntry = FindSameEntry(newEntry, aFinalList, aOriginalCount);
-                if (originalEntry)
-                {
-                    if (!aFallback)
-                    {
-                        *originalEntry = newEntry;
-                        //aUsedKeyMap.emplace(originalEntry->primaryKey, originalEntry);
-                    }
-                    continue;
-                }
-            }
-
-            aFinalList.EmplaceBack(newEntry);
-            aUsedKeyMap.emplace(newEntry.primaryKey, aFinalList.End() - 1);
+            newEntry.secondaryKey = "";
+            MergeEntry(aFinalList, newEntry, i, aUsedKeyMap, aOriginalCount, aOriginalMaxKey, aFallback);
         }
         else
         {
-            auto* originalEntry = existingIt.value();
-
-            if (originalEntry->secondaryKey.Length() == 0)
-                LogWarning("|{}| Item #{} overwrites entry [{}].",
-                           ModuleName, i, originalEntry->primaryKey);
-            else
-                LogWarning("|{}| Item #{} overwrites entry [{}] aka [{}].",
-                           ModuleName, i, originalEntry->primaryKey, originalEntry->secondaryKey.c_str());
-
-            *originalEntry = newEntry;
+            MergeEntry(aFinalList, newEntry, i, aUsedKeyMap, aOriginalCount, aOriginalMaxKey, aFallback);
         }
     }
 
     return success;
+}
+
+void App::LocalizationModule::MergeEntry(OnScreenEntryList& aFinalList, OnScreenEntry& aNewEntry, uint32_t aIndex,
+                                         OnScreenEntryMap& aUsedKeyMap, uint32_t aOriginalCount,
+                                         uint64_t aOriginalMaxKey, bool aFallback)
+{
+    const auto& existingIt = aUsedKeyMap.find(aNewEntry.primaryKey);
+
+    if (existingIt == aUsedKeyMap.end())
+    {
+        if (aNewEntry.primaryKey <= aOriginalMaxKey)
+        {
+            auto* originalEntry = FindSameEntry(aNewEntry, aFinalList, aOriginalCount);
+            if (originalEntry)
+            {
+                if (!aFallback)
+                {
+                    *originalEntry = aNewEntry;
+                    //aUsedKeyMap.emplace(originalEntry->primaryKey, originalEntry);
+                }
+                return;
+            }
+        }
+
+        aFinalList.EmplaceBack(aNewEntry);
+        aUsedKeyMap.emplace(aNewEntry.primaryKey, aFinalList.End() - 1);
+    }
+    else
+    {
+        auto* originalEntry = existingIt.value();
+
+        if (originalEntry->secondaryKey.Length() == 0)
+            LogWarning("|{}| Item #{} overwrites entry [{}].",
+                       ModuleName, aIndex, originalEntry->primaryKey);
+        else
+            LogWarning("|{}| Item #{} overwrites entry [{}] aka [{}].",
+                       ModuleName, aIndex, originalEntry->primaryKey, originalEntry->secondaryKey.c_str());
+
+        *originalEntry = aNewEntry;
+    }
 }
 
 App::OnScreenEntry* App::LocalizationModule::FindSameEntry(OnScreenEntry& aEntry, OnScreenEntryList& aList,

@@ -19,8 +19,14 @@ public:
 
 private:
     void OnLoadOnScreens(Red::Handle<OnScreenEntries>& aOnScreens, Red::ResourcePath aPath);
-    static bool AppendEntries(const std::string& aPath, OnScreenEntryList& aFinalList, OnScreenEntryMap& aUsedKeyMap,
+
+    static bool MergeResource(const std::string& aPath, OnScreenEntryList& aFinalList, OnScreenEntryMap& aUsedKeyMap,
                               uint32_t aOriginalCount, uint64_t aOriginalMaxKey, bool aFallback);
+
+    static void MergeEntry(OnScreenEntryList& aFinalList, OnScreenEntry& aNewEntry, uint32_t aIndex,
+                           OnScreenEntryMap& aUsedKeyMap, uint32_t aOriginalCount, uint64_t aOriginalMaxKey,
+                           bool aFallback);
+
     static OnScreenEntry* FindSameEntry(OnScreenEntry& aEntry, OnScreenEntryList& aList, uint32_t aCount);
 };
 }
