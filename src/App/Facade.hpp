@@ -10,6 +10,7 @@ class Facade : public Red::Rtti::Class<Facade>
 {
 public:
     static void Reload();
+    static bool Require(Red::CString& aVersion);
     static Red::CString GetVersion();
 
 private:
