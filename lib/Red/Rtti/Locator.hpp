@@ -9,7 +9,7 @@ template<RED4ext::CName ATypeName>
 class TypeLocator
 {
 public:
-    operator const RED4ext::CBaseRTTIType*()
+    operator const RED4ext::CBaseRTTIType*() const
     {
         if (!s_resolved)
         {
@@ -19,7 +19,7 @@ public:
         return s_type;
     }
 
-    operator const RED4ext::CClass*()
+    operator const RED4ext::CClass*() const
     {
         if (!s_resolved)
         {
@@ -40,7 +40,7 @@ public:
     }
 
 private:
-    void Resolve()
+    void Resolve() const
     {
         s_type = RED4ext::CRTTISystem::Get()->GetType(ATypeName);
         s_resolved = true;
