@@ -62,6 +62,8 @@ App::OverrideTagManager::OverrideTagManager() noexcept
                   {"t0_000_pma_base__full", {5}},
                   {"t0_000_pwa_base__full", {5}},
                   {"t0_000_pwa_fpp__torso", {5}},
+                  {"l0_000_pwa_base__cs_flat", {0}},
+                  {"l0_000_pwa_base__cs_heel", {0}},
               }
           },
           {
@@ -72,6 +74,7 @@ App::OverrideTagManager::OverrideTagManager() noexcept
                   {"t0_000_pwa_base__full", {6}},
                   {"t0_000_pwa_fpp__torso", {6}},
                   {"l0_000_pwa_base__cs_flat", {1}},
+                  {"l0_000_pwa_base__cs_heel", {1}},
               }
           },
           {
@@ -81,6 +84,15 @@ App::OverrideTagManager::OverrideTagManager() noexcept
                   {"t0_000_pwa_base__full", {7}},
                   {"t0_000_pwa_fpp__torso", {7}},
                   {"l0_000_pwa_base__cs_flat", {2}},
+                  {"l0_000_pwa_base__cs_heel", {2}},
+              }
+          },
+          {
+              "HighHeels",
+              {
+                  {"t0_000_pwa_base__full", {5, 6, 7}},
+                  {"t0_000_pwa_fpp__torso", {5, 6, 7}},
+                  {"l0_000_pwa_base__cs_heel", {true, {0, 1, 2}}},
               }
           },
       })
