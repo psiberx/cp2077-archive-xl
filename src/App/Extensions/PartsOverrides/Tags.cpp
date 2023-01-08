@@ -60,10 +60,13 @@ App::OverrideTagManager::OverrideTagManager() noexcept
               "hide_Calves",
               {
                   {"t0_000_pma_base__full", {5}},
+                  {"l0_000_pma_base__high_heels", {0}},
+                  {"l0_000_pma_base__flat_shoes", {0}},
                   {"t0_000_pwa_base__full", {5}},
                   {"t0_000_pwa_fpp__torso", {5}},
                   {"l0_000_pwa_base__cs_flat", {0}},
-                  {"l0_000_pwa_base__cs_heel", {0}},
+                  {"l0_000_pwa_base__high_heels", {0}},
+                  {"l0_000_pwa_base__flat_shoes", {0}},
               }
           },
           {
@@ -71,28 +74,46 @@ App::OverrideTagManager::OverrideTagManager() noexcept
               {
                   {"s0_", {}},
                   {"t0_000_pma_base__full", {6}},
+                  {"l0_000_pma_base__high_heels", {1}},
+                  {"l0_000_pma_base__flat_shoes", {1}},
                   {"t0_000_pwa_base__full", {6}},
                   {"t0_000_pwa_fpp__torso", {6}},
                   {"l0_000_pwa_base__cs_flat", {1}},
-                  {"l0_000_pwa_base__cs_heel", {1}},
+                  {"l0_000_pwa_base__high_heels", {1}},
+                  {"l0_000_pwa_base__flat_shoes", {1}},
               }
           },
           {
               "hide_Feet",
               {
                   {"t0_000_pma_base__full", {7}},
+                  {"l0_000_pma_base__high_heels", {2}},
+                  {"l0_000_pma_base__flat_shoes", {2}},
                   {"t0_000_pwa_base__full", {7}},
                   {"t0_000_pwa_fpp__torso", {7}},
                   {"l0_000_pwa_base__cs_flat", {2}},
-                  {"l0_000_pwa_base__cs_heel", {2}},
+                  {"l0_000_pwa_base__high_heels", {2}},
+                  {"l0_000_pwa_base__flat_shoes", {2}},
               }
           },
           {
               "HighHeels",
               {
+                  {"t0_000_pma_base__full", {5, 6, 7}},
+                  {"l0_000_pma_base__high_heels", {true, {0, 1, 2}}},
                   {"t0_000_pwa_base__full", {5, 6, 7}},
                   {"t0_000_pwa_fpp__torso", {5, 6, 7}},
-                  {"l0_000_pwa_base__cs_heel", {true, {0, 1, 2}}},
+                  {"l0_000_pwa_base__high_heels", {true, {0, 1, 2}}},
+              }
+          },
+          {
+              "FlatShoes",
+              {
+                  {"t0_000_pma_base__full", {5, 6, 7}},
+                  {"l0_000_pma_base__flat_shoes", {true, {0, 1, 2}}},
+                  {"t0_000_pwa_base__full", {5, 6, 7}},
+                  {"t0_000_pwa_fpp__torso", {5, 6, 7}},
+                  {"l0_000_pwa_base__flat_shoes", {true, {0, 1, 2}}},
               }
           },
       })
