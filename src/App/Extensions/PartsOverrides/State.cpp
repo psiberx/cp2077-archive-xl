@@ -120,11 +120,14 @@ const Core::SharedPtr<App::ResourceState>& App::EntityState::FindResourceState(R
     return it.value();
 }
 
-void App::EntityState::AddChunkMaskOverride(uint64_t aHash, Red::CName aComponentName, uint64_t aChunkMask)
+void App::EntityState::AddChunkMaskOverride(uint64_t aHash, Red::CName aComponentName, uint64_t aChunkMask, bool aShow)
 {
     if (auto& componentState = GetComponentState(aComponentName))
     {
-        componentState->AddChunkMaskOverride(aHash, aChunkMask);
+        if (aShow)
+            componentState->AddShowingChunkMaskOverride(aHash, aChunkMask);
+        else
+            componentState->AddHidingChunkMaskOverride(aHash, aChunkMask);
     }
 }
 
@@ -134,7 +137,10 @@ void App::EntityState::AddChunkMaskOverride(uint64_t aHash, Red::CName aVisualTa
     {
         if (auto& componentState = GetComponentState(componentName))
         {
-            componentState->AddChunkMaskOverride(aHash, chunkMask);
+            if (chunkMask)
+                componentState->AddShowingChunkMaskOverride(aHash, chunkMask);
+            else
+                componentState->AddHidingChunkMaskOverride(aHash, chunkMask);
         }
     }
 }
@@ -185,10 +191,16 @@ bool App::EntityState::ApplyChunkMasks(Red::Handle<Red::ent::IComponent>& aCompo
     uint64_t finalChunkMask = GetOriginalChunkMask(component);
 
     if (componentState)
-        finalChunkMask &= componentState->GetOverriddenChunkMask();
+        finalChunkMask |= componentState->GetShowingChunkMask();
 
     if (prefixState)
-        finalChunkMask &= prefixState->GetOverriddenChunkMask();
+        finalChunkMask |= prefixState->GetShowingChunkMask();
+
+    if (componentState)
+        finalChunkMask &= componentState->GetHidingChunkMask();
+
+    if (prefixState)
+        finalChunkMask &= prefixState->GetHidingChunkMask();
 
     return component.SetChunkMask(finalChunkMask);
 }
@@ -204,7 +216,7 @@ uint64_t App::EntityState::GetOriginalChunkMask(ComponentWrapper& aComponent)
     return originalChunkMaskIt.value();
 }
 
-int32_t App::EntityState::GetOrderOffset(Red::ResourcePath aResourcePath)
+int32_t App::EntityState::GetOrderOffset(Red::ResourcePath aResourcePath) const
 {
     auto& resourceState = FindResourceState(aResourcePath);
 
@@ -226,30 +238,66 @@ const char* App::ComponentState::GetName() const
 
 bool App::ComponentState::IsOverridden() const
 {
-    return !m_overridenChunkMasks.empty();
+    return !m_hidingChunkMasks.empty() || !m_showingChunkMasks.empty();
 }
 
-void App::ComponentState::AddChunkMaskOverride(uint64_t aHash, uint64_t aChunkMask)
+void App::ComponentState::AddHidingChunkMaskOverride(uint64_t aHash, uint64_t aChunkMask)
 {
-    auto it = m_overridenChunkMasks.find(aChunkMask);
+    auto it = m_hidingChunkMasks.find(aChunkMask);
 
-    if (it == m_overridenChunkMasks.end())
-        it = m_overridenChunkMasks.emplace(aHash, ~0ull).first;
+    if (it == m_hidingChunkMasks.end())
+        it = m_hidingChunkMasks.emplace(aHash, ~0ull).first;
 
     it.value() &= aChunkMask;
 }
 
-bool App::ComponentState::RemoveChunkMaskOverride(uint64_t aHash)
+void App::ComponentState::AddShowingChunkMaskOverride(uint64_t aHash, uint64_t aChunkMask)
 {
-    return m_overridenChunkMasks.erase(aHash);
+    auto it = m_showingChunkMasks.find(aChunkMask);
+
+    if (it == m_showingChunkMasks.end())
+        it = m_showingChunkMasks.emplace(aHash, 0ull).first;
+
+    it.value() |= aChunkMask;
 }
 
-uint64_t App::ComponentState::GetOverriddenChunkMask()
+bool App::ComponentState::RemoveChunkMaskOverride(uint64_t aHash)
+{
+    m_hidingChunkMasks.erase(aHash);
+    m_showingChunkMasks.erase(aHash);
+
+    return true;
+}
+
+uint64_t App::ComponentState::GetOverriddenChunkMask(uint64_t aOriginalMask)
+{
+    uint64_t finalChunkMask = aOriginalMask;
+
+    for (const auto& [_, hidingChunkMask] : m_hidingChunkMasks)
+        finalChunkMask &= hidingChunkMask;
+
+    for (const auto& [_, showingChunkMask] : m_showingChunkMasks)
+        finalChunkMask |= showingChunkMask;
+
+    return finalChunkMask;
+}
+
+uint64_t App::ComponentState::GetHidingChunkMask()
 {
     uint64_t finalChunkMask = ~0ull;
 
-    for (const auto& [_, overridenChunkMask] : m_overridenChunkMasks)
-        finalChunkMask &= overridenChunkMask;
+    for (const auto& [_, hidingChunkMask] : m_hidingChunkMasks)
+        finalChunkMask &= hidingChunkMask;
+
+    return finalChunkMask;
+}
+
+uint64_t App::ComponentState::GetShowingChunkMask()
+{
+    uint64_t finalChunkMask = 0ull;
+
+    for (const auto& [_, showingChunkMask] : m_showingChunkMasks)
+        finalChunkMask |= showingChunkMask;
 
     return finalChunkMask;
 }

@@ -215,16 +215,7 @@ void App::PartsOverridesModule::RegisterOffsetOverrides(Core::SharedPtr<EntitySt
 void App::PartsOverridesModule::RegisterPartsOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
                                                        Red::Handle<Red::AppearanceDefinition>& aApperance)
 {
-    for (const auto& partOverrides : aApperance->partsOverrides)
-    {
-        if (!partOverrides.partResource.path)
-        {
-            for (const auto& componentOverride : partOverrides.componentsOverrides)
-            {
-                aEntityState->AddChunkMaskOverride(aHash, componentOverride.componentName, componentOverride.chunkMask);
-            }
-        }
-    }
+    RegisterPartsOverrides(aEntityState, aHash, aApperance->partsOverrides);
 
     for (const auto& visualTag : aApperance->visualTags.tags)
     {

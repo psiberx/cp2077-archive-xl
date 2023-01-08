@@ -16,13 +16,17 @@ public:
     [[nodiscard]] const char* GetName() const;
     [[nodiscard]] bool IsOverridden() const;
 
-    void AddChunkMaskOverride(uint64_t aHash, uint64_t aChunkMask);
+    void AddHidingChunkMaskOverride(uint64_t aHash, uint64_t aChunkMask);
+    void AddShowingChunkMaskOverride(uint64_t aHash, uint64_t aChunkMask);
     bool RemoveChunkMaskOverride(uint64_t aHash);
-    uint64_t GetOverriddenChunkMask();
+    uint64_t GetOverriddenChunkMask(uint64_t aOriginalMask);
+    uint64_t GetHidingChunkMask();
+    uint64_t GetShowingChunkMask();
 
 private:
     std::string m_name;
-    Core::Map<uint64_t, uint64_t> m_overridenChunkMasks;
+    Core::Map<uint64_t, uint64_t> m_hidingChunkMasks;
+    Core::Map<uint64_t, uint64_t> m_showingChunkMasks;
 };
 
 class ResourceState
@@ -63,11 +67,11 @@ public:
     [[nodiscard]] const Core::SharedPtr<ResourceState>& FindResourceState(Red::ResourcePath aResourcePath) const;
 
     bool ApplyChunkMasks(Red::Handle<Red::ent::IComponent>& aComponent);
-    void AddChunkMaskOverride(uint64_t aHash, Red::CName aComponentName, uint64_t aChunkMask);
+    void AddChunkMaskOverride(uint64_t aHash, Red::CName aComponentName, uint64_t aChunkMask, bool aShow = false);
     void AddChunkMaskOverride(uint64_t aHash, Red::CName aVisualTag);
     void RemoveChunkMaskOverrides(uint64_t aHash);
 
-    int32_t GetOrderOffset(Red::ResourcePath aResourcePath);
+    [[nodiscard]] int32_t GetOrderOffset(Red::ResourcePath aResourcePath) const;
     void AddOffsetOverride(uint64_t aHash, Red::ResourcePath aResourcePath, int32_t aOffset);
     void RemoveOffsetOverrides(uint64_t aHash);
 
