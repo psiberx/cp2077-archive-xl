@@ -1,7 +1,7 @@
 param ($StageDir, $ProjectName, $DistDir, $Version, $Suffix = "")
 
 if ($Version -eq $null) {
-    $Version = Select-String -path "src/App/Project.hpp" -pattern """(\d+\.\d+\.\d+)""" | % {"$($_.Matches.Groups[1])"}
+    $Version = Select-String -Path "src/App/Project.hpp" -Pattern """(\d+\.\d+\.\d+)""" -List | % {"$($_.Matches.Groups[1])"}
 }
 
 New-Item -ItemType directory -Force -Path ${DistDir} | Out-Null
