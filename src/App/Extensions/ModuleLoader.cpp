@@ -97,7 +97,15 @@ bool App::ModuleLoader::ReadConfig(const std::filesystem::path& aPath, const std
 
     try
     {
-        LogInfo("Reading \"{}\"...", std::filesystem::relative(aPath, aDir).string());
+        std::error_code error;
+        auto path = std::filesystem::relative(aPath, aDir, error);
+        if (path.empty())
+        {
+            path = std::filesystem::absolute(aPath, error);
+            path = std::filesystem::relative(path, aDir, error);
+        }
+
+        LogInfo("Reading \"{}\"...", path.string());
 
         const auto name = aPath.filename().string();
         const auto config = YAML::LoadFile(aPath.string());
