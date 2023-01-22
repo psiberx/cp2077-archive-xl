@@ -60,7 +60,20 @@ void App::LocalizationModule::OnLoadOnScreens(Red::Handle<OnScreenEntries>& aOnS
             }
 
             for (const auto& path : paths->second)
+            {
                 successAll &= MergeResource(path, entryList, usedKeyMap, originalCount, originalMaxKey, fallback);
+            }
+
+            if (!fallback && language != unit.fallback)
+            {
+                fallback = true;
+                paths = unit.onscreens.find(unit.fallback);
+
+                for (const auto& path : paths->second)
+                {
+                    successAll &= MergeResource(path, entryList, usedKeyMap, originalCount, originalMaxKey, fallback);
+                }
+            }
         }
 
         if (successAll)
@@ -146,7 +159,7 @@ void App::LocalizationModule::MergeEntry(OnScreenEntryList& aFinalList, OnScreen
         aFinalList.EmplaceBack(aNewEntry);
         aUsedKeyMap.emplace(aNewEntry.primaryKey, aFinalList.End() - 1);
     }
-    else
+    else if (!aFallback)
     {
         auto* originalEntry = existingIt.value();
 
