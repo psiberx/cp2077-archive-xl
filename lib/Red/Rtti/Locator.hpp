@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Detail.hpp"
+
 #include <RED4ext/CName.hpp>
 #include <RED4ext/RTTISystem.hpp>
 
@@ -34,6 +36,36 @@ public:
         return reinterpret_cast<RED4ext::CClass*>(s_type);
     }
 
+    operator const RED4ext::CRTTIHandleType*() const
+    {
+        if (!s_resolved)
+        {
+            Resolve();
+        }
+
+        if (!s_type || s_type->GetType() != RED4ext::ERTTIType::Handle)
+        {
+            return nullptr;
+        }
+
+        return reinterpret_cast<RED4ext::CRTTIHandleType*>(s_type);
+    }
+
+    operator const RED4ext::CRTTIWeakHandleType*() const
+    {
+        if (!s_resolved)
+        {
+            Resolve();
+        }
+
+        if (!s_type || s_type->GetType() != RED4ext::ERTTIType::WeakHandle)
+        {
+            return nullptr;
+        }
+
+        return reinterpret_cast<RED4ext::CRTTIWeakHandleType*>(s_type);
+    }
+
     operator bool()
     {
         return s_type;
@@ -50,8 +82,18 @@ private:
     static inline bool s_resolved;
 };
 
-template<class TClass>
-class ClassLocator : public TypeLocator<TClass::NAME>
+template<typename T>
+class ClassLocator;
+
+template<class T>
+requires detail::HasGeneratedNameConst<T>
+class ClassLocator<T> : public TypeLocator<T::NAME>
+{
+};
+
+template<class T>
+requires detail::HasGeneratedNameConst<T>
+class ClassLocator<RED4ext::Handle<T>> : public TypeLocator<RED4ext::FNV1a64(T::NAME, RED4ext::FNV1a64("handle:"))>
 {
 };
 }
