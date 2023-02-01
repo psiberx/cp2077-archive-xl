@@ -40,6 +40,10 @@ def patterns():
                      expected=4,
                      index=2),
             ]),
+            Group(name="CBaseEngine", functions=[
+                Item(name="LoadGatheredResources",
+                     pattern="40 53 48 83 EC 70 48 8B 01 FF 90 A0 00 00 00 33 DB 84 C0 8B CB 0F 95 C1 E8"),
+            ]),
             Group(name="CharacterCustomizationFeetController", functions=[
                 Item(name="CheckState",
                      pattern="48 8B C4 41 54 48 83 EC 70 48 89 58 20 48 89 78 E0 48 8B F9 4C 89 68 D8 4C 89 70 D0 4D 8B F0"),
@@ -47,6 +51,18 @@ def patterns():
                      pattern="48 89 5C 24 10 48 89 6C 24 18 48 89 74 24 20 57 48 83 EC 40 48 8B 79 50 33 ED 89 6C 24 50 48 8B DA 48 85 FF 74",
                      expected=2,
                      index=1),
+            ]),
+            Group(name="CharacterCustomizationSystem", functions=[
+                Item(name="InitState",
+                     pattern="48 8B C4 55 41 57 48 8D A8 38 FF FF FF 48 81 EC B8 01 00 00 48 89 58 08 48 89 78 20 48 8B F9"),
+                Item(name="InitOptions",
+                     pattern="48 8B C4 44 88 40 18 48 89 50 10 55 56 48 8D 68 A1 48 81 EC E8 00 00 00 48 89 58 20 4C 89 68 D8"),
+                Item(name="InitAppOption",
+                     pattern="4C 8B DC 48 81 EC 98 00 00 00 49 89 5B 08 49 8B D9 49 89 73 F8 48 8B F1 49 8B 08 4D 89 63 E8"),
+                Item(name="InitMorphOption",
+                     pattern="48 8B C4 55 57 48 8D 68 A1 48 81 EC D8 00 00 00 48 89 58 08 49 8B D8 4C 89 60 20 4D 8B E1"),
+                Item(name="InitSwitcherOption",
+                     pattern="48 8B C4 44 89 48 20 4C 89 40 18 89 50 10 55 41 57 48 8D 68 B1 48 81 EC E8 00 00 00 48 89 70 E8"),
             ]),
             Group(name="Entity", functions=[
                 Item(name="GetComponents",
@@ -118,6 +134,12 @@ def patterns():
                 Item(name="LoadOnScreens",
                      pattern="40 55 53 57 48 8B EC 48 81 EC 80 00 00 00 0F 57 C0 48 8B D9 F3 0F 7F 45 A0 48 85 D2 75 17 33 FF 48 8B C1 48 89 39 48 89 79 08 48 81 C4 80 00 00",
                      expected=2),
+            ]),
+            Group(name="ResourceLoader", functions=[
+                Item(name="OnUpdate",
+                     pattern="48 8B 49 48 48 85 C9 0F 85",
+                     expected=9,
+                     index=2),
             ]),
             Group(name="TagList", functions=[
                 Item(name="MergeWith",
