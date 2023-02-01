@@ -24,7 +24,9 @@ public:
 
     void Configure();
     void Load();
+    void PostLoad();
     void Unload();
+    void Reload();
 
 private:
     bool ExtraConfigDirExists();

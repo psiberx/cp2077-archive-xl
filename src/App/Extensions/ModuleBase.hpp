@@ -16,6 +16,7 @@ public:
     virtual std::string_view GetName() = 0;
     virtual bool Load() = 0;
     virtual bool Unload() = 0;
+    virtual void PostLoad() {}
 };
 
 class ConfigurableModule : public Module
@@ -23,6 +24,7 @@ class ConfigurableModule : public Module
 public:
     virtual bool Configure(const std::string& aConfigName, const YAML::Node& aConfigNode) = 0;
     virtual void Reset() = 0;
+    virtual void Reload() {};
 };
 
 struct ConfigurableUnit

@@ -24,6 +24,8 @@ constexpr uintptr_t AttachmentSlots_InitializeSlots = 0x141653B00 - ImageBase; /
 constexpr uintptr_t AttachmentSlots_IsSlotEmpty = 0x14165C220 - ImageBase; // 48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 20 48 8B F1 48 8B DA 48 81 C1 00 01 00 00, expected: 4, index: 1
 constexpr uintptr_t AttachmentSlots_IsSlotSpawning = 0x14165C2D0 - ImageBase; // 48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 20 48 8B F1 48 8B DA 48 81 C1 00 01 00 00, expected: 4, index: 2
 
+constexpr uintptr_t CBaseEngine_LoadGatheredResources = 0x140A78DC0 - ImageBase; // 40 53 48 83 EC 70 48 8B 01 FF 90 A0 00 00 00 33 DB 84 C0 8B CB 0F 95 C1 E8, expected: 1, index: 0
+
 constexpr uintptr_t CharacterCustomizationFeetController_CheckState = 0x1424C6F80 - ImageBase; // 48 8B C4 41 54 48 83 EC 70 48 89 58 20 48 89 78 E0 48 8B F9 4C 89 68 D8 4C 89 70 D0 4D 8B F0, expected: 1, index: 0
 constexpr uintptr_t CharacterCustomizationFeetController_GetOwner = 0x1424C6010 - ImageBase; // 48 89 5C 24 10 48 89 6C 24 18 48 89 74 24 20 57 48 83 EC 40 48 8B 79 50 33 ED 89 6C 24 50 48 8B DA 48 85 FF 74, expected: 2, index: 1
 
@@ -52,6 +54,8 @@ constexpr uintptr_t InkWidgetLibrary_SpawnFromExternal = 0x14098DEF0 - ImageBase
 constexpr uintptr_t InkWidgetLibrary_SpawnFromLocal = 0x14098DFE0 - ImageBase; // 40 53 48 83 EC 20 48 8B DA 49 8B D0 E8 ? ? ? ? 48 85 C0 74 ? 48 8B  D3 48 8B C8 E8, expected: 2, index: 1
 
 constexpr uintptr_t Localization_LoadOnScreens = 0x1406ECE40 - ImageBase; // 40 55 53 57 48 8B EC 48 81 EC 80 00 00 00 0F 57 C0 48 8B D9 F3 0F 7F 45 A0 48 85 D2 75 17 33 FF 48 8B C1 48 89 39 48 89 79 08 48 81 C4 80 00 00, expected: 2, index: 0
+
+constexpr uintptr_t ResourceLoader_OnUpdate = 0x140204710 - ImageBase; // 48 8B 49 48 48 85 C9 0F 85, expected: 9, index: 2
 
 constexpr uintptr_t TagList_MergeWith = 0x1402ADE70 - ImageBase; // 48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 20 48 8B 1A 48 8B F1 8B 42 0C 48 8D 3C C3 48 3B DF 74, expected: 1, index: 0
 

@@ -7,5 +7,5 @@ namespace Raw::GameApplication
 {
 constexpr auto InitResourceDepot = Core::RawFunc<
     /* addr = */ Red::Addresses::GameApplication_InitResourceDepot,
-    /* type = */ void (*)(uintptr_t a1, uintptr_t a2)>();
+    /* type = */ void (*)(uintptr_t aApp, uintptr_t aParams)>();
 }

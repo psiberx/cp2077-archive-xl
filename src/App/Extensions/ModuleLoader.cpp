@@ -153,6 +153,30 @@ void App::ModuleLoader::Load()
     m_loaded = true;
 }
 
+void App::ModuleLoader::PostLoad()
+{
+    if (!m_loaded)
+        return;
+
+    for (const auto& module : m_modules)
+    {
+        try
+        {
+            module->PostLoad();
+        }
+        catch (const std::exception& ex)
+        {
+            LogError("|{}| {}", module->GetName(), ex.what());
+            module->Unload();
+        }
+        catch (...)
+        {
+            LogError("|{}| Failed to post load. An unknown error has occurred.", module->GetName());
+            module->Unload();
+        }
+    }
+}
+
 void App::ModuleLoader::Unload()
 {
     if (!m_loaded)
@@ -175,4 +199,28 @@ void App::ModuleLoader::Unload()
     }
 
     m_loaded = false;
+}
+
+void App::ModuleLoader::Reload()
+{
+    if (!m_loaded)
+        return;
+
+    for (const auto& module : m_configurables)
+    {
+        try
+        {
+            module->Reload();
+        }
+        catch (const std::exception& ex)
+        {
+            LogError("|{}| {}", module->GetName(), ex.what());
+            module->Unload();
+        }
+        catch (...)
+        {
+            LogError("|{}| Failed to reload. An unknown error has occurred.", module->GetName());
+            module->Unload();
+        }
+    }
 }
