@@ -17,7 +17,7 @@ void App::ExtensionService::OnBootstrap()
 
     m_loader->Add<AppearanceSwapModule>();
     m_loader->Add<AttachmentSlotsModule>();
-    //m_loader->Add<CustomizationModule>();
+    m_loader->Add<CustomizationModule>();
     m_loader->Add<FactoryIndexModule>();
     m_loader->Add<InkSpawnerModule>();
     m_loader->Add<LocalizationModule>();
