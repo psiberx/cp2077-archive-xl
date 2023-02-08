@@ -141,6 +141,10 @@ def patterns():
                      expected=9,
                      index=2),
             ]),
+            Group(name="StreamingWorld", functions=[
+                Item(name="OnLoad",
+                     pattern="48 89 5C 24 08 57 48 83 EC 40 48 8B FA 48 8B D9 E8 ? ? ? ? 0F 57 C0 48 8D 93 D8 01 00 00"),
+            ]),
             Group(name="TagList", functions=[
                 Item(name="MergeWith",
                      pattern="48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 20 48 8B 1A 48 8B F1 8B 42 0C 48 8D 3C C3 48 3B DF 74"),

@@ -6,6 +6,7 @@
 #include "App/Extensions/InkSpawner/Module.hpp"
 #include "App/Extensions/Localization/Module.hpp"
 #include "App/Extensions/PartsOverrides/Module.hpp"
+#include "App/Extensions/Streaming/Module.hpp"
 #include "App/Extensions/VisualTags/Module.hpp"
 #include "Red/GameApplication.hpp"
 #include "Red/GameEngine.hpp"
@@ -22,6 +23,7 @@ void App::ExtensionService::OnBootstrap()
     m_loader->Add<InkSpawnerModule>();
     m_loader->Add<LocalizationModule>();
     m_loader->Add<PartsOverridesModule>();
+    m_loader->Add<StreamingModule>();
     m_loader->Add<VisualTagsModule>();
 
     HookOnceAfter<Raw::GameApplication::InitResourceDepot>([&]() {

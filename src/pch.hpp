@@ -74,6 +74,8 @@
 #include <RED4ext/Scripting/Natives/Generated/ink/IWidgetController.hpp>
 #include <RED4ext/Scripting/Natives/Generated/loc/alization/PersistenceOnScreenEntries.hpp>
 #include <RED4ext/Scripting/Natives/Generated/red/TagList.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/StreamingBlock.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/StreamingWorld.hpp>
 
 #include <yaml-cpp/yaml.h>
 
