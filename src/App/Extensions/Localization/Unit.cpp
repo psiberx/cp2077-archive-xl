@@ -38,7 +38,7 @@ void App::LocalizationUnit::LoadYAML(const YAML::Node& aNode)
 
                 if (!Language::IsKnown(language))
                 {
-                    issues.emplace_back(fmt::format("Unknown language code [{}].", key));
+                    issues.emplace_back(fmt::format("Unknown language code \"{}\".", key));
                     continue;
                 }
 

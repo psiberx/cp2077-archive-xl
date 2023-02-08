@@ -32,7 +32,7 @@ void App::LocalizationModule::OnLoadOnScreens(Red::Handle<OnScreenEntries>& aOnS
 {
     auto language = Language::ResolveFromResource(aPath);
 
-    LogInfo("|{}| The localization system is initializing for the language [{}]...", ModuleName, language.ToString());
+    LogInfo("|{}| The localization system is initializing (current language is \"{}\")...", ModuleName, language.ToString());
 
     if (!m_units.empty())
     {
@@ -49,13 +49,13 @@ void App::LocalizationModule::OnLoadOnScreens(Red::Handle<OnScreenEntries>& aOnS
 
             if (paths != unit.onscreens.end())
             {
-                LogInfo("|{}| Processing [{}]...", ModuleName, unit.name);
+                LogInfo("|{}| Processing {}...", ModuleName, unit.name);
             }
             else
             {
                 fallback = true;
                 paths = unit.onscreens.find(unit.fallback);
-                LogInfo("|{}| Processing [{}] using fallback language [{}]...",
+                LogInfo("|{}| Processing {} using fallback language \"{}\"...",
                         ModuleName, unit.name, unit.fallback.ToString());
             }
 
@@ -96,11 +96,11 @@ bool App::LocalizationModule::MergeResource(const std::string& aPath, OnScreenEn
 
     if (!resource.instance)
     {
-        LogError("|{}| Resource [{}] failed to load.", ModuleName, aPath);
+        LogError("|{}| Resource \"{}\" failed to load.", ModuleName, aPath);
         return false;
     }
 
-    LogInfo("|{}| Merging entries from [{}]...", ModuleName, aPath);
+    LogInfo("|{}| Merging entries from \"{}\"...", ModuleName, aPath);
 
     bool success = true;
     auto& newEntries = resource.GetPtr()->entries;
@@ -164,10 +164,10 @@ void App::LocalizationModule::MergeEntry(OnScreenEntryList& aFinalList, OnScreen
         auto* originalEntry = existingIt.value();
 
         if (originalEntry->secondaryKey.Length() == 0)
-            LogWarning("|{}| Item #{} overwrites entry [{}].",
+            LogWarning("|{}| Item #{} overwrites entry {}.",
                        ModuleName, aIndex, originalEntry->primaryKey);
         else
-            LogWarning("|{}| Item #{} overwrites entry [{}] aka [{}].",
+            LogWarning("|{}| Item #{} overwrites entry {} aka {}.",
                        ModuleName, aIndex, originalEntry->primaryKey, originalEntry->secondaryKey.c_str());
 
         *originalEntry = aNewEntry;

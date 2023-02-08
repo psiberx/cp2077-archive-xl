@@ -37,11 +37,11 @@ void App::FactoryIndexModule::OnLoadFactoryAsync(uintptr_t aIndex, Red::Resource
         {
             for (const auto& unit : m_units)
             {
-                LogInfo("|{}| Processing [{}]...", ModuleName, unit.name);
+                LogInfo("|{}| Processing {}...", ModuleName, unit.name);
 
                 for (const auto& path : unit.factories)
                 {
-                    LogInfo("|{}| Adding factory [{}]...", ModuleName, path);
+                    LogInfo("|{}| Adding factory \"{}\"...", ModuleName, path);
 
                     // TODO: Check if factory resource exists...
                     Raw::FactoryIndex::LoadFactoryAsync(aIndex, path.c_str(), aContext);
