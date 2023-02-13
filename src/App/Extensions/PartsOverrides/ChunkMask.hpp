@@ -21,7 +21,7 @@ struct ChunkMask
         for (const auto& chunk : aChunks)
             mask |= 1 << chunk;
 
-        if (!set)
+        if (!set && mask)
         {
             mask = ~mask;
         }
