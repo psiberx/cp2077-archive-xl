@@ -7,7 +7,6 @@ constexpr auto ModuleName = "Customization";
 
 constexpr auto MaleResource = Red::ResourcePath(R"(base\gameplay\gui\fullscreen\main_menu\male_cco.inkcharcustomization)");
 constexpr auto FemaleResource = Red::ResourcePath(R"(base\gameplay\gui\fullscreen\main_menu\female_cco.inkcharcustomization)");
-constexpr auto CharacterGroup = Red::CName("character_customization");
 
 Red::Rtti::ClassLocator<Red::game::ui::AppearanceInfo> s_AppInfoType;
 Red::Rtti::ClassLocator<Red::game::ui::MorphInfo> s_MorphInfoType;
@@ -21,20 +20,26 @@ std::string_view App::CustomizationModule::GetName()
 
 bool App::CustomizationModule::Load()
 {
-    if (!HookBefore<Raw::CharacterCustomizationSystem::InitOptions>(&CustomizationModule::OnInitOptions))
-        throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::InitOptions].");
+    if (!HookBefore<Raw::CharacterCustomizationSystem::Initialize>(&CustomizationModule::OnActivateSystem))
+        throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::Initialize].");
 
-    if (!HookBefore<Raw::CharacterCustomizationSystem::InitState>(&CustomizationModule::OnInitState))
-        throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::InitState].");
+    if (!HookBefore<Raw::CharacterCustomizationSystem::Uninitialize>(&CustomizationModule::OnDeactivateSystem))
+        throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::Uninitialize].");
 
-    if (!HookBefore<Raw::CharacterCustomizationSystem::InitAppOption>(&CustomizationModule::OnInitAppOption))
-        throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::InitAppOption].");
+    if (!HookBefore<Raw::CharacterCustomizationSystem::EnsureState>(&CustomizationModule::OnEnsureState))
+        throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::EnsureState].");
 
-    if (!HookBefore<Raw::CharacterCustomizationSystem::InitMorphOption>(&CustomizationModule::OnInitMorphOption))
-        throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::InitMorphOption].");
+    if (!HookBefore<Raw::CharacterCustomizationSystem::InitializeAppOption>(&CustomizationModule::OnInitAppOption))
+        throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::InitializeAppOption].");
 
-    if (!HookAfter<Raw::CharacterCustomizationSystem::InitSwitcherOption>(&CustomizationModule::OnInitSwitcherOption))
-        throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::InitSwitcherOption].");
+    if (!HookBefore<Raw::CharacterCustomizationSystem::InitializeMorphOption>(&CustomizationModule::OnInitMorphOption))
+        throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::InitializeMorphOption].");
+
+    if (!HookAfter<Raw::CharacterCustomizationSystem::InitializeSwitcherOption>(&CustomizationModule::OnInitSwitcherOption))
+        throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::InitializeSwitcherOption].");
+
+    if (!HookBefore<Raw::RuntimeSystemEntityAppearanceChanger::ChangeAppearance>(&CustomizationModule::OnChangeAppearance))
+        throw std::runtime_error("Failed to hook [RuntimeSystemEntityAppearanceChanger::ChangeAppearance].");
 
     return true;
 }
@@ -46,9 +51,12 @@ void App::CustomizationModule::PostLoad()
 
 bool App::CustomizationModule::Unload()
 {
-    Unhook<Raw::CharacterCustomizationSystem::InitOptions>();
-    Unhook<Raw::CharacterCustomizationSystem::InitState>();
-    Unhook<Raw::CharacterCustomizationSystem::InitAppOption>();
+    Unhook<Raw::CharacterCustomizationSystem::Initialize>();
+    Unhook<Raw::CharacterCustomizationSystem::EnsureState>();
+    Unhook<Raw::CharacterCustomizationSystem::InitializeAppOption>();
+    Unhook<Raw::CharacterCustomizationSystem::InitializeMorphOption>();
+    Unhook<Raw::CharacterCustomizationSystem::InitializeSwitcherOption>();
+    Unhook<Raw::RuntimeSystemEntityAppearanceChanger::ChangeAppearance>();
 
     return true;
 }
@@ -80,6 +88,22 @@ bool App::CustomizationModule::IsCustomEntryName(Red::CName aName, const Red::CS
     return IsCustomEntryName(Red::FNV1a64(reinterpret_cast<const uint8_t*>(aSubName.c_str()), aSubName.Length(), aName));
 }
 
+void App::CustomizationModule::RegisterAppOverride(Red::ResourcePath aOriginal, Red::ResourcePath aOverride,
+                                                   Red::CName aName)
+{
+    m_customAppOverrides.insert({Red::AppearanceDescriptor{aOriginal, aName},
+                                 Red::AppearanceDescriptor{aOverride, aName}});
+}
+
+void App::CustomizationModule::ApplyAppOverride(Red::AppearanceDescriptor& aAppearance)
+{
+    auto it = m_customAppOverrides.find(aAppearance);
+    if (it != m_customAppOverrides.end())
+    {
+        aAppearance = it.value();
+    }
+}
+
 void App::CustomizationModule::PrefetchCustomResources()
 {
     for (const auto& unit : m_units)
@@ -107,6 +131,8 @@ void App::CustomizationModule::PrefetchCustomResources(Core::Vector<Customizatio
 
 void App::CustomizationModule::MergeCustomEntries()
 {
+    std::unique_lock _(m_customEntriesMergeLock);
+
     if (m_customEntriesMerged)
         return;
 
@@ -213,6 +239,12 @@ void App::CustomizationModule::MergeCustomOptions(Red::DynArray<CustomizationOpt
                     {
                         targetAppOption->definitions.EmplaceBack(sourceChoice);
 
+                        if (targetAppOption->resource.path != sourceAppOption->resource.path)
+                        {
+                            RegisterAppOverride(targetAppOption->resource.path, sourceAppOption->resource.path,
+                                                sourceChoice.name);
+                        }
+
                         RegisterCustomEntryName(sourceChoice.name);
                     }
                 }
@@ -286,6 +318,8 @@ void App::CustomizationModule::MergeCustomOptions(Red::DynArray<CustomizationOpt
 
 void App::CustomizationModule::RemoveCustomEntries()
 {
+    std::unique_lock _(m_customEntriesMergeLock);
+
     if (!m_customEntriesMerged)
         return;
 
@@ -300,6 +334,7 @@ void App::CustomizationModule::RemoveCustomEntries()
     RemoveCustomEntries(maleResource);
     RemoveCustomEntries(femaleResource);
 
+    m_customAppOverrides.clear();
     m_customEntryNames.clear();
     m_customEntriesMerged = false;
 }
@@ -391,13 +426,20 @@ void App::CustomizationModule::ResetCustomResources()
     m_customFemaleResources.clear();
 }
 
-void App::CustomizationModule::OnInitOptions(App::CustomizationSystem& aSystem, App::CustomizationPuppet& aPuppet,
-                                             bool aIsMale, uintptr_t a4)
+void App::CustomizationModule::OnActivateSystem(App::CustomizationSystem& aSystem, App::CustomizationPuppet& aPuppet,
+                                            bool aIsMale, uintptr_t a4)
 {
     MergeCustomEntries();
+
+    m_customizationActive = true;
 }
 
-void App::CustomizationModule::OnInitState(App::CustomizationSystem& aSystem, App::CustomizationState& aState)
+void App::CustomizationModule::OnDeactivateSystem(App::CustomizationSystem& aSystem)
+{
+    m_customizationActive = false;
+}
+
+void App::CustomizationModule::OnEnsureState(App::CustomizationSystem& aSystem, App::CustomizationState& aState)
 {
     MergeCustomEntries();
 }
@@ -447,6 +489,27 @@ void App::CustomizationModule::OnInitSwitcherOption(App::CustomizationSystem& aS
         if (IsCustomEntryName(aOption->info->name))
         {
             aOption->isActive = true;
+        }
+    }
+}
+
+void App::CustomizationModule::OnChangeAppearance(App::AppearanceChangerSystem& aSystem,
+                                                  App::CustomizationPuppet& aPuppet,
+                                                  Red::SomeIterator<Red::AppearanceDescriptor>& aOldApp,
+                                                  Red::SomeIterator<Red::AppearanceDescriptor>& aNewApp,
+                                                  uintptr_t a5,
+                                                  uint8_t a6)
+{
+    if (m_customizationActive && !m_customAppOverrides.empty())
+    {
+        if (aOldApp)
+        {
+            ApplyAppOverride(aOldApp);
+        }
+
+        if (aNewApp)
+        {
+            ApplyAppOverride(aNewApp);
         }
     }
 }

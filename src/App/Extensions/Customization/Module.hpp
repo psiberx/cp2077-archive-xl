@@ -2,6 +2,7 @@
 
 #include "App/Extensions/ModuleBase.hpp"
 #include "App/Extensions/Customization/Unit.hpp"
+#include "Red/AppearanceChanger.hpp"
 #include "Red/CharacterCustomization.hpp"
 
 namespace App
@@ -17,7 +18,9 @@ using CustomizationSystem = Red::game::ui::ICharacterCustomizationSystem;
 using CustomizationState = Red::Handle<Red::game::ui::CharacterCustomizationState>;
 using CustomizationStateOption = Red::Handle<Red::game::ui::CharacterCustomizationOption>;
 using CustomizationPuppet = Red::Handle<Red::game::Puppet>;
+using CustomizationPuppetWeak = Red::WeakHandle<Red::game::Puppet>;
 using CustomizationPart = Red::game::ui::CharacterCustomizationPart;
+using AppearanceChangerSystem = Red::world::RuntimeSystemEntityAppearanceChanger;
 
 class CustomizationModule : public ConfigurableUnitModule<CustomizationUnit>
 {
@@ -33,6 +36,9 @@ private:
     void RegisterCustomEntryName(Red::CName aName, const Red::CString& aSubName);
     bool IsCustomEntryName(Red::CName aName);
     bool IsCustomEntryName(Red::CName aName, const Red::CString& aSubName);
+
+    void RegisterAppOverride(Red::ResourcePath aOriginal, Red::ResourcePath aOverride, Red::CName aName);
+    void ApplyAppOverride(Red::AppearanceDescriptor& aAppearance);
 
     void PrefetchCustomResources();
     void PrefetchCustomResources(Core::Vector<CustomizationResourceToken>& aResources,
@@ -53,8 +59,9 @@ private:
 
     void ResetCustomResources();
 
-    void OnInitOptions(CustomizationSystem& aSystem, CustomizationPuppet& aPuppet, bool aIsMale, uintptr_t a4);
-    void OnInitState(CustomizationSystem& aSystem, CustomizationState& aState);
+    void OnActivateSystem(CustomizationSystem& aSystem, CustomizationPuppet& aPuppet, bool aIsMale, uintptr_t a4);
+    void OnDeactivateSystem(CustomizationSystem& aSystem);
+    void OnEnsureState(CustomizationSystem& aSystem, CustomizationState& aState);
     void OnInitAppOption(CustomizationSystem& aSystem,
                          CustomizationPart aPartType,
                          CustomizationStateOption& aOption,
@@ -70,10 +77,19 @@ private:
                               int32_t aCurrentIndex,
                               uint64_t a5,
                               Red::Map<Red::CName, CustomizationStateOption>& aUiSlots);
+    void OnChangeAppearance(AppearanceChangerSystem& aSystem,
+                            CustomizationPuppet& aPuppet,
+                            Red::SomeIterator<Red::AppearanceDescriptor>& aOldApp,
+                            Red::SomeIterator<Red::AppearanceDescriptor>& aNewApp,
+                            uintptr_t a5,
+                            uint8_t a6);
 
-    bool m_customEntriesMerged;
-    Core::Set<Red::CName> m_customEntryNames;
     Core::Vector<CustomizationResourceToken> m_customMaleResources;
     Core::Vector<CustomizationResourceToken> m_customFemaleResources;
+    Core::Map<Red::AppearanceDescriptor::Hash, Red::AppearanceDescriptor> m_customAppOverrides;
+    Core::Set<Red::CName> m_customEntryNames;
+    std::mutex m_customEntriesMergeLock;
+    bool m_customEntriesMerged;
+    bool m_customizationActive;
 };
 }
