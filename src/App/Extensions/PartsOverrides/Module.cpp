@@ -175,8 +175,8 @@ void App::PartsOverridesModule::OnComputeGarment(Red::Handle<Red::ent::Entity>& 
                      ModuleName, entityState->GetName());
         }
 
-        ApplyChunkMasks(entityState, aData->components);
-        ApplyOffsets(entityState, aOffsets, aData->resources);
+        ApplyComponentOverrides(entityState, aData->components);
+        ApplyResourceOverrides(entityState, aOffsets, aData->resources);
     }
 }
 
@@ -192,14 +192,14 @@ void App::PartsOverridesModule::OnReassembleAppearance(Red::ent::Entity* aEntity
                      ModuleName, entityState->GetName());
         }
 
-        ApplyChunkMasks(entityState, true);
+        ApplyComponentOverrides(entityState, true);
     }
 }
 
-void App::PartsOverridesModule::OnGameDetach(uintptr_t)
+void App::PartsOverridesModule::OnGameDetach()
 {
     std::unique_lock _(s_mutex);
-    s_states->Reset();
+    s_states->ClearStates();
 }
 
 void App::PartsOverridesModule::RegisterOffsetOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
@@ -233,6 +233,7 @@ void App::PartsOverridesModule::RegisterPartsOverrides(Core::SharedPtr<EntitySta
             for (const auto& componentOverride : partOverrides.componentsOverrides)
             {
                 aEntityState->AddChunkMaskOverride(aHash, componentOverride.componentName, componentOverride.chunkMask);
+                aEntityState->AddAppearanceOverride(aHash, componentOverride.componentName, componentOverride.meshAppearance);
             }
         }
     }
@@ -246,17 +247,19 @@ void App::PartsOverridesModule::UnregisterOffsetOverrides(Core::SharedPtr<Entity
 void App::PartsOverridesModule::UnregisterPartsOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash)
 {
     aEntityState->RemoveChunkMaskOverrides(aHash);
+    aEntityState->RemoveAppearanceOverrides(aHash);
 }
 
-void App::PartsOverridesModule::ApplyOffsets(Core::SharedPtr<App::EntityState>& aEntityState,
-                                             Red::DynArray<int32_t>& aOffsets,
-                                             Red::DynArray<Red::ResourcePath>& aResourcePaths)
+void App::PartsOverridesModule::ApplyResourceOverrides(Core::SharedPtr<App::EntityState>& aEntityState,
+                                                       Red::DynArray<int32_t>& aOffsets,
+                                                       Red::DynArray<Red::ResourcePath>& aResourcePaths)
 {
     if (aOffsets.size != aResourcePaths.size)
     {
         aOffsets.Reserve(aResourcePaths.size);
-        aOffsets.Clear();
     }
+
+    aOffsets.Clear();
 
     for (auto& resourcePath : aResourcePaths)
     {
@@ -264,15 +267,16 @@ void App::PartsOverridesModule::ApplyOffsets(Core::SharedPtr<App::EntityState>& 
     }
 }
 
-void App::PartsOverridesModule::ApplyChunkMasks(Core::SharedPtr<EntityState>& aEntityState,
-                                                Red::DynArray<Red::Handle<Red::ent::IComponent>>& aComponents,
-                                                bool aVerbose)
+void App::PartsOverridesModule::ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState,
+                                                        Red::DynArray<Red::Handle<Red::ent::IComponent>>& aComponents,
+                                                        bool aVerbose)
 {
     auto index = 0;
 
     for (auto& component : aComponents)
     {
         aEntityState->ApplyChunkMasks(component);
+        aEntityState->ApplyAppearance(component);
 
         if (EnableDebugOutput && aVerbose && component->isEnabled)
         {
@@ -286,7 +290,7 @@ void App::PartsOverridesModule::ApplyChunkMasks(Core::SharedPtr<EntityState>& aE
     }
 }
 
-void App::PartsOverridesModule::ApplyChunkMasks(Core::SharedPtr<EntityState>& aEntityState, bool aVerbose)
+void App::PartsOverridesModule::ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, bool aVerbose)
 {
-    ApplyChunkMasks(aEntityState, Raw::Entity::GetComponents(aEntityState->GetEntity()), aVerbose);
+    ApplyComponentOverrides(aEntityState, Raw::Entity::GetComponents(aEntityState->GetEntity()), aVerbose);
 }

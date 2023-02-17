@@ -20,6 +20,19 @@ inline bool SetComponentChunkMask(T* aComponent, uint64_t aChunkMask)
     aComponent->chunkMask = aChunkMask;
     return true;
 }
+
+template<class T>
+inline Red::CName GetComponentAppearance(T* aComponent)
+{
+    return aComponent->meshAppearance;
+}
+
+template<class T>
+inline bool SetComponentAppearance(T* aComponent, Red::CName aAppearance)
+{
+    aComponent->meshAppearance = aAppearance;
+    return true;
+}
 }
 
 App::ComponentWrapper::ComponentWrapper(Red::Handle<Red::ent::IComponent>& aComponent)
@@ -50,6 +63,19 @@ App::ComponentWrapper::ComponentWrapper(Red::Handle<Red::ent::IComponent>& aComp
 bool App::ComponentWrapper::IsSupported() const
 {
     return m_type != ComponentType::Unsupported;
+}
+
+uint64_t App::ComponentWrapper::GetUniqueId()
+{
+    if (!m_uniqueId)
+    {
+        // Component Name + Appearance Name + Appearance Resource Path
+        m_uniqueId = m_component->name;
+        m_uniqueId = Red::FNV1a64(m_component->unk48, sizeof(uint64_t), m_uniqueId);
+        m_uniqueId = Red::FNV1a64(m_component->unk68, sizeof(uint64_t), m_uniqueId);
+    }
+
+    return m_uniqueId;
 }
 
 uint64_t App::ComponentWrapper::GetChunkMask() const
@@ -90,15 +116,40 @@ bool App::ComponentWrapper::SetChunkMask(uint64_t aChunkMask) const
     return false;
 }
 
-uint64_t App::ComponentWrapper::GetUniqueId()
+Red::CName App::ComponentWrapper::GetAppearance() const
 {
-    if (!m_uniqueId)
+    switch (m_type)
     {
-        // Component Name + Appearance Name + Appearance Resource Path
-        m_uniqueId = m_component->name;
-        m_uniqueId = Red::FNV1a64(m_component->unk48, sizeof(uint64_t), m_uniqueId);
-        m_uniqueId = Red::FNV1a64(m_component->unk68, sizeof(uint64_t), m_uniqueId);
+    case ComponentType::MeshComponent:
+        return GetComponentAppearance(m_component.GetPtr<Red::ent::MeshComponent>());
+    case ComponentType::SkinnedMeshComponent:
+        return GetComponentAppearance(m_component.GetPtr<Red::ent::SkinnedMeshComponent>());
+    case ComponentType::SkinnedClothComponent:
+        return GetComponentAppearance(m_component.GetPtr<Red::ent::SkinnedClothComponent>());
+    case ComponentType::MorphTargetSkinnedMeshComponent:
+        return GetComponentAppearance(m_component.GetPtr<Red::ent::MorphTargetSkinnedMeshComponent>());
+    case ComponentType::Unsupported:
+        break;
     }
 
-    return m_uniqueId;
+    return {};
+}
+
+bool App::ComponentWrapper::SetAppearance(Red::CName aAppearance) const
+{
+    switch (m_type)
+    {
+    case ComponentType::MeshComponent:
+        return SetComponentAppearance(m_component.GetPtr<Red::ent::MeshComponent>(), aAppearance);
+    case ComponentType::SkinnedMeshComponent:
+        return SetComponentAppearance(m_component.GetPtr<Red::ent::SkinnedMeshComponent>(), aAppearance);
+    case ComponentType::SkinnedClothComponent:
+        return SetComponentAppearance(m_component.GetPtr<Red::ent::SkinnedClothComponent>(), aAppearance);
+    case ComponentType::MorphTargetSkinnedMeshComponent:
+        return SetComponentAppearance(m_component.GetPtr<Red::ent::MorphTargetSkinnedMeshComponent>(), aAppearance);
+    case ComponentType::Unsupported:
+        break;
+    }
+
+    return false;
 }

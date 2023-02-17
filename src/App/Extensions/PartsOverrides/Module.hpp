@@ -23,7 +23,7 @@ private:
     static void OnComputeGarment(Red::Handle<Red::ent::Entity>&, Red::DynArray<int32_t>&,
                                  Red::SharedPtr<Red::GarmentComputeData>&, uintptr_t, uintptr_t, uintptr_t, bool);
     static void OnReassembleAppearance(Red::ent::Entity*, uintptr_t, uintptr_t, uintptr_t, uintptr_t, uintptr_t);
-    static void OnGameDetach(uintptr_t);
+    static void OnGameDetach();
 
     static void RegisterOffsetOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
                                         Red::Handle<Red::AppearanceDefinition>& aApperance,
@@ -34,11 +34,11 @@ private:
                                        Red::DynArray<Red::AppearancePartOverrides>& aOverrides);
     static void UnregisterOffsetOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash);
     static void UnregisterPartsOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash);
-    static void ApplyOffsets(Core::SharedPtr<EntityState>& aEntityState, Red::DynArray<int32_t>& aOffsets,
-                             Red::DynArray<Red::ResourcePath>& aResourcePaths);
-    static void ApplyChunkMasks(Core::SharedPtr<EntityState>& aEntityState,
-                                Red::DynArray<Red::Handle<Red::ent::IComponent>>&, bool aVerbose = false);
-    static void ApplyChunkMasks(Core::SharedPtr<EntityState>& aEntityState, bool aVerbose = false);
+    static void ApplyResourceOverrides(Core::SharedPtr<EntityState>& aEntityState, Red::DynArray<int32_t>& aOffsets,
+                                       Red::DynArray<Red::ResourcePath>& aResourcePaths);
+    static void ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState,
+                                        Red::DynArray<Red::Handle<Red::ent::IComponent>>&, bool aVerbose = false);
+    static void ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, bool aVerbose = false);
 
     static inline Core::UniquePtr<OverrideStateManager> s_states;
     static inline std::shared_mutex s_mutex;

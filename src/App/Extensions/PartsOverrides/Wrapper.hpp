@@ -18,8 +18,12 @@ public:
 
     [[nodiscard]] bool IsSupported() const;
     [[nodiscard]] uint64_t GetUniqueId();
+
     [[nodiscard]] uint64_t GetChunkMask() const;
     bool SetChunkMask(uint64_t aChunkMask) const;
+
+    [[nodiscard]] Red::CName GetAppearance() const;
+    bool SetAppearance(Red::CName aAppearance) const;
 
 private:
     Red::Handle<Red::ent::IComponent>& m_component;

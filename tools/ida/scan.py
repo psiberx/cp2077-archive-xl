@@ -56,6 +56,10 @@ def patterns():
                      expected=2,
                      index=1),
             ]),
+            Group(name="CharacterCustomizationHelper", functions=[
+                Item(name="GetHairColor",
+                     pattern="40 55 41 56 41 57 48 8B EC 48 83 EC 50 4C 8B F9 48 8B 0A 48 8D 55 D8 48 8B 01 FF 90 E8 01 00 00"),
+            ]),
             Group(name="CharacterCustomizationSystem", functions=[
                 Item(name="Initialize",
                      pattern="48 8B C4 44 88 40 18 48 89 50 10 55 56 48 8D 68 A1 48 81 EC E8 00 00 00 48 89 58 20 4C 89 68 D8"),

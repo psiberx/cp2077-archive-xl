@@ -427,7 +427,7 @@ void App::CustomizationModule::ResetCustomResources()
 }
 
 void App::CustomizationModule::OnActivateSystem(App::CustomizationSystem& aSystem, App::CustomizationPuppet& aPuppet,
-                                            bool aIsMale, uintptr_t a4)
+                                                bool aIsMale, uintptr_t a4)
 {
     MergeCustomEntries();
 

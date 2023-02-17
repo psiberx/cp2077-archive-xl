@@ -67,3 +67,10 @@ constexpr auto InitializeSwitcherOption = Core::RawFunc<
                           uint64_t a5,
                           Red::Map<Red::CName, Red::Handle<Red::game::ui::CharacterCustomizationOption>>& aUiSlots)>();
 }
+
+namespace Raw::CharacterCustomizationHelper
+{
+constexpr auto GetHairColor = Core::RawFunc<
+    /* addr = */ Red::Addresses::CharacterCustomizationHelper_GetHairColor,
+    /* type = */ void (*)(Red::CName& aOut, Red::WeakHandle<Red::ISerializable>& aSystem, bool aIsMale)>();
+}

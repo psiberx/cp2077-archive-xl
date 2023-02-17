@@ -2,6 +2,8 @@
 
 namespace
 {
+constexpr auto DefaultAppearance = Red::CName("default");
+
 Core::SharedPtr<App::EntityState> s_nullEntityState;
 Core::SharedPtr<App::ComponentState> s_nullComponentState;
 Core::SharedPtr<App::ResourceState> s_nullResourceState;
@@ -33,7 +35,7 @@ Core::SharedPtr<App::EntityState>& App::OverrideStateManager::FindEntityState(Re
     return it.value();
 }
 
-void App::OverrideStateManager::Reset()
+void App::OverrideStateManager::ClearStates()
 {
     m_entityStates.clear();
 }
@@ -41,6 +43,7 @@ void App::OverrideStateManager::Reset()
 App::EntityState::EntityState(Red::ent::Entity* aEntity) noexcept
     : m_entity(aEntity)
     , m_prefixResolver(ComponentPrefixResolver::Get())
+    , m_appearanceResolver(DynamicAppearanceResolver::Get())
     , m_tagManager(OverrideTagManager::Get())
 {
     m_name.append(aEntity->GetType()->GetName().ToString());
@@ -153,6 +156,25 @@ void App::EntityState::RemoveChunkMaskOverrides(uint64_t aHash)
     }
 }
 
+void App::EntityState::AddAppearanceOverride(uint64_t aHash, Red::CName aComponentName, Red::CName aAppearance)
+{
+    if (aAppearance != DefaultAppearance)
+    {
+        if (auto& componentState = GetComponentState(aComponentName))
+        {
+            componentState->AddAppearanceOverride(aHash, aAppearance);
+        }
+    }
+}
+
+void App::EntityState::RemoveAppearanceOverrides(uint64_t aHash)
+{
+    for (auto& [_, componentState] : m_componentStates)
+    {
+        componentState->RemoveAppearanceOverride(aHash);
+    }
+}
+
 void App::EntityState::AddOffsetOverride(uint64_t aHash, Red::ResourcePath aResourcePath, int32_t aOffset)
 {
     if (auto& resourceState = GetResourceState(aResourcePath))
@@ -172,6 +194,7 @@ void App::EntityState::RemoveOffsetOverrides(uint64_t aHash)
 void App::EntityState::RemoveAllOverrides(uint64_t aHash)
 {
     RemoveChunkMaskOverrides(aHash);
+    RemoveAppearanceOverrides(aHash);
     RemoveOffsetOverrides(aHash);
 }
 
@@ -180,7 +203,8 @@ bool App::EntityState::ApplyChunkMasks(Red::Handle<Red::ent::IComponent>& aCompo
     auto& componentState = FindComponentState(aComponent->name);
     auto& prefixState = FindComponentState(m_prefixResolver->GetPrefix(aComponent->name));
 
-    if (!componentState && !prefixState)
+    if ((!componentState || !componentState->ChangesChunkMask())
+        && (!prefixState || !prefixState->ChangesChunkMask()))
         return false;
 
     ComponentWrapper component(aComponent);
@@ -205,15 +229,46 @@ bool App::EntityState::ApplyChunkMasks(Red::Handle<Red::ent::IComponent>& aCompo
     return component.SetChunkMask(finalChunkMask);
 }
 
+bool App::EntityState::ApplyAppearance(Red::Handle<Red::ent::IComponent>& aComponent)
+{
+    auto& componentState = FindComponentState(aComponent->name);
+
+    if (!componentState || !componentState->ChangesAppearance())
+        return false;
+
+    ComponentWrapper component(aComponent);
+
+    if (!component.IsSupported())
+        return false;
+
+    const auto originalAppearance = GetOriginalAppearance(component);
+    const auto finalAppearance = componentState->HasOverriddenAppearance()
+        ? m_appearanceResolver->GetAppearance(m_entity, componentState->GetOverriddenAppearance())
+        : originalAppearance;
+
+    return component.SetAppearance(finalAppearance);
+}
+
 uint64_t App::EntityState::GetOriginalChunkMask(ComponentWrapper& aComponent)
 {
     auto componentId = aComponent.GetUniqueId();
-    auto originalChunkMaskIt = m_originalChunkMasks.find(componentId);
+    auto it = m_originalChunkMasks.find(componentId);
 
-    if (originalChunkMaskIt == m_originalChunkMasks.end())
-        originalChunkMaskIt = m_originalChunkMasks.emplace(componentId, aComponent.GetChunkMask()).first;
+    if (it == m_originalChunkMasks.end())
+        it = m_originalChunkMasks.emplace(componentId, aComponent.GetChunkMask()).first;
 
-    return originalChunkMaskIt.value();
+    return it.value();
+}
+
+Red::CName App::EntityState::GetOriginalAppearance(App::ComponentWrapper& aComponent)
+{
+    auto componentId = aComponent.GetUniqueId();
+    auto it = m_originalAppearances.find(componentId);
+
+    if (it == m_originalAppearances.end())
+        it = m_originalAppearances.emplace(componentId, aComponent.GetAppearance()).first;
+
+    return it.value();
 }
 
 int32_t App::EntityState::GetOrderOffset(Red::ResourcePath aResourcePath) const
@@ -228,6 +283,8 @@ int32_t App::EntityState::GetOrderOffset(Red::ResourcePath aResourcePath) const
 
 App::ComponentState::ComponentState(Red::CName aName) noexcept
     : m_name(aName.ToString())
+    , m_chunkMaskChanged(false)
+    , m_appearanceChanged(false)
 {
 }
 
@@ -238,27 +295,31 @@ const char* App::ComponentState::GetName() const
 
 bool App::ComponentState::IsOverridden() const
 {
-    return !m_hidingChunkMasks.empty() || !m_showingChunkMasks.empty();
+    return HasOverriddenChunkMask() || HasOverriddenAppearance();
 }
 
 void App::ComponentState::AddHidingChunkMaskOverride(uint64_t aHash, uint64_t aChunkMask)
 {
-    auto it = m_hidingChunkMasks.find(aChunkMask);
+    auto it = m_hidingChunkMasks.find(aHash);
 
     if (it == m_hidingChunkMasks.end())
         it = m_hidingChunkMasks.emplace(aHash, ~0ull).first;
 
     it.value() &= aChunkMask;
+
+    m_chunkMaskChanged = true;
 }
 
 void App::ComponentState::AddShowingChunkMaskOverride(uint64_t aHash, uint64_t aChunkMask)
 {
-    auto it = m_showingChunkMasks.find(aChunkMask);
+    auto it = m_showingChunkMasks.find(aHash);
 
     if (it == m_showingChunkMasks.end())
         it = m_showingChunkMasks.emplace(aHash, 0ull).first;
 
     it.value() |= aChunkMask;
+
+    m_chunkMaskChanged = true;
 }
 
 bool App::ComponentState::RemoveChunkMaskOverride(uint64_t aHash)
@@ -302,6 +363,51 @@ uint64_t App::ComponentState::GetShowingChunkMask()
     return finalChunkMask;
 }
 
+bool App::ComponentState::HasOverriddenChunkMask() const
+{
+    return !m_hidingChunkMasks.empty() || !m_showingChunkMasks.empty();
+}
+
+bool App::ComponentState::ChangesChunkMask() const
+{
+    return m_chunkMaskChanged;
+}
+
+void App::ComponentState::AddAppearanceOverride(uint64_t aHash, Red::CName aAppearance)
+{
+    auto it = m_appearanceNames.find(aHash);
+
+    if (it == m_appearanceNames.end())
+        it = m_appearanceNames.emplace(aHash, DefaultAppearance).first;
+
+    it.value() = aAppearance;
+
+    m_appearanceChanged = true;
+}
+
+bool App::ComponentState::RemoveAppearanceOverride(uint64_t aHash)
+{
+    return m_appearanceNames.erase(aHash);
+}
+
+Red::CName App::ComponentState::GetOverriddenAppearance()
+{
+    if (m_appearanceNames.empty())
+        return DefaultAppearance;
+
+    return m_appearanceNames.begin().value();
+}
+
+bool App::ComponentState::HasOverriddenAppearance() const
+{
+    return !m_appearanceNames.empty();
+}
+
+bool App::ComponentState::ChangesAppearance() const
+{
+    return m_appearanceChanged;
+}
+
 App::ResourceState::ResourceState(Red::ResourcePath aPath) noexcept
     : m_path(aPath)
 {
@@ -319,7 +425,7 @@ bool App::ResourceState::IsOverridden() const
 
 void App::ResourceState::AddOffsetOverride(uint64_t aHash, int32_t aOffset)
 {
-    auto it = m_overridenOffsets.find(aOffset);
+    auto it = m_overridenOffsets.find(aHash);
 
     if (it == m_overridenOffsets.end())
         it = m_overridenOffsets.emplace(aHash, 0).first;
