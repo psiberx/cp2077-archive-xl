@@ -283,10 +283,12 @@ void App::PartsOverridesModule::ApplyComponentOverrides(Core::SharedPtr<EntitySt
             LogDebug("|{}| [entity={} index={} component={} type={}].",
                      ModuleName,
                      aEntityState->GetName(),
-                     index++,
+                     index,
                      component->name.ToString(),
                      component->GetType()->GetName().ToString());
         }
+
+        ++index;
     }
 }
 
