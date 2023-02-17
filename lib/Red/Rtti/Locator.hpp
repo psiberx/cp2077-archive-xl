@@ -11,7 +11,7 @@ template<RED4ext::CName ATypeName>
 class TypeLocator
 {
 public:
-    operator const RED4ext::CBaseRTTIType*() const
+    operator RED4ext::CBaseRTTIType*() const
     {
         if (!s_resolved)
         {
@@ -21,7 +21,7 @@ public:
         return s_type;
     }
 
-    operator const RED4ext::CClass*() const
+    operator RED4ext::CClass*() const
     {
         if (!s_resolved)
         {
@@ -36,7 +36,7 @@ public:
         return reinterpret_cast<RED4ext::CClass*>(s_type);
     }
 
-    operator const RED4ext::CRTTIHandleType*() const
+    operator RED4ext::CRTTIHandleType*() const
     {
         if (!s_resolved)
         {
@@ -51,7 +51,7 @@ public:
         return reinterpret_cast<RED4ext::CRTTIHandleType*>(s_type);
     }
 
-    operator const RED4ext::CRTTIWeakHandleType*() const
+    operator RED4ext::CRTTIWeakHandleType*() const
     {
         if (!s_resolved)
         {
