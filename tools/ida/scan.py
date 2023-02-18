@@ -74,6 +74,10 @@ def patterns():
                 Item(name="InitializeSwitcherOption",
                      pattern="48 8B C4 44 89 48 20 4C 89 40 18 89 50 10 55 41 57 48 8D 68 B1 48 81 EC E8 00 00 00 48 89 70 E8"),
             ]),
+            Group(name="CMesh", functions=[
+                Item(name="GetAppearance",
+                     pattern="40 53 48 83 EC 20 4C 8B 81 E0 01 00 00 48 8B D9 8B 81 EC 01 00 00 48 C1 E0 04 49 03 C0 4C 3B C0"),
+            ]),
             Group(name="Entity", functions=[
                 Item(name="GetComponents",
                      pattern="48 83 C1 70 E9",
@@ -144,6 +148,10 @@ def patterns():
                 Item(name="LoadOnScreens",
                      pattern="40 55 53 57 48 8B EC 48 81 EC 80 00 00 00 0F 57 C0 48 8B D9 F3 0F 7F 45 A0 48 85 D2 75 17 33 FF 48 8B C1 48 89 39 48 89 79 08 48 81 C4 80 00 00",
                      expected=2),
+            ]),
+            Group(name="MeshAppearance", functions=[
+                Item(name="LoadMaterialSetupAsync",
+                     pattern="40 55 53 56 57 41 55 41 57 48 8D AC 24 78 FF FF FF 48 81 EC 88 01 00 00 45 0F B6 E8 48 8B F2 4C"),
             ]),
             Group(name="ResourceLoader", functions=[
                 Item(name="OnUpdate",

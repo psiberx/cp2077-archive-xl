@@ -113,9 +113,11 @@ class OverrideStateManager
 public:
     Core::SharedPtr<EntityState>& GetEntityState(Red::ent::Entity* aEntity);
     Core::SharedPtr<EntityState>& FindEntityState(Red::ent::Entity* aEntity);
+    Core::SharedPtr<EntityState>& FindEntityState(Red::ResourcePath aPath);
     void ClearStates();
 
 private:
     Core::Map<Red::ent::Entity*, Core::SharedPtr<EntityState>> m_entityStates;
+    Core::Map<Red::ResourcePath, Core::SharedPtr<EntityState>> m_entityStatesByPath;
 };
 }

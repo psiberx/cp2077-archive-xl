@@ -1,4 +1,5 @@
 #include "Wrapper.hpp"
+#include "Red/Mesh.hpp"
 #include "Red/Rtti/Locator.hpp"
 
 namespace
@@ -32,6 +33,25 @@ inline bool SetComponentAppearance(T* aComponent, Red::CName aAppearance)
 {
     aComponent->meshAppearance = aAppearance;
     return true;
+}
+
+template<class T>
+inline Red::ResourceReference<Red::CMesh> GetComponentMesh(T* aComponent)
+{
+    return aComponent->mesh.Resolve();
+}
+
+template<class T>
+inline Red::ResourceReference<Red::CMesh> GetMorphComponentMesh(T* aComponent)
+{
+    Red::ResourceReference<Red::MorphTargetMesh> morphRef = aComponent->morphResource.Resolve();
+
+    if (morphRef.LoadAsync() && morphRef.IsLoaded())
+    {
+        return morphRef.Get()->baseMesh;
+    }
+
+    return {};
 }
 }
 
@@ -152,4 +172,43 @@ bool App::ComponentWrapper::SetAppearance(Red::CName aAppearance) const
     }
 
     return false;
+}
+
+bool App::ComponentWrapper::LoadAppearance() const
+{
+    Red::ResourceReference<Red::CMesh> meshRef;
+    Red::CName meshAppName;
+
+    switch (m_type)
+    {
+    case ComponentType::MeshComponent:
+        meshRef = GetComponentMesh(m_component.GetPtr<Red::ent::MeshComponent>());
+        meshAppName = GetComponentAppearance(m_component.GetPtr<Red::ent::MeshComponent>());
+        break;
+    case ComponentType::SkinnedMeshComponent:
+        meshRef = GetComponentMesh(m_component.GetPtr<Red::ent::SkinnedMeshComponent>());
+        meshAppName = GetComponentAppearance(m_component.GetPtr<Red::ent::SkinnedMeshComponent>());
+        break;
+    case ComponentType::SkinnedClothComponent:
+        // meshRef = GetClothComponentMesh(m_component.GetPtr<Red::ent::SkinnedClothComponent>());
+        // meshAppName = GetComponentAppearance(m_component.GetPtr<Red::ent::SkinnedClothComponent>());
+        break;
+    case ComponentType::MorphTargetSkinnedMeshComponent:
+        meshRef = GetMorphComponentMesh(m_component.GetPtr<Red::ent::MorphTargetSkinnedMeshComponent>());
+        meshAppName = GetComponentAppearance(m_component.GetPtr<Red::ent::MorphTargetSkinnedMeshComponent>());
+        break;
+    case ComponentType::Unsupported:
+        break;
+    }
+
+    if (meshRef.LoadAsync() && meshRef.IsLoaded())
+    {
+        auto meshApp = Raw::CMesh::GetAppearance(*meshRef.Get().GetPtr(), meshAppName);
+        if (meshApp && meshApp->name == meshAppName)
+        {
+            Raw::MeshAppearance::LoadMaterialSetupAsync(*meshApp.GetPtr(), meshApp, 0);
+        }
+    }
+
+    return true;
 }

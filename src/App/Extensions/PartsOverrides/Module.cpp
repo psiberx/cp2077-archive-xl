@@ -175,7 +175,7 @@ void App::PartsOverridesModule::OnComputeGarment(Red::Handle<Red::ent::Entity>& 
                      ModuleName, entityState->GetName());
         }
 
-        ApplyComponentOverrides(entityState, aData->components);
+        ApplyComponentOverrides(entityState, aData->components, true);
         ApplyResourceOverrides(entityState, aOffsets, aData->resources);
     }
 }

@@ -24,6 +24,7 @@ public:
 
     [[nodiscard]] Red::CName GetAppearance() const;
     bool SetAppearance(Red::CName aAppearance) const;
+    bool LoadAppearance() const;
 
 private:
     Red::Handle<Red::ent::IComponent>& m_component;
