@@ -24,9 +24,12 @@ Red::Rtti::ClassLocator<Red::game::ui::ICharacterCustomizationSystem> s_customiz
 
 Red::CName App::DynamicAppearanceResolver::GetAppearance(Red::ent::Entity* aEntity, Red::CName aAppearance)
 {
-    char buffer[256];
+    constexpr auto MaxLength = 255;
+
+    char buffer[MaxLength + 1];
     char* out = buffer;
-    auto* app = aAppearance.ToString();
+    const char* max = buffer + MaxLength;
+    const char* app = aAppearance.ToString();
 
     while (app && *app)
     {
@@ -37,7 +40,7 @@ Red::CName App::DynamicAppearanceResolver::GetAppearance(Red::ent::Entity* aEnti
             if (out == buffer)
                 return aAppearance;
 
-            strcpy_s(out, out - buffer - 1, app);
+            strcpy_s(out, out - max, app);
             break;
         }
 
@@ -48,11 +51,16 @@ Red::CName App::DynamicAppearanceResolver::GetAppearance(Red::ent::Entity* aEnti
             return aAppearance;
         }
 
-        while (app != tagOpen)
+        while (app != tagOpen && out < max)
         {
             *out = *app;
             ++out;
             ++app;
+        }
+
+        if (out == max)
+        {
+            break;
         }
 
         app = tagClose + 1;
@@ -62,11 +70,16 @@ Red::CName App::DynamicAppearanceResolver::GetAppearance(Red::ent::Entity* aEnti
 
         if (value)
         {
-            while (value && *value)
+            while (value && *value && out < max)
             {
                 *out = *value;
                 ++out;
                 ++value;
+            }
+
+            if (out == max)
+            {
+                break;
             }
         }
     }
