@@ -289,7 +289,7 @@ void App::EntityState::RemoveChunkMaskOverrides(uint64_t aHash)
 
 void App::EntityState::AddAppearanceOverride(uint64_t aHash, Red::CName aComponentName, Red::CName aAppearance)
 {
-    if (aAppearance != DefaultAppearance)
+    if (aAppearance && aAppearance != DefaultAppearance)
     {
         if (auto& componentState = GetComponentState(aComponentName))
         {
