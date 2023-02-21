@@ -147,6 +147,12 @@ class ClassLocator<RED4ext::Handle<T>> : public TypeLocator<RED4ext::FNV1a64(T::
 {
 };
 
+template<RED4ext::CName T>
+RED4ext::CBaseRTTIType* GetType()
+{
+    return TypeLocator<T>::Get();
+}
+
 template<typename T>
 requires detail::HasGeneratedNameConst<T>
 RED4ext::CBaseRTTIType* GetType()
