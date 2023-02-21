@@ -32,7 +32,7 @@ void App::LocalizationModule::OnLoadOnScreens(Red::Handle<OnScreenEntries>& aOnS
 {
     auto language = Language::ResolveFromResource(aPath);
 
-    LogInfo("|{}| The localization system is initializing (current language is \"{}\")...", ModuleName, language.ToString());
+    LogInfo("|{}| Localization system is initializing (current language is \"{}\")...", ModuleName, language.ToString());
 
     if (!m_units.empty())
     {
@@ -49,7 +49,7 @@ void App::LocalizationModule::OnLoadOnScreens(Red::Handle<OnScreenEntries>& aOnS
 
             if (paths != unit.onscreens.end())
             {
-                LogInfo("|{}| Processing {}...", ModuleName, unit.name);
+                LogInfo("|{}| Processing \"{}\"...", ModuleName, unit.name);
             }
             else
             {

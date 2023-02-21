@@ -31,13 +31,13 @@ void App::FactoryIndexModule::OnLoadFactoryAsync(uintptr_t aIndex, Red::Resource
 {
     if (aPath == LastFactory)
     {
-        LogInfo("|{}| The factory index is initializing...", ModuleName);
+        LogInfo("|{}| Factory index is initializing...", ModuleName);
 
         if (!m_units.empty())
         {
             for (const auto& unit : m_units)
             {
-                LogInfo("|{}| Processing {}...", ModuleName, unit.name);
+                LogInfo("|{}| Processing \"{}\"...", ModuleName, unit.name);
 
                 for (const auto& path : unit.factories)
                 {

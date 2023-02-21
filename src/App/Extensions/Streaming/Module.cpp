@@ -44,7 +44,7 @@ void App::StreamingModule::OnWorldLoad(Red::world::StreamingWorld* aWorld, Red::
 
         for (const auto& unit : m_units)
         {
-            LogInfo("|{}| Processing {}...", ModuleName, unit.name);
+            LogInfo("|{}| Processing \"{}\"...", ModuleName, unit.name);
 
             for (const auto& path : unit.blocks)
             {
