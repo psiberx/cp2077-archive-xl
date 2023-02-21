@@ -39,31 +39,31 @@ template<typename T, typename U>
 concept IsMemberCallCompatible = IsScripable<T> and IsCompatible<T, U> and sizeof(T) == sizeof(U);
 
 template<typename T>
-concept HasTypeGetter = requires(T)
+concept HasTypeGetter = requires(T*)
 {
     { T::GetType() } -> std::convertible_to<RED4ext::CClass*>;
 };
 
 template<typename T>
-concept HasTypeNameGetter = requires(T)
+concept HasTypeNameGetter = requires(T*)
 {
     { T::GetName() } -> std::same_as<RED4ext::CName>;
 };
 
 template<typename T>
-concept HasTypeNameConst = requires(T)
+concept HasTypeNameConst = requires(T*)
 {
     { T::Name } -> std::convertible_to<const char*>;
 };
 
 template<typename T>
-concept HasTypeFlagsConst = requires(T)
+concept HasTypeFlagsConst = requires(T*)
 {
     { T::Flags } -> std::convertible_to<RED4ext::CClass::Flags>;
 };
 
 template<typename T>
-concept HasGeneratedNameConst = requires(T)
+concept HasGeneratedNameConst = requires(T*)
 {
     { T::NAME } -> std::convertible_to<const char*>;
     { T::ALIAS } -> std::convertible_to<const char*>;

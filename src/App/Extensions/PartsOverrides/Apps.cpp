@@ -18,8 +18,6 @@ constexpr auto FemaleBodyComponent2 = Red::CName("t0_000_pwa_fpp__torso");
 
 constexpr auto MaleTagValue = "m";
 constexpr auto FemaleTagValue = "w";
-
-Red::Rtti::ClassLocator<Red::game::ui::ICharacterCustomizationSystem> s_customizationSystemType;
 }
 
 Red::CName App::DynamicAppearanceResolver::GetAppearance(Red::ent::Entity* aEntity, Red::CName aAppearance)
@@ -126,7 +124,9 @@ Red::CName App::DynamicAppearanceResolver::GetSkinColor(Red::ent::Entity* aEntit
 
 Red::CName App::DynamicAppearanceResolver::GetHairColor(Red::ent::Entity* aEntity)
 {
-    static auto* system = Red::CGameEngine::Get()->framework->gameInstance->GetInstance(s_customizationSystemType);
+    static auto* system = Red::CGameEngine::Get()->framework->gameInstance->GetInstance(
+        Red::Rtti::GetClass<Red::game::ui::ICharacterCustomizationSystem>()
+    );
 
     Red::CName hairColor;
     Raw::CharacterCustomizationHelper::GetHairColor(hairColor, system->ref, IsMale(aEntity));
