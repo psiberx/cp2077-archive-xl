@@ -128,7 +128,7 @@ def patterns():
                 Item(name="FinishAsyncSpawn",
                      pattern="48 89 5C 24 10 57 48 83 EC 30 48 8B 42 08 48 8B DA 4C 8B 0A 48 8B F9 4C 8B 41 18 4C 89 4C 24 20"),
             ]),
-           Group(name="InkWidgetLibrary", functions=[
+            Group(name="InkWidgetLibrary", functions=[
                 Item(name="AsyncSpawnFromExternal",
                      pattern="48 89 5C 24 08 57 48 83 EC 40 48 8B FA 49 8B D9 48 8D 54 24 28 E8 ? ? ? ? 48 8B 4C 24 28 48 85 C9 74 ? 48 8B D3 E8",
                      expected=2,
@@ -143,6 +143,27 @@ def patterns():
                      pattern="40 53 48 83 EC 20 48 8B DA 49 8B D0 E8 ? ? ? ? 48 85 C0 74 ? 48 8B  D3 48 8B C8 E8",
                      expected=2,
                      index=1),
+            ]),
+            Group(name="JobHandle", functions=[
+                Item(name="Wait",
+                     pattern="40 53 48 83 EC 30 48 8B D9 33 D2 48 8B 0D BE BB 07 02 E8"),
+            ]),
+            Group(name="JournalManager", functions=[
+                Item(name="LoadJournal",
+                     pattern="48 89 5C 24 20 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 D9 48 81 EC D0 00 00 00 4C 8B E2"),
+                Item(name="TrackPointOfInterest",
+                     pattern="48 81 C1 20 01 00 00 E9",
+                     expected=8),
+                Item(name="TrackQuest",
+                     pattern="48 89 54 24 10 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 18 FF FF FF 48 81 EC E8 01 00 00 48 8B 1A 45 32 ED 4C 8B F2 48 8B F1"),
+            ]),
+            Group(name="JournalRootFolderEntry", functions=[
+                Item(name="Initialize",
+                     pattern="48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 20 4D 8B C1 49 8B F1 48 8B DA 48 8B F9 E8"),
+            ]),
+            Group(name="JournalTree", functions=[
+                Item(name="ProcessJournalIndex",
+                     pattern="48 89 4C 24 08 55 41 56 48 81 EC B8 00 00 00 4C 8B F1 48 8B EA 48 8B 49 08 E8"),
             ]),
             Group(name="Localization", functions=[
                 Item(name="LoadOnScreens",

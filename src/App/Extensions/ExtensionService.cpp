@@ -4,6 +4,7 @@
 #include "App/Extensions/Customization/Module.hpp"
 #include "App/Extensions/FactoryIndex/Module.hpp"
 #include "App/Extensions/InkSpawner/Module.hpp"
+#include "App/Extensions/Journal/Module.hpp"
 #include "App/Extensions/Localization/Module.hpp"
 #include "App/Extensions/PartsOverrides/Module.hpp"
 #include "App/Extensions/Streaming/Module.hpp"
@@ -21,6 +22,7 @@ void App::ExtensionService::OnBootstrap()
     m_loader->Add<CustomizationModule>();
     m_loader->Add<FactoryIndexModule>();
     m_loader->Add<InkSpawnerModule>();
+    m_loader->Add<JournalModule>();
     m_loader->Add<LocalizationModule>();
     m_loader->Add<PartsOverridesModule>();
     m_loader->Add<StreamingModule>();

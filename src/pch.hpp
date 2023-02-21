@@ -29,6 +29,7 @@
 #include <RED4ext/Handle.hpp>
 #include <RED4ext/HashMap.hpp>
 #include <RED4ext/ISerializable.hpp>
+#include <RED4ext/JobQueue.hpp>
 #include <RED4ext/NativeTypes.hpp>
 #include <RED4ext/Relocation.hpp>
 #include <RED4ext/ResourceDepot.hpp>
@@ -57,6 +58,10 @@
 #include <RED4ext/Scripting/Natives/Generated/ent/TemplateAppearance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/AppearanceNameVisualTagsPreset.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/AttachmentSlots.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/JournalTree.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/JournalResource.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/JournalRootFolderEntry.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/JournalManager.hpp>
 #include "RED4ext/Scripting/Natives/Generated/game/Puppet.hpp"
 #include <RED4ext/Scripting/Natives/Generated/game/TPPRepresentationComponent.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/AppearanceInfo.hpp>
