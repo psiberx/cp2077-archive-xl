@@ -301,11 +301,48 @@ void App::JournalModule::ReloadJournal()
     if (!manager)
         return;
 
-    Red::Handle<Red::game::JournalEntry> null;
-    Raw::JournalManager::TrackQuest(manager, null);
-    Raw::JournalManager::TrackPointOfInterest(manager, null);
+    Red::JournalEntryHash questHash{};
+    Red::JournalEntryHash poiHash{};
+
+    {
+        Red::Handle<Red::game::JournalEntry> quest;
+        Red::Handle<Red::game::JournalEntry> poi;
+
+        Raw::JournalManager::GetTrackedQuest(manager, quest);
+        Raw::JournalManager::GetTrackedPointOfInterest(manager, poi);
+
+        if (quest)
+            questHash = Raw::JournalManager::GetEntryHash(manager, quest);
+
+        if (poi)
+            poiHash = Raw::JournalManager::GetEntryHash(manager, poi);
+    }
+
+    {
+        Red::Handle<Red::game::JournalEntry> null;
+        Raw::JournalManager::TrackQuest(manager, null);
+        Raw::JournalManager::TrackPointOfInterest(manager, null);
+    }
 
     Red::JobHandle job{};
     Raw::JournalManager::LoadJournal(manager, job);
     Raw::JobHandle::Wait(job);
+
+    if (questHash)
+    {
+        Red::Handle<Red::game::JournalEntry> quest;
+        Raw::JournalManager::GetEntryByHash(manager, quest, questHash);
+
+        if (quest)
+            Raw::JournalManager::TrackQuest(manager, quest);
+    }
+
+    if (poiHash)
+    {
+        Red::Handle<Red::game::JournalEntry> poi;
+        Raw::JournalManager::GetEntryByHash(manager, poi, poiHash);
+
+        if (poiHash)
+            Raw::JournalManager::TrackPointOfInterest(manager, poi);
+    }
 }
