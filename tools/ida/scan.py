@@ -178,6 +178,10 @@ def patterns():
                      pattern="40 55 53 57 48 8B EC 48 81 EC 80 00 00 00 0F 57 C0 48 8B D9 F3 0F 7F 45 A0 48 85 D2 75 17 33 FF 48 8B C1 48 89 39 48 89 79 08 48 81 C4 80 00 00",
                      expected=2),
             ]),
+            Group(name="MappinResource", functions=[
+                Item(name="GetMappinData",
+                     pattern="48 8B 41 40 8B 49 4C 48 C1 E1 05 48 03 C8 48 3B C1 74"),
+            ]),
             Group(name="MeshAppearance", functions=[
                 Item(name="LoadMaterialSetupAsync",
                      pattern="40 55 53 56 57 41 55 41 57 48 8D AC 24 78 FF FF FF 48 81 EC 88 01 00 00 45 0F B6 E8 48 8B F2 4C"),

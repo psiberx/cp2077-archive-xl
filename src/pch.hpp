@@ -40,9 +40,11 @@
 #include <RED4ext/SortedArray.hpp>
 #include <RED4ext/TweakDB.hpp>
 #include <RED4ext/Hashing/FNV1a.hpp>
+#include <RED4ext/Hashing/Murmur3.hpp>
 #include <RED4ext/Memory/Allocators.hpp>
 #include <RED4ext/Memory/SharedPtr.hpp>
 #include <RED4ext/Scripting/CProperty.hpp>
+#include <RED4ext/Scripting/Natives/ScriptGameInstance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/CMesh.hpp>
 #include <RED4ext/Scripting/Natives/Generated/MorphTargetMesh.hpp>
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearanceDefinition.hpp>
@@ -58,12 +60,15 @@
 #include <RED4ext/Scripting/Natives/Generated/ent/TemplateAppearance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/AppearanceNameVisualTagsPreset.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/AttachmentSlots.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/JournalQuestMapPin.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/JournalTree.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/JournalResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/JournalRootFolderEntry.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/JournalManager.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/MappinResource.hpp>
 #include "RED4ext/Scripting/Natives/Generated/game/Puppet.hpp"
 #include <RED4ext/Scripting/Natives/Generated/game/TPPRepresentationComponent.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/mappins/IMappinVolume.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/AppearanceInfo.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/CharacterCustomizationFeetController.hpp>
 #include "RED4ext/Scripting/Natives/Generated/game/ui/CharacterCustomizationInfo.hpp"
@@ -82,6 +87,8 @@
 #include <RED4ext/Scripting/Natives/Generated/loc/alization/PersistenceOnScreenEntries.hpp>
 #include <RED4ext/Scripting/Natives/Generated/mesh/MeshAppearance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/red/TagList.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/GlobalNodeID.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/GlobalNodeRef.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/RuntimeSystemEntityAppearanceChanger.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/StreamingBlock.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/StreamingWorld.hpp>

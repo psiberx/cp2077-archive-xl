@@ -7,6 +7,8 @@ namespace
 {
 constexpr auto ModuleName = "Journal";
 
+constexpr auto MappinsResource = Red::ResourcePath(R"(base\worlds\03_night_city\_compiled\default\03_night_city.mappins)");
+
 constexpr auto PathSeparator = '/';
 constexpr auto EditMarker = '*';
 constexpr auto IdentityProp = Red::CName("id");
@@ -25,6 +27,9 @@ bool App::JournalModule::Load()
     if (!HookBefore<Raw::JournalRootFolderEntry::Initialize>(&JournalModule::OnInitializeRoot))
         throw std::runtime_error("Failed to hook [JournalRootFolderEntry::Initialize].");
 
+    if (!Hook<Raw::MappinResource::GetMappinData>(&JournalModule::OnGetMappinData))
+        throw std::runtime_error("Failed to hook [MappinResource::GetMappinData].");
+
     return true;
 }
 
@@ -32,6 +37,7 @@ bool App::JournalModule::Unload()
 {
     Unhook<Raw::JournalTree::ProcessJournalIndex>();
     Unhook<Raw::JournalRootFolderEntry::Initialize>();
+    Unhook<Raw::MappinResource::GetMappinData>();
 
     return true;
 }
@@ -40,6 +46,7 @@ void App::JournalModule::Reload()
 {
     if (!m_units.empty() && m_resources.empty())
     {
+        ResetRuntimeData();
         ReloadJournal();
     }
 }
@@ -110,13 +117,88 @@ void App::JournalModule::OnInitializeRoot(Red::game::JournalRootFolderEntry* aJo
         successAll &= MergeEntries(aJournalRoot, root);
     }
 
-    ResetResources();
+    ResetResourceData();
 
     if (successAll)
         LogInfo("|{}| All journal entries merged.", ModuleName);
     else
         LogWarning("|{}| Journal entries merged with issues.", ModuleName);
 
+}
+
+Red::game::CookedMappinData* App::JournalModule::OnGetMappinData(Red::game::MappinResource* aResource, uint32_t aHash)
+{
+    if (aResource->cookedData.size == aResource->cookedData.capacity && aResource->path == MappinsResource)
+    {
+        const auto reserve = std::max(m_mappins.size() << 1, aResource->cookedData.size / 2ull);
+        aResource->cookedData.Reserve(aResource->cookedData.size + reserve);
+    }
+
+    auto result = Raw::MappinResource::GetMappinData(aResource, aHash);
+
+    if (!result && !m_mappins.empty() && aResource->path == MappinsResource)
+    {
+        const auto it = m_mappins.find(aHash);
+        if (it != m_mappins.end())
+        {
+            // LogInfo("|{}| Uncooked mappin #{} requested...", ModuleName, aHash);
+
+            Red::game::CookedMappinData cookedMappin{};
+            cookedMappin.journalPathHash = aHash;
+
+            const auto& mappin = it.value();
+
+            if (mappin->reference.reference.unk00)
+            {
+                Red::world::GlobalNodeRef context{};
+                Red::ExecuteFunction("worldGlobalNodeID", "GetRoot", &context);
+
+                if (!context.hash)
+                {
+                    LogError("|{}| Can't resolve mappin #{} context.", ModuleName, aHash);
+                    return nullptr;
+                }
+
+                Red::NodeRef reference = mappin->reference.reference;
+                Red::world::GlobalNodeRef resolved{};
+                Red::ExecuteGlobalFunction("ResolveNodeRef", &resolved, reference, context);
+
+                if (!resolved.hash)
+                {
+                    LogError("|{}| Can't resolve mappin #{} reference.", ModuleName, aHash);
+                    return nullptr;
+                }
+
+                bool success{};
+                Red::Transform transform{};
+                Red::ScriptGameInstance game{};
+                Red::ExecuteFunction("ScriptGameInstance", "GetNodeTransform", &success, game, resolved, transform);
+
+                if (!success)
+                {
+                    LogError("|{}| Can't resolve mappin #{} position.", ModuleName, aHash);
+                    return nullptr;
+                }
+
+                cookedMappin.position.X = transform.position.X;
+                cookedMappin.position.Y = transform.position.Y;
+                cookedMappin.position.Z = transform.position.Z;
+            }
+            else
+            {
+                cookedMappin.position = mappin->offset;
+                mappin->offset = {};
+            }
+
+            {
+                std::unique_lock _(m_mappinsLock);
+                aResource->cookedData.PushBack(std::move(cookedMappin));
+                return aResource->cookedData.End() - 1;
+            }
+        }
+    }
+
+    return result;
 }
 
 App::JournalModule::EntrySearchResult App::JournalModule::FindEntry(Red::game::JournalEntry* aParent,
@@ -129,6 +211,7 @@ App::JournalModule::EntrySearchResult App::JournalModule::FindEntry(Red::game::J
 
     Red::game::JournalContainerEntry* parentEntry = nullptr;
     Red::game::JournalEntry* finalEntry = aParent;
+    std::string finalPath;
     bool markedForEdit = false;
 
     std::stringstream ss(aPath.c_str());
@@ -147,6 +230,11 @@ App::JournalModule::EntrySearchResult App::JournalModule::FindEntry(Red::game::J
             markedForEdit = true;
         }
 
+        if (!finalPath.empty())
+            finalPath += PathSeparator;
+
+        finalPath += id;
+
         auto it = std::find_if(parentEntry->entries.Begin(), parentEntry->entries.End(),
             [&id](const Red::Handle<Red::game::JournalEntry>& aEntry) -> bool
             {
@@ -155,31 +243,25 @@ App::JournalModule::EntrySearchResult App::JournalModule::FindEntry(Red::game::J
 
         if (it == parentEntry->entries.End())
         {
-            return {nullptr, ss.eof() ? parentEntry : nullptr, markedForEdit};
+            return {nullptr, finalPath, ss.eof() ? parentEntry : nullptr, markedForEdit};
         }
 
         finalEntry = it->GetPtr();
     }
 
-    return {finalEntry, parentEntry, markedForEdit};
+    return {finalEntry, finalPath, parentEntry, markedForEdit};
 }
 
 bool App::JournalModule::MergeEntries(Red::game::JournalContainerEntry* aTarget,
                                       Red::game::JournalContainerEntry* aSource,
-                                      const std::string& aFullPath)
+                                      const std::string& aPath)
 {
     auto success = true;
 
     for (const auto& sourceEntry : aSource->entries)
     {
-        auto [targetEntry, parentEntry, markedForEdit] = FindEntry(aTarget, sourceEntry->id);
-
-        auto targetPath = aFullPath;
-        if (!aFullPath.empty())
-        {
-            targetPath.push_back(PathSeparator);
-        }
-        targetPath.append(sourceEntry->id.c_str());
+        auto [targetEntry, targetId, parentEntry, markedForEdit] = FindEntry(aTarget, sourceEntry->id);
+        auto targetPath = MakePath(aPath, targetId);
 
         if (targetEntry)
         {
@@ -194,7 +276,7 @@ bool App::JournalModule::MergeEntries(Red::game::JournalContainerEntry* aTarget,
                 continue;
             }
 
-            ConvertLocKeys(sourceEntry, true);
+            ProcessNewEntries(sourceEntry, targetPath, true);
 
             parentEntry->entries.EmplaceBack(sourceEntry);
         }
@@ -209,7 +291,7 @@ bool App::JournalModule::MergeEntries(Red::game::JournalContainerEntry* aTarget,
 }
 
 bool App::JournalModule::MergeEntry(Red::game::JournalEntry* aTarget, Red::game::JournalEntry* aSource,
-                                    const std::string& aFullPath, bool aEditProps)
+                                    const std::string& aPath, bool aEditProps)
 {
     static const auto s_containerEntryType = Red::Rtti::GetClass<Red::game::JournalContainerEntry>();
 
@@ -234,7 +316,7 @@ bool App::JournalModule::MergeEntry(Red::game::JournalEntry* aTarget, Red::game:
         }
         else
         {
-            LogWarning("|{}| {}: Cannot modify entry, type mismatch.", ModuleName, aFullPath);
+            LogWarning("|{}| {}: Cannot modify entry, type mismatch.", ModuleName, aPath);
             success = false;
         }
     }
@@ -243,16 +325,31 @@ bool App::JournalModule::MergeEntry(Red::game::JournalEntry* aTarget, Red::game:
     {
         success &= MergeEntries(reinterpret_cast<Red::game::JournalContainerEntry*>(aTarget),
                                 reinterpret_cast<Red::game::JournalContainerEntry*>(aSource),
-                                aFullPath);
+                                aPath);
     }
 
     return success;
 }
 
-void App::JournalModule::ConvertLocKeys(Red::game::JournalEntry* aEntry, bool aRecursive)
+void App::JournalModule::ProcessNewEntries(Red::game::JournalEntry* aEntry, const std::string& aPath, bool aRecursive)
+{
+    static const auto s_containerEntryType = Red::Rtti::GetClass<Red::game::JournalContainerEntry>();
+
+    ConvertLocKeys(aEntry);
+    CollectMappin(aEntry, aPath);
+
+    if (aRecursive && aEntry->GetType()->IsA(s_containerEntryType))
+    {
+        for (const auto& entry : reinterpret_cast<Red::game::JournalContainerEntry*>(aEntry)->entries)
+        {
+            ProcessNewEntries(entry, MakePath(aPath, entry->id.c_str()), true);
+        }
+    }
+}
+
+void App::JournalModule::ConvertLocKeys(Red::game::JournalEntry* aEntry)
 {
     static const auto s_localizationStringType = Red::Rtti::GetType<"LocalizationString">();
-    static const auto s_containerEntryType = Red::Rtti::GetClass<Red::game::JournalContainerEntry>();
 
     Red::DynArray<Red::CProperty*> props;
     aEntry->GetType()->GetProperties(props);
@@ -276,20 +373,29 @@ void App::JournalModule::ConvertLocKeys(Red::game::JournalEntry* aEntry, bool aR
             }
         }
     }
+}
 
-    if (aRecursive && aEntry->GetType()->IsA(s_containerEntryType))
+void App::JournalModule::CollectMappin(Red::game::JournalEntry* aEntry, const std::string& aPath)
+{
+    static const auto s_mappinEntryType = Red::Rtti::GetClass<Red::game::JournalQuestMapPin>();
+
+    if (aEntry->GetType()->IsA(s_mappinEntryType))
     {
-        for (const auto& entry : reinterpret_cast<Red::game::JournalContainerEntry*>(aEntry)->entries)
-        {
-            ConvertLocKeys(entry, true);
-        }
+        const auto hash = CalculateJournalHash(aPath);
+
+        m_mappins.emplace(hash, reinterpret_cast<Red::game::JournalQuestMapPin*>(aEntry));
     }
 }
 
-void App::JournalModule::ResetResources()
+void App::JournalModule::ResetResourceData()
 {
     m_resources.clear();
     m_paths.clear();
+}
+
+void App::JournalModule::ResetRuntimeData()
+{
+    m_mappins.clear();
 }
 
 void App::JournalModule::ReloadJournal()
@@ -345,4 +451,14 @@ void App::JournalModule::ReloadJournal()
         if (poiHash)
             Raw::JournalManager::TrackPointOfInterest(manager, poi);
     }
+}
+
+std::string App::JournalModule::MakePath(const std::string& aPath, const std::string& aStep)
+{
+    return !aPath.empty() ? aPath + PathSeparator + aStep : aStep;
+}
+
+uint32_t App::JournalModule::CalculateJournalHash(const std::string& aPath)
+{
+    return Red::Murmur3_32(reinterpret_cast<const uint8_t*>(aPath.data()), aPath.length(), 0X5EEDBA5E);
 }
