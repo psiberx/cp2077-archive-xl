@@ -1,13 +1,12 @@
 #include "Wrapper.hpp"
 #include "Red/Mesh.hpp"
-#include "Red/Rtti/Locator.hpp"
 
 namespace
 {
-Red::Rtti::ClassLocator<Red::ent::MeshComponent> s_MeshComponentRttiType;
-Red::Rtti::ClassLocator<Red::ent::SkinnedMeshComponent> s_SkinnedMeshComponentRttiType;
-Red::Rtti::ClassLocator<Red::ent::SkinnedClothComponent> s_SkinnedClothComponentRttiType;
-Red::Rtti::ClassLocator<Red::ent::MorphTargetSkinnedMeshComponent> s_MorphTargetSkinnedMeshComponentRttiType;
+Red::ClassLocator<Red::ent::MeshComponent> s_MeshComponentRttiType;
+Red::ClassLocator<Red::ent::SkinnedMeshComponent> s_SkinnedMeshComponentRttiType;
+Red::ClassLocator<Red::ent::SkinnedClothComponent> s_SkinnedClothComponentRttiType;
+Red::ClassLocator<Red::ent::MorphTargetSkinnedMeshComponent> s_MorphTargetSkinnedMeshComponentRttiType;
 
 template<class T>
 inline uint64_t GetComponentChunkMask(T* aComponent)

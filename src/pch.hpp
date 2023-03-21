@@ -8,6 +8,7 @@
 #include <map>
 #include <memory>
 #include <ranges>
+#include <source_location>
 #include <string>
 #include <string_view>
 #include <type_traits>
@@ -84,7 +85,7 @@
 #include <RED4ext/Scripting/Natives/Generated/ink/WidgetLibraryResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/WidgetLogicController.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/IWidgetController.hpp>
-#include <RED4ext/Scripting/Natives/Generated/loc/alization/PersistenceOnScreenEntries.hpp>
+#include <RED4ext/Scripting/Natives/Generated/localization/PersistenceOnScreenEntries.hpp>
 #include <RED4ext/Scripting/Natives/Generated/mesh/MeshAppearance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/red/TagList.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/GlobalNodeID.hpp>
@@ -93,6 +94,9 @@
 #include <RED4ext/Scripting/Natives/Generated/world/StreamingBlock.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/StreamingWorld.hpp>
 
+#include <nameof.hpp>
+#include <semver.hpp>
+
 #include <yaml-cpp/yaml.h>
 
 #include "Core/Raw.hpp"
@@ -100,6 +104,9 @@
 
 #include "Red/Alias.hpp"
 #include "Red/Stl.hpp"
+#include "Red/Framework.hpp"
+#include "Red/Rtti/Definition.hpp"
+#include "Red/Rtti/Resolving.hpp"
 
 #ifdef VERBOSE
 #include "Red/Log.hpp"

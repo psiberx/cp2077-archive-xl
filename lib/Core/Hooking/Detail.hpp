@@ -309,11 +309,17 @@ private:
 
 template<typename TRaw,
          typename TWrapper,
-         HookFlow TFlow = HookFlow::Original, HookRun TRun = HookRun::Default>
+         HookFlow TFlow = HookFlow::Original,
+         HookRun TRun = HookRun::Default>
 class HookHandler;
 
-template<template<uintptr_t, typename> class TRaw, uintptr_t TOffset, typename TRet, typename... TArgs,
-         typename TWrapper, HookFlow TFlow, HookRun TRun>
+template<template<uintptr_t, typename> class TRaw,
+         uintptr_t TOffset,
+         typename TRet,
+         typename... TArgs,
+         typename TWrapper,
+         HookFlow TFlow,
+         HookRun TRun>
 class HookHandler<TRaw<TOffset, TRet(*)(TArgs...)>, TWrapper, TFlow, TRun>
 {
 public:
@@ -371,68 +377,68 @@ public:
             {
                 Detach();
             }
-
-            return;
         }
-        else
+        else if constexpr (TFlow == HookFlow::Original)
         {
-            TRet ret;
+            if constexpr (Traits::IsOriginal)
+            {
+                TRet ret = s_callback(std::forward<TArgs>(aArgs)...);
 
-            if constexpr (TFlow == HookFlow::Original)
-            {
-                if constexpr (Traits::IsOriginal)
+                if constexpr (TRun == HookRun::Once)
                 {
-                    ret = s_callback(std::forward<TArgs>(aArgs)...);
-                }
-            }
-            else if constexpr (TFlow == HookFlow::Before)
-            {
-                if constexpr (Traits::IsArgsObserver)
-                {
-                    s_callback(std::forward<TArgs>(aArgs)...);
-                }
-                else if constexpr (Traits::IsBlindObserver)
-                {
-                    s_callback();
+                    Detach();
                 }
 
-                ret = s_original(std::forward<TArgs>(aArgs)...);
+                return ret;
             }
-            else if constexpr (TFlow == HookFlow::After)
+        }
+        else if constexpr (TFlow == HookFlow::Before)
+        {
+            if constexpr (Traits::IsArgsObserver)
             {
-                ret = s_original(std::forward<TArgs>(aArgs)...);
+                s_callback(std::forward<TArgs>(aArgs)...);
+            }
+            else if constexpr (Traits::IsBlindObserver)
+            {
+                s_callback();
+            }
 
-                if constexpr (Traits::IsArgsObserver)
-                {
-                    s_callback(std::forward<TArgs>(aArgs)...);
-                }
-                else if constexpr (Traits::IsTailObserver)
-                {
-                    s_callback(ret, std::forward<TArgs>(aArgs)...);
-                }
-                else if constexpr (Traits::IsResultObserver)
-                {
-                    s_callback(ret);
-                }
-                else if constexpr (Traits::IsBlindObserver)
-                {
-                    s_callback();
-                }
-                else if constexpr (Traits::IsTailWrapper)
-                {
-                    ret = s_callback(ret, std::forward<TArgs>(aArgs)...);
-                }
-                else if constexpr (Traits::IsResultWrapper)
-                {
-                    ret = s_callback(ret);
-                }
-            }
-            else if constexpr (TFlow == HookFlow::Wrap)
+            TRet ret = s_original(std::forward<TArgs>(aArgs)...);
+
+            if constexpr (TRun == HookRun::Once)
             {
-                if constexpr (Traits::IsFullWrapper)
-                {
-                    ret = s_callback(std::forward<Original>(s_original), std::forward<TArgs>(aArgs)...);
-                }
+                Detach();
+            }
+
+            return ret;
+        }
+        else if constexpr (TFlow == HookFlow::After)
+        {
+            TRet ret = s_original(std::forward<TArgs>(aArgs)...);
+
+            if constexpr (Traits::IsArgsObserver)
+            {
+                s_callback(std::forward<TArgs>(aArgs)...);
+            }
+            else if constexpr (Traits::IsTailObserver)
+            {
+                s_callback(ret, std::forward<TArgs>(aArgs)...);
+            }
+            else if constexpr (Traits::IsResultObserver)
+            {
+                s_callback(ret);
+            }
+            else if constexpr (Traits::IsBlindObserver)
+            {
+                s_callback();
+            }
+            else if constexpr (Traits::IsTailWrapper)
+            {
+                ret = s_callback(ret, std::forward<TArgs>(aArgs)...);
+            }
+            else if constexpr (Traits::IsResultWrapper)
+            {
+                ret = s_callback(ret);
             }
 
             if constexpr (TRun == HookRun::Once)
@@ -441,6 +447,20 @@ public:
             }
 
             return ret;
+        }
+        else if constexpr (TFlow == HookFlow::Wrap)
+        {
+            if constexpr (Traits::IsFullWrapper)
+            {
+                TRet ret = s_callback(std::forward<Original>(s_original), std::forward<TArgs>(aArgs)...);
+
+                if constexpr (TRun == HookRun::Once)
+                {
+                    Detach();
+                }
+
+                return ret;
+            }
         }
     }
 
@@ -473,7 +493,6 @@ public:
     inline static void Dispose()
     {
         s_callback = {};
-        //s_original = nullptr;
     }
 
 private:

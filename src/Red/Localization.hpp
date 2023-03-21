@@ -13,6 +13,6 @@ namespace Raw::Localization
 {
 constexpr auto LoadOnScreens = Core::RawFunc<
     /* addr = */ Red::Addresses::Localization_LoadOnScreens,
-    /* type = */ uint64_t (*)(Red::Handle<Red::loc::alization::PersistenceOnScreenEntries>& aOut,
+    /* type = */ uint64_t (*)(Red::Handle<Red::localization::PersistenceOnScreenEntries>& aOut,
                               Red::ResourcePath aPath)>();
 }

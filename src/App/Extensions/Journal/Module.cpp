@@ -1,7 +1,6 @@
 #include "Module.hpp"
 #include "Red/JobHandle.hpp"
 #include "Red/Localization.hpp"
-#include "Red/Rtti/Locator.hpp"
 
 namespace
 {
@@ -86,7 +85,7 @@ void App::JournalModule::OnLoadJournal(uintptr_t a1, Red::JobGroup& aJobGroup)
 void App::JournalModule::OnInitializeRoot(Red::game::JournalRootFolderEntry* aJournalRoot, uintptr_t, uintptr_t,
                                           Red::JobQueue& aJobQueue)
 {
-    static const auto s_rootEntryType = Red::Rtti::GetClass<Red::game::JournalRootFolderEntry>();
+    static const auto s_rootEntryType = Red::GetClass<Red::game::JournalRootFolderEntry>();
 
     if (m_units.empty())
         return;
@@ -204,7 +203,7 @@ Red::game::CookedMappinData* App::JournalModule::OnGetMappinData(Red::game::Mapp
 App::JournalModule::EntrySearchResult App::JournalModule::FindEntry(Red::game::JournalEntry* aParent,
                                                                     Red::CString& aPath)
 {
-    static const auto s_containerEntryType = Red::Rtti::GetClass<Red::game::JournalContainerEntry>();
+    static const auto s_containerEntryType = Red::GetClass<Red::game::JournalContainerEntry>();
 
     if (!aParent)
         return {};
@@ -293,7 +292,7 @@ bool App::JournalModule::MergeEntries(Red::game::JournalContainerEntry* aTarget,
 bool App::JournalModule::MergeEntry(Red::game::JournalEntry* aTarget, Red::game::JournalEntry* aSource,
                                     const std::string& aPath, bool aEditProps)
 {
-    static const auto s_containerEntryType = Red::Rtti::GetClass<Red::game::JournalContainerEntry>();
+    static const auto s_containerEntryType = Red::GetClass<Red::game::JournalContainerEntry>();
 
     auto success = true;
 
@@ -333,7 +332,7 @@ bool App::JournalModule::MergeEntry(Red::game::JournalEntry* aTarget, Red::game:
 
 void App::JournalModule::ProcessNewEntries(Red::game::JournalEntry* aEntry, const std::string& aPath, bool aRecursive)
 {
-    static const auto s_containerEntryType = Red::Rtti::GetClass<Red::game::JournalContainerEntry>();
+    static const auto s_containerEntryType = Red::GetClass<Red::game::JournalContainerEntry>();
 
     ConvertLocKeys(aEntry);
     CollectMappin(aEntry, aPath);
@@ -349,7 +348,7 @@ void App::JournalModule::ProcessNewEntries(Red::game::JournalEntry* aEntry, cons
 
 void App::JournalModule::ConvertLocKeys(Red::game::JournalEntry* aEntry)
 {
-    static const auto s_localizationStringType = Red::Rtti::GetType<"LocalizationString">();
+    static const auto s_localizationStringType = Red::GetType<"LocalizationString">();
 
     Red::DynArray<Red::CProperty*> props;
     aEntry->GetType()->GetProperties(props);
@@ -377,7 +376,7 @@ void App::JournalModule::ConvertLocKeys(Red::game::JournalEntry* aEntry)
 
 void App::JournalModule::CollectMappin(Red::game::JournalEntry* aEntry, const std::string& aPath)
 {
-    static const auto s_mappinEntryType = Red::Rtti::GetClass<Red::game::JournalQuestMapPin>();
+    static const auto s_mappinEntryType = Red::GetClass<Red::game::JournalQuestMapPin>();
 
     if (aEntry->GetType()->IsA(s_mappinEntryType))
     {
@@ -400,9 +399,7 @@ void App::JournalModule::ResetRuntimeData()
 
 void App::JournalModule::ReloadJournal()
 {
-    auto* manager = Red::CGameEngine::Get()->framework->gameInstance->GetInstance(
-        Red::Rtti::GetClass<Red::game::IJournalManager>()
-    );
+    auto manager = Red::GetGameSystem<Red::game::IJournalManager>();
 
     if (!manager)
         return;

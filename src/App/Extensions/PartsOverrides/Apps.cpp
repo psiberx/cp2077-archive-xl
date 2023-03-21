@@ -1,7 +1,6 @@
 #include "Apps.hpp"
 #include "Red/CharacterCustomization.hpp"
 #include "Red/Entity.hpp"
-#include "Red/Rtti/Locator.hpp"
 
 namespace
 {
@@ -125,7 +124,7 @@ Red::CName App::DynamicAppearanceResolver::GetSkinColor(Red::ent::Entity* aEntit
 Red::CName App::DynamicAppearanceResolver::GetHairColor(Red::ent::Entity* aEntity)
 {
     static auto* system = Red::CGameEngine::Get()->framework->gameInstance->GetInstance(
-        Red::Rtti::GetClass<Red::game::ui::ICharacterCustomizationSystem>()
+        Red::GetClass<Red::game::ui::ICharacterCustomizationSystem>()
     );
 
     Red::CName hairColor;

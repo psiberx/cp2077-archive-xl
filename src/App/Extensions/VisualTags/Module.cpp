@@ -31,7 +31,7 @@ void App::VisualTagsModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset&
                                             Red::TagList& aOutTags)
 {
     static Core::Map<uint64_t, Red::TagList> s_autoTagsCache;
-    static Red::TagList s_emptyTags;
+    static Red::TagList s_emptyTags{};
 
     if (aOutTags.tags.size > 0 || !aAppearanceName)
         return;

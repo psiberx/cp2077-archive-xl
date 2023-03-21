@@ -88,6 +88,7 @@ public:
     using Ptr = Type*;
 
     static constexpr uintptr_t offset = A;
+    static constexpr bool indirect = std::is_pointer_v<T>;
 
     constexpr RawPtr() = default;
 
@@ -96,17 +97,43 @@ public:
         return GetPtr() != nullptr;
     }
 
-    [[nodiscard]] inline operator T() const
+    [[nodiscard]] inline operator Type&() const
     {
-        return GetPtr();
+        if constexpr (indirect)
+        {
+            return **GetPtr();
+        }
+        else
+        {
+            return *GetPtr();
+        }
     }
 
-    [[nodiscard]] inline T* operator->() const
+    [[nodiscard]] inline operator Type*() const
     {
-        return GetPtr();
+        if constexpr (indirect)
+        {
+            return *GetPtr();
+        }
+        else
+        {
+            return GetPtr();
+        }
     }
 
-    const RawPtr& operator=(T aRhs) const noexcept
+    [[nodiscard]] inline Type* operator->() const
+    {
+        if constexpr (indirect)
+        {
+            return *GetPtr();
+        }
+        else
+        {
+            return GetPtr();
+        }
+    }
+
+    RawPtr& operator=(T&& aRhs) const noexcept
     {
         *GetPtr() = aRhs;
         return *this;

@@ -1,5 +1,4 @@
 #include "Module.hpp"
-#include "Red/Rtti/Locator.hpp"
 
 namespace
 {
@@ -8,9 +7,9 @@ constexpr auto ModuleName = "Customization";
 constexpr auto MaleResource = Red::ResourcePath(R"(base\gameplay\gui\fullscreen\main_menu\male_cco.inkcharcustomization)");
 constexpr auto FemaleResource = Red::ResourcePath(R"(base\gameplay\gui\fullscreen\main_menu\female_cco.inkcharcustomization)");
 
-Red::Rtti::ClassLocator<Red::game::ui::AppearanceInfo> s_AppInfoType;
-Red::Rtti::ClassLocator<Red::game::ui::MorphInfo> s_MorphInfoType;
-Red::Rtti::ClassLocator<Red::game::ui::SwitcherInfo> s_SwitcherInfoType;
+Red::ClassLocator<Red::game::ui::AppearanceInfo> s_AppInfoType;
+Red::ClassLocator<Red::game::ui::MorphInfo> s_MorphInfoType;
+Red::ClassLocator<Red::game::ui::SwitcherInfo> s_SwitcherInfoType;
 }
 
 std::string_view App::CustomizationModule::GetName()

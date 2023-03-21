@@ -1,5 +1,4 @@
 #include "Module.hpp"
-#include "Red/Rtti/Locator.hpp"
 
 namespace
 {
@@ -10,8 +9,8 @@ constexpr auto ControllerSeparator = ':';
 constexpr auto WaitTimeout = std::chrono::milliseconds(200);
 constexpr auto WaitTick = std::chrono::milliseconds(2);
 
-Red::Rtti::ClassLocator<Red::ink::IWidgetController> s_gameControllerType;
-Red::Rtti::ClassLocator<Red::ink::WidgetLogicController> s_logicControllerType;
+Red::ClassLocator<Red::ink::IWidgetController> s_gameControllerType;
+Red::ClassLocator<Red::ink::WidgetLogicController> s_logicControllerType;
 }
 
 std::string_view App::InkSpawnerModule::GetName()

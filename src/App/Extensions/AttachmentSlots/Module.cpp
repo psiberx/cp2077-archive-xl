@@ -1,6 +1,5 @@
 #include "Module.hpp"
 #include "Red/TransactionSystem.hpp"
-#include "Red/Rtti/Locator.hpp"
 
 namespace
 {
@@ -8,7 +7,7 @@ constexpr auto ModuleName = "AttachmentSlots";
 
 constexpr auto ParentSlotFlat = ".parentSlot";
 
-const Red::Rtti::TypeLocator<"gameTransactionSystem"> s_transactionSystemType;
+const Red::TypeLocator<"gameTransactionSystem"> s_transactionSystemType;
 
 const Red::TweakDBID s_tppAffectedSlots[] = {
     Red::TweakDBID("AttachmentSlots.Head"),

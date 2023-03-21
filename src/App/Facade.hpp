@@ -1,21 +1,23 @@
 #pragma once
 
-#include "Core/Foundation/Feature.hpp"
-#include "Core/Logging/LoggingAgent.hpp"
-#include "Red/Rtti/Class.hpp"
+#include "App/Project.hpp"
 
 namespace App
 {
-class Facade : public Red::Rtti::Class<Facade>
+class Facade : public Red::IScriptable
 {
 public:
     static void Reload();
     static bool Require(Red::CString& aVersion);
     static Red::CString GetVersion();
 
-private:
-    friend Descriptor;
-    static void OnRegister(Descriptor* aType);
-    static void OnDescribe(Descriptor* aType);
+    RTTI_IMPL_TYPEINFO(Facade);
 };
 }
+
+RTTI_DEFINE_CLASS(App::Facade, App::Project::Name, {
+    RTTI_ABSTRACT();
+    RTTI_METHOD(Reload);
+    RTTI_METHOD(Require);
+    RTTI_METHOD(GetVersion, "Version");
+})

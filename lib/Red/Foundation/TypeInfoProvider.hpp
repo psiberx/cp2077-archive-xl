@@ -4,7 +4,7 @@
 
 namespace Red
 {
-class RttiProvider : public Core::Feature
+class TypeInfoProvider : public Core::Feature
 {
     void OnBootstrap() override;
 };

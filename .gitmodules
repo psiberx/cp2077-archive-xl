@@ -7,3 +7,6 @@
 [submodule "vendor/semver"]
 	path = vendor/semver
 	url = git@github.com:Neargye/semver.git
+[submodule "vendor/nameof"]
+	path = vendor/nameof
+	url = git@github.com:Neargye/nameof.git

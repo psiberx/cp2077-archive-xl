@@ -5,8 +5,8 @@
 
 namespace App
 {
-using OnScreenEntry = Red::loc::alization::PersistenceOnScreenEntry;
-using OnScreenEntries = Red::loc::alization::PersistenceOnScreenEntries;
+using OnScreenEntry = Red::localization::PersistenceOnScreenEntry;
+using OnScreenEntries = Red::localization::PersistenceOnScreenEntries;
 using OnScreenEntryList = decltype(std::declval<OnScreenEntries>().entries);
 using OnScreenEntryMap = Core::Map<decltype(std::declval<OnScreenEntry>().primaryKey), OnScreenEntry*>;
 

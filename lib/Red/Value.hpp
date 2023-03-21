@@ -82,14 +82,13 @@ struct ManagedValue : Value<T>
         : Data(aType)
     {
         Data::instance = Data::type->GetAllocator()->AllocAligned(Data::type->GetSize(), Data::type->GetAlignment()).memory;
+
+        std::memset(Data::instance, 0, Data::type->GetSize());
+        Data::type->Construct(Data::instance);
+
         if (aInstance)
         {
             Data::type->Assign(Data::instance, aInstance);
-        }
-        else
-        {
-            std::memset(Data::instance, 0, Data::type->GetSize());
-            Data::type->Construct(Data::instance);
         }
     }
 

@@ -1,5 +1,4 @@
 #include "Facade.hpp"
-#include "App/Project.hpp"
 #include "App/Extensions/ExtensionService.hpp"
 #include "Core/Facades/Container.hpp"
 
@@ -17,17 +16,4 @@ bool App::Facade::Require(Red::CString& aVersion)
 Red::CString App::Facade::GetVersion()
 {
     return Project::Version.to_string().c_str();
-}
-
-void App::Facade::OnRegister(Descriptor* aType)
-{
-    aType->SetName(Project::Name);
-    aType->SetFlags({ .isAbstract = true });
-}
-
-void App::Facade::OnDescribe(Descriptor* aType)
-{
-    aType->AddFunction<&Reload>("Reload");
-    aType->AddFunction<&Require>("Require");
-    aType->AddFunction<&GetVersion>("Version");
 }
