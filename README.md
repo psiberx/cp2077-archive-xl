@@ -16,7 +16,7 @@ With the mod you can:
 
 ### Prerequisites
 
-- [RED4ext](https://docs.red4ext.com/getting-started/installing-red4ext) 1.9.0+
+- [RED4ext](https://docs.red4ext.com/getting-started/installing-red4ext) 1.10.0+
 
 ### Installation
 
