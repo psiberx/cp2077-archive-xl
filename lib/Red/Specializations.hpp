@@ -1,11 +1,13 @@
 #pragma once
 
+#include "TypeInfo/Resolving.hpp"
+
 template<>
 struct std::hash<RED4ext::CName>
 {
     std::size_t operator()(RED4ext::CName aKey) const
     {
-        return static_cast<size_t>(aKey.hash);
+        return aKey.hash;
     }
 };
 
@@ -14,7 +16,7 @@ struct std::hash<RED4ext::TweakDBID>
 {
     std::size_t operator()(RED4ext::TweakDBID aKey) const
     {
-        return static_cast<size_t>(aKey.value);
+        return aKey.value;
     }
 };
 
@@ -23,7 +25,17 @@ struct std::hash<RED4ext::ResourcePath>
 {
     std::size_t operator()(RED4ext::ResourcePath aKey) const
     {
-        return static_cast<size_t>(aKey.hash);
+        return aKey.hash;
+    }
+};
+
+template<typename T>
+requires std::is_class_v<T> && std::is_convertible_v<T, size_t> && Red::Detail::HasGeneratedTypeName<T>
+struct std::hash<T>
+{
+    std::size_t operator()(T aKey) const
+    {
+        return static_cast<size_t>(aKey);
     }
 };
 

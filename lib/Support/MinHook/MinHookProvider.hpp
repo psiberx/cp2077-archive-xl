@@ -3,7 +3,7 @@
 #include "Core/Foundation/Feature.hpp"
 #include "Core/Hooking/HookingDriver.hpp"
 
-namespace Vendor
+namespace Support
 {
 class MinHookProvider
     : public Core::Feature

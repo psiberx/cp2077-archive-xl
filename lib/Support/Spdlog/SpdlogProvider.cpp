@@ -5,7 +5,7 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
 
-void Vendor::SpdlogProvider::OnInitialize()
+void Support::SpdlogProvider::OnInitialize()
 {
     if (m_logPath.empty())
     {
@@ -22,27 +22,27 @@ void Vendor::SpdlogProvider::OnInitialize()
     SetDefault(*this);
 }
 
-void Vendor::SpdlogProvider::LogInfo(const std::string& aMessage)
+void Support::SpdlogProvider::LogInfo(const std::string& aMessage)
 {
     spdlog::default_logger_raw()->info(aMessage);
 }
 
-void Vendor::SpdlogProvider::LogWarning(const std::string& aMessage)
+void Support::SpdlogProvider::LogWarning(const std::string& aMessage)
 {
     spdlog::default_logger_raw()->warn(aMessage);
 }
 
-void Vendor::SpdlogProvider::LogError(const std::string& aMessage)
+void Support::SpdlogProvider::LogError(const std::string& aMessage)
 {
     spdlog::default_logger_raw()->error(aMessage);
 }
 
-void Vendor::SpdlogProvider::LogDebug(const std::string& aMessage)
+void Support::SpdlogProvider::LogDebug(const std::string& aMessage)
 {
     spdlog::default_logger_raw()->debug(aMessage);
 }
 
-void Vendor::SpdlogProvider::LogFlush()
+void Support::SpdlogProvider::LogFlush()
 {
     spdlog::default_logger_raw()->flush();
 }

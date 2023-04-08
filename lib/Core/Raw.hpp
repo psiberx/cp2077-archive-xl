@@ -84,7 +84,7 @@ template<uintptr_t A, typename T>
 class RawPtr : public RawBase
 {
 public:
-    using Type = std::conditional_t<std::is_pointer_v<T>, std::remove_pointer_t<T>, T>;
+    using Type = std::remove_pointer_t<T>;
     using Ptr = Type*;
 
     static constexpr uintptr_t offset = A;
@@ -154,5 +154,84 @@ public:
     {
         return reinterpret_cast<T*>(GetAddress());
     }
+};
+
+template<uintptr_t A, typename T>
+class OffsetPtr
+{
+public:
+    using Type = std::remove_pointer_t<T>;
+    using Ptr = Type*;
+
+    static constexpr uintptr_t offset = A;
+    static constexpr bool indirect = std::is_pointer_v<T>;
+
+    constexpr OffsetPtr(void* aBase)
+        : base(reinterpret_cast<uintptr_t>(aBase))
+    {
+    }
+
+    [[nodiscard]] inline operator bool() const
+    {
+        if constexpr (std::is_same_v<Type, bool>)
+        {
+            return GetValuePtr() || *GetValuePtr();
+        }
+        else
+        {
+            return GetValuePtr();
+        }
+    }
+
+    [[nodiscard]] inline operator Type&() const
+    {
+        return *GetValuePtr();
+    }
+
+    [[nodiscard]] inline operator Type*() const
+    {
+        return GetValuePtr();
+    }
+
+    [[nodiscard]] inline Type* operator->() const
+    {
+        return GetValuePtr();
+    }
+
+    OffsetPtr& operator=(T&& aRhs) const noexcept
+    {
+        *GetPtr() = aRhs;
+        return *this;
+    }
+
+    const OffsetPtr& operator=(const T& aRhs) const noexcept
+    {
+        *GetPtr() = aRhs;
+        return *this;
+    }
+
+    [[nodiscard]] inline T* GetPtr() const noexcept
+    {
+        return reinterpret_cast<T*>(GetAddress());
+    }
+
+    [[nodiscard]] inline Type* GetValuePtr() const noexcept
+    {
+        if constexpr (indirect)
+        {
+            return *GetPtr();
+        }
+        else
+        {
+            return GetPtr();
+        }
+    }
+
+    [[nodiscard]] inline uintptr_t GetAddress() const noexcept
+    {
+        return base + offset;
+    }
+
+    uintptr_t base;
 };
 }

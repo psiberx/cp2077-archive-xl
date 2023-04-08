@@ -4,7 +4,7 @@
 #include "Core/Hooking/HookingDriver.hpp"
 #include "Core/Logging/LoggingDriver.hpp"
 
-namespace Vendor
+namespace Support
 {
 class RED4extProvider
     : public Core::Feature

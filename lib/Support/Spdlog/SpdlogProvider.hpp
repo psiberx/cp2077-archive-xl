@@ -3,7 +3,7 @@
 #include "Core/Foundation/Feature.hpp"
 #include "Core/Logging/LoggingDriver.hpp"
 
-namespace Vendor
+namespace Support
 {
 class SpdlogProvider
     : public Core::Feature

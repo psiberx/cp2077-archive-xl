@@ -2,9 +2,9 @@
 
 #include "Core/Foundation/Feature.hpp"
 
-namespace Red
+namespace Support
 {
-class TypeInfoProvider : public Core::Feature
+class RedLibProvider : public Core::Feature
 {
     void OnBootstrap() override;
 };

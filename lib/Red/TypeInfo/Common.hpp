@@ -2,41 +2,76 @@
 
 namespace Red
 {
-template<typename T>
-constexpr uint64_t FNV1a64v(T aValue, uint64_t aSeed = 0xCBF29CE484222325)
+struct Scope
 {
-    constexpr uint64_t prime = 0x100000001b3;
-
-    uint64_t hash = aSeed;
-    for (size_t i = 0; i != sizeof(T); ++i)
+    constexpr Scope(const std::source_location& aLocation = std::source_location::current()) noexcept
+        : hash(FNV1a64(aLocation.file_name(), aLocation.line()))
     {
-        hash ^= aValue % 0xFF;
-        hash *= prime;
-        aValue /= 0xFF;
     }
 
-    return hash;
-}
-
-consteval auto AutoScope(const std::source_location& aLocation = std::source_location::current()) {
-    return FNV1a64v(aLocation.line(), FNV1a64(aLocation.file_name()));
-}
-
-template<typename T, auto ADefault = T()>
-struct Optional
-{
-    inline operator T&()
+    constexpr Scope(const char* aName) noexcept
+        : hash(FNV1a64(aName))
     {
-        return value;
     }
 
-    T value{ADefault};
+    constexpr Scope(uint64_t aHash) noexcept
+        : hash(aHash)
+    {
+    }
+
+    // template<template<typename> class B, typename T>
+    // constexpr Scope(const B<T>&) noexcept
+    //     : hash(FNV1a64(nameof::nameof_type<T>().data()))
+    // {
+    // }
+    //
+    // template<template<typename, auto> class E, typename T, auto S>
+    // constexpr Scope(const E<T, S>&) noexcept
+    //     : hash(S)
+    // {
+    // }
+    //
+    // template<template<auto, typename...> class E, auto S, typename... P>
+    // constexpr Scope(const E<S, P...>&) noexcept
+    //     : hash(S)
+    // {
+    // }
+
+    constexpr operator uint64_t() const noexcept
+    {
+        return hash;
+    }
+
+    constexpr static Scope Unique(const std::source_location& aLocation = std::source_location::current()) noexcept
+    {
+        return {aLocation};
+    }
+
+    template<typename T>
+    constexpr static Scope For()
+    {
+        return FNV1a64(nameof::nameof_type<T>().data());
+    }
+
+    template<typename T, auto S>
+    constexpr static Scope For()
+    {
+        return S;
+    }
+
+    uint64_t hash;
 };
+
+template<typename T, auto V = 0>
+struct Optional;
 
 namespace Detail
 {
 template<typename T>
-concept IsScripable = std::is_base_of_v<IScriptable, T>;
+concept IsScriptable = std::is_base_of_v<IScriptable, T>;
+
+template<typename T>
+concept IsGameSystem = std::is_base_of_v<IGameSystem, T>;
 
 template<typename T>
 concept IsType = std::is_base_of_v<CBaseRTTIType, T>;
@@ -129,11 +164,65 @@ struct Specialization<G<A, V>> : public std::true_type
 template<typename T>
 concept IsSpecialization = Specialization<T>::value;
 
-// template<typename T, template<typename> class G>
-// concept IsSameSpecialization = (IsSpecialization<T> && std::is_same_v<T, G<typename Specialization<T>::argument_type>>);
+template<typename T, typename U = std::remove_cvref_t<T>>
+concept IsOptional = Specialization<U>::value
+    && std::is_same_v<U, Optional<typename Specialization<U>::argument_type, Specialization<U>::argument_value>>;
+
+template<typename T, typename U = std::remove_cvref_t<T>>
+concept IsScriptRef = Specialization<U>::value
+    && std::is_same_v<U, ScriptRef<typename Specialization<U>::argument_type>>;
+}
+
+template<typename T, auto ADefault>
+requires (!std::is_void_v<T>)
+struct Optional<T, ADefault>
+{
+    inline operator const T&() const
+    {
+        return value;
+    }
+
+    [[nodiscard]] inline const T* operator->() const
+    {
+        return &value;
+    }
+
+    [[nodiscard]] bool IsEmpty() const
+    {
+        return !value;
+    }
+
+    [[nodiscard]] bool IsDefault() const
+    {
+        return value == ADefault;
+    }
+
+    T value{ADefault};
+};
 
 template<typename T>
-concept IsOptional = Specialization<T>::value
-    && std::is_same_v<T, Red::Optional<typename Specialization<T>::argument_type, Specialization<T>::argument_value>>;
-}
+struct Optional<T, 0>
+{
+    inline operator T&()
+    {
+        return value;
+    }
+
+    inline operator const T&() const
+    {
+        return value;
+    }
+
+    [[nodiscard]] inline const T* operator->() const
+    {
+        return &value;
+    }
+
+    [[nodiscard]] bool IsEmpty() const
+    {
+        return !value;
+    }
+
+    T value{};
+};
 }

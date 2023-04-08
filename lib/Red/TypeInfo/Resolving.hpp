@@ -5,14 +5,14 @@
 
 namespace Red
 {
+template<Scope>
+struct TypeInfoBuilder;
+
 template<typename T>
 struct TypeNameMapping : public std::false_type {};
 
 template<typename G>
 struct TypePrefixMapping : public std::false_type {};
-
-template<typename T>
-struct RTTITypeBuilder;
 
 namespace Detail
 {
@@ -27,19 +27,37 @@ concept HasGeneratedTypeName = requires(T*)
 };
 
 template<typename T>
+concept HasTypeNameMapping = TypeNameMapping<T>::value;
+
+template<typename G>
+concept HasTypePrefixMapping = TypePrefixMapping<G>::value;
+
+template<typename T>
 concept HasTypeNameBuilder = requires(T*)
 {
-    { Red::RTTITypeBuilder<T>::Name() } -> IsTypeNameConst;
+    { TypeInfoBuilder<Scope::For<T>()>::Name() } -> IsTypeNameConst;
 };
 
 template<typename T>
-concept HasTypeNameMapping = TypeNameMapping<T>::value;
+consteval auto ResolveTypeNameBuilder()
+{
+    return TypeInfoBuilder<Scope::For<T>()>::Name();
+}
 
-template<typename T>
-concept HasTypePrefixMapping = TypePrefixMapping<T>::value;
+template<size_t N>
+consteval auto MakeConstStr(const char* aName)
+{
+    constexpr auto len = N + 1;
+    std::array<char, len> result{};
+
+    for (auto i = 0; i < N; ++i)
+        result[i] = aName[i];
+
+    return result;
+}
 
 template<size_t N, size_t M>
-consteval auto ConcatConstTypeName(const char* aPrefix, const char* aName)
+consteval auto ConcatConstStr(const char* aPrefix, const char* aName)
 {
     constexpr auto len = N + M + 1;
     std::array<char, len> result{};
@@ -54,7 +72,7 @@ consteval auto ConcatConstTypeName(const char* aPrefix, const char* aName)
 }
 
 template<size_t N>
-consteval auto MakeConstTypeName(const char* aName)
+consteval auto UpFirstConstStr(const char* aName)
 {
     constexpr auto len = N + 1;
     std::array<char, len> result{};
@@ -62,7 +80,22 @@ consteval auto MakeConstTypeName(const char* aName)
     for (auto i = 0; i < N; ++i)
         result[i] = aName[i];
 
+    if (result[0] >= 'a' && result[0] <= 'z')
+    {
+        result[0] -= ('a' - 'A');
+    }
+
     return result;
+}
+
+consteval auto RemoveMemberPrefix(std::string_view aName)
+{
+    if (aName.starts_with("m_"))
+    {
+        aName.remove_prefix(2);
+    }
+
+    return aName;
 }
 
 constexpr auto ScopedEnumPrefix = "enum RED4ext::";
@@ -99,18 +132,13 @@ consteval auto GetTypePrefixStr()
     constexpr auto prefix = TypePrefixMapping<U>::prefix;
     constexpr auto length = std::char_traits<char>::length(prefix);
 
-    return Detail::MakeConstTypeName<length>(prefix);
+    return Detail::MakeConstStr<length>(prefix);
 }
 
 template<template<typename> class T>
 consteval auto GetTypePrefixStr()
 {
-    using U = T<ISerializable>;
-
-    constexpr auto prefix = TypePrefixMapping<U>::prefix;
-    constexpr auto length = std::char_traits<char>::length(prefix);
-
-    return Detail::MakeConstTypeName<length>(prefix);
+    return GetTypePrefixStr<T<ISerializable>>();
 }
 
 template<typename T>
@@ -120,17 +148,17 @@ consteval auto GetTypeNameStr()
 
     if constexpr (Detail::HasTypeNameBuilder<U>)
     {
-        constexpr auto name = RTTITypeBuilder<U>::Name();
+        constexpr auto name = Detail::ResolveTypeNameBuilder<U>();
 
         if constexpr (std::is_same_v<std::remove_cvref_t<decltype(name)>, std::string_view>)
         {
-            return Detail::MakeConstTypeName<name.size()>(name.data());
+            return Detail::MakeConstStr<name.size()>(name.data());
         }
         else
         {
             constexpr auto length = std::char_traits<char>::length(name);
 
-            return Detail::MakeConstTypeName<length>(name);
+            return Detail::MakeConstStr<length>(name);
         }
     }
     else if constexpr (Detail::HasTypeNameMapping<U>)
@@ -138,14 +166,14 @@ consteval auto GetTypeNameStr()
         constexpr auto name = TypeNameMapping<U>::name;
         constexpr auto length = std::char_traits<char>::length(name);
 
-        return Detail::MakeConstTypeName<length>(name);
+        return Detail::MakeConstStr<length>(name);
     }
     else if constexpr (Detail::HasGeneratedTypeName<U>)
     {
         constexpr auto name = U::NAME;
         constexpr auto length = std::char_traits<char>::length(name);
 
-        return Detail::MakeConstTypeName<length>(name);
+        return Detail::MakeConstStr<length>(name);
     }
     else if constexpr (Detail::IsSpecialization<U> && Detail::HasTypePrefixMapping<U>)
     {
@@ -153,13 +181,13 @@ consteval auto GetTypeNameStr()
         constexpr auto length = std::char_traits<char>::length(prefix);
         constexpr auto inner = GetTypeNameStr<typename Detail::Specialization<U>::argument_type>();
 
-        return Detail::ConcatConstTypeName<length, inner.size() - 1>(prefix, inner.data());
+        return Detail::ConcatConstStr<length, inner.size() - 1>(prefix, inner.data());
     }
     else if constexpr (Detail::IsOptional<U>)
     {
         constexpr auto inner = GetTypeNameStr<typename Detail::Specialization<U>::argument_type>();
 
-        return Detail::MakeConstTypeName<inner.size() - 1>(inner.data());
+        return Detail::MakeConstStr<inner.size() - 1>(inner.data());
     }
     else
     {
@@ -174,7 +202,7 @@ consteval auto GetTypeNameStr()
         {
             constexpr auto name = nameof::detail::pretty_name(fullName);
 
-            return Detail::MakeConstTypeName<name.size()>(name.data());
+            return Detail::MakeConstStr<name.size()>(name.data());
         }
     }
 }
@@ -321,39 +349,39 @@ class ClassLocator : public TypeLocator<GetTypeName<T>()>
 };
 
 template<CName AType>
-CBaseRTTIType* GetType()
+inline CBaseRTTIType* GetType()
 {
     return TypeLocator<AType>::Get();
 }
 
 template<typename TType>
-CBaseRTTIType* GetType()
+inline CBaseRTTIType* GetType()
 {
     constexpr auto name = GetTypeName<TType>();
 
     return TypeLocator<name>::Get();
 }
 
-CBaseRTTIType* GetType(CName aTypeName)
+inline CBaseRTTIType* GetType(CName aTypeName)
 {
     return CRTTISystem::Get()->GetType(aTypeName);
 }
 
 template<CName AType>
-CClass* GetClass()
+inline CClass* GetClass()
 {
     return TypeLocator<AType>::GetClass();
 }
 
 template<typename TType>
-CClass* GetClass()
+inline CClass* GetClass()
 {
     constexpr auto name = GetTypeName<TType>();
 
     return TypeLocator<name>::GetClass();
 }
 
-CClass* GetClass(CName aTypeName)
+inline CClass* GetClass(CName aTypeName)
 {
     auto type = CRTTISystem::Get()->GetType(aTypeName);
 
@@ -366,24 +394,64 @@ CClass* GetClass(CName aTypeName)
 }
 
 template<typename T>
-CName ResolveTypeName()
+inline CName ResolveTypeName()
 {
-    constexpr auto name = GetTypeNameStr<T>();
-    return CNamePool::Add(name.data());
+    constexpr auto str = GetTypeNameStr<T>();
+    static const auto name = CNamePool::Add(str.data());
+    return name;
 }
 
 template<typename T>
-CBaseRTTIType* ResolveType()
+inline CBaseRTTIType* ResolveType()
 {
     static const auto s_name = ResolveTypeName<T>();
     return CRTTISystem::Get()->GetType(s_name);
 }
 
 template<typename T>
-CClass* ResolveClass()
+inline CClass* ResolveClass()
 {
     static const auto s_name = ResolveTypeName<T>();
     return CRTTISystem::Get()->GetClass(s_name);
+}
+
+inline bool IsCompatible(CBaseRTTIType* aLhsType, CBaseRTTIType* aRhsType)
+{
+    if (aLhsType != aRhsType)
+    {
+        auto metaType = aLhsType->GetType();
+
+        if (metaType == aRhsType->GetType() && (metaType == ERTTIType::Handle || metaType == ERTTIType::WeakHandle))
+        {
+            auto lhsSubType = reinterpret_cast<CClass*>(reinterpret_cast<CRTTIHandleType*>(aLhsType)->innerType);
+            auto rhsSubType = reinterpret_cast<CClass*>(reinterpret_cast<CRTTIHandleType*>(aRhsType)->innerType);
+
+            return rhsSubType->IsA(lhsSubType);
+        }
+    }
+
+    return true;
+}
+
+inline bool IsCompatible(CBaseRTTIType* aLhsType, CBaseRTTIType* aRhsType, void* aRhsValue)
+{
+    if (aLhsType != aRhsType)
+    {
+        auto metaType = aLhsType->GetType();
+
+        if (metaType == aRhsType->GetType() && (metaType == ERTTIType::Handle || metaType == ERTTIType::WeakHandle))
+        {
+            auto lhsSubType = reinterpret_cast<CClass*>(reinterpret_cast<CRTTIHandleType*>(aLhsType)->innerType);
+            auto rhsInstance = aRhsValue ? reinterpret_cast<Handle<ISerializable>*>(aRhsValue)->instance : nullptr;
+            auto rhsSubType = rhsInstance
+                                  ? rhsInstance->GetType()
+                                  : reinterpret_cast<CClass*>(reinterpret_cast<CRTTIHandleType*>(aRhsType)->innerType);
+
+            return rhsSubType->IsA(lhsSubType);
+        }
+    }
+
+    return true;
 }
 
 RTTI_TYPE_NAME(int8_t, "Int8");
@@ -410,4 +478,6 @@ RTTI_TYPE_PREFIX(WeakHandle, "whandle:");
 RTTI_TYPE_PREFIX(ScriptRef, "script_ref:");
 RTTI_TYPE_PREFIX(ResourceReference, "rRef:");
 RTTI_TYPE_PREFIX(ResourceAsyncReference, "raRef:");
+
+RTTI_TYPE_NAME(char, "Uint8");
 }

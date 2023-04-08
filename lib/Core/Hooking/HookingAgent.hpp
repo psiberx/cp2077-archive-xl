@@ -129,6 +129,13 @@ protected:
         return Instance::Detach();
     }
 
+    template<typename TTarget>
+    inline static bool IsHooked()
+    {
+        using Instance = Detail::HookInstance<TTarget>;
+        return Instance::IsAttached();
+    }
+
     template<RawFunc TTarget, typename TCallback, HookFlow TFlow = HookFlow::Original, HookRun TRun = HookRun::Default>
     requires Detail::HookFlowTraits<TFlow, decltype(TTarget), TCallback>::IsCompatibleNonMember
     inline static bool Hook(TCallback&& aCallback, typename decltype(TTarget)::Callable* aOriginal = nullptr)
@@ -231,6 +238,12 @@ protected:
     inline static bool Unhook()
     {
         return Unhook<decltype(TTarget)>();
+    }
+
+    template<RawFunc TTarget>
+    inline static bool IsHooked()
+    {
+        return IsHooked<decltype(TTarget)>();
     }
 
     static HookingDriver& GetHookingDriver();
