@@ -30,6 +30,7 @@ void App::VisualTagsModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset&
                                             Red::CName aAppearanceName,
                                             Red::TagList& aOutTags)
 {
+    static std::shared_mutex s_autoTagsLock;
     static Core::Map<uint64_t, Red::TagList> s_autoTagsCache;
     static Red::TagList s_emptyTags{};
 
@@ -37,12 +38,15 @@ void App::VisualTagsModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset&
         return;
 
     auto cacheKey = Red::FNV1a64(aAppearanceName.ToString(), aEntityPath.hash);
-    auto cachedTagsIt = s_autoTagsCache.find(cacheKey);
 
-    if (cachedTagsIt != s_autoTagsCache.end())
     {
-        MergeTags(aOutTags, cachedTagsIt->second);
-        return;
+        std::shared_lock _(s_autoTagsLock);
+        auto cachedTagsIt = s_autoTagsCache.find(cacheKey);
+        if (cachedTagsIt != s_autoTagsCache.end())
+        {
+            MergeTags(aOutTags, cachedTagsIt->second);
+            return;
+        }
     }
 
     auto loader = Red::ResourceLoader::Get();
@@ -56,6 +60,7 @@ void App::VisualTagsModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset&
 
     if (!appearanceTemplate)
     {
+        std::unique_lock _(s_autoTagsLock);
         s_autoTagsCache.emplace(cacheKey, s_emptyTags);
         return;
     }
@@ -70,6 +75,7 @@ void App::VisualTagsModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset&
 
     if (!appearanceDefinition)
     {
+        std::unique_lock _(s_autoTagsLock);
         s_autoTagsCache.emplace(cacheKey, s_emptyTags);
         return;
     }
@@ -77,9 +83,11 @@ void App::VisualTagsModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset&
     Red::TagList autoTags;
     MergeTags(autoTags, appearanceDefinition->visualTags);
 
-    cachedTagsIt = s_autoTagsCache.emplace(cacheKey, autoTags).first;
-
-    MergeTags(aOutTags, cachedTagsIt->second);
+    {
+        std::unique_lock _(s_autoTagsLock);
+        auto cachedTagsIt = s_autoTagsCache.emplace(cacheKey, autoTags).first;
+        MergeTags(aOutTags, cachedTagsIt->second);
+    }
 }
 
 Red::TemplateAppearance* App::VisualTagsModule::FindAppearance(Red::EntityTemplate* aResource, Red::CName aName)

@@ -51,6 +51,7 @@ void App::CustomizationModule::PostLoad()
 bool App::CustomizationModule::Unload()
 {
     Unhook<Raw::CharacterCustomizationSystem::Initialize>();
+    Unhook<Raw::CharacterCustomizationSystem::Uninitialize>();
     Unhook<Raw::CharacterCustomizationSystem::EnsureState>();
     Unhook<Raw::CharacterCustomizationSystem::InitializeAppOption>();
     Unhook<Raw::CharacterCustomizationSystem::InitializeMorphOption>();
