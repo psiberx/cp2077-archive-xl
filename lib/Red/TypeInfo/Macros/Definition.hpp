@@ -29,7 +29,7 @@
 #define X_RTTI_OVERLOAD(F, ...) X_RTTI_SELECT_MACRO(F, __VA_ARGS__)(__VA_ARGS__)
 
 #define RTTI_MEMBER_ACCESS(_class) \
-    friend class Red::TypeInfoBuilder<Red::Scope::For<_class>()>; \
+    friend struct Red::TypeInfoBuilder<Red::Scope::For<_class>()>; \
     friend class Red::ClassDescriptor<_class>;
 
 #define RTTI_IMPL_TYPEINFO(_class) \
@@ -50,10 +50,13 @@ public: \
         return AllocatorType::Get(); \
     }
 
-#define RTTI_DEFINE_CLASS(...) X_RTTI_OVERLOAD(X_RTTI_DEF_CLASS, __VA_ARGS__)
-#define X_RTTI_DEF_CLASS_1(_class) X_RTTI_DEF_CLASS_3(_class, X_RTTI_TYPENAME(_class),)
-#define X_RTTI_DEF_CLASS_2(_class, _desc) X_RTTI_DEF_CLASS_3(_class, X_RTTI_TYPENAME(_class), _desc)
-#define X_RTTI_DEF_CLASS_3(_class, _name, _desc) \
+#define RTTI_FWD_ALLOCATOR() public: struct ForwardAllocator : std::true_type {};
+#define RTTI_FWD_CONSTRUCTOR() public: struct ForwardInitializer : std::true_type {};
+
+#define RTTI_DEFINE_CLASS(...) X_RTTI_OVERLOAD(X_RTTI_DEFINE_CLASS, __VA_ARGS__)
+#define X_RTTI_DEFINE_CLASS_1(_class) X_RTTI_DEFINE_CLASS_3(_class, X_RTTI_TYPENAME(_class),)
+#define X_RTTI_DEFINE_CLASS_2(_class, _desc) X_RTTI_DEFINE_CLASS_3(_class, X_RTTI_TYPENAME(_class), _desc)
+#define X_RTTI_DEFINE_CLASS_3(_class, _name, _desc) \
     template<> \
     struct Red::TypeInfoBuilder<Red::ClassDefinition<_class>{}> \
     { \
@@ -69,8 +72,8 @@ public: \
         } \
     };
 
-#define RTTI_EXPAND_CLASS(...) X_RTTI_OVERLOAD(X_RTTI_EXT_CLASS, __VA_ARGS__)
-#define X_RTTI_EXT_CLASS_2(_class, _desc) \
+#define RTTI_EXPAND_CLASS(...) X_RTTI_OVERLOAD(X_RTTI_EXPAND_CLASS, __VA_ARGS__)
+#define X_RTTI_EXPAND_CLASS_2(_class, _desc) \
     template<> \
     struct Red::TypeInfoBuilder<Red::ClassExpansion<_class, X_RTTI_LOCATION>{}> \
     { \
@@ -81,7 +84,7 @@ public: \
             _desc; \
         } \
     };
-#define X_RTTI_EXT_CLASS_3(_class, _expansion, _desc) \
+#define X_RTTI_EXPAND_CLASS_3(_class, _expansion, _desc) \
     template<> \
     struct Red::TypeInfoBuilder<Red::ClassExpansion<_class, Red::Scope::For<_expansion>()>{}> \
     { \
@@ -94,6 +97,7 @@ public: \
     };
 
 #define RTTI_ABSTRACT() type->MarkAbstract()
+#define RTTI_SCRIPTED() type->MarkScripted()
 #define RTTI_PARENT(_parent) type->SetParent<_parent>()
 #define RTTI_ALIAS(_alias) type->SetAlias(_alias)
 
@@ -133,9 +137,25 @@ public: \
 #define X_RTTI_GETTER_1(_property) X_RTTI_GETTER_2(_property, X_RTTI_GETTER_NAME(_property))
 #define X_RTTI_GETTER_2(_property, _name) type->AddGetter<&Type::_property>(_name)
 
-#define RTTI_DEFINE_ENUM(...) X_RTTI_OVERLOAD(X_RTTI_DEF_ENUM, __VA_ARGS__)
-#define X_RTTI_DEF_ENUM_1(_enum) X_RTTI_DEF_ENUM_2(_enum, X_RTTI_TYPENAME(_enum))
-#define X_RTTI_DEF_ENUM_2(_enum, _name) \
+#define RTTI_SCRIPT_METHOD(...) X_RTTI_OVERLOAD(X_RTTI_SCRIPT_METHOD, __VA_ARGS__)
+#define X_RTTI_SCRIPT_METHOD_1(_method) X_RTTI_SCRIPT_METHOD_2(_method, #_method)
+#define X_RTTI_SCRIPT_METHOD_2(_method, _name) type->AddScriptFunction<&Type::_method>(_name)
+
+#define RTTI_SCRIPT_METHOD_FQN(...) X_RTTI_OVERLOAD(X_RTTI_SCRIPT_METHOD_FQN, __VA_ARGS__)
+#define X_RTTI_SCRIPT_METHOD_FQN_1(_method) X_RTTI_SCRIPT_METHOD_FQN_2(_method, X_RTTI_NAME(_method))
+#define X_RTTI_SCRIPT_METHOD_FQN_2(_method, _name) type->AddScriptFunction<&_method>(_name)
+
+#define RTTI_SCRIPT_CALLBACK(...) X_RTTI_OVERLOAD(X_RTTI_SCRIPT_CALLBACK, __VA_ARGS__)
+#define X_RTTI_SCRIPT_CALLBACK_1(_method) X_RTTI_SCRIPT_CALLBACK_2(_method, #_method)
+#define X_RTTI_SCRIPT_CALLBACK_2(_method, _name) type->AddScriptFunction<&Type::_method>(_name, {.isEvent = true})
+
+#define RTTI_SCRIPT_CALLBACK_FQN(...) X_RTTI_OVERLOAD(X_RTTI_SCRIPT_CALLBACK_FQN, __VA_ARGS__)
+#define X_RTTI_SCRIPT_CALLBACK_FQN_1(_method) X_RTTI_SCRIPT_CALLBACK_FQN_2(_method, X_RTTI_NAME(_method))
+#define X_RTTI_SCRIPT_CALLBACK_FQN_2(_method, _name) type->AddScriptFunction<&_method>(_name, {.isEvent = true})
+
+#define RTTI_DEFINE_ENUM(...) X_RTTI_OVERLOAD(X_RTTI_DEFINE_ENUM, __VA_ARGS__)
+#define X_RTTI_DEFINE_ENUM_1(_enum) X_RTTI_DEFINE_ENUM_2(_enum, X_RTTI_TYPENAME(_enum))
+#define X_RTTI_DEFINE_ENUM_2(_enum, _name) \
     template<> \
     struct Red::TypeInfoBuilder<Red::EnumDefinition<_enum>{}> \
     { \
@@ -147,9 +167,9 @@ public: \
         } \
     };
 
-#define RTTI_DEFINE_FLAGS(...) X_RTTI_OVERLOAD(X_RTTI_DEF_FLAGS, __VA_ARGS__)
-#define X_RTTI_DEF_FLAGS_1(_enum) X_RTTI_DEF_FLAGS_2(_enum, X_RTTI_TYPENAME(_enum))
-#define X_RTTI_DEF_FLAGS_2(_enum, _name) \
+#define RTTI_DEFINE_FLAGS(...) X_RTTI_OVERLOAD(X_RTTI_DEFINE_FLAGS, __VA_ARGS__)
+#define X_RTTI_DEFINE_FLAGS_1(_enum) X_RTTI_DEFINE_FLAGS_2(_enum, X_RTTI_TYPENAME(_enum))
+#define X_RTTI_DEFINE_FLAGS_2(_enum, _name) \
     template<> \
     struct Red::TypeInfoBuilder<Red::FlagsDefinition<_enum>{}>  \
     { \
@@ -161,9 +181,9 @@ public: \
         } \
     };
 
-#define RTTI_EXPAND_ENUM(...) X_RTTI_OVERLOAD(X_RTTI_EXP_ENUM, __VA_ARGS__)
-#define X_RTTI_EXP_ENUM_1(_enum) X_RTTI_EXP_ENUM_2(_enum, _enum)
-#define X_RTTI_EXP_ENUM_2(_enum, _expansion) \
+#define RTTI_EXPAND_ENUM(...) X_RTTI_OVERLOAD(X_RTTI_EXPAND_ENUM, __VA_ARGS__)
+#define X_RTTI_EXPAND_ENUM_1(_enum) X_RTTI_EXPAND_ENUM_2(_enum, _enum)
+#define X_RTTI_EXPAND_ENUM_2(_enum, _expansion) \
     template<> \
     struct Red::TypeInfoBuilder<Red::EnumExpansion<_enum, X_RTTI_LOCATION>{}> \
     { \
@@ -175,9 +195,9 @@ public: \
         } \
     };
 
-#define RTTI_EXPAND_FLAGS(...) X_RTTI_OVERLOAD(X_RTTI_EXP_FLAGS, __VA_ARGS__)
-#define X_RTTI_EXP_FLAGS_1(_enum) X_RTTI_EXP_FLAGS_2(_enum, _enum)
-#define X_RTTI_EXP_FLAGS_2(_enum, _expansion) \
+#define RTTI_EXPAND_FLAGS(...) X_RTTI_OVERLOAD(X_RTTI_EXPAND_FLAGS, __VA_ARGS__)
+#define X_RTTI_EXPAND_FLAGS_1(_enum) X_RTTI_EXPAND_FLAGS_2(_enum, _enum)
+#define X_RTTI_EXPAND_FLAGS_2(_enum, _expansion) \
     template<> \
     struct Red::TypeInfoBuilder<Red::EnumExpansion<_enum, X_RTTI_LOCATION>{}> \
     { \
@@ -191,8 +211,8 @@ public: \
 
 #define RTTI_OPTION() static_assert(false, "Not Implemented")
 
-#define RTTI_DEFINE_GLOBALS(...) X_RTTI_OVERLOAD(X_RTTI_DEF_GLOB, __VA_ARGS__)
-#define X_RTTI_DEF_GLOB_1(_desc) \
+#define RTTI_DEFINE_GLOBALS(...) X_RTTI_OVERLOAD(X_RTTI_DEFINE_GLOBALS, __VA_ARGS__)
+#define X_RTTI_DEFINE_GLOBALS_1(_desc) \
     template<> \
     struct Red::TypeInfoBuilder<Red::GlobalDefinition<X_RTTI_LOCATION>{}> \
     { \
@@ -202,7 +222,7 @@ public: \
             _desc; \
         } \
     };
-#define X_RTTI_DEF_GLOB_2(_namespace, _desc) \
+#define X_RTTI_DEFINE_GLOBALS_2(_namespace, _desc) \
     template<> \
     struct Red::TypeInfoBuilder<<Red::GlobalDefinition<X_RTTI_LOCATION>{}> \
     { \
@@ -220,7 +240,7 @@ public: \
 
 #define RTTI_FUNCTION_FQN RTTI_FUNCTION
 
-#define RTTI_OP() static_assert(false, "Not Implemented")
+#define RTTI_OPERATOR() static_assert(false, "Not Implemented")
 #define RTTI_CAST() static_assert(false, "Not Implemented")
 
 #define RTTI_REGISTER(_handler) \
