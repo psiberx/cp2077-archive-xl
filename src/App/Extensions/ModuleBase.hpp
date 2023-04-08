@@ -74,4 +74,5 @@ public:
 
 protected:
     Core::Vector<U> m_units;
-};}
+};
+}
