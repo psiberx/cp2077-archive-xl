@@ -147,7 +147,7 @@ Red::game::CookedMappinData* App::JournalModule::OnGetMappinData(Red::game::Mapp
 
             const auto& mappin = it.value();
 
-            if (mappin->reference.reference.unk00)
+            if (mappin->reference.reference.hash)
             {
                 Red::world::GlobalNodeRef context{};
                 Red::ExecuteFunction("worldGlobalNodeID", "GetRoot", &context);

@@ -7,8 +7,6 @@ constexpr auto ModuleName = "AttachmentSlots";
 
 constexpr auto ParentSlotFlat = ".parentSlot";
 
-const Red::TypeLocator<"gameTransactionSystem"> s_transactionSystemType;
-
 const Red::TweakDBID s_tppAffectedSlots[] = {
     Red::TweakDBID("AttachmentSlots.Head"),
     Red::TweakDBID("AttachmentSlots.Eyes"),
@@ -121,8 +119,7 @@ void App::AttachmentSlotsModule::OnCheckFeetState(Red::game::ui::CharacterCustom
     if (aLiftedState == Red::CharacterFeetState::Lifted)
         return;
 
-    auto gameInstance = Red::CGameEngine::Get()->framework->gameInstance;
-    auto transactionSystem = gameInstance->GetInstance(s_transactionSystemType);
+    auto transactionSystem = Red::GetGameSystem<Red::ITransactionSystem>();
 
     Red::Handle<Red::IScriptable> ownerObject;
     Raw::CharacterCustomizationFeetController::GetOwner(aComponent, ownerObject);

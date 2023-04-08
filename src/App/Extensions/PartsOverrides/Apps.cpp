@@ -123,9 +123,7 @@ Red::CName App::DynamicAppearanceResolver::GetSkinColor(Red::ent::Entity* aEntit
 
 Red::CName App::DynamicAppearanceResolver::GetHairColor(Red::ent::Entity* aEntity)
 {
-    static auto* system = Red::CGameEngine::Get()->framework->gameInstance->GetInstance(
-        Red::GetClass<Red::game::ui::ICharacterCustomizationSystem>()
-    );
+    static auto system = Red::GetGameSystem<Red::game::ui::ICharacterCustomizationSystem>();
 
     Red::CName hairColor;
     Raw::CharacterCustomizationHelper::GetHairColor(hairColor, system->ref, IsMale(aEntity));
