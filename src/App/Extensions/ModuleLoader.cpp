@@ -1,4 +1,5 @@
 #include "ModuleLoader.hpp"
+#include "App/Utils/Str.hpp"
 
 App::ModuleLoader::ModuleLoader(std::filesystem::path aConfigDir, std::wstring aConfigExt)
     : m_extraConfigDir(std::move(aConfigDir))
@@ -35,7 +36,7 @@ void App::ModuleLoader::Configure()
             {
                 if (group.scope == Red::ArchiveScope::Mod)
                 {
-                    configDirs.emplace_back(group.basePath.c_str());
+                    configDirs.emplace_back(Str::Widen(group.basePath.c_str()));
                 }
             }
         }
@@ -107,8 +108,13 @@ bool App::ModuleLoader::ReadConfig(const std::filesystem::path& aPath, const std
 
         LogInfo("Reading \"{}\"...", path.string());
 
+        std::ifstream file(aPath);
+
+        if (!file)
+            throw std::runtime_error("Can't read file.");
+
         const auto name = aPath.filename().string();
-        const auto config = YAML::LoadFile(aPath.string());
+        const auto config = YAML::Load(file);
 
         for (const auto& module : m_configurables)
             success &= module->Configure(name, config);
