@@ -1,10 +1,13 @@
 #pragma once
 
-#include "Core/Raw.hpp"
 #include "Red/Addresses.hpp"
 
 namespace Raw::Entity
 {
+using ComponentsStorage = Core::OffsetPtr<0x70, Red::ent::ComponentsStorage>;
+using VisualTags = Core::OffsetPtr<0x138, Red::DynArray<Red::CName>>;
+using Tags = Core::OffsetPtr<0x230, Red::DynArray<Red::CName>>;
+
 constexpr auto GetComponents = Core::RawFunc<
     /* addr = */ Red::Addresses::Entity_GetComponents,
     /* type = */ Red::DynArray<Red::Handle<Red::ent::IComponent>>& (*)(Red::ent::Entity*)>();

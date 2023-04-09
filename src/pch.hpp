@@ -16,16 +16,15 @@
 #include <utility>
 #include <vector>
 
+#include <RED4ext/Common.hpp>
 #include <RED4ext/Api/EMainReason.hpp>
 #include <RED4ext/Api/Sdk.hpp>
 #include <RED4ext/Api/Runtime.hpp>
 #include <RED4ext/Api/SemVer.hpp>
 #include <RED4ext/Api/Version.hpp>
-
 #include <RED4ext/CName.hpp>
 #include <RED4ext/CNamePool.hpp>
 #include <RED4ext/CString.hpp>
-#include <RED4ext/Common.hpp>
 #include <RED4ext/DynArray.hpp>
 #include <RED4ext/GameEngine.hpp>
 #include <RED4ext/Handle.hpp>
@@ -60,6 +59,7 @@
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearanceDefinition.hpp>
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearancePartOverrides.hpp>
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearanceResource.hpp>
+#include <RED4ext/Scripting/Natives/Generated/ent/ComponentsStorage.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/Entity.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/EntityID.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/EntityTemplate.hpp>
@@ -79,7 +79,9 @@
 #include <RED4ext/Scripting/Natives/Generated/game/JournalRootFolderEntry.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/JournalTree.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/MappinResource.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/ScriptableSystem.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/TPPRepresentationComponent.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/data/ItemsFactoryAppearanceSuffixBase_Record.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/mappins/IMappinVolume.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/AppearanceInfo.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/CharacterCustomizationFeetController.hpp>

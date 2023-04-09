@@ -7,6 +7,7 @@
 #include "App/Extensions/Journal/Module.hpp"
 #include "App/Extensions/Localization/Module.hpp"
 #include "App/Extensions/PartsOverrides/Module.hpp"
+#include "App/Extensions/PuppetState/Module.hpp"
 #include "App/Extensions/Streaming/Module.hpp"
 #include "App/Extensions/VisualTags/Module.hpp"
 #include "Red/GameApplication.hpp"
@@ -25,6 +26,7 @@ void App::ExtensionService::OnBootstrap()
     m_loader->Add<JournalModule>();
     m_loader->Add<LocalizationModule>();
     m_loader->Add<PartsOverridesModule>();
+    m_loader->Add<PuppetStateModule>();
     m_loader->Add<StreamingModule>();
     m_loader->Add<VisualTagsModule>();
 

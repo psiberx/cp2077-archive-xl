@@ -210,6 +210,10 @@ def patterns():
                      expected=3,
                      index=1),
             ]),
+            Group(name="TweakDB", functions=[
+                Item(name="Load",
+                     pattern="48 89 5C 24 18 55 57 41 56 48 8B EC 48 83 EC 70 48 8B D9 45 33 F6 48 8D"),
+            ]),
         ]),
     ]
 

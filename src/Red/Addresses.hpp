@@ -95,4 +95,6 @@ constexpr uintptr_t TagList_MergeWith = 0x1402ADEF0 - ImageBase; // 48 89 5C 24 
 constexpr uintptr_t TPPRepresentationComponent_OnAttach = 0x141A919C0 - ImageBase; // 48 89 54 24 10 55 53 56 57 41 56 41 57 48 8D AC 24 E8 FE FF FF 48 81 EC 18 02 00 00 45 33 F6, expected: 1, index: 0
 
 constexpr uintptr_t TransactionSystem_IsSlotSpawning = 0x141AAF640 - ImageBase; // 40 53 48 83 EC 30 49 8B D8 4C 8B C2 48 8D 54 24 20 E8 ? ? ? ? 48 8B 4C 24 20 48 85 C9 75 04 32 DB EB ? 48 8B D3 E8 ? ? ? ? 0F B6 D8, expected: 3, index: 1
+
+constexpr uintptr_t TweakDB_Load = 0x140BD3E20 - ImageBase; // 48 89 5C 24 18 55 57 41 56 48 8B EC 48 83 EC 70 48 8B D9 45 33 F6 48 8D, expected: 1, index: 0
 }
