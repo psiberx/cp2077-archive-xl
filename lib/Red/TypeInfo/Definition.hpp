@@ -375,21 +375,22 @@ inline std::string MakeScriptFunctionName(CBaseFunction* aFunc, const char* aNam
     return name;
 }
 
-inline Memory::AllocationResult MakeScriptForwardCode(CBaseFunction* aFunc)
+inline RawBuffer MakeScriptForwardCode(CBaseFunction* aFunc)
 {
-    constexpr auto ParamOp = 25;
-    constexpr auto CallStaticOp = 36;
-    constexpr auto ParamEndOp = 38;
-    constexpr auto ReturnOp = 39;
-    constexpr auto OpSize = sizeof(char);
-    constexpr auto OffsetSize = sizeof(uint16_t);
-    constexpr auto FlagsSize = sizeof(uint16_t);
-    constexpr auto PointerSize = sizeof(void*);
-    constexpr auto BaseCodeSize = OpSize + OffsetSize * 2 + PointerSize + FlagsSize + OpSize;
-    constexpr auto BaseExitOffset = BaseCodeSize - OpSize - OffsetSize;
+    constexpr uint8_t ParamOp = 25;
+    constexpr uint8_t CallStaticOp = 36;
+    constexpr uint8_t ParamEndOp = 38;
+    constexpr uint8_t ReturnOp = 39;
+    constexpr uint32_t OpSize = sizeof(char);
+    constexpr uint32_t OffsetSize = sizeof(uint16_t);
+    constexpr uint32_t FlagsSize = sizeof(uint16_t);
+    constexpr uint32_t PointerSize = sizeof(void*);
+    constexpr uint32_t BaseCodeSize = OpSize + OffsetSize * 2 + PointerSize + FlagsSize + OpSize;
+    constexpr uint16_t BaseExitOffset = BaseCodeSize - OpSize - OffsetSize;
 
-    const auto extraCodeSize = aFunc->params.size * (OpSize + PointerSize) + (aFunc->returnType ? 1 : 0);
-    const auto finalCodeSize = BaseCodeSize + extraCodeSize;
+    const uint32_t extraCodeSize = aFunc->params.size * (OpSize + PointerSize) + (aFunc->returnType ? 1 : 0);
+    const uint32_t finalCodeSize = BaseCodeSize + extraCodeSize;
+    const uint16_t finalExitOffset = BaseExitOffset + extraCodeSize;
 
     Memory::EngineAllocator allocator;
     auto buffer = allocator.Alloc(finalCodeSize);
@@ -404,7 +405,7 @@ inline Memory::AllocationResult MakeScriptForwardCode(CBaseFunction* aFunc)
     *code = CallStaticOp;
     code += OpSize;
 
-    *reinterpret_cast<uint16_t*>(code) = BaseExitOffset + extraCodeSize;
+    *reinterpret_cast<uint16_t*>(code) = finalExitOffset;
     code += OffsetSize;
 
     *reinterpret_cast<uint16_t*>(code) = 0;
@@ -428,9 +429,7 @@ inline Memory::AllocationResult MakeScriptForwardCode(CBaseFunction* aFunc)
     *code = ParamEndOp;
     code += OpSize;
 
-    buffer.size = finalCodeSize;
-
-    return buffer;
+    return {buffer.memory, finalCodeSize};
 }
 
 using FunctionFlagsStorage = uint32_t;
@@ -584,14 +583,14 @@ public:
 
         Memory::RTTIFunctionAllocator allocator;
         auto scriptFunc = allocator.Alloc<CClassFunction>();
-        std::memcpy(scriptFunc, nativeFunc, sizeof(CClassFunction));
+        std::memcpy(scriptFunc, nativeFunc, sizeof(CClassFunction)); // NOLINT(bugprone-undefined-memory-manipulation)
 
         auto fullName = Detail::MakeScriptFunctionName(scriptFunc, aName);
         scriptFunc->shortName = CNamePool::Add(aName);
         scriptFunc->fullName = CNamePool::Add(fullName.c_str());
 
         auto bytecode = Detail::MakeScriptForwardCode(nativeFunc);
-        scriptFunc->bytecode.bytecode.buffer.data = bytecode.memory;
+        scriptFunc->bytecode.bytecode.buffer.data = bytecode.data;
         scriptFunc->bytecode.bytecode.buffer.size = bytecode.size;
 
         scriptFunc->flags.isNative = false;
@@ -891,6 +890,10 @@ struct ClassDefinition
                 if constexpr (Detail::IsGameSystem<TClass>)
                 {
                     type->parent = GetClass<IGameSystem>();
+                }
+                else if constexpr (Detail::IsScriptableSystem<TClass>)
+                {
+                    type->parent = GetClass<ScriptableSystem>();
                 }
                 else
                 {

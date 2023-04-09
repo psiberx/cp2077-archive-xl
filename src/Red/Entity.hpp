@@ -5,8 +5,8 @@
 namespace Raw::Entity
 {
 using ComponentsStorage = Core::OffsetPtr<0x70, Red::ent::ComponentsStorage>;
-using VisualTags = Core::OffsetPtr<0x138, Red::DynArray<Red::CName>>;
-using Tags = Core::OffsetPtr<0x230, Red::DynArray<Red::CName>>;
+using VisualTags = Core::OffsetPtr<0x138, Red::TagList>;
+using Tags = Core::OffsetPtr<0x230, Red::TagList>;
 
 constexpr auto GetComponents = Core::RawFunc<
     /* addr = */ Red::Addresses::Entity_GetComponents,

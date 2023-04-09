@@ -11,20 +11,14 @@ Red::CString App::PuppetStateSystem::GetBodyTypeSuffix(Red::ItemID aItemID,
 
     for (const auto& bodyType : PuppetStateModule::s_bodyTypes)
     {
-        for (const auto& tag : *entityTags)
+        if (entityTags->HasTag(bodyType))
         {
-            if (tag == bodyType)
-            {
-                return bodyType.ToString();
-            }
+            return bodyType.ToString();
         }
 
-        for (const auto& tag : *visualTags)
+        if (visualTags->HasTag(bodyType))
         {
-            if (tag == bodyType)
-            {
-                return bodyType.ToString();
-            }
+            return bodyType.ToString();
         }
     }
 
