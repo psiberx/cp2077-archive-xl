@@ -68,6 +68,7 @@ public: \
         } \
         static void Describe(Descriptor* type) \
         { \
+            using T = Type; \
             _desc; \
         } \
     };
@@ -81,6 +82,7 @@ public: \
         using Descriptor = Red::ClassDescriptor<_class>; \
         static void Describe(Descriptor* type) \
         { \
+            using T = Type; \
             _desc; \
         } \
     };
@@ -92,6 +94,7 @@ public: \
         using Descriptor = Red::ClassDescriptor<_class>; \
         static void Describe(Descriptor* type) \
         { \
+            using T = Type; \
             _desc; \
         } \
     };
@@ -104,10 +107,12 @@ public: \
 #define RTTI_METHOD(...) X_RTTI_OVERLOAD(X_RTTI_METHOD, __VA_ARGS__)
 #define X_RTTI_METHOD_1(_method) X_RTTI_METHOD_2(_method, #_method)
 #define X_RTTI_METHOD_2(_method, _name) type->AddFunction<&Type::_method>(_name)
+#define X_RTTI_METHOD_3(_method, _overload, _name) type->AddFunction<static_cast<_overload>(&Type::_method)>(_name)
 
 #define RTTI_METHOD_FQN(...) X_RTTI_OVERLOAD(X_RTTI_METHOD_FQN, __VA_ARGS__)
 #define X_RTTI_METHOD_FQN_1(_method) X_RTTI_METHOD_FQN_2(_method, X_RTTI_NAME(_method))
 #define X_RTTI_METHOD_FQN_2(_method, _name) type->AddFunction<&_method>(_name)
+#define X_RTTI_METHOD_FQN_3(_method, _overload, _name) type->AddFunction<static_cast<_overload>(&_method)>(_name)
 
 #define RTTI_CALLBACK(...) X_RTTI_OVERLOAD(X_RTTI_CALLBACK, __VA_ARGS__)
 #define X_RTTI_CALLBACK_1(_method) X_RTTI_CALLBACK_2(_method, #_method)

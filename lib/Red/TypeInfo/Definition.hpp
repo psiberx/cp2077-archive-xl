@@ -988,7 +988,7 @@ struct SystemBuilder
         if (gameInstance->systemMap.Get(systemType))
             return;
 
-        auto systemInstance = MakeHandle<TSystem>();
+        auto systemInstance = BuildSystem();
 
         if (!systemInstance)
             return;
