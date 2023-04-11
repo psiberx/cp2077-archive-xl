@@ -146,7 +146,7 @@ def patterns():
             ]),
             Group(name="JobHandle", functions=[
                 Item(name="Wait",
-                     pattern="40 53 48 83 EC 30 48 8B D9 33 D2 48 8B 0D BE BB 07 02 E8"),
+                     pattern="40 53 48 83 EC 30 48 8B D9 33 D2 48 8B 0D ? ? ? ? E8"),
             ]),
             Group(name="JournalManager", functions=[
                 Item(name="LoadJournal",
