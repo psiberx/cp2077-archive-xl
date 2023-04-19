@@ -25,6 +25,7 @@ private:
     void OnLoadTexts(Red::Handle<TextResource>& aOnScreens, Red::ResourcePath aPath);
     void OnLoadSubtitles(Red::Handle<SubtitleResource>& aSubtitles, Red::ResourcePath aPath);
     void OnLoadVoiceOvers(void* aContext);
+    void OnLoadLipsyncs(void* aContext, uint8_t a2);
 
     static bool MergeTextResource(const std::string& aPath, TextEntryList& aFinalList, TextEntryMap& aUsedKeyMap,
                                   uint32_t aOriginalCount, uint64_t aOriginalMaxKey, bool aFallback);
@@ -36,5 +37,8 @@ private:
     static TextEntry* FindSameTextEntry(TextEntry& aEntry, TextEntryList& aList, uint32_t aCount);
 
     static bool MergeSubtitleResource(const std::string& aPath, SubtitleEntryList& aFinalList);
+
+    static void MergeLipsyncResource(const Red::Handle<Red::animLipsyncMapping>& aSource,
+                                     Red::Handle<Red::animLipsyncMapping>& aTarget);
 };
 }

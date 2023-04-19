@@ -183,6 +183,8 @@ def patterns():
                      index=1),
                 Item(name="LoadVoiceOvers",
                      pattern="48 89 5C 24 10 48 89 4C 24 08 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 A0 48 81 EC 60 01 00"),
+                Item(name="LoadLipsyncs",
+                     pattern="48 89 5C 24 10 48 89 74 24 20 57 48 83 EC 50 48 8B F1 0F B6 FA 48 8B 0D ? ? ? ? E8 ? ? ? ? 48 8B D8 48 8D 48 20 E8"),
             ]),
             Group(name="MappinResource", functions=[
                 Item(name="GetMappinData",

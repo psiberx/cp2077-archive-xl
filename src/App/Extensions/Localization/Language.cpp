@@ -91,3 +91,35 @@ Red::CName App::Language::ResolveFromSubtitleResource(Red::ResourcePath aPath)
 
     return it.value();
 }
+
+Red::CName App::Language::ResolveFromLipsyncResource(Red::ResourcePath aPath)
+{
+    static Core::Map<Red::ResourcePath, Red::CName> s_codes {
+        { R"(base\localization\ar-ar.lipmap)", "ar-ar" },
+        { R"(base\localization\cz-cz.lipmap)", "cz-cz" },
+        { R"(base\localization\db-db.lipmap)", "db-db" },
+        { R"(base\localization\de-de.lipmap)", "de-de" },
+        { R"(base\localization\en-us.lipmap)", "en-us" },
+        { R"(base\localization\es-es.lipmap)", "es-es" },
+        { R"(base\localization\es-mx.lipmap)", "es-mx" },
+        { R"(base\localization\fr-fr.lipmap)", "fr-fr" },
+        { R"(base\localization\hu-hu.lipmap)", "hu-hu" },
+        { R"(base\localization\it-it.lipmap)", "it-it" },
+        { R"(base\localization\jp-jp.lipmap)", "jp-jp" },
+        { R"(base\localization\kr-kr.lipmap)", "kr-kr" },
+        { R"(base\localization\pl-pl.lipmap)", "pl-pl" },
+        { R"(base\localization\pt-br.lipmap)", "pt-br" },
+        { R"(base\localization\ru-ru.lipmap)", "ru-ru" },
+        { R"(base\localization\th-th.lipmap)", "th-th" },
+        { R"(base\localization\tr-tr.lipmap)", "tr-tr" },
+        { R"(base\localization\zh-cn.lipmap)", "zh-cn" },
+        { R"(base\localization\zh-tw.lipmap)", "zh-tw" },
+    };
+
+    const auto& it = s_codes.find(aPath);
+
+    if (it == s_codes.end())
+        return {};
+
+    return it.value();
+}

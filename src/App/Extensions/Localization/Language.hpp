@@ -27,4 +27,5 @@ enum Code : uint64_t
 bool IsKnown(Red::CName aLanguage);
 Red::CName ResolveFromTextResource(Red::ResourcePath aPath);
 Red::CName ResolveFromSubtitleResource(Red::ResourcePath aPath);
+Red::CName ResolveFromLipsyncResource(Red::ResourcePath aPath);
 }

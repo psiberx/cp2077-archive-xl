@@ -5,6 +5,11 @@
 namespace
 {
 constexpr auto ModuleName = "Localization";
+
+constexpr auto WaitTimeout = std::chrono::milliseconds(200);
+constexpr auto WaitTick = std::chrono::milliseconds(2);
+
+Red::ResourceToken<Red::animLipsyncMapping>* s_currentLipMap;
 }
 
 std::string_view App::LocalizationModule::GetName()
@@ -23,6 +28,9 @@ bool App::LocalizationModule::Load()
     if (!HookBefore<Raw::Localization::LoadVoiceOvers>(&LocalizationModule::OnLoadVoiceOvers))
         throw std::runtime_error("Failed to hook [Localization::LoadVoiceOverMaps].");
 
+    if (!HookAfter<Raw::Localization::LoadLipsyncs>(&LocalizationModule::OnLoadLipsyncs))
+        throw std::runtime_error("Failed to hook [Localization::LoadLipsyncs].");
+
     return true;
 }
 
@@ -31,6 +39,7 @@ bool App::LocalizationModule::Unload()
     Unhook<Raw::Localization::LoadTexts>();
     Unhook<Raw::Localization::LoadSubtitles>();
     Unhook<Raw::Localization::LoadVoiceOvers>();
+    Unhook<Raw::Localization::LoadLipsyncs>();
 
     return true;
 }
@@ -38,7 +47,7 @@ bool App::LocalizationModule::Unload()
 void App::LocalizationModule::OnLoadTexts(Red::Handle<TextResource>& aOnScreens,
                                               Red::ResourcePath aPath)
 {
-    auto language = Language::ResolveFromTextResource(aPath);
+    const auto language = Language::ResolveFromTextResource(aPath);
 
     LogInfo("|{}| Initializing translations for \"{}\" language...", ModuleName, language.ToString());
 
@@ -205,7 +214,7 @@ App::TextEntry* App::LocalizationModule::FindSameTextEntry(TextEntry& aEntry, Te
 
 void App::LocalizationModule::OnLoadSubtitles(Red::Handle<SubtitleResource>& aSubtitles, Red::ResourcePath aPath)
 {
-    auto language = Language::ResolveFromSubtitleResource(aPath);
+    const auto language = Language::ResolveFromSubtitleResource(aPath);
 
     LogInfo("|{}| Initializing subtitles for \"{}\" language...", ModuleName, language.ToString());
 
@@ -276,6 +285,8 @@ bool App::LocalizationModule::MergeSubtitleResource(const std::string& aPath, Ap
 
 void App::LocalizationModule::OnLoadVoiceOvers(void* aContext)
 {
+    LogInfo("|{}| Initializing voiceover index...", ModuleName);
+
     auto mergedAny = false;
     auto successAll = true;
 
@@ -292,12 +303,15 @@ void App::LocalizationModule::OnLoadVoiceOvers(void* aContext)
                 auto paths = unit.vomaps.find(entry.languageCode);
                 if (paths != unit.vomaps.end())
                 {
+                    LogInfo("|{}| Processing \"{}\"...", ModuleName, unit.name);
+
                     for (const auto& path : paths->second)
                     {
                         Red::RaRef<Red::JsonResource> ref(path.c_str());
 
                         if (depot->ResourceExists(ref.path))
                         {
+                            LogInfo("|{}| Merging entries from \"{}\"...", ModuleName, path);
                             entry.voMapChunks.PushBack(ref);
                         }
                         else
@@ -314,9 +328,121 @@ void App::LocalizationModule::OnLoadVoiceOvers(void* aContext)
     }
 
     if (!mergedAny)
-        LogInfo("|{}| No voiceovers to merge.", ModuleName);
+        LogInfo("|{}| No voiceover maps to merge.", ModuleName);
     else if (successAll)
-        LogInfo("|{}| All voiceovers merged.", ModuleName);
+        LogInfo("|{}| All voiceover maps merged.", ModuleName);
     else
-        LogWarning("|{}| Some voiceovers merged with issues.", ModuleName);
+        LogWarning("|{}| Some voiceover maps merged with issues.", ModuleName);
+}
+
+void App::LocalizationModule::OnLoadLipsyncs(void* aContext, uint8_t a2)
+{
+    auto mainToken = Raw::Localization::LipMapToken(aContext)->instance;
+
+    if (s_currentLipMap != mainToken)
+    {
+        s_currentLipMap = mainToken;
+
+        const auto language = Language::ResolveFromLipsyncResource(mainToken->path);
+
+        LogInfo("|{}| Initializing lipsync maps for \"{}\" language...", ModuleName, language.ToString());
+
+        auto mergedAny = false;
+        bool successAll = true;
+
+        auto loader = Red::ResourceLoader::Get();
+        Red::DynArray<Red::SharedPtr<Red::ResourceToken<Red::animLipsyncMapping>>> tokens;
+
+        for (const auto& unit : m_units)
+        {
+            auto paths = unit.lipmaps.find(language);
+            if (paths != unit.lipmaps.end())
+            {
+                LogInfo("|{}| Processing \"{}\"...", ModuleName, unit.name);
+
+                for (const auto& path : paths->second)
+                {
+                    auto token = loader->LoadAsync<Red::animLipsyncMapping>(path.c_str());
+
+                    if (!token->IsFailed())
+                    {
+                        LogInfo("|{}| Merging entries from \"{}\"...", ModuleName, path);
+                        tokens.PushBack(std::move(token));
+                    }
+                    else
+                    {
+                        LogError("|{}| Resource \"{}\" failed to load.", ModuleName, path);
+                        successAll = false;
+                    }
+                }
+
+                mergedAny = true;
+            }
+        }
+
+        if (tokens.size)
+        {
+            const auto start = std::chrono::steady_clock::now();
+            while (true)
+            {
+                bool allFinished = true;
+
+                for (const auto& token : tokens)
+                {
+                    if (!token->IsFinished())
+                    {
+                        allFinished = false;
+                        break;
+                    }
+                }
+
+                if (allFinished)
+                    break;
+
+                std::this_thread::sleep_for(WaitTick);
+
+                if (std::chrono::steady_clock::now() - start >= WaitTimeout)
+                    break;
+            }
+
+            if (mainToken->IsFinished())
+            {
+                for (const auto& token : tokens)
+                {
+                    MergeLipsyncResource(token->resource, mainToken->resource);
+                }
+            }
+            else
+            {
+                mainToken->OnLoaded([tokens = std::move(tokens)](Red::Handle<Red::animLipsyncMapping>& aResource) {
+                    for (const auto& token : tokens)
+                    {
+                        MergeLipsyncResource(token->resource, aResource);
+                    }
+                    // TODO: Trim?
+                });
+            }
+        }
+
+        if (!mergedAny)
+            LogInfo("|{}| No lipsync maps to merge.", ModuleName);
+        else if (successAll)
+            LogInfo("|{}| All lipsync maps merged.", ModuleName);
+        else
+            LogWarning("|{}| Some lipsync maps merged with issues.", ModuleName);
+    }
+}
+
+void App::LocalizationModule::MergeLipsyncResource(const Red::Handle<Red::animLipsyncMapping>& aSource,
+                                                   Red::Handle<Red::animLipsyncMapping>& aTarget)
+{
+    for (const auto& path : aSource->scenePaths)
+    {
+        aTarget->scenePaths.PushBack(path);
+    }
+
+    for (const auto& entry : aSource->sceneEntries)
+    {
+        aTarget->sceneEntries.PushBack(entry);
+    }
 }

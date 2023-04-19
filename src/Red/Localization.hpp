@@ -12,6 +12,7 @@ constexpr auto LocKeyPrefixLength = std::char_traits<char>::length(LocKeyPrefix)
 namespace Raw::Localization
 {
 using VoiceOverTokens = Core::OffsetPtr<0x8, Red::Map<uint32_t, Red::SharedPtr<Red::ResourceToken<Red::JsonResource>>>>;
+using LipMapToken = Core::OffsetPtr<0x188, Red::SharedPtr<Red::ResourceToken<Red::animLipsyncMapping>>>;
 
 constexpr auto LoadTexts = Core::RawFunc<
     /* addr = */ Red::Addresses::Localization_LoadOnScreens,
@@ -26,4 +27,8 @@ constexpr auto LoadSubtitles = Core::RawFunc<
 constexpr auto LoadVoiceOvers = Core::RawFunc<
     /* addr = */ Red::Addresses::Localization_LoadVoiceOvers,
     /* type = */ void (*)(void* aContext)>();
+
+constexpr auto LoadLipsyncs = Core::RawFunc<
+    /* addr = */ Red::Addresses::Localization_LoadLipsyncs,
+    /* type = */ void (*)(void* aContext, uint8_t a2)>();
 }
