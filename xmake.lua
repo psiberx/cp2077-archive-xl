@@ -1,24 +1,26 @@
 set_xmakever("2.5.9")
 
 set_project("ArchiveXL")
-set_version("1.4.2", {build = "%y%m%d%H%M"})
+set_version("1.4.3", {build = "%y%m%d%H%M"})
 
 set_arch("x64")
 set_languages("cxx20", "cxx2a")
-set_optimize("none")
 add_cxxflags("/MP /GR- /EHsc")
 
 if is_mode("debug") then
     set_symbols("debug")
+    set_optimize("none")
     add_cxxflags("/Od /Ob0 /Zi /RTC1")
 elseif is_mode("release") then
     set_symbols("hidden")
     set_strip("all")
-    add_cxxflags("/O2 /Ob2 /fp:fast")
+    set_optimize("fastest")
+    add_cxxflags("/Ob2")
 elseif is_mode("releasedbg") then
     set_symbols("debug")
     set_strip("all")
-    add_cxxflags("/O2 /Ob1 /fp:fast /Zi")
+    set_optimize("fastest")
+    add_cxxflags("/Ob1 /Zi")
 end
 
 if is_mode("debug") then
