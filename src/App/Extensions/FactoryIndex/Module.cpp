@@ -31,7 +31,7 @@ void App::FactoryIndexModule::OnLoadFactoryAsync(uintptr_t aIndex, Red::Resource
 {
     if (aPath == LastFactory)
     {
-        LogInfo("|{}| Factory index is initializing...", ModuleName);
+        LogInfo("|{}| Initializing factory index...", ModuleName);
 
         if (!m_units.empty())
         {

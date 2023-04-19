@@ -5,10 +5,14 @@
 
 namespace App
 {
-using OnScreenEntry = Red::localization::PersistenceOnScreenEntry;
-using OnScreenEntries = Red::localization::PersistenceOnScreenEntries;
-using OnScreenEntryList = decltype(std::declval<OnScreenEntries>().entries);
-using OnScreenEntryMap = Core::Map<decltype(std::declval<OnScreenEntry>().primaryKey), OnScreenEntry*>;
+using TextResource = Red::localization::PersistenceOnScreenEntries;
+using TextEntry = Red::localization::PersistenceOnScreenEntry;
+using TextEntryList = Red::DynArray<TextEntry>;
+using TextEntryMap = Core::Map<uint64_t, TextEntry*>;
+
+using SubtitleResource = Red::localization::PersistenceSubtitleMap;
+using SubtitleEntry = Red::localization::PersistenceSubtitleMapEntry;
+using SubtitleEntryList = Red::DynArray<SubtitleEntry>;
 
 class LocalizationModule : public ConfigurableUnitModule<LocalizationUnit>
 {
@@ -18,15 +22,18 @@ public:
     bool Unload() override;
 
 private:
-    void OnLoadOnScreens(Red::Handle<OnScreenEntries>& aOnScreens, Red::ResourcePath aPath);
+    void OnLoadTexts(Red::Handle<TextResource>& aOnScreens, Red::ResourcePath aPath);
+    void OnLoadSubtitles(Red::Handle<SubtitleResource>& aSubtitles, Red::ResourcePath aPath);
 
-    static bool MergeResource(const std::string& aPath, OnScreenEntryList& aFinalList, OnScreenEntryMap& aUsedKeyMap,
-                              uint32_t aOriginalCount, uint64_t aOriginalMaxKey, bool aFallback);
+    static bool MergeTextResource(const std::string& aPath, TextEntryList& aFinalList, TextEntryMap& aUsedKeyMap,
+                                  uint32_t aOriginalCount, uint64_t aOriginalMaxKey, bool aFallback);
 
-    static void MergeEntry(OnScreenEntryList& aFinalList, OnScreenEntry& aNewEntry, uint32_t aIndex,
-                           OnScreenEntryMap& aUsedKeyMap, uint32_t aOriginalCount, uint64_t aOriginalMaxKey,
-                           bool aFallback);
+    static void MergeTextEntry(TextEntryList& aFinalList, TextEntry& aNewEntry, uint32_t aIndex,
+                               TextEntryMap& aUsedKeyMap, uint32_t aOriginalCount, uint64_t aOriginalMaxKey,
+                               bool aFallback);
 
-    static OnScreenEntry* FindSameEntry(OnScreenEntry& aEntry, OnScreenEntryList& aList, uint32_t aCount);
+    static TextEntry* FindSameTextEntry(TextEntry& aEntry, TextEntryList& aList, uint32_t aCount);
+
+    static bool MergeSubtitleResource(const std::string& aPath, SubtitleEntryList& aFinalList);
 };
 }

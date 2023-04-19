@@ -177,6 +177,10 @@ def patterns():
                 Item(name="LoadOnScreens",
                      pattern="40 55 53 57 48 8B EC 48 81 EC 80 00 00 00 0F 57 C0 48 8B D9 F3 0F 7F 45 A0 48 85 D2 75 17 33 FF 48 8B C1 48 89 39 48 89 79 08 48 81 C4 80 00 00",
                      expected=2),
+                Item(name="LoadSubtitles",
+                     pattern="40 55 53 57 48 8B EC 48 81 EC 80 00 00 00 0F 57 C0 48 8B D9 F3 0F 7F 45 A0 48 85 D2 75 17 33 FF 48 8B C1 48 89 39 48 89 79 08 48 81 C4 80 00 00",
+                     expected=2,
+                     index=1),
             ]),
             Group(name="MappinResource", functions=[
                 Item(name="GetMappinData",

@@ -92,6 +92,7 @@
 #include <RED4ext/Scripting/Natives/Generated/ink/WidgetLibraryResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/WidgetLogicController.hpp>
 #include <RED4ext/Scripting/Natives/Generated/localization/PersistenceOnScreenEntries.hpp>
+#include <RED4ext/Scripting/Natives/Generated/localization/PersistenceSubtitleMap.hpp>
 #include <RED4ext/Scripting/Natives/Generated/mesh/MeshAppearance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/red/TagList.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/GlobalNodeID.hpp>
