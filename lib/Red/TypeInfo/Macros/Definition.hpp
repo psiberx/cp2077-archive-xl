@@ -229,7 +229,7 @@ public: \
     };
 #define X_RTTI_DEFINE_GLOBALS_2(_namespace, _desc) \
     template<> \
-    struct Red::TypeInfoBuilder<<Red::GlobalDefinition<X_RTTI_LOCATION>{}> \
+    struct Red::TypeInfoBuilder<Red::GlobalDefinition<X_RTTI_LOCATION>{}> \
     { \
         using Descriptor = Red::GlobalDescriptor; \
         static void Describe(Descriptor* rtti) \
@@ -250,7 +250,7 @@ public: \
 
 #define RTTI_REGISTER(_handler) \
     template<> \
-    struct Red::TypeInfoBuilder<<Red::GlobalDefinition<X_RTTI_LOCATION>{}> \
+    struct Red::TypeInfoBuilder<Red::GlobalDefinition<X_RTTI_LOCATION>{}> \
     { \
         using Descriptor = Red::GlobalDescriptor; \
         static void Register(Descriptor* rtti) \
@@ -261,7 +261,7 @@ public: \
 
 #define RTTI_DESCRIBE(_handler) \
     template<> \
-    struct Red::TypeInfoBuilder<<Red::GlobalDefinition<X_RTTI_LOCATION>{}> \
+    struct Red::TypeInfoBuilder<Red::GlobalDefinition<X_RTTI_LOCATION>{}> \
     { \
         using Descriptor = Red::GlobalDescriptor; \
         static void Describe(Descriptor* rtti) \

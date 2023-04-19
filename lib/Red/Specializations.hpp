@@ -38,12 +38,3 @@ struct std::hash<T>
         return static_cast<size_t>(aKey);
     }
 };
-
-template<typename T>
-struct RED4ext::HashMapHash<T, std::enable_if_t<std::is_same_v<T, uint64_t>>>
-{
-    uint32_t operator()(const T& aKey) const noexcept
-    {
-        return static_cast<uint32_t>(aKey) ^ ((aKey >> 32) & 0xFFFFFFFF);
-    }
-};

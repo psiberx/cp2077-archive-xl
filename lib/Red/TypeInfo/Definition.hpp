@@ -1,9 +1,14 @@
 #pragma once
 
 #include "Common.hpp"
+#include "Parameters.hpp"
 #include "Registrar.hpp"
 #include "Resolving.hpp"
 #include "Macros/Definition.hpp"
+
+#ifndef RTTI_DIRECT_RETURNS
+#define RTTI_DIRECT_RETURNS true
+#endif
 
 namespace Red
 {
@@ -99,49 +104,65 @@ consteval auto GetMaxValue()
     }
 }
 
+template<typename T>
+using FinalArgType = T;
+
+template<typename T>
+using FinalRetType = T;
+
 template<typename T = void>
 inline void ExtractArg(CStackFrame* aFrame, T* aInstance = nullptr)
 {
-    if constexpr (std::is_pointer_v<T>)
+    using U = std::remove_cvref_t<T>;
+
+    if constexpr (std::is_pointer_v<U>)
     {
         aFrame->useDirectData = true;
+    }
+    else if constexpr (IsScriptRef<U>)
+    {
+        if ((aFrame->paramFlags >> aFrame->currentParam) & 1)
+        {
+            aInstance->AllocateValue();
+        }
     }
 
     aFrame->data = nullptr;
     aFrame->dataType = nullptr;
-    aFrame->currentParam++;
 
     const auto opcode = *(aFrame->code++);
-    OpcodeHandlers::Run(opcode, aFrame->context, aFrame, aInstance, IsScriptRef<T> ? aInstance : nullptr);
+    OpcodeHandlers::Run(opcode, aFrame->context, aFrame, aInstance, IsScriptRef<U> ? aInstance : nullptr);
 
-    if constexpr (std::is_pointer_v<T>)
+    if constexpr (std::is_pointer_v<U>)
     {
         aFrame->useDirectData = false;
 
-        if constexpr (!std::is_void_v<T>)
+        if constexpr (!std::is_void_v<U>)
         {
             if (aFrame->data && aInstance)
             {
-                *aInstance = reinterpret_cast<T>(aFrame->data);
+                *aInstance = reinterpret_cast<U>(aFrame->data);
             }
         }
     }
+
+    ++aFrame->currentParam;
 }
 
 template<typename C, typename T, std::size_t I>
-inline void ExtractArg(CStackFrame* aFrame, T* aArg)
+inline void ExtractArg(C* aContext, CStackFrame* aFrame, T* aArg)
 {
-    if constexpr (I == 0 && !std::is_void_v<C> && !std::is_base_of_v<IScriptable, C> && std::is_same_v<T, C*>)
+    using U = std::remove_cvref_t<T>;
+
+    if constexpr (I == 0 && !std::is_void_v<C> && std::is_base_of_v<IScriptable, C> && std::is_same_v<T, C*>)
     {
-        ScriptRef<C> context{};
-        ExtractArg(aFrame, &context);
-        *aArg = context.ref;
+        *aArg = aContext;
     }
-    else if constexpr (std::is_same_v<T, std::string> || std::is_same_v<T, std::string_view>)
+    else if constexpr (I == 0 && !std::is_void_v<C> && !std::is_base_of_v<IScriptable, C> && std::is_same_v<T, C*>)
     {
-        CString* str{};
-        ExtractArg(aFrame, &str);
-        *aArg = {str->c_str(), str->Length()};
+        ScriptRef<C> ctx;
+        ExtractArg(aFrame, &ctx);
+        *aArg = ctx.ref;
     }
     else if constexpr (std::is_same_v<T, CStackFrame*>)
     {
@@ -154,22 +175,22 @@ inline void ExtractArg(CStackFrame* aFrame, T* aArg)
 }
 
 template<typename C, typename... Args, std::size_t... I>
-inline void ExtractArgs(CStackFrame* aFrame, std::tuple<Args...>& aArgs, std::index_sequence<I...>)
+inline void ExtractArgs(C* aContext, CStackFrame* aFrame, std::tuple<Args...>& aArgs, std::index_sequence<I...>)
 {
-    (ExtractArg<C, Args, I>(aFrame, &std::get<I>(aArgs)), ...);
+    (ExtractArg<C, Args, I>(aContext, aFrame, &std::get<I>(aArgs)), ...);
 }
 
 template<typename C, typename... Args>
-inline void ExtractArgs(CStackFrame* aFrame, std::tuple<Args...>& aArgs)
+inline void ExtractArgs(C* aContext, CStackFrame* aFrame, std::tuple<Args...>& aArgs)
 {
-    ExtractArgs<C>(aFrame, aArgs, std::make_index_sequence<sizeof...(Args)>());
+    ExtractArgs(aContext, aFrame, aArgs, std::make_index_sequence<sizeof...(Args)>());
     aFrame->currentParam = 0;
     ++aFrame->code;
 }
 
 template<typename R>
 inline void AssignReturnValue(R* aRetValue, CBaseRTTIType* aRetValueType,
-                              R* aRetBuffer, CBaseRTTIType* aRetBufferType)
+                              FinalRetType<R>* aRetBuffer, CBaseRTTIType* aRetBufferType)
 {
     if (aRetBuffer)
     {
@@ -178,15 +199,7 @@ inline void AssignReturnValue(R* aRetValue, CBaseRTTIType* aRetValueType,
             aRetValueType = aRetBufferType;
         }
 
-        if constexpr (std::is_same_v<R, std::string> || std::is_same_v<R, std::string_view>)
-        {
-            CString str(aRetValue->data());
-            aRetValueType->Assign(aRetBuffer, &str);
-        }
-        else
-        {
-            aRetValueType->Assign(aRetBuffer, aRetValue);
-        }
+        aRetValueType->Assign(aRetBuffer, aRetValue);
     }
 }
 
@@ -196,43 +209,43 @@ inline ScriptingFunction_t<void*> MakeNativeFunction()
 {
     using F = decltype(AFunction);
     using C = typename FunctionPtr<F>::context_type;
-    using R = typename FunctionPtr<F>::return_type;
-    using Args = std::conditional_t<
-        std::is_void_v<C> || std::is_base_of_v<IScriptable, C>,
-        typename FunctionPtr<F>::arguments_type,
-        typename FunctionPtr<F>::extended_arguments_type>;
+    using R = FinalRetType<typename FunctionPtr<F>::return_type>;
+    using Args = typename FunctionPtr<F>::template transform_arguments_type<FinalArgType>;
 
-    static const auto s_retType = !std::is_void_v<R> ? ResolveType<R>() : nullptr;
+    static const auto s_retType = !std::is_void_v<R> ? ResolveType<FinalRetType<R>>() : nullptr;
 
-    auto f = [](IScriptable* aContext, CStackFrame* aFrame, R* aRet, CBaseRTTIType* aRetType) -> void
+    auto f = [](C* aContext, CStackFrame* aFrame, R* aRet, CBaseRTTIType* aRetType) -> void
     {
         Args args;
-        ExtractArgs<C>(aFrame, args);
+        ExtractArgs(aContext, aFrame, args);
 
         if constexpr (std::is_void_v<R>)
         {
-            if constexpr (std::is_void_v<C> || !std::is_base_of_v<IScriptable, C>)
-            {
-                std::apply(AFunction, args);
-            }
-            else
-            {
-                std::apply(AFunction, std::tuple_cat(std::make_tuple(reinterpret_cast<C*>(aContext)), args));
-            }
+            std::apply(AFunction, args);
         }
         else
         {
-            if constexpr (std::is_void_v<C> || !std::is_base_of_v<IScriptable, C>)
+#if RTTI_DIRECT_RETURNS
+            if (aRet)
             {
-                R ret = std::apply(AFunction, args);
-                AssignReturnValue(&ret, s_retType, aRet, aRetType);
+                *aRet = std::apply(AFunction, args);
             }
             else
             {
-                R ret = std::apply(AFunction, std::tuple_cat(std::make_tuple(reinterpret_cast<C*>(aContext)), args));
-                AssignReturnValue(&ret, s_retType, aRet, aRetType);
+                R ret = std::apply(AFunction, args);
             }
-        }
+#else
+            R ret = std::apply(AFunction, args);
+            if (aRet)
+            {
+                if (!aRetType)
+                {
+                    aRetType = s_retType;
+                }
+                aRetType->Assign(aRet, &ret);
+            }
+#endif
+       }
     };
 
     return reinterpret_cast<ScriptingFunction_t<void*>>(+f);
@@ -262,13 +275,9 @@ inline void DescribeParameter(CBaseFunction* aFunc)
 {
     using U = std::remove_cvref_t<T>;
 
-    if constexpr (std::is_same_v<U, std::string> || std::is_same_v<U, std::string_view>)
+    if constexpr (!std::is_same_v<U, CStackFrame*>)
     {
-        aFunc->AddParam(GetTypeName<CString>(), "arg");
-    }
-    else if constexpr (!std::is_same_v<U, CStackFrame*>)
-    {
-        aFunc->AddParam(ResolveTypeName<T>(), "arg", false, Detail::IsOptional<T>);
+        aFunc->AddParam(ResolveTypeName<FinalArgType<U>>(), "arg", false, IsOptional<U>);
     }
 }
 
@@ -279,14 +288,7 @@ inline void DescribeReturnValue(CBaseFunction* aFunc)
 
     if constexpr (!std::is_void_v<U>)
     {
-        if constexpr (std::is_same_v<U, std::string> || std::is_same_v<U, std::string_view>)
-        {
-            aFunc->SetReturnType(GetTypeName<CString>());
-        }
-        else
-        {
-            aFunc->SetReturnType(ResolveTypeName<U>());
-        }
+        aFunc->SetReturnType(ResolveTypeName<FinalRetType<U>>());
     }
 }
 
@@ -445,6 +447,12 @@ inline bool IsSpecial(CBaseFunction* aFunc)
 inline void MarkSpecial(CBaseFunction* aFunc)
 {
     *reinterpret_cast<Detail::FunctionFlagsStorage*>(&aFunc->flags) |= Detail::FunctionSpecialFlag;
+}
+
+template<typename T = void>
+inline void GetParameter(CStackFrame* aFrame, T* aInstance = nullptr)
+{
+    Detail::ExtractArg(aFrame, aInstance);
 }
 
 template<typename C, typename R, typename RT>
@@ -807,6 +815,23 @@ protected:
 class GlobalDescriptor : public CRTTISystem
 {
 public:
+    template<typename T>
+    inline auto Get()
+    {
+        if constexpr (std::is_class_v<T>)
+        {
+            return reinterpret_cast<ClassDescriptor<T>*>(GetClass(GetTypeName<T>()));
+        }
+        else if constexpr (std::is_enum_v<T>)
+        {
+            return reinterpret_cast<EnumDescriptor<T>*>(GetEnum(GetTypeName<T>()));
+        }
+        else
+        {
+            return GetType(GetTypeName<T>());
+        }
+    }
+
     template<class TContext, typename TRet, typename TRetType>
     CGlobalFunction* AddFunction(NativeFunctionPtr<TContext, TRet, TRetType> aFunc, const char* aName,
                                  CBaseFunction::Flags aFlags = {})
@@ -962,7 +987,8 @@ struct SystemBuilder
     static inline void RegisterGetter()
     {
         constexpr auto systemRefStr = GetTypeNameStr<Handle<TSystem>>();
-        constexpr auto systemNameStr = GetTypeNameStr<TSystem>();
+        constexpr auto systemTypeStr = GetTypeNameStr<TSystem>();
+        constexpr auto systemNameStr = Red::Detail::UpFirstConstStr<systemTypeStr.size()>(systemTypeStr.data());
         constexpr auto getterNameStr = Detail::ConcatConstStr<3, systemNameStr.size() - 1>("Get", systemNameStr.data());
 
         auto gameType = GetClass<ScriptGameInstance>();

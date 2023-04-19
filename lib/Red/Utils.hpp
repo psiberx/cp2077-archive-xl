@@ -8,9 +8,27 @@ inline WeakHandle<U>& AsWeakHandle(T* aInstance)
     return *reinterpret_cast<WeakHandle<U>*>(&aInstance->ref);
 }
 
-template<typename T>
-inline Handle<T> AsHandle(T* aInstance)
+template<typename T, typename U = T>
+inline Handle<U> AsHandle(T* aInstance)
 {
+    return AsWeakHandle(aInstance);
+}
+
+template<typename T, typename U = T>
+inline WeakHandle<U> ToWeakHandle(T* aInstance)
+{
+    if (!aInstance)
+        return {};
+
+    return AsWeakHandle(aInstance);
+}
+
+template<typename T>
+inline Handle<T> ToHandle(T* aInstance)
+{
+    if (!aInstance)
+        return {};
+
     if (aInstance->ref.instance)
     {
         return reinterpret_cast<WeakHandle<T>*>(&aInstance->ref)->Lock();
@@ -22,8 +40,11 @@ inline Handle<T> AsHandle(T* aInstance)
 }
 
 template<typename T, typename U>
-inline Handle<T> AsHandle(U* aInstance)
+inline Handle<T> ToHandle(U* aInstance)
 {
+    if (!aInstance)
+        return {};
+
     auto instance = reinterpret_cast<ISerializable*>(aInstance);
     if (instance->ref.instance)
     {

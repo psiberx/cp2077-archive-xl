@@ -19,24 +19,6 @@ struct Scope
     {
     }
 
-    // template<template<typename> class B, typename T>
-    // constexpr Scope(const B<T>&) noexcept
-    //     : hash(FNV1a64(nameof::nameof_type<T>().data()))
-    // {
-    // }
-    //
-    // template<template<typename, auto> class E, typename T, auto S>
-    // constexpr Scope(const E<T, S>&) noexcept
-    //     : hash(S)
-    // {
-    // }
-    //
-    // template<template<auto, typename...> class E, auto S, typename... P>
-    // constexpr Scope(const E<S, P...>&) noexcept
-    //     : hash(S)
-    // {
-    // }
-
     constexpr operator uint64_t() const noexcept
     {
         return hash;
@@ -61,9 +43,6 @@ struct Scope
 
     uint64_t hash;
 };
-
-template<typename T, auto V = 0>
-struct Optional;
 
 namespace Detail
 {
@@ -104,7 +83,7 @@ struct FunctionPtr<R (*)(Args...)> : public std::true_type
     using context_type = void;
     using return_type = R;
 
-    using arguments_type = std::tuple<std::remove_const_t<std::remove_reference_t<Args>>...>;
+    using arguments_type = std::tuple<std::remove_cvref_t<Args>...>;
     using qualified_arguments_type = std::tuple<Args...>;
     using extended_arguments_type = arguments_type;
 
@@ -117,6 +96,9 @@ struct FunctionPtr<R (*)(Args...)> : public std::true_type
     template<size_t I>
     using extended_argument_type = typename std::tuple_element<I, extended_arguments_type>::type;
 
+    template<template<typename> typename P>
+    using transform_arguments_type = std::tuple<P<std::remove_cvref_t<Args>>...>;
+
     static constexpr size_t arity = sizeof...(Args);
 };
 
@@ -124,7 +106,10 @@ template<typename C, typename R, typename... Args>
 struct FunctionPtr<R (C::*)(Args...)> : FunctionPtr<R (*)(Args...)>
 {
     using context_type = C;
-    using extended_arguments_type = std::tuple<C*, std::remove_const_t<std::remove_reference_t<Args>>...>;
+    using extended_arguments_type = std::tuple<C*, std::remove_cvref_t<Args>...>;
+
+    template<template<typename> typename P>
+    using transform_arguments_type = std::tuple<C*, P<std::remove_cvref_t<Args>>...>;
 };
 
 template<typename C, typename R, typename... Args>
@@ -166,66 +151,5 @@ struct Specialization<G<A, V>> : public std::true_type
 
 template<typename T>
 concept IsSpecialization = Specialization<T>::value;
-
-template<typename T, typename U = std::remove_cvref_t<T>>
-concept IsOptional = Specialization<U>::value
-    && std::is_same_v<U, Optional<typename Specialization<U>::argument_type, Specialization<U>::argument_value>>;
-
-template<typename T, typename U = std::remove_cvref_t<T>>
-concept IsScriptRef = Specialization<U>::value
-    && std::is_same_v<U, ScriptRef<typename Specialization<U>::argument_type>>;
 }
-
-template<typename T, auto ADefault>
-requires (!std::is_void_v<T>)
-struct Optional<T, ADefault>
-{
-    inline operator const T&() const
-    {
-        return value;
-    }
-
-    [[nodiscard]] inline const T* operator->() const
-    {
-        return &value;
-    }
-
-    [[nodiscard]] bool IsEmpty() const
-    {
-        return !value;
-    }
-
-    [[nodiscard]] bool IsDefault() const
-    {
-        return value == ADefault;
-    }
-
-    T value{ADefault};
-};
-
-template<typename T>
-struct Optional<T, 0>
-{
-    inline operator T&()
-    {
-        return value;
-    }
-
-    inline operator const T&() const
-    {
-        return value;
-    }
-
-    [[nodiscard]] inline const T* operator->() const
-    {
-        return &value;
-    }
-
-    [[nodiscard]] bool IsEmpty() const
-    {
-        return !value;
-    }
-
-    T value{};
-};
 }

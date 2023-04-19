@@ -175,7 +175,7 @@ public:
     {
         if constexpr (std::is_same_v<Type, bool>)
         {
-            return GetValuePtr() || *GetValuePtr();
+            return GetValuePtr() && *GetValuePtr();
         }
         else
         {

@@ -14,6 +14,9 @@ struct TypeNameMapping : public std::false_type {};
 template<typename G>
 struct TypePrefixMapping : public std::false_type {};
 
+template<typename G>
+struct TypeProxyMapping : public std::false_type {};
+
 namespace Detail
 {
 template<typename T>
@@ -31,6 +34,9 @@ concept HasTypeNameMapping = TypeNameMapping<T>::value;
 
 template<typename G>
 concept HasTypePrefixMapping = TypePrefixMapping<G>::value;
+
+template<typename G>
+concept HasTypeProxyMapping = TypeProxyMapping<G>::value;
 
 template<typename T>
 concept HasTypeNameBuilder = requires(T*)
@@ -183,11 +189,9 @@ consteval auto GetTypeNameStr()
 
         return Detail::ConcatConstStr<length, inner.size() - 1>(prefix, inner.data());
     }
-    else if constexpr (Detail::IsOptional<U>)
+    else if constexpr (Detail::HasTypeProxyMapping<U>)
     {
-        constexpr auto inner = GetTypeNameStr<typename Detail::Specialization<U>::argument_type>();
-
-        return Detail::MakeConstStr<inner.size() - 1>(inner.data());
+        return GetTypeNameStr<typename TypeProxyMapping<U>::type>();
     }
     else
     {
@@ -475,7 +479,6 @@ RTTI_TYPE_NAME(Variant, "Variant");
 RTTI_TYPE_PREFIX(DynArray, "array:");
 RTTI_TYPE_PREFIX(Handle, "handle:");
 RTTI_TYPE_PREFIX(WeakHandle, "whandle:");
-RTTI_TYPE_PREFIX(ScriptRef, "script_ref:");
 RTTI_TYPE_PREFIX(ResourceReference, "rRef:");
 RTTI_TYPE_PREFIX(ResourceAsyncReference, "raRef:");
 

@@ -13,3 +13,10 @@
     { \
         static constexpr auto prefix = _prefix; \
     };
+
+#define RTTI_TYPE_PROXY(_type) \
+    template<typename A, auto... Args> \
+    struct Red::TypeProxyMapping<_type<A, Args...>> : public std::true_type \
+    { \
+        using type = A; \
+    };
