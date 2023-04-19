@@ -46,8 +46,6 @@
 #include <RED4ext/Memory/SharedPtr.hpp>
 #include <RED4ext/Scripting/CProperty.hpp>
 #include <RED4ext/Scripting/Natives/ScriptGameInstance.hpp>
-#include <RED4ext/Scripting/Natives/Generated/CMesh.hpp>
-#include <RED4ext/Scripting/Natives/Generated/MorphTargetMesh.hpp>
 #include "RED4ext/Scripting/Natives/Generated/game/Puppet.hpp"
 #include "RED4ext/Scripting/Natives/Generated/game/ui/CharacterCustomizationInfo.hpp"
 #include "RED4ext/Scripting/Natives/Generated/game/ui/CharacterCustomizationInfoResource.hpp"
@@ -56,6 +54,10 @@
 #include "RED4ext/Scripting/Natives/Generated/game/ui/ICharacterCustomizationSystem.hpp"
 #include "RED4ext/Scripting/Natives/Generated/game/ui/MorphInfo.hpp"
 #include "RED4ext/Scripting/Natives/Generated/game/ui/OptionsGroup.hpp"
+#include <RED4ext/Scripting/Natives/Generated/CMesh.hpp>
+#include <RED4ext/Scripting/Natives/Generated/JsonResource.hpp>
+#include <RED4ext/Scripting/Natives/Generated/MorphTargetMesh.hpp>
+#include <RED4ext/Scripting/Natives/Generated/anim/LipsyncMapping.hpp>
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearanceDefinition.hpp>
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearancePartOverrides.hpp>
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearanceResource.hpp>
@@ -91,6 +93,7 @@
 #include <RED4ext/Scripting/Natives/Generated/ink/WidgetLibraryItemInstance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/WidgetLibraryResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/WidgetLogicController.hpp>
+#include <RED4ext/Scripting/Natives/Generated/loc/VoLanguageDataMap.hpp>
 #include <RED4ext/Scripting/Natives/Generated/localization/PersistenceOnScreenEntries.hpp>
 #include <RED4ext/Scripting/Natives/Generated/localization/PersistenceSubtitleMap.hpp>
 #include <RED4ext/Scripting/Natives/Generated/mesh/MeshAppearance.hpp>

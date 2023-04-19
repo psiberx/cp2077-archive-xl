@@ -24,6 +24,7 @@ public:
 private:
     void OnLoadTexts(Red::Handle<TextResource>& aOnScreens, Red::ResourcePath aPath);
     void OnLoadSubtitles(Red::Handle<SubtitleResource>& aSubtitles, Red::ResourcePath aPath);
+    void OnLoadVoiceOvers(void* aContext);
 
     static bool MergeTextResource(const std::string& aPath, TextEntryList& aFinalList, TextEntryMap& aUsedKeyMap,
                                   uint32_t aOriginalCount, uint64_t aOriginalMaxKey, bool aFallback);

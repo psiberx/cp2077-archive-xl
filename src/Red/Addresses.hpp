@@ -82,6 +82,7 @@ constexpr uintptr_t JournalTree_ProcessJournalIndex = 0x142054650 - ImageBase; /
 
 constexpr uintptr_t Localization_LoadOnScreens = 0x1406FC120 - ImageBase; // 40 55 53 57 48 8B EC 48 81 EC 80 00 00 00 0F 57 C0 48 8B D9 F3 0F 7F 45 A0 48 85 D2 75 17 33 FF 48 8B C1 48 89 39 48 89 79 08 48 81 C4 80 00 00, expected: 2, index: 0
 constexpr uintptr_t Localization_LoadSubtitles = 0x1406FC370 - ImageBase; // 40 55 53 57 48 8B EC 48 81 EC 80 00 00 00 0F 57 C0 48 8B D9 F3 0F 7F 45 A0 48 85 D2 75 17 33 FF 48 8B C1 48 89 39 48 89 79 08 48 81 C4 80 00 00, expected: 2, index: 1
+constexpr uintptr_t Localization_LoadVoiceOvers = 0x1406FFE40 - ImageBase; // 48 89 5C 24 10 48 89 4C 24 08 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 A0 48 81 EC 60 01 00, expected: 1, index: 0
 
 constexpr uintptr_t MappinResource_GetMappinData = 0x14246C610 - ImageBase; // 48 8B 41 40 8B 49 4C 48 C1 E1 05 48 03 C8 48 3B C1 74, expected: 1, index: 0
 

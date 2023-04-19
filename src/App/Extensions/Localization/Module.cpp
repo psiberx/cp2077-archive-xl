@@ -14,19 +14,23 @@ std::string_view App::LocalizationModule::GetName()
 
 bool App::LocalizationModule::Load()
 {
-    if (!HookAfter<Raw::Localization::LoadOnScreens>(&LocalizationModule::OnLoadTexts))
+    if (!HookAfter<Raw::Localization::LoadTexts>(&LocalizationModule::OnLoadTexts))
         throw std::runtime_error("Failed to hook [Localization::LoadOnScreens].");
 
     if (!HookAfter<Raw::Localization::LoadSubtitles>(&LocalizationModule::OnLoadSubtitles))
         throw std::runtime_error("Failed to hook [Localization::LoadSubtitles].");
+
+    if (!HookBefore<Raw::Localization::LoadVoiceOvers>(&LocalizationModule::OnLoadVoiceOvers))
+        throw std::runtime_error("Failed to hook [Localization::LoadVoiceOverMaps].");
 
     return true;
 }
 
 bool App::LocalizationModule::Unload()
 {
-    Unhook<Raw::Localization::LoadOnScreens>();
+    Unhook<Raw::Localization::LoadTexts>();
     Unhook<Raw::Localization::LoadSubtitles>();
+    Unhook<Raw::Localization::LoadVoiceOvers>();
 
     return true;
 }
@@ -38,7 +42,7 @@ void App::LocalizationModule::OnLoadTexts(Red::Handle<TextResource>& aOnScreens,
 
     LogInfo("|{}| Initializing translations for \"{}\" language...", ModuleName, language.ToString());
 
-    auto mergedAny = true;
+    auto mergedAny = false;
     auto successAll = true;
 
     if (!m_units.empty())
@@ -102,7 +106,7 @@ bool App::LocalizationModule::MergeTextResource(const std::string& aPath, TextEn
                                             uint64_t aOriginalMaxKey, bool aFallback)
 {
     Red::Handle<TextResource> resource;
-    Raw::Localization::LoadOnScreens(resource, aPath.c_str());
+    Raw::Localization::LoadTexts(resource, aPath.c_str());
 
     if (!resource.instance)
     {
@@ -201,11 +205,11 @@ App::TextEntry* App::LocalizationModule::FindSameTextEntry(TextEntry& aEntry, Te
 
 void App::LocalizationModule::OnLoadSubtitles(Red::Handle<SubtitleResource>& aSubtitles, Red::ResourcePath aPath)
 {
-    auto language = Language::ResolveFromTextResource(aPath);
+    auto language = Language::ResolveFromSubtitleResource(aPath);
 
     LogInfo("|{}| Initializing subtitles for \"{}\" language...", ModuleName, language.ToString());
 
-    auto mergedAny = true;
+    auto mergedAny = false;
     auto successAll = true;
 
     if (!m_units.empty())
@@ -268,4 +272,51 @@ bool App::LocalizationModule::MergeSubtitleResource(const std::string& aPath, Ap
     }
 
     return true;
+}
+
+void App::LocalizationModule::OnLoadVoiceOvers(void* aContext)
+{
+    auto mergedAny = false;
+    auto successAll = true;
+
+    if (!m_units.empty())
+    {
+        auto depot = Red::ResourceDepot::Get();
+        auto tokens = Raw::Localization::VoiceOverTokens(aContext);
+        auto map = tokens->values[0]->resource->root.GetPtr<Red::locVoLanguageDataMap>();
+
+        for (auto& entry : map->entries)
+        {
+            for (const auto& unit : m_units)
+            {
+                auto paths = unit.vomaps.find(entry.languageCode);
+                if (paths != unit.vomaps.end())
+                {
+                    for (const auto& path : paths->second)
+                    {
+                        Red::RaRef<Red::JsonResource> ref(path.c_str());
+
+                        if (depot->ResourceExists(ref.path))
+                        {
+                            entry.voMapChunks.PushBack(ref);
+                        }
+                        else
+                        {
+                            LogError("|{}| Resource \"{}\" not found.", ModuleName, path);
+                            successAll = false;
+                        }
+                    }
+
+                    mergedAny = true;
+                }
+            }
+        }
+    }
+
+    if (!mergedAny)
+        LogInfo("|{}| No voiceovers to merge.", ModuleName);
+    else if (successAll)
+        LogInfo("|{}| All voiceovers merged.", ModuleName);
+    else
+        LogWarning("|{}| Some voiceovers merged with issues.", ModuleName);
 }
