@@ -31,8 +31,6 @@ end
 
 add_requires("fmt", "hopscotch-map", "minhook", "spdlog", "tiltedcore", "yaml-cpp")
 
-add_defines(--[[ "RED4EXT_STATIC_LIB", ]] "YAML_CPP_STATIC_DEFINE")
-
 target("ArchiveXL")
     set_default(true)
     set_kind("shared")
@@ -55,7 +53,6 @@ target("RED4ext.SDK")
     set_default(false)
     set_kind("static")
     set_group("vendor")
---     add_files("vendor/RED4ext.SDK/src/**.cpp")
     add_headerfiles("vendor/RED4ext.SDK/include/**.hpp")
     add_includedirs("vendor/RED4ext.SDK/include/", { public = true })
 
