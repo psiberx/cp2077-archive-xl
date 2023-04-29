@@ -39,6 +39,39 @@ App::OverrideTagManager::OverrideTagManager() noexcept
               }
           },
           {
+              "hide_LowerAbdomen",
+              {
+                  {"t0_000_pma_base__full", {3}},
+                  {"t0_000_pwa_base__full", {3}},
+                  {"t0_000_pwa_fpp__torso", {3}},
+              }
+          },
+          {
+              "hide_UpperAbdomen",
+              {
+                  {"t0_000_pma_base__full", {2}},
+                  {"t0_000_pwa_base__full", {2}},
+                  {"t0_000_pwa_fpp__torso", {2}},
+              }
+          },
+          {
+              "hide_CollarBone",
+              {
+                  {"t0_000_pma_base__full", {1}},
+                  {"t0_000_pwa_base__full", {1}},
+                  {"t0_000_pwa_fpp__torso", {1}},
+              }
+          },
+          {
+              "hide_Chest",
+              {
+                  {"t0_000_pma_base__full", {0}},
+                  {"t0_000_pwa_base__full", {0}},
+                  {"t0_000_pwa_fpp__torso", {0}},
+                  {"MorphTargetSkinnedMesh0531", {}}, // nipples
+              }
+          },
+          {
               "hide_Legs",
               {
                   {"l0_", {}},
