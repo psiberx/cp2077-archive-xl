@@ -38,7 +38,7 @@ private:
 
     static bool MergeSubtitleResource(const std::string& aPath, SubtitleEntryList& aFinalList);
 
-    static void MergeLipsyncResource(const Red::Handle<Red::animLipsyncMapping>& aSource,
+    static bool MergeLipsyncResource(const Red::Handle<Red::animLipsyncMapping>& aSource,
                                      Red::Handle<Red::animLipsyncMapping>& aTarget);
 };
 }

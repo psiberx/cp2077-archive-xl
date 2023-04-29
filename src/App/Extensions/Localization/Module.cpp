@@ -409,18 +409,26 @@ void App::LocalizationModule::OnLoadLipsyncs(void* aContext, uint8_t a2)
             {
                 for (const auto& token : tokens)
                 {
-                    MergeLipsyncResource(token->resource, mainToken->resource);
+                    successAll &= MergeLipsyncResource(token->resource, mainToken->resource);
                 }
             }
             else
             {
                 mainToken->OnLoaded([tokens = std::move(tokens)](Red::Handle<Red::animLipsyncMapping>& aResource) {
+                    bool successAll = true;
+
                     for (const auto& token : tokens)
                     {
-                        MergeLipsyncResource(token->resource, aResource);
+                        successAll &= MergeLipsyncResource(token->resource, aResource);
                     }
-                    // TODO: Trim?
+
+                    if (successAll)
+                        LogInfo("|{}| All lipsync maps merged.", ModuleName);
+                    else
+                        LogWarning("|{}| Some lipsync maps merged with issues.", ModuleName);
                 });
+
+                return;
             }
         }
 
@@ -433,16 +441,38 @@ void App::LocalizationModule::OnLoadLipsyncs(void* aContext, uint8_t a2)
     }
 }
 
-void App::LocalizationModule::MergeLipsyncResource(const Red::Handle<Red::animLipsyncMapping>& aSource,
+bool App::LocalizationModule::MergeLipsyncResource(const Red::Handle<Red::animLipsyncMapping>& aSource,
                                                    Red::Handle<Red::animLipsyncMapping>& aTarget)
 {
-    for (const auto& path : aSource->scenePaths)
+    if (aSource->scenePaths.size != aSource->sceneEntries.size)
+        return false;
+
+    for (uint32_t i = 0; i < aSource->scenePaths.size; ++i)
     {
-        aTarget->scenePaths.PushBack(path);
+        auto& path = aSource->scenePaths[i];
+        auto& entry = aSource->sceneEntries[i];
+
+        auto pathIt = std::lower_bound(aTarget->scenePaths.Begin(), aTarget->scenePaths.End(), path);
+        auto targetIt = aTarget->sceneEntries.Begin() + (pathIt - aTarget->scenePaths.Begin());
+
+        if (pathIt == aTarget->scenePaths.End() || *pathIt != path)
+        {
+            aTarget->scenePaths.Emplace(pathIt, path);
+            aTarget->sceneEntries.Emplace(targetIt, entry);
+        }
+        else
+        {
+            for (auto& tag : entry.actorVoiceTags)
+            {
+                targetIt->actorVoiceTags.PushBack(tag);
+            }
+
+            for (auto& set : entry.animSets)
+            {
+                targetIt->animSets.PushBack(set);
+            }
+        }
     }
 
-    for (const auto& entry : aSource->sceneEntries)
-    {
-        aTarget->sceneEntries.PushBack(entry);
-    }
+    return true;
 }
