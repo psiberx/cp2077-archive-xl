@@ -419,6 +419,11 @@ inline CClass* ResolveClass()
     return CRTTISystem::Get()->GetClass(s_name);
 }
 
+inline void RegisterPendingTypes()
+{
+    CRTTISystem::Get()->GetType("Int32");
+}
+
 inline bool IsCompatible(CBaseRTTIType* aLhsType, CBaseRTTIType* aRhsType)
 {
     if (aLhsType != aRhsType)

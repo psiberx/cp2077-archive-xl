@@ -28,6 +28,7 @@ void App::ModuleLoader::Configure()
             module->Reset();
 
         Core::Vector<std::filesystem::path> configDirs;
+        Core::Vector<std::filesystem::path> configFiles;
 
         {
             auto depot = Red::ResourceDepot::Get();
@@ -36,7 +37,17 @@ void App::ModuleLoader::Configure()
             {
                 if (group.scope == Red::ArchiveScope::Mod)
                 {
-                    configDirs.emplace_back(Str::Widen(group.basePath.c_str()));
+                    if (group.basePath.Length() > 0)
+                    {
+                        configDirs.emplace_back(Str::Widen(group.basePath.c_str()));
+                    }
+                    else
+                    {
+                        for (const auto& archive : group.archives)
+                        {
+                            configFiles.emplace_back(Str::Widen(archive.path.c_str()) + m_customConfigExt);
+                        }
+                    }
                 }
             }
         }
@@ -55,19 +66,26 @@ void App::ModuleLoader::Configure()
             if (!std::filesystem::exists(configDir, error))
                 continue;
 
-            auto configDirIt = std::filesystem::recursive_directory_iterator(
+            auto configDirIt = std::filesystem::directory_iterator(
                 configDir, std::filesystem::directory_options::follow_directory_symlink);
 
             for (const auto& entry : configDirIt)
             {
-                const auto ext = entry.path().extension();
-
-                if (entry.is_regular_file() && (ext == m_customConfigExt || ext == L".yml" || ext == L".yaml"))
+                if (entry.is_regular_file() && entry.path().extension() == m_customConfigExt)
                 {
                     successAll &= ReadConfig(entry.path(), configDir);
                     foundAny = true;
                 }
             }
+        }
+
+        for (const auto& configFile : configFiles)
+        {
+            if (!std::filesystem::exists(configFile, error))
+                continue;
+
+            successAll &= ReadConfig(configFile, configFile.parent_path());
+            foundAny = true;
         }
 
         if (foundAny)
@@ -79,7 +97,7 @@ void App::ModuleLoader::Configure()
         }
         else
         {
-            LogInfo("Nothing found.");
+            LogInfo("No extensions found.");
         }
     }
     catch (const std::exception& ex)

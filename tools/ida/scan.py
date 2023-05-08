@@ -194,6 +194,12 @@ def patterns():
                 Item(name="LoadMaterialSetupAsync",
                      pattern="40 55 53 56 57 41 55 41 57 48 8D AC 24 78 FF FF FF 48 81 EC 88 01 00 00 45 0F B6 E8 48 8B F2 4C"),
             ]),
+            Group(name="ResourceDepot", functions=[
+                Item(name="InitializeArchives",
+                     pattern="48 89 5C 24 10 48 89 74 24 18 48 89 7C 24 20 55 41 54 41 55 41 56 41 57 48 8D 6C 24 C9 48 81 EC D0 00 00 00 4C 8B F9 48 83 C1 50 E8"),
+                Item(name="LoadArchives",
+                     pattern="48 8B C4 4C 89 48 20 55 53 56 41 55 48 8D 68 B1 48 81 EC C8 00 00 00 49 8B 18 4C 8B EA"),
+            ]),
             Group(name="ResourceLoader", functions=[
                 Item(name="OnUpdate",
                      pattern="48 8B 49 48 48 85 C9 0F 85",
