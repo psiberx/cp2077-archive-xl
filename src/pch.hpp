@@ -37,6 +37,7 @@
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearanceDefinition.hpp>
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearancePartOverrides.hpp>
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearanceResource.hpp>
+#include <RED4ext/Scripting/Natives/Generated/ent/AnimatedComponent.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/ComponentsStorage.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/Entity.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/EntityID.hpp>

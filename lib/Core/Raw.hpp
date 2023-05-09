@@ -232,6 +232,16 @@ public:
         return base + offset;
     }
 
+    inline static Type* Get(void* aBase)
+    {
+        return OffsetPtr(aBase);
+    }
+
+    inline static Type& Ref(void* aBase)
+    {
+        return OffsetPtr(aBase);
+    }
+
     uintptr_t base;
 };
 }

@@ -12,6 +12,10 @@ def patterns():
                 Item(name="IsMainThread",
                      pattern="83 3D  ?  ? ? ? 00 74 17 65 48 8B 04 25 30 00 00 00 8B 48 48 39 0D ? ? ? ? 74 03 32 C0 C3"),
             ]),
+            Group(name="AnimatedComponent", functions=[
+                Item(name="InitializeAnimations",
+                     pattern="48 89 5C 24 18 55 56 57 41 54 41 55 41 56 41 57 48 8B EC 48 83 EC 50 0F 57 C0 4C 8B F9 33 C0"),
+            ]),
             Group(name="AppearanceChanger", functions=[
                 Item(name="ComputePlayerGarment",
                      pattern="48 89 5C 24 08 48 89 74 24 10 48 89 7C 24 18 4C 89 64 24 20 55 41 56 41 57 48 8D 6C 24 C0"),

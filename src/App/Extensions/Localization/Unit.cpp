@@ -142,5 +142,5 @@ bool App::LocalizationUnit::ReadOptions(const YAML::Node& aNode,
     }
     }
 
-    return malformed;
+    return !malformed;
 }

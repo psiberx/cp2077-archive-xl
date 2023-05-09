@@ -53,18 +53,18 @@ public:
         U unit(aName);
         unit.LoadYAML(aNode);
 
-        if (unit.IsDefined())
-            m_units.emplace_back(std::move(unit));
-
         if (unit.HasIssues())
         {
             for (const auto& issue : unit.issues)
                 LogError("|{}| {}", GetName(), issue);
-
-            return false;
         }
 
-        return true;
+        if (unit.IsDefined())
+        {
+            m_units.emplace_back(std::move(unit));
+        }
+
+        return !unit.HasIssues();
     }
 
     void Reset() override

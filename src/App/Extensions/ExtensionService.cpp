@@ -1,4 +1,5 @@
 #include "ExtensionService.hpp"
+#include "App/Extensions/Animations/Module.hpp"
 #include "App/Extensions/AppearanceSwap/Module.hpp"
 #include "App/Extensions/AttachmentSlots/Module.hpp"
 #include "App/Extensions/Customization/Module.hpp"
@@ -18,6 +19,7 @@ void App::ExtensionService::OnBootstrap()
 {
     m_loader = Core::MakeUnique<ModuleLoader>("", L".xl");
 
+    m_loader->Add<AnimationsModule>();
     m_loader->Add<AppearanceSwapModule>();
     m_loader->Add<AttachmentSlotsModule>();
     m_loader->Add<CustomizationModule>();
