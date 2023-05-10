@@ -1,4 +1,5 @@
 #include "Unit.hpp"
+#include "App/Utils/Str.hpp"
 
 namespace
 {
@@ -6,6 +7,8 @@ constexpr auto AnimationsNodeKey = "animations";
 constexpr auto EntityNodeKey = "entity";
 constexpr auto AnimSetNodeKey = "set";
 constexpr auto VariablesNodeKey = "vars";
+constexpr auto PriorityNodeKey = "priority";
+constexpr auto ComponentNodeKey = "component";
 }
 
 bool App::AnimationsUnit::IsDefined()
@@ -51,6 +54,18 @@ void App::AnimationsUnit::LoadYAML(const YAML::Node& aNode)
                     entry.variables.push_back(variableNode.Scalar());
                 }
             }
+        }
+
+        const auto& priorityNode = entryNode[PriorityNodeKey];
+        if (priorityNode.IsDefined() && priorityNode.IsScalar())
+        {
+            ParseInt(priorityNode.Scalar(), entry.priority);
+        }
+
+        const auto& componentNode = entryNode[ComponentNodeKey];
+        if (componentNode.IsDefined() && componentNode.IsScalar())
+        {
+            entry.component = componentNode.Scalar();
         }
     }
 

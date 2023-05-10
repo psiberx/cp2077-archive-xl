@@ -36,7 +36,7 @@ bool App::AnimationsModule::Unload()
 
 void App::AnimationsModule::PrepareEntries()
 {
-    m_animsByEntity.clear();
+    m_animsByTarget.clear();
 
     auto depot = Red::ResourceDepot::Get();
     Core::Set<Red::ResourcePath> invalidPaths;
@@ -78,7 +78,14 @@ void App::AnimationsModule::PrepareEntries()
                 animSetupEntry.variableNames.EmplaceBack(var.c_str());
             }
 
-            m_animsByEntity[entityPath].emplace_back(std::move(animSetupEntry));
+            auto targetHash = entityPath.hash;
+
+            if (!animation.component.empty())
+            {
+                targetHash = Red::FNV1a64(animation.component.data(), targetHash);
+            }
+
+            m_animsByTarget[targetHash].emplace_back(std::move(animSetupEntry));
 
             m_paths[entityPath] = animation.entity;
             m_paths[animPath] = animation.set;
@@ -91,18 +98,24 @@ void App::AnimationsModule::OnInitializeAnimations(Red::entAnimatedComponent* aC
     const auto entity = Raw::IComponent::Owner::Get(aComponent);
     const auto templatePath = Raw::Entity::TemplatePath::Ref(entity);
 
-    const auto& anims = m_animsByEntity.find(templatePath);
-    if (anims != m_animsByEntity.end())
+    auto anims = m_animsByTarget.find(templatePath);
+    if (anims == m_animsByTarget.end())
     {
-        LogInfo("|{}| Initializing animations for \"{}\"...", ModuleName, m_paths[templatePath]);
-
-        for (const auto& anim : anims.value())
-        {
-            LogInfo("|{}| Merging animations from \"{}\"...", ModuleName, m_paths[anim.animSet.path]);
-
-            aComponent->animations.gameplay.PushBack(anim);
-        }
-
-        LogInfo("|{}| All animations merged.", ModuleName);
+        anims = m_animsByTarget.find(Red::FNV1a64(aComponent->name.ToString(), templatePath));
+        if (anims == m_animsByTarget.end())
+            return;
     }
+
+    LogInfo("|{}| Initializing animations for \"{}:{}\"...",
+            ModuleName, m_paths[templatePath], aComponent->name.ToString());
+
+    for (const auto& anim : anims.value())
+    {
+        LogInfo("|{}| Merging animations from \"{}\" with priority {}...",
+                ModuleName, m_paths[anim.animSet.path], anim.priority);
+
+        aComponent->animations.gameplay.PushBack(anim);
+    }
+
+    LogInfo("|{}| All animations merged.", ModuleName);
 }

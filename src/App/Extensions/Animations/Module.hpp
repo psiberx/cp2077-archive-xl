@@ -17,7 +17,7 @@ private:
     void PrepareEntries();
     void OnInitializeAnimations(Red::entAnimatedComponent* aComponent);
 
-    Core::Map<Red::ResourcePath, Core::Vector<Red::animAnimSetupEntry>> m_animsByEntity;
+    Core::Map<uint64_t, Core::Vector<Red::animAnimSetupEntry>> m_animsByTarget;
     Core::Map<Red::ResourcePath, std::string> m_paths;
 };
 }

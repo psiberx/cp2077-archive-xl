@@ -13,6 +13,7 @@ struct AnimationEntry
     }
 
     std::string entity;
+    std::string component = "root";
     std::string set;
     uint8_t priority = 128;
     Core::Vector<std::string> variables;
