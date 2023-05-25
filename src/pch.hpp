@@ -48,6 +48,7 @@
 #include <RED4ext/Scripting/Natives/Generated/ent/SkinnedClothComponent.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/SkinnedMeshComponent.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/TemplateAppearance.hpp>
+#include <RED4ext/Scripting/Natives/Generated/ent/VisualTagsSchema.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/AppearanceNameVisualTagsPreset.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/AttachmentSlots.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/IGameSystem.hpp>

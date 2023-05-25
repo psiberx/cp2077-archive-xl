@@ -50,12 +50,12 @@ void App::VisualTagsModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset&
     }
 
     auto loader = Red::ResourceLoader::Get();
-
     auto entityToken = loader->FindToken<Red::ent::EntityTemplate>(aEntityPath);
 
     if (!entityToken || !entityToken->IsLoaded())
         return;
 
+    auto entityTemplate = entityToken->Get();
     auto appearanceTemplate = FindAppearance(*entityToken, aAppearanceName);
 
     if (!appearanceTemplate)
@@ -82,6 +82,11 @@ void App::VisualTagsModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset&
 
     Red::TagList autoTags;
     MergeTags(autoTags, appearanceDefinition->visualTags);
+
+    if (entityTemplate->visualTagsSchema)
+    {
+        MergeTags(autoTags, entityTemplate->visualTagsSchema->visualTags);
+    }
 
     {
         std::unique_lock _(s_autoTagsLock);
