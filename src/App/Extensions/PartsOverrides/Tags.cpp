@@ -165,8 +165,7 @@ App::OverrideTagDefinition& App::OverrideTagManager::GetOverrides(Red::CName aTa
     return it.value();
 }
 
-Core::SharedPtr<App::OverrideTagManager>& App::OverrideTagManager::Get()
+void App::OverrideTagManager::DefineTag(Red::CName aTag, App::OverrideTagDefinition aDefinition)
 {
-    static auto s_instance = Core::MakeShared<OverrideTagManager>();
-    return s_instance;
+    m_definitions[aTag] = std::move(aDefinition);
 }

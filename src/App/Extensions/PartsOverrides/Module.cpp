@@ -38,9 +38,17 @@ bool App::PartsOverridesModule::Load()
     if (!HookBefore<Raw::Entity::ReassembleAppearance>(&OnReassembleAppearance))
         throw std::runtime_error("Failed to hook [Entity::ReassembleAppearance].");
 
-    s_states = Core::MakeUnique<OverrideStateManager>();
+    s_stateManager = Core::MakeUnique<OverrideStateManager>();
+    s_tagManager = Core::MakeShared<OverrideTagManager>();
+
+    ConfigureTags();
 
     return true;
+}
+
+void App::PartsOverridesModule::Reload()
+{
+    ConfigureTags();
 }
 
 bool App::PartsOverridesModule::Unload()
@@ -54,9 +62,22 @@ bool App::PartsOverridesModule::Unload()
     Unhook<Raw::AppearanceChanger::ComputePlayerGarment>();
     Unhook<Raw::Entity::ReassembleAppearance>();
 
-    s_states.reset();
+    s_stateManager.reset();
 
     return true;
+}
+
+void App::PartsOverridesModule::ConfigureTags()
+{
+    std::unique_lock _(s_mutex);
+
+    for (const auto& unit : m_units)
+    {
+        for (const auto& tag : unit.tags)
+        {
+            s_tagManager->DefineTag(tag.first.data(), tag.second);
+        }
+    }
 }
 
 void App::PartsOverridesModule::OnAddItem(uintptr_t, Red::WeakHandle<Red::ent::Entity>& aEntityWeak,
@@ -65,7 +86,7 @@ void App::PartsOverridesModule::OnAddItem(uintptr_t, Red::WeakHandle<Red::ent::E
     if (auto entity = aEntityWeak.Lock())
     {
         std::unique_lock _(s_mutex);
-        if (auto& entityState = s_states->GetEntityState(entity))
+        if (auto& entityState = s_stateManager->GetEntityState(entity))
         {
             if (EnableDebugOutput)
             {
@@ -85,7 +106,7 @@ void App::PartsOverridesModule::OnAddCustomItem(uintptr_t, Red::WeakHandle<Red::
     if (auto entity = aEntityWeak.Lock())
     {
         std::unique_lock _(s_mutex);
-        if (auto& entityState = s_states->GetEntityState(entity))
+        if (auto& entityState = s_stateManager->GetEntityState(entity))
         {
             if (EnableDebugOutput)
             {
@@ -106,7 +127,7 @@ void App::PartsOverridesModule::OnChangeItem(uintptr_t, Red::WeakHandle<Red::ent
     if (auto entity = aEntityWeak.Lock())
     {
         std::unique_lock _(s_mutex);
-        if (auto& entityState = s_states->GetEntityState(entity))
+        if (auto& entityState = s_stateManager->GetEntityState(entity))
         {
             if (EnableDebugOutput)
             {
@@ -126,7 +147,7 @@ void App::PartsOverridesModule::OnChangeCustomItem(uintptr_t, Red::WeakHandle<Re
     if (auto entity = aEntityWeak.Lock())
     {
         std::unique_lock _(s_mutex);
-        if (auto& entityState = s_states->GetEntityState(entity))
+        if (auto& entityState = s_stateManager->GetEntityState(entity))
         {
             if (EnableDebugOutput)
             {
@@ -147,7 +168,7 @@ void App::PartsOverridesModule::OnRemoveItem(uintptr_t, Red::WeakHandle<Red::ent
     if (auto entity = aEntityWeak.Lock())
     {
         std::unique_lock _(s_mutex);
-        if (auto& entityState = s_states->GetEntityState(entity))
+        if (auto& entityState = s_stateManager->GetEntityState(entity))
         {
             if (EnableDebugOutput)
             {
@@ -167,7 +188,7 @@ void App::PartsOverridesModule::OnComputeGarment(Red::Handle<Red::ent::Entity>& 
                                                  uintptr_t, uintptr_t, uintptr_t, bool)
 {
     std::unique_lock _(s_mutex);
-    if (auto& entityState = s_states->FindEntityState(aEntity))
+    if (auto& entityState = s_stateManager->FindEntityState(aEntity))
     {
         if (EnableDebugOutput)
         {
@@ -184,7 +205,7 @@ void App::PartsOverridesModule::OnReassembleAppearance(Red::ent::Entity* aEntity
                                                        uintptr_t, uintptr_t)
 {
     std::unique_lock _(s_mutex);
-    if (auto& entityState = s_states->FindEntityState(aEntity))
+    if (auto& entityState = s_stateManager->FindEntityState(aEntity))
     {
         if (EnableDebugOutput)
         {
@@ -199,7 +220,7 @@ void App::PartsOverridesModule::OnReassembleAppearance(Red::ent::Entity* aEntity
 void App::PartsOverridesModule::OnGameDetach()
 {
     std::unique_lock _(s_mutex);
-    s_states->ClearStates();
+    s_stateManager->ClearStates();
 }
 
 void App::PartsOverridesModule::RegisterOffsetOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
@@ -219,7 +240,10 @@ void App::PartsOverridesModule::RegisterPartsOverrides(Core::SharedPtr<EntitySta
 
     for (const auto& visualTag : aApperance->visualTags.tags)
     {
-        aEntityState->AddChunkMaskOverride(aHash, visualTag);
+        for (auto& [componentName, chunkMask] : s_tagManager->GetOverrides(visualTag))
+        {
+            aEntityState->AddChunkMaskOverride(aHash, componentName, chunkMask);
+        }
     }
 }
 

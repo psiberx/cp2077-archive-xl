@@ -1,4 +1,4 @@
-#include "State.hpp"
+#include "States.hpp"
 
 namespace
 {
@@ -175,7 +175,6 @@ App::EntityState::EntityState(Red::ent::Entity* aEntity) noexcept
     : m_entity(aEntity)
     , m_prefixResolver(ComponentPrefixResolver::Get())
     , m_appearanceResolver(DynamicAppearanceResolver::Get())
-    , m_tagManager(OverrideTagManager::Get())
 {
     m_name.append(aEntity->GetType()->GetName().ToString());
     m_name.append("/");
@@ -262,20 +261,6 @@ void App::EntityState::AddChunkMaskOverride(uint64_t aHash, Red::CName aComponen
             componentState->AddShowingChunkMaskOverride(aHash, aChunkMask);
         else
             componentState->AddHidingChunkMaskOverride(aHash, aChunkMask);
-    }
-}
-
-void App::EntityState::AddChunkMaskOverride(uint64_t aHash, Red::CName aVisualTag)
-{
-    for (auto& [componentName, chunkMask] : m_tagManager->GetOverrides(aVisualTag))
-    {
-        if (auto& componentState = GetComponentState(componentName))
-        {
-            if (chunkMask)
-                componentState->AddShowingChunkMaskOverride(aHash, chunkMask);
-            else
-                componentState->AddHidingChunkMaskOverride(aHash, chunkMask);
-        }
     }
 }
 

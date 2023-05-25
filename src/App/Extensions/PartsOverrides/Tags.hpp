@@ -11,9 +11,8 @@ class OverrideTagManager
 public:
     OverrideTagManager() noexcept;
 
+    void DefineTag(Red::CName aTag, OverrideTagDefinition aDefinition);
     [[nodiscard]] OverrideTagDefinition& GetOverrides(Red::CName aTag);
-
-    [[nodiscard]] static Core::SharedPtr<OverrideTagManager>& Get();
 
 private:
     Core::Map<Red::CName, OverrideTagDefinition> m_definitions;

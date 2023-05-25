@@ -1,20 +1,24 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
-#include "App/Extensions/PartsOverrides/State.hpp"
+#include "App/Extensions/PartsOverrides/States.hpp"
+#include "App/Extensions/PartsOverrides/Unit.hpp"
 #include "Red/AppearanceChanger.hpp"
 #include "Red/GarmentAssembler.hpp"
 
 namespace App
 {
-class PartsOverridesModule : public Module
+class PartsOverridesModule : public ConfigurableUnitModule<PartsOverridesUnit>
 {
 public:
     bool Load() override;
+    void Reload() override;
     bool Unload() override;
     std::string_view GetName() override;
 
 private:
+    void ConfigureTags();
+
     static void OnAddItem(uintptr_t, Red::WeakHandle<Red::ent::Entity>&, Red::GarmentItemAddRequest&);
     static void OnAddCustomItem(uintptr_t, Red::WeakHandle<Red::ent::Entity>&, Red::GarmentItemAddCustomRequest&);
     static void OnChangeItem(uintptr_t, Red::WeakHandle<Red::ent::Entity>&, Red::GarmentItemChangeRequest&);
@@ -40,7 +44,8 @@ private:
                                         Red::DynArray<Red::Handle<Red::ent::IComponent>>&, bool aVerbose = false);
     static void ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, bool aVerbose = false);
 
-    static inline Core::UniquePtr<OverrideStateManager> s_states;
+    static inline Core::UniquePtr<OverrideStateManager> s_stateManager;
+    static inline Core::SharedPtr<OverrideTagManager> s_tagManager;
     static inline std::shared_mutex s_mutex;
 };
 }

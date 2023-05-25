@@ -80,7 +80,6 @@ public:
 
     bool ApplyChunkMasks(Red::Handle<Red::ent::IComponent>& aComponent);
     void AddChunkMaskOverride(uint64_t aHash, Red::CName aComponentName, uint64_t aChunkMask, bool aShow = false);
-    void AddChunkMaskOverride(uint64_t aHash, Red::CName aVisualTag);
     void RemoveChunkMaskOverrides(uint64_t aHash);
 
     bool ApplyAppearance(Red::Handle<Red::ent::IComponent>& aComponent);
@@ -105,7 +104,6 @@ private:
     Core::Map<uint64_t, Red::CName> m_originalAppearances;
     Core::SharedPtr<ComponentPrefixResolver> m_prefixResolver;
     Core::SharedPtr<DynamicAppearanceResolver> m_appearanceResolver;
-    Core::SharedPtr<OverrideTagManager> m_tagManager;
 };
 
 class OverrideStateManager
