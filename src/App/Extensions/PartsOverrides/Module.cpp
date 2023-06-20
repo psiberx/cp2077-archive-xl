@@ -242,7 +242,7 @@ void App::PartsOverridesModule::RegisterPartsOverrides(Core::SharedPtr<EntitySta
     {
         for (auto& [componentName, chunkMask] : s_tagManager->GetOverrides(visualTag))
         {
-            aEntityState->AddChunkMaskOverride(aHash, componentName, chunkMask);
+            aEntityState->AddChunkMaskOverride(aHash, componentName, chunkMask.mask, chunkMask.set);
         }
     }
 }
