@@ -189,16 +189,20 @@ Known visual tags defined by the game:
 
 Custom visual tags defined by the mod:
 
-| Tag           | Effect                |
-|:--------------|:----------------------|
-| `hide_Head`   | Hides head.           |
-| `hide_Torso`  | Hides torso.          |
-| `hide_Arms`   | Hides head.           |
-| `hide_Thighs` | Hides thighs.         |
-| `hide_Calves` | Hides calves.         |
-| `hide_Ankles` | Hides ankles.         |
-| `hide_Feet`   | Hides feet.           |
-| `hide_Legs`   | Hides the whole legs. |
+| Tag                 | Effect                                  |
+|:--------------------|:----------------------------------------|
+| `hide_Head`         | Hides head.                             |
+| `hide_Torso`        | Hides the whole torso.                  |
+| `hide_LowerAbdomen` | Hides lower abdomen.                    |
+| `hide_UpperAbdomen` | Hides upper abdomen.                    |
+| `hide_CollarBone`   | Hides collar bone area.                 |
+| `hide_Arms`         | Hides head.                             |
+| `hide_Thighs`       | Hides thighs.                           |
+| `hide_Calves`       | Hides calves.                           |
+| `hide_Ankles`       | Hides ankles.                           |
+| `hide_Feet`         | Hides feet.                             |
+| `hide_Legs`         | Hides the whole legs.                   |
+| `force_FlatFeet`    | Forces flat feet for female characters. |
 
 ### Spawning widgets
 
