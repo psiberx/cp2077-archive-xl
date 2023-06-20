@@ -18,7 +18,7 @@ namespace Raw::CharacterCustomizationFeetController
 constexpr auto GetOwner = Core::RawFunc<
     /* addr = */ Red::Addresses::CharacterCustomizationFeetController_GetOwner,
     /* type = */ void (*)(Red::game::ui::CharacterCustomizationFeetController* aComponent,
-                          Red::Handle<Red::IScriptable>& aOwner)>();
+                          Red::Handle<Red::Entity>& aOwner)>();
 
 constexpr auto CheckState = Core::RawFunc<
     /* addr = */ Red::Addresses::CharacterCustomizationFeetController_CheckState,

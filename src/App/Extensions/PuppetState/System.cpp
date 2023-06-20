@@ -6,8 +6,8 @@ Red::CString App::PuppetStateSystem::GetBodyTypeSuffix(Red::ItemID aItemID,
                                                        const Red::WeakHandle<Red::GameObject>& aOwner,
                                                        const Red::Handle<Red::ItemsFactoryAppearanceSuffixBase_Record>&)
 {
-    Raw::Entity::Tags entityTags(aOwner.instance);
-    Raw::Entity::VisualTags visualTags(aOwner.instance);
+    auto entityTags = Raw::Entity::Tags(aOwner.instance);
+    auto visualTags = Raw::Entity::VisualTags(aOwner.instance);
 
     for (const auto& bodyType : PuppetStateModule::s_bodyTypes)
     {
