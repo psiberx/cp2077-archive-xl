@@ -16,7 +16,11 @@ With the mod you can:
 
 ### Prerequisites
 
-- [RED4ext](https://docs.red4ext.com/getting-started/installing-red4ext) 1.14.0+
+- [RED4ext](https://docs.red4ext.com/getting-started/installing-red4ext) 1.15.0+
+
+### Compatibility
+
+- Cyberpunk 2077 1.63 Hotfix 1
 
 ### Installation
 
