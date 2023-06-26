@@ -40,5 +40,8 @@ private:
 
     static bool MergeLipsyncResource(const Red::Handle<Red::animLipsyncMapping>& aSource,
                                      Red::Handle<Red::animLipsyncMapping>& aTarget);
+
+    static inline Red::ResourceToken<Red::animLipsyncMapping>* s_currentLipMap;
+    static inline Core::Map<Red::ResourcePath, std::string> s_paths;
 };
 }

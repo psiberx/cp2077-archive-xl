@@ -8,8 +8,6 @@ constexpr auto ModuleName = "Localization";
 
 constexpr auto WaitTimeout = std::chrono::milliseconds(200);
 constexpr auto WaitTick = std::chrono::milliseconds(2);
-
-Red::ResourceToken<Red::animLipsyncMapping>* s_currentLipMap;
 }
 
 std::string_view App::LocalizationModule::GetName()
@@ -366,7 +364,7 @@ void App::LocalizationModule::OnLoadLipsyncs(void* aContext, uint8_t a2)
 
                     if (!token->IsFailed())
                     {
-                        LogInfo("|{}| Merging entries from \"{}\"...", ModuleName, path);
+                        s_paths[token->path] = path;
                         tokens.PushBack(std::move(token));
                     }
                     else
@@ -447,10 +445,14 @@ bool App::LocalizationModule::MergeLipsyncResource(const Red::Handle<Red::animLi
     if (aSource->scenePaths.size != aSource->sceneEntries.size)
         return false;
 
+    LogInfo("|{}| Merging entries from \"{}\"...", ModuleName, s_paths[aSource->path]);
+
     for (uint32_t i = 0; i < aSource->scenePaths.size; ++i)
     {
         auto& path = aSource->scenePaths[i];
         auto& entry = aSource->sceneEntries[i];
+
+        LogInfo("|{}| Merging entry #{} with hash {}...", ModuleName, i + 1, path);
 
         auto pathIt = std::lower_bound(aTarget->scenePaths.Begin(), aTarget->scenePaths.End(), path);
         auto targetIt = aTarget->sceneEntries.Begin() + (pathIt - aTarget->scenePaths.Begin());

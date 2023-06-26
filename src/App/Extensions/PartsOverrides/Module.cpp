@@ -304,12 +304,28 @@ void App::PartsOverridesModule::ApplyComponentOverrides(Core::SharedPtr<EntitySt
 
         if (EnableDebugOutput && aVerbose && component->isEnabled)
         {
-            LogDebug("|{}| [entity={} index={} component={} type={}].",
-                     ModuleName,
-                     aEntityState->GetName(),
-                     index,
-                     component->name.ToString(),
-                     component->GetType()->GetName().ToString());
+            auto wrapper = ComponentWrapper(component);
+
+            if (wrapper.IsSupported())
+            {
+                LogDebug("|{}| [entity={} index={} component={} type={} app={} chunks={:064b}].",
+                         ModuleName,
+                         aEntityState->GetName(),
+                         index,
+                         component->name.ToString(),
+                         component->GetType()->GetName().ToString(),
+                         wrapper.GetAppearance().ToString(),
+                         wrapper.GetChunkMask());
+            }
+            else
+            {
+                LogDebug("|{}| [entity={} index={} component={} type={}].",
+                         ModuleName,
+                         aEntityState->GetName(),
+                         index,
+                         component->name.ToString(),
+                         component->GetType()->GetName().ToString());
+            }
         }
 
         ++index;
