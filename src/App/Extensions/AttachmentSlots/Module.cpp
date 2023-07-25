@@ -33,6 +33,12 @@ bool App::AttachmentSlotsModule::Load()
     if (!HookBefore<Raw::TPPRepresentationComponent::OnAttach>(&OnAttachTPP))
         throw std::runtime_error("Failed to hook [TPPRepresentationComponent::OnInitialize].");
 
+    if (!HookWrap<Raw::TPPRepresentationComponent::OnItemEquipped>(&OnItemChangeTPP))
+        throw std::runtime_error("Failed to hook [TPPRepresentationComponent::OnItemEquipped].");
+
+    if (!HookWrap<Raw::TPPRepresentationComponent::OnItemUnequipped>(&OnItemChangeTPP))
+        throw std::runtime_error("Failed to hook [TPPRepresentationComponent::OnItemUnequipped].");
+
     if (!HookAfter<Raw::CharacterCustomizationFeetController::CheckState>(&OnCheckFeetState))
         throw std::runtime_error("Failed to hook [CharacterCustomizationFeetController::CheckState].");
 
@@ -44,6 +50,8 @@ bool App::AttachmentSlotsModule::Unload()
     Unhook<Raw::AttachmentSlots::InitializeSlots>();
     Unhook<Raw::AttachmentSlots::IsSlotSpawning>();
     Unhook<Raw::TPPRepresentationComponent::OnAttach>();
+    Unhook<Raw::TPPRepresentationComponent::OnItemEquipped>();
+    Unhook<Raw::TPPRepresentationComponent::OnItemUnequipped>();
     Unhook<Raw::CharacterCustomizationFeetController::CheckState>();
 
     return true;
@@ -64,7 +72,8 @@ void App::AttachmentSlotsModule::OnInitializeSlots(Red::game::AttachmentSlots*, 
                 const auto parentSlotID = *parentSlotFlat->GetValue<Red::TweakDBID>();
                 if (parentSlotID)
                 {
-                    s_slots[parentSlotID].insert(slotID);
+                    s_extraSlots[parentSlotID].insert(slotID);
+                    s_baseSlots[slotID] = parentSlotID;
                 }
             }
         }
@@ -78,9 +87,8 @@ bool App::AttachmentSlotsModule::OnSlotSpawningCheck(Red::game::AttachmentSlots*
     if (!result)
     {
         std::shared_lock _(s_slotsMutex);
-        const auto& subSlots = s_slots.find(aSlotID);
-
-        if (subSlots != s_slots.end())
+        const auto& subSlots = s_extraSlots.find(aSlotID);
+        if (subSlots != s_extraSlots.end())
         {
             for (const auto& subSlotID : subSlots->second)
             {
@@ -102,9 +110,8 @@ void App::AttachmentSlotsModule::OnAttachTPP(Red::game::TPPRepresentationCompone
 
     for (const auto slotID : s_tppAffectedSlots)
     {
-        const auto& subSlots = s_slots.find(slotID);
-
-        if (subSlots != s_slots.end())
+        const auto& subSlots = s_extraSlots.find(slotID);
+        if (subSlots != s_extraSlots.end())
         {
             for (const auto& subSlotID : subSlots->second)
             {
@@ -112,6 +119,22 @@ void App::AttachmentSlotsModule::OnAttachTPP(Red::game::TPPRepresentationCompone
             }
         }
     }
+}
+
+void App::AttachmentSlotsModule::OnItemChangeTPP(Raw::TPPRepresentationComponent::SlotListenerCallback aCallback,
+                                                 Red::game::TPPRepresentationComponent* aComponent,
+                                                 Red::TweakDBID aItemID, Red::TweakDBID aSlotID)
+{
+    {
+        std::shared_lock _(s_slotsMutex);
+        const auto& baseSlot = s_baseSlots.find(aSlotID);
+        if (baseSlot != s_baseSlots.end())
+        {
+            aSlotID = baseSlot.value();
+        }
+    }
+
+    aCallback(aComponent, aItemID, aSlotID);
 }
 
 bool IsVisualTagActive(Red::ITransactionSystem* aTransactionSystem, Red::Handle<Red::Entity>& aOwner,
@@ -170,9 +193,8 @@ void App::AttachmentSlotsModule::OnCheckFeetState(Red::game::ui::CharacterCustom
         else
         {
             std::shared_lock _(s_slotsMutex);
-            const auto& subSlots = s_slots.find(s_feetSlot);
-
-            if (subSlots != s_slots.end())
+            const auto& subSlots = s_extraSlots.find(s_feetSlot);
+            if (subSlots != s_extraSlots.end())
             {
                 for (const auto& subSlotID : subSlots->second)
                 {

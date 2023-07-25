@@ -223,6 +223,10 @@ def patterns():
             Group(name="TPPRepresentationComponent", functions=[
                 Item(name="OnAttach",
                      pattern="48 89 54 24 10 55 53 56 57 41 56 41 57 48 8D AC 24 E8 FE FF FF 48 81 EC 18 02 00 00 45 33 F6"),
+                Item(name="OnItemEquipped",
+                     pattern="4C 89 44 24 ? 48 89 54 24 ? 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 44 0F B6 AD"),
+                Item(name="OnItemUnequipped",
+                     pattern="4C 89 44 24 ? 48 89 54 24 ? 53 55 56 48 83 EC ? 0F B6 6C 24 ? 48 8B F1 48 89 7C 24 ? 48 8D 0D ? ? ? ? 48 8B FA"),
             ]),
             Group(name="TransactionSystem", functions=[
                 Item(name="IsSlotSpawning",
