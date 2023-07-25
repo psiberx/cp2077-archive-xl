@@ -26,6 +26,8 @@ public:
     bool SetAppearance(Red::CName aAppearance) const;
     bool LoadAppearance() const;
 
+    [[nodiscard]] Red::ResourcePath GetMeshPath() const;
+
 private:
     Red::Handle<Red::ent::IComponent>& m_component;
     ComponentType m_type;

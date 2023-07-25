@@ -2,35 +2,40 @@
 
 struct ChunkMask
 {
+    constexpr ChunkMask(bool aSet, std::initializer_list<uint8_t> aChunks) noexcept
+    {
+        Set(aSet, aChunks);
+    }
+
+    constexpr explicit ChunkMask(std::initializer_list<uint8_t> aChunks) noexcept
+    {
+        Set(false, aChunks);
+    }
+
+    ChunkMask(bool aSet, const std::vector<uint8_t>& aChunks) noexcept
+    {
+        Set(aSet, aChunks);
+    }
+
+    explicit ChunkMask(const std::vector<uint8_t>& aChunks) noexcept
+    {
+        Set(false, aChunks);
+    }
+
     constexpr ChunkMask(bool aSet, uint64_t aMask) noexcept
         : set(aSet)
         , mask(aMask)
     {
     }
 
-    constexpr ChunkMask(uint64_t aMask) noexcept
+    constexpr explicit ChunkMask(uint64_t aMask) noexcept
         : ChunkMask(false, aMask)
     {
     }
 
-    constexpr ChunkMask(bool aSet, std::initializer_list<uint8_t> aChunks) noexcept
-    {
-        Set(aSet, aChunks);
-    }
-
-    constexpr ChunkMask(std::initializer_list<uint8_t> aChunks) noexcept
-    {
-        Set(false, aChunks);
-    }
-
-    ChunkMask(const std::vector<uint8_t>& aChunks) noexcept
-    {
-        Set(false, aChunks);
-    }
-
-    constexpr ChunkMask() noexcept
-        : set(false)
-        , mask(0ull)
+    constexpr explicit ChunkMask(bool aSet) noexcept
+        : set(aSet)
+        , mask(aSet ? ~0ull : 0ull)
     {
     }
 

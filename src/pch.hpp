@@ -31,6 +31,7 @@
 #include "RED4ext/Scripting/Natives/Generated/game/ui/MorphInfo.hpp"
 #include "RED4ext/Scripting/Natives/Generated/game/ui/OptionsGroup.hpp"
 #include <RED4ext/Scripting/Natives/Generated/CMesh.hpp>
+#include <RED4ext/Scripting/Natives/Generated/ITexture.hpp>
 #include <RED4ext/Scripting/Natives/Generated/JsonResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/MorphTargetMesh.hpp>
 #include <RED4ext/Scripting/Natives/Generated/anim/LipsyncMapping.hpp>

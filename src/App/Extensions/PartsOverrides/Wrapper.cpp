@@ -52,6 +52,18 @@ inline Red::ResourceReference<Red::CMesh> GetMorphComponentMesh(T* aComponent)
 
     return {};
 }
+
+template<class T>
+inline Red::ResourcePath GetComponentMeshPath(T* aComponent)
+{
+    return aComponent->mesh.path;
+}
+
+template<class T>
+inline Red::ResourcePath GetMorphComponentMeshPath(T* aComponent)
+{
+    return aComponent->morphResource.path;
+}
 }
 
 App::ComponentWrapper::ComponentWrapper(Red::Handle<Red::ent::IComponent>& aComponent)
@@ -210,4 +222,23 @@ bool App::ComponentWrapper::LoadAppearance() const
     }
 
     return true;
+}
+
+Red::ResourcePath App::ComponentWrapper::GetMeshPath() const
+{
+    switch (m_type)
+    {
+    case ComponentType::MeshComponent:
+        return GetComponentMeshPath(m_component.GetPtr<Red::ent::MeshComponent>());
+    case ComponentType::SkinnedMeshComponent:
+        return GetComponentMeshPath(m_component.GetPtr<Red::ent::SkinnedMeshComponent>());
+    case ComponentType::SkinnedClothComponent:
+        break;
+    case ComponentType::MorphTargetSkinnedMeshComponent:
+        return GetMorphComponentMeshPath(m_component.GetPtr<Red::ent::MorphTargetSkinnedMeshComponent>());
+    case ComponentType::Unsupported:
+        break;
+    }
+
+    return {};
 }
