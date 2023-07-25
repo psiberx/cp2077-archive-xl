@@ -4,6 +4,7 @@
 namespace
 {
 constexpr auto ModuleName = "PartsOverrides";
+constexpr auto BodyPartTag = Red::CName("PlayerBodyPart");
 constexpr auto EnableDebugOutput = false;
 }
 
@@ -31,6 +32,9 @@ bool App::PartsOverridesModule::Load()
 
     if (!HookBefore<Raw::GarmentAssembler::OnGameDetach>(&OnGameDetach))
         throw std::runtime_error("Failed to hook [GarmentAssembler::OnGameDetach].");
+
+    if (!Hook<Raw::AppearanceChanger::GetBaseMeshOffset>(&OnGetBaseMeshOffset))
+        throw std::runtime_error("Failed to hook [AppearanceChanger::GetBaseMeshOffset].");
 
     if (!HookBefore<Raw::AppearanceChanger::ComputePlayerGarment>(&OnComputeGarment))
         throw std::runtime_error("Failed to hook [AppearanceChanger::ComputePlayerGarment].");
@@ -60,6 +64,7 @@ bool App::PartsOverridesModule::Unload()
     Unhook<Raw::GarmentAssembler::RemoveItem>();
     Unhook<Raw::GarmentAssembler::OnGameDetach>();
     Unhook<Raw::AppearanceChanger::ComputePlayerGarment>();
+    Unhook<Raw::AppearanceChanger::GetBaseMeshOffset>();
     Unhook<Raw::Entity::ReassembleAppearance>();
 
     s_stateManager.reset();
@@ -182,6 +187,25 @@ void App::PartsOverridesModule::OnRemoveItem(uintptr_t, Red::WeakHandle<Red::ent
     }
 }
 
+int64_t App::PartsOverridesModule::OnGetBaseMeshOffset(Red::Handle<Red::IComponent>& aComponent,
+                                                       Red::Handle<Red::EntityTemplate>& aTemplate)
+{
+    if (s_garmentOffsetsEnabled)
+    {
+        if (!aTemplate || !aTemplate->visualTagsSchema || !aTemplate->visualTagsSchema->visualTags.Contains(BodyPartTag))
+        {
+            if (EnableDebugOutput)
+            {
+                LogDebug("|{}| [event=GetBaseMeshOffset comp={} offset=0].", ModuleName, aComponent->name.ToString());
+            }
+
+            return 0;
+        }
+    }
+
+    return Raw::AppearanceChanger::GetBaseMeshOffset(aComponent, aTemplate);
+}
+
 void App::PartsOverridesModule::OnComputeGarment(Red::Handle<Red::ent::Entity>& aEntity,
                                                  Red::DynArray<int32_t>& aOffsets,
                                                  Red::SharedPtr<Red::GarmentComputeData>& aData,
@@ -285,9 +309,12 @@ void App::PartsOverridesModule::ApplyResourceOverrides(Core::SharedPtr<App::Enti
 
     aOffsets.Clear();
 
-    for (auto& resourcePath : aResourcePaths)
+    if (s_garmentOffsetsEnabled)
     {
-        aOffsets.PushBack(aEntityState->GetOrderOffset(resourcePath));
+        for (auto& resourcePath : aResourcePaths)
+        {
+            aOffsets.PushBack(aEntityState->GetOrderOffset(resourcePath));
+        }
     }
 }
 
@@ -335,4 +362,14 @@ void App::PartsOverridesModule::ApplyComponentOverrides(Core::SharedPtr<EntitySt
 void App::PartsOverridesModule::ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, bool aVerbose)
 {
     ApplyComponentOverrides(aEntityState, Raw::Entity::GetComponents(aEntityState->GetEntity()), aVerbose);
+}
+
+void App::PartsOverridesModule::EnableGarmentOffsets()
+{
+    s_garmentOffsetsEnabled = true;
+}
+
+void App::PartsOverridesModule::DisableGarmentOffsets()
+{
+    s_garmentOffsetsEnabled = false;
 }

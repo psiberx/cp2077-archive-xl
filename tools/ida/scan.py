@@ -19,6 +19,8 @@ def patterns():
             Group(name="AppearanceChanger", functions=[
                 Item(name="ComputePlayerGarment",
                      pattern="48 89 5C 24 08 48 89 74 24 10 48 89 7C 24 18 4C 89 64 24 20 55 41 56 41 57 48 8D 6C 24 C0"),
+                Item(name="GetBaseMeshOffset",
+                     pattern="4C 8B DC 55 41 56 49 8D 6B ? 48 81 EC ? ? ? ? 48 8D 05 ? ? ? ? 4C 8B F2 48 89 45"),
             ]),
             Group(name="AppearanceChangeRequest", functions=[
                 Item(name="LoadEntityTemplate",

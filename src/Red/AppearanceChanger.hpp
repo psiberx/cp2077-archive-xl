@@ -2,6 +2,7 @@
 
 #include "Core/Raw.hpp"
 #include "Red/Addresses.hpp"
+#include "Red/EntityTemplate.hpp"
 
 namespace Red
 {
@@ -61,6 +62,11 @@ RED4EXT_ASSERT_OFFSET(SomeIterator<AppearanceDescriptor>, end, 0x8);
 
 namespace Raw::AppearanceChanger
 {
+constexpr auto GetBaseMeshOffset = Core::RawFunc<
+    /* addr = */ Red::Addresses::AppearanceChanger_GetBaseMeshOffset,
+    /* type = */ int64_t (*)(Red::Handle<Red::IComponent>& aComponent,
+                             Red::Handle<Red::EntityTemplate>& aTemplate)>();
+
 constexpr auto ComputePlayerGarment = Core::RawFunc<
     /* addr = */ Red::Addresses::AppearanceChanger_ComputePlayerGarment,
     /* type = */ void (*)(Red::Handle<Red::ent::Entity>& aEntity,

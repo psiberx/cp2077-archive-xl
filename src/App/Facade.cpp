@@ -1,6 +1,7 @@
 #include "Facade.hpp"
 #include "App/Archives/ArchiveService.hpp"
 #include "App/Extensions/ExtensionService.hpp"
+#include "App/Extensions/PartsOverrides/Module.hpp"
 #include "Core/Facades/Container.hpp"
 
 bool App::Facade::RegisterDir(Red::CString& aPath)
@@ -11,6 +12,16 @@ bool App::Facade::RegisterDir(Red::CString& aPath)
 bool App::Facade::RegisterArchive(Red::CString& aPath)
 {
     return Core::Resolve<ArchiveService>()->RegisterArchive(aPath.c_str());
+}
+
+void App::Facade::EnableGarmentOffsets()
+{
+    PartsOverridesModule::EnableGarmentOffsets();
+}
+
+void App::Facade::DisableGarmentOffsets()
+{
+    PartsOverridesModule::DisableGarmentOffsets();
 }
 
 void App::Facade::Reload()

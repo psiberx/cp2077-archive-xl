@@ -5,6 +5,7 @@
 #include "App/Extensions/PartsOverrides/Unit.hpp"
 #include "Red/AppearanceChanger.hpp"
 #include "Red/GarmentAssembler.hpp"
+#include "Red/EntityTemplate.hpp"
 
 namespace App
 {
@@ -16,6 +17,9 @@ public:
     bool Unload() override;
     std::string_view GetName() override;
 
+    static void EnableGarmentOffsets();
+    static void DisableGarmentOffsets();
+
 private:
     void ConfigureTags();
 
@@ -24,6 +28,8 @@ private:
     static void OnChangeItem(uintptr_t, Red::WeakHandle<Red::ent::Entity>&, Red::GarmentItemChangeRequest&);
     static void OnChangeCustomItem(uintptr_t, Red::WeakHandle<Red::ent::Entity>&, Red::GarmentItemChangeCustomRequest&);
     static void OnRemoveItem(uintptr_t, Red::WeakHandle<Red::ent::Entity>&, Red::GarmentItemRemoveRequest&);
+    static int64_t OnGetBaseMeshOffset(Red::Handle<Red::IComponent>& aComponent,
+                                         Red::Handle<Red::EntityTemplate>& aTemplate);
     static void OnComputeGarment(Red::Handle<Red::ent::Entity>&, Red::DynArray<int32_t>&,
                                  Red::SharedPtr<Red::GarmentComputeData>&, uintptr_t, uintptr_t, uintptr_t, bool);
     static void OnReassembleAppearance(Red::ent::Entity*, uintptr_t, uintptr_t, uintptr_t, uintptr_t, uintptr_t);
@@ -46,6 +52,7 @@ private:
 
     static inline Core::UniquePtr<OverrideStateManager> s_stateManager;
     static inline Core::SharedPtr<OverrideTagManager> s_tagManager;
+    static inline bool s_garmentOffsetsEnabled;
     static inline std::shared_mutex s_mutex;
 };
 }
