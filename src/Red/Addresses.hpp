@@ -32,7 +32,8 @@ constexpr uintptr_t AttachmentSlots_IsSlotSpawning = 0x1416718D0 - ImageBase; //
 constexpr uintptr_t CBaseEngine_LoadGatheredResources = 0x140A89710 - ImageBase; // 40 53 48 83 EC 70 48 8B 01 FF 90 A0 00 00 00 33 DB 84 C0 8B CB 0F 95 C1 E8, expected: 1, index: 0
 
 constexpr uintptr_t CharacterCustomizationFeetController_CheckState = 0x1424DE720 - ImageBase; // 48 8B C4 41 54 48 83 EC 70 48 89 58 20 48 89 78 E0 48 8B F9 4C 89 68 D8 4C 89 70 D0 4D 8B F0, expected: 1, index: 0
-constexpr uintptr_t CharacterCustomizationFeetController_GetOwner = 0x1424DD7B0 - ImageBase; // 48 89 5C 24 10 48 89 6C 24 18 48 89 74 24 20 57 48 83 EC 40 48 8B 79 50 33 ED 89 6C 24 50 48 8B DA 48 85 FF 74, expected: 2, index: 1
+
+constexpr uintptr_t CharacterCustomizationHairstyleController_CheckState = 0x1424DE9F0 - ImageBase; // 48 8B C4 48 89 50 ? 55 41 55 48 8D 68 ? 48 81 EC ? ? ? ? 48 89 58 ? 48 89 70 ? 48 8B F2, expected: 1, index: 0
 
 constexpr uintptr_t CharacterCustomizationHelper_GetHairColor = 0x141C032F0 - ImageBase; // 40 55 41 56 41 57 48 8B EC 48 83 EC 50 4C 8B F9 48 8B 0A 48 8D 55 D8 48 8B 01 FF 90 E8 01 00 00, expected: 1, index: 0
 

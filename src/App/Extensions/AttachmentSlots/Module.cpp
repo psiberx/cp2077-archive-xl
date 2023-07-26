@@ -7,13 +7,15 @@ namespace
 constexpr auto ModuleName = "AttachmentSlots";
 
 constexpr auto ParentSlotFlat = ".parentSlot";
-constexpr auto FlatFeetTag = Red::CName("force_FlatFeet");
+constexpr auto ForceHairTag = Red::CName("force_Hair");
+constexpr auto ForceFlatFeetTag = Red::CName("force_FlatFeet");
 
 const auto s_tppAffectedSlots = {
     Red::TweakDBID("AttachmentSlots.Head"),
     Red::TweakDBID("AttachmentSlots.Eyes"),
 };
 
+const auto s_headSlot = Red::TweakDBID("AttachmentSlots.Head");
 const auto s_feetSlot = Red::TweakDBID("AttachmentSlots.Feet");
 }
 
@@ -39,6 +41,9 @@ bool App::AttachmentSlotsModule::Load()
     if (!HookWrap<Raw::TPPRepresentationComponent::OnItemUnequipped>(&OnItemChangeTPP))
         throw std::runtime_error("Failed to hook [TPPRepresentationComponent::OnItemUnequipped].");
 
+    if (!HookAfter<Raw::CharacterCustomizationHairstyleController::CheckState>(&OnCheckHairState))
+        throw std::runtime_error("Failed to hook [CharacterCustomizationHairstyleController::CheckState].");
+
     if (!HookAfter<Raw::CharacterCustomizationFeetController::CheckState>(&OnCheckFeetState))
         throw std::runtime_error("Failed to hook [CharacterCustomizationFeetController::CheckState].");
 
@@ -52,6 +57,7 @@ bool App::AttachmentSlotsModule::Unload()
     Unhook<Raw::TPPRepresentationComponent::OnAttach>();
     Unhook<Raw::TPPRepresentationComponent::OnItemEquipped>();
     Unhook<Raw::TPPRepresentationComponent::OnItemUnequipped>();
+    Unhook<Raw::CharacterCustomizationHairstyleController::CheckState>();
     Unhook<Raw::CharacterCustomizationFeetController::CheckState>();
 
     return true;
@@ -137,8 +143,38 @@ void App::AttachmentSlotsModule::OnItemChangeTPP(Raw::TPPRepresentationComponent
     aCallback(aComponent, aItemID, aSlotID);
 }
 
-bool IsVisualTagActive(Red::ITransactionSystem* aTransactionSystem, Red::Handle<Red::Entity>& aOwner,
-                       Red::TweakDBID aSlotID, Red::CName aVisualTag)
+bool App::AttachmentSlotsModule::IsVisualTagActive(Red::IComponent* aComponent,
+                                                   Red::TweakDBID aBaseSlotID, Red::CName aVisualTag)
+{
+    auto transactionSystem = Red::GetGameSystem<Red::ITransactionSystem>();
+    auto owner = Red::ToHandle(Raw::IComponent::Owner::Get(aComponent));
+
+    if (IsVisualTagActive(transactionSystem, owner, aBaseSlotID, aVisualTag))
+    {
+        return true;
+    }
+    else
+    {
+        std::shared_lock _(s_slotsMutex);
+        const auto& subSlots = s_extraSlots.find(s_feetSlot);
+        if (subSlots != s_extraSlots.end())
+        {
+            for (const auto& subSlotID : subSlots->second)
+            {
+                if (IsVisualTagActive(transactionSystem, owner, subSlotID, aVisualTag))
+                {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+bool App::AttachmentSlotsModule::IsVisualTagActive(Red::ITransactionSystem* aTransactionSystem,
+                                                   Red::Handle<Red::Entity>& aOwner,
+                                                   Red::TweakDBID aSlotID, Red::CName aVisualTag)
 {
     Red::Handle<Red::Entity> itemObject{};
     Red::CallVirtual(aTransactionSystem, "GetItemInSlot", itemObject, aOwner, aSlotID);
@@ -162,6 +198,18 @@ bool IsVisualTagActive(Red::ITransactionSystem* aTransactionSystem, Red::Handle<
     return matched;
 }
 
+void App::AttachmentSlotsModule::OnCheckHairState(Red::game::ui::CharacterCustomizationHairstyleController* aComponent,
+                                                  Red::CharacterHairState& aHairState)
+{
+    if (aHairState == Red::CharacterHairState::Hidden)
+    {
+        if (IsVisualTagActive(aComponent, s_headSlot, ForceHairTag))
+        {
+            aHairState = Red::CharacterHairState::Visible;
+        }
+    }
+}
+
 void App::AttachmentSlotsModule::OnCheckFeetState(Red::game::ui::CharacterCustomizationFeetController* aComponent,
                                                   Red::CharacterFeetState& aLiftedState,
                                                   Red::CharacterFeetState& aFlatState)
@@ -180,32 +228,10 @@ void App::AttachmentSlotsModule::OnCheckFeetState(Red::game::ui::CharacterCustom
 
     if (aLiftedState == Red::CharacterFeetState::Lifted)
     {
-        auto transactionSystem = Red::GetGameSystem<Red::ITransactionSystem>();
-
-        Red::Handle<Red::Entity> owner;
-        Raw::CharacterCustomizationFeetController::GetOwner(aComponent, owner);
-
-        if (IsVisualTagActive(transactionSystem, owner, s_feetSlot, FlatFeetTag))
+        if (IsVisualTagActive(aComponent, s_feetSlot, ForceFlatFeetTag))
         {
             aLiftedState = Red::CharacterFeetState::Flat;
             aFlatState = Red::CharacterFeetState::Lifted;
-        }
-        else
-        {
-            std::shared_lock _(s_slotsMutex);
-            const auto& subSlots = s_extraSlots.find(s_feetSlot);
-            if (subSlots != s_extraSlots.end())
-            {
-                for (const auto& subSlotID : subSlots->second)
-                {
-                    if (IsVisualTagActive(transactionSystem, owner, subSlotID, FlatFeetTag))
-                    {
-                        aLiftedState = Red::CharacterFeetState::Flat;
-                        aFlatState = Red::CharacterFeetState::Lifted;
-                        break;
-                    }
-                }
-            }
         }
     }
 }

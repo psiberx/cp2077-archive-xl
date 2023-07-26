@@ -57,10 +57,14 @@ def patterns():
             Group(name="CharacterCustomizationFeetController", functions=[
                 Item(name="CheckState",
                      pattern="48 8B C4 41 54 48 83 EC 70 48 89 58 20 48 89 78 E0 48 8B F9 4C 89 68 D8 4C 89 70 D0 4D 8B F0"),
-                Item(name="GetOwner",
-                     pattern="48 89 5C 24 10 48 89 6C 24 18 48 89 74 24 20 57 48 83 EC 40 48 8B 79 50 33 ED 89 6C 24 50 48 8B DA 48 85 FF 74",
-                     expected=2,
-                     index=1),
+#                 Item(name="GetOwner",
+#                      pattern="48 89 5C 24 10 48 89 6C 24 18 48 89 74 24 20 57 48 83 EC 40 48 8B 79 50 33 ED 89 6C 24 50 48 8B DA 48 85 FF 74",
+#                      expected=2,
+#                      index=1),
+            ]),
+            Group(name="CharacterCustomizationHairstyleController", functions=[
+                Item(name="CheckState",
+                     pattern="48 8B C4 48 89 50 ? 55 41 55 48 8D 68 ? 48 81 EC ? ? ? ? 48 89 58 ? 48 89 70 ? 48 8B F2"),
             ]),
             Group(name="CharacterCustomizationHelper", functions=[
                 Item(name="GetHairColor",

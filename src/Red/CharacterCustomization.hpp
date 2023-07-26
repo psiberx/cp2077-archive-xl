@@ -11,14 +11,29 @@ enum class CharacterFeetState : uint32_t
     Flat = 1,
     Lifted = 2,
 };
+
+enum class CharacterHairState : uint32_t
+{
+    Undefined = 0,
+    Hidden = 1,
+    Visible = 2,
+};
+}
+
+namespace Raw::CharacterCustomizationHairstyleController
+{
+constexpr auto CheckState = Core::RawFunc<
+    /* addr = */ Red::Addresses::CharacterCustomizationHairstyleController_CheckState,
+    /* type = */ void (*)(Red::game::ui::CharacterCustomizationHairstyleController* aComponent,
+                          Red::CharacterHairState& aLiftedState)>();
 }
 
 namespace Raw::CharacterCustomizationFeetController
 {
-constexpr auto GetOwner = Core::RawFunc<
-    /* addr = */ Red::Addresses::CharacterCustomizationFeetController_GetOwner,
-    /* type = */ void (*)(Red::game::ui::CharacterCustomizationFeetController* aComponent,
-                          Red::Handle<Red::Entity>& aOwner)>();
+// constexpr auto GetOwner = Core::RawFunc<
+//     /* addr = */ Red::Addresses::CharacterCustomizationFeetController_GetOwner,
+//     /* type = */ void (*)(Red::game::ui::CharacterCustomizationFeetController* aComponent,
+//                           Red::Handle<Red::Entity>& aOwner)>();
 
 constexpr auto CheckState = Core::RawFunc<
     /* addr = */ Red::Addresses::CharacterCustomizationFeetController_CheckState,

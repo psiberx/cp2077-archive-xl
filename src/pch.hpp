@@ -66,6 +66,7 @@
 #include <RED4ext/Scripting/Natives/Generated/game/mappins/IMappinVolume.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/AppearanceInfo.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/CharacterCustomizationFeetController.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/ui/CharacterCustomizationHairstyleController.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/SwitcherInfo.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/IWidgetController.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/Widget.hpp>

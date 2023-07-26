@@ -21,9 +21,15 @@ private:
     static void OnItemChangeTPP(Raw::TPPRepresentationComponent::SlotListenerCallback aCallback,
                                 Red::game::TPPRepresentationComponent* aComponent,
                                 Red::TweakDBID aItemID, Red::TweakDBID aSlotID);
+    static void OnCheckHairState(Red::game::ui::CharacterCustomizationHairstyleController* aComponent,
+                                 Red::CharacterHairState& aHairState);
     static void OnCheckFeetState(Red::game::ui::CharacterCustomizationFeetController* aComponent,
                                  Red::CharacterFeetState& aLiftedState,
                                  Red::CharacterFeetState& aFlatState);
+
+    static bool IsVisualTagActive(Red::IComponent* aComponent, Red::TweakDBID aBaseSlotID, Red::CName aVisualTag);
+    static bool IsVisualTagActive(Red::ITransactionSystem* aTransactionSystem, Red::Handle<Red::Entity>& aOwner,
+                                  Red::TweakDBID aSlotID, Red::CName aVisualTag);
 
     static inline Core::Map<Red::TweakDBID, Core::Set<Red::TweakDBID>> s_extraSlots;
     static inline Core::Map<Red::TweakDBID, Red::TweakDBID> s_baseSlots;
