@@ -206,6 +206,7 @@ Custom visual tags defined by the mod:
 | `hide_Ankles`       | Hides ankles.                           |
 | `hide_Feet`         | Hides feet.                             |
 | `hide_Legs`         | Hides the whole legs.                   |
+| `force_Hair`        | Forces visible hair for head items.     |
 | `force_FlatFeet`    | Forces flat feet for female characters. |
 
 ### Spawning widgets
