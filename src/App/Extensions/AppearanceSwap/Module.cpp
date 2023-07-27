@@ -10,6 +10,9 @@ constexpr auto DefaultApperanceName = Red::CName("default");
 constexpr auto EmptyApperanceName = Red::CName("empty_appearance_default");
 constexpr auto EmptyApperancePath = Red::ResourcePath(R"(base\characters\appearances\player\items\empty_appearance.app)");
 
+constexpr auto FPPSuffixValue = "&FPP";
+constexpr auto DisableFPPTag = Red::CName("disable_FPP");
+
 constexpr auto EntityOffset = 0xD0;
 constexpr auto EntityPathOffset = 0x60;
 constexpr auto EntityNameFlat = ".entityName";
@@ -46,12 +49,32 @@ bool App::AppearanceSwapModule::Unload()
     return true;
 }
 
-Red::TemplateAppearance* App::AppearanceSwapModule::OnFindAppearance(Red::EntityTemplate* aResource, Red::CName aName)
+Red::TemplateAppearance* App::AppearanceSwapModule::OnFindAppearance(Red::EntityTemplate* aTemplate, Red::CName aName)
 {
     if (aName == EmptyApperanceName)
         return s_emptyApperance.get();
 
-    return Raw::EntityTemplate::FindAppearance(aResource, aName);
+    auto appearance = Raw::EntityTemplate::FindAppearance(aTemplate, aName);
+
+    if (!appearance && aName != DefaultApperanceName && aTemplate->visualTagsSchema)
+    {
+        const auto& visualTags = aTemplate->visualTagsSchema->visualTags;
+        if (!visualTags.IsEmpty())
+        {
+            if (visualTags.Contains(DisableFPPTag))
+            {
+                const std::string_view nameStr = aName.ToString();
+                if (nameStr.find(FPPSuffixValue) != std::string_view::npos)
+                {
+                    aTemplate->appearances.EmplaceBack(*s_emptyApperance);
+                    appearance = aTemplate->appearances.End() - 1;
+                    appearance->name = aName;
+                }
+            }
+        }
+    }
+
+    return appearance;
 }
 
 bool App::AppearanceSwapModule::OnLoadEntityTemplate(uintptr_t aRequest)

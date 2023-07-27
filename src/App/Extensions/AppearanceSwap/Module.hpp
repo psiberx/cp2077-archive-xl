@@ -13,7 +13,7 @@ public:
     std::string_view GetName() override;
 
 private:
-    static Red::TemplateAppearance* OnFindAppearance(Red::EntityTemplate* aResource, Red::CName aName);
+    static Red::TemplateAppearance* OnFindAppearance(Red::EntityTemplate* aTemplate, Red::CName aName);
     static bool OnLoadEntityTemplate(uintptr_t aRequest);
 
     static inline Core::UniquePtr<Red::TemplateAppearance> s_emptyApperance;
