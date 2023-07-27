@@ -6,7 +6,7 @@ namespace
 {
 constexpr auto ModuleName = "Localization";
 
-constexpr auto WaitTimeout = std::chrono::milliseconds(200);
+constexpr auto WaitTimeout = std::chrono::milliseconds(500);
 constexpr auto WaitTick = std::chrono::milliseconds(2);
 }
 
@@ -405,8 +405,21 @@ void App::LocalizationModule::OnLoadLipsyncs(void* aContext, uint8_t a2)
 
             if (mainToken->IsFinished())
             {
+                if (mainToken->IsFailed())
+                {
+                    LogWarning("|{}| Failed to initialize lipsync maps for \"{}\" language...",
+                               ModuleName, language.ToString());
+                    return;
+                }
+
                 for (const auto& token : tokens)
                 {
+                    if (token->IsFailed())
+                    {
+                        LogError("|{}| Resource \"{}\" failed to load.", ModuleName, s_paths[token->path]);
+                        continue;
+                    }
+
                     successAll &= MergeLipsyncResource(token->resource, mainToken->resource);
                 }
             }
@@ -417,6 +430,12 @@ void App::LocalizationModule::OnLoadLipsyncs(void* aContext, uint8_t a2)
 
                     for (const auto& token : tokens)
                     {
+                        if (token->IsFailed())
+                        {
+                            LogError("|{}| Resource \"{}\" failed to load.", ModuleName, s_paths[token->path]);
+                            continue;
+                        }
+
                         successAll &= MergeLipsyncResource(token->resource, aResource);
                     }
 
