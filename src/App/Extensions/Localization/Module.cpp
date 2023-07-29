@@ -417,6 +417,7 @@ void App::LocalizationModule::OnLoadLipsyncs(void* aContext, uint8_t a2)
                     if (token->IsFailed())
                     {
                         LogError("|{}| Resource \"{}\" failed to load.", ModuleName, s_paths[token->path]);
+                        successAll = false;
                         continue;
                     }
 
@@ -433,6 +434,7 @@ void App::LocalizationModule::OnLoadLipsyncs(void* aContext, uint8_t a2)
                         if (token->IsFailed())
                         {
                             LogError("|{}| Resource \"{}\" failed to load.", ModuleName, s_paths[token->path]);
+                            successAll = false;
                             continue;
                         }
 
