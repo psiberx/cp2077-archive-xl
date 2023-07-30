@@ -1,5 +1,6 @@
 #include "Module.hpp"
 #include "Red/Entity.hpp"
+#include "Red/ResourcePath.hpp"
 
 namespace
 {
@@ -33,6 +34,9 @@ bool App::PartsOverridesModule::Load()
     if (!HookBefore<Raw::GarmentAssembler::OnGameDetach>(&OnGameDetach))
         throw std::runtime_error("Failed to hook [GarmentAssembler::OnGameDetach].");
 
+    if (!HookBefore<Raw::AppearanceChanger::RegisterPart>(&OnRegisterPart))
+        throw std::runtime_error("Failed to hook [AppearanceChanger::RegisterPart].");
+
     if (!Hook<Raw::AppearanceChanger::GetBaseMeshOffset>(&OnGetBaseMeshOffset))
         throw std::runtime_error("Failed to hook [AppearanceChanger::GetBaseMeshOffset].");
 
@@ -42,7 +46,11 @@ bool App::PartsOverridesModule::Load()
     if (!HookBefore<Raw::Entity::ReassembleAppearance>(&OnReassembleAppearance))
         throw std::runtime_error("Failed to hook [Entity::ReassembleAppearance].");
 
-    s_stateManager = Core::MakeUnique<OverrideStateManager>();
+    if (!HookAfter<Raw::ResourcePath::Create>(&OnCreateResourcePath))
+        throw std::runtime_error("Failed to hook [ResourcePath::Create].");
+
+    s_dynamicAppearance = Core::MakeShared<DynamicAppearanceController>();
+    s_stateManager = Core::MakeUnique<OverrideStateManager>(s_dynamicAppearance);
     s_tagManager = Core::MakeShared<OverrideTagManager>();
 
     ConfigureTags();
@@ -63,11 +71,15 @@ bool App::PartsOverridesModule::Unload()
     Unhook<Raw::GarmentAssembler::ChangeCustomItem>();
     Unhook<Raw::GarmentAssembler::RemoveItem>();
     Unhook<Raw::GarmentAssembler::OnGameDetach>();
-    Unhook<Raw::AppearanceChanger::ComputePlayerGarment>();
+    Unhook<Raw::AppearanceChanger::RegisterPart>();
     Unhook<Raw::AppearanceChanger::GetBaseMeshOffset>();
+    Unhook<Raw::AppearanceChanger::ComputePlayerGarment>();
     Unhook<Raw::Entity::ReassembleAppearance>();
+    Unhook<Raw::ResourcePath::Create>();
 
+    s_dynamicAppearance.reset();
     s_stateManager.reset();
+    s_tagManager.reset();
 
     return true;
 }
@@ -85,7 +97,7 @@ void App::PartsOverridesModule::ConfigureTags()
     }
 }
 
-void App::PartsOverridesModule::OnAddItem(uintptr_t, Red::WeakHandle<Red::ent::Entity>& aEntityWeak,
+void App::PartsOverridesModule::OnAddItem(uintptr_t, Red::WeakHandle<Red::Entity>& aEntityWeak,
                                           Red::GarmentItemAddRequest& aRequest)
 {
     if (auto entity = aEntityWeak.Lock())
@@ -93,19 +105,20 @@ void App::PartsOverridesModule::OnAddItem(uintptr_t, Red::WeakHandle<Red::ent::E
         std::unique_lock _(s_mutex);
         if (auto& entityState = s_stateManager->GetEntityState(entity))
         {
-            if (EnableDebugOutput)
+            if constexpr (EnableDebugOutput)
             {
                 LogDebug("|{}| [event=AddItem entity={} item={} app={}].",
                          ModuleName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
             }
 
+            UpdatePartAttributes(entityState, aRequest.apperance);
             RegisterOffsetOverrides(entityState, aRequest.hash, aRequest.apperance, aRequest.offset);
-            RegisterPartsOverrides(entityState, aRequest.hash, aRequest.apperance);
+            RegisterComponentOverrides(entityState, aRequest.hash, aRequest.apperance);
         }
     }
 }
 
-void App::PartsOverridesModule::OnAddCustomItem(uintptr_t, Red::WeakHandle<Red::ent::Entity>& aEntityWeak,
+void App::PartsOverridesModule::OnAddCustomItem(uintptr_t, Red::WeakHandle<Red::Entity>& aEntityWeak,
                                                 Red::GarmentItemAddCustomRequest& aRequest)
 {
     if (auto entity = aEntityWeak.Lock())
@@ -113,20 +126,21 @@ void App::PartsOverridesModule::OnAddCustomItem(uintptr_t, Red::WeakHandle<Red::
         std::unique_lock _(s_mutex);
         if (auto& entityState = s_stateManager->GetEntityState(entity))
         {
-            if (EnableDebugOutput)
+            if constexpr (EnableDebugOutput)
             {
                 LogDebug("|{}| [event=AddCustomItem entity={} item={} app={}].",
                          ModuleName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
             }
 
+            UpdatePartAttributes(entityState, aRequest.apperance);
             RegisterOffsetOverrides(entityState, aRequest.hash, aRequest.apperance, aRequest.offset);
-            RegisterPartsOverrides(entityState, aRequest.hash, aRequest.apperance);
-            RegisterPartsOverrides(entityState, aRequest.hash, aRequest.overrides);
+            RegisterComponentOverrides(entityState, aRequest.hash, aRequest.apperance);
+            RegisterComponentOverrides(entityState, aRequest.hash, aRequest.overrides);
         }
     }
 }
 
-void App::PartsOverridesModule::OnChangeItem(uintptr_t, Red::WeakHandle<Red::ent::Entity>& aEntityWeak,
+void App::PartsOverridesModule::OnChangeItem(uintptr_t, Red::WeakHandle<Red::Entity>& aEntityWeak,
                                              Red::GarmentItemChangeRequest& aRequest)
 {
     if (auto entity = aEntityWeak.Lock())
@@ -134,19 +148,20 @@ void App::PartsOverridesModule::OnChangeItem(uintptr_t, Red::WeakHandle<Red::ent
         std::unique_lock _(s_mutex);
         if (auto& entityState = s_stateManager->GetEntityState(entity))
         {
-            if (EnableDebugOutput)
+            if constexpr (EnableDebugOutput)
             {
                 LogDebug("|{}| [event=ChangeItem entity={} item={} app={}].",
                          ModuleName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
             }
 
-            UnregisterPartsOverrides(entityState, aRequest.hash);
-            RegisterPartsOverrides(entityState, aRequest.hash, aRequest.apperance);
+            UnregisterComponentOverrides(entityState, aRequest.hash);
+            UpdatePartAttributes(entityState, aRequest.apperance);
+            RegisterComponentOverrides(entityState, aRequest.hash, aRequest.apperance);
         }
     }
 }
 
-void App::PartsOverridesModule::OnChangeCustomItem(uintptr_t, Red::WeakHandle<Red::ent::Entity>& aEntityWeak,
+void App::PartsOverridesModule::OnChangeCustomItem(uintptr_t, Red::WeakHandle<Red::Entity>& aEntityWeak,
                                                    Red::GarmentItemChangeCustomRequest& aRequest)
 {
     if (auto entity = aEntityWeak.Lock())
@@ -154,20 +169,21 @@ void App::PartsOverridesModule::OnChangeCustomItem(uintptr_t, Red::WeakHandle<Re
         std::unique_lock _(s_mutex);
         if (auto& entityState = s_stateManager->GetEntityState(entity))
         {
-            if (EnableDebugOutput)
+            if constexpr (EnableDebugOutput)
             {
                 LogDebug("|{}| [event=ChangeCustomItem entity={} item={} app={}].",
                          ModuleName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
             }
 
-            UnregisterPartsOverrides(entityState, aRequest.hash);
-            RegisterPartsOverrides(entityState, aRequest.hash, aRequest.apperance);
-            RegisterPartsOverrides(entityState, aRequest.hash, aRequest.overrides);
+            UnregisterComponentOverrides(entityState, aRequest.hash);
+            UpdatePartAttributes(entityState, aRequest.apperance);
+            RegisterComponentOverrides(entityState, aRequest.hash, aRequest.apperance);
+            RegisterComponentOverrides(entityState, aRequest.hash, aRequest.overrides);
         }
     }
 }
 
-void App::PartsOverridesModule::OnRemoveItem(uintptr_t, Red::WeakHandle<Red::ent::Entity>& aEntityWeak,
+void App::PartsOverridesModule::OnRemoveItem(uintptr_t, Red::WeakHandle<Red::Entity>& aEntityWeak,
                                              Red::GarmentItemRemoveRequest& aRequest)
 {
     if (auto entity = aEntityWeak.Lock())
@@ -175,16 +191,24 @@ void App::PartsOverridesModule::OnRemoveItem(uintptr_t, Red::WeakHandle<Red::ent
         std::unique_lock _(s_mutex);
         if (auto& entityState = s_stateManager->GetEntityState(entity))
         {
-            if (EnableDebugOutput)
+            if constexpr (EnableDebugOutput)
             {
                 LogDebug("|{}| [event=RemoveItem entity={} item={}].",
                          ModuleName, entityState->GetName(), aRequest.hash);
             }
 
             UnregisterOffsetOverrides(entityState, aRequest.hash);
-            UnregisterPartsOverrides(entityState, aRequest.hash);
+            UnregisterComponentOverrides(entityState, aRequest.hash);
         }
     }
+}
+
+void App::PartsOverridesModule::OnRegisterPart(uintptr_t, Red::Handle<Red::EntityTemplate>& aPart,
+                                               Red::Handle<Red::ComponentsStorage>& aComponentStorage,
+                                               Red::Handle<Red::AppearanceDefinition>& aAppearance)
+{
+    std::unique_lock _(s_mutex);
+    UpdatePartAssignments(aComponentStorage->components, aPart->path);
 }
 
 int64_t App::PartsOverridesModule::OnGetBaseMeshOffset(Red::Handle<Red::IComponent>& aComponent,
@@ -194,7 +218,7 @@ int64_t App::PartsOverridesModule::OnGetBaseMeshOffset(Red::Handle<Red::ICompone
     {
         if (!aTemplate || !aTemplate->visualTagsSchema || !aTemplate->visualTagsSchema->visualTags.Contains(BodyPartTag))
         {
-            if (EnableDebugOutput)
+            if constexpr (EnableDebugOutput)
             {
                 LogDebug("|{}| [event=GetBaseMeshOffset comp={} offset=0].", ModuleName, aComponent->name.ToString());
             }
@@ -206,7 +230,7 @@ int64_t App::PartsOverridesModule::OnGetBaseMeshOffset(Red::Handle<Red::ICompone
     return Raw::AppearanceChanger::GetBaseMeshOffset(aComponent, aTemplate);
 }
 
-void App::PartsOverridesModule::OnComputeGarment(Red::Handle<Red::ent::Entity>& aEntity,
+void App::PartsOverridesModule::OnComputeGarment(Red::Handle<Red::Entity>& aEntity,
                                                  Red::DynArray<int32_t>& aOffsets,
                                                  Red::SharedPtr<Red::GarmentComputeData>& aData,
                                                  uintptr_t, uintptr_t, uintptr_t, bool)
@@ -214,30 +238,44 @@ void App::PartsOverridesModule::OnComputeGarment(Red::Handle<Red::ent::Entity>& 
     std::unique_lock _(s_mutex);
     if (auto& entityState = s_stateManager->FindEntityState(aEntity))
     {
-        if (EnableDebugOutput)
+        if constexpr (EnableDebugOutput)
         {
             LogDebug("|{}| [event=ComputeGarment entity={}].",
                      ModuleName, entityState->GetName());
         }
 
+        UpdatePartAssignments(entityState, aData->components, aData->resources);
+        UpdateDynamicAppearance(entityState);
+
+        ApplyDynamicAppearance(entityState, aData->components);
         ApplyComponentOverrides(entityState, aData->components, true);
-        ApplyResourceOverrides(entityState, aOffsets, aData->resources);
+        ApplyOffsetOverrides(entityState, aOffsets, aData->resources);
     }
 }
 
-void App::PartsOverridesModule::OnReassembleAppearance(Red::ent::Entity* aEntity, uintptr_t, uintptr_t, uintptr_t,
+void App::PartsOverridesModule::OnReassembleAppearance(Red::Entity* aEntity, uintptr_t, uintptr_t, uintptr_t,
                                                        uintptr_t, uintptr_t)
 {
     std::unique_lock _(s_mutex);
     if (auto& entityState = s_stateManager->FindEntityState(aEntity))
     {
-        if (EnableDebugOutput)
+        if constexpr (EnableDebugOutput)
         {
             LogDebug("|{}| [event=ReassembleAppearance entity={}].",
                      ModuleName, entityState->GetName());
         }
 
+        ApplyDynamicAppearance(entityState);
         ApplyComponentOverrides(entityState, true);
+    }
+}
+
+void App::PartsOverridesModule::OnCreateResourcePath(Red::ResourcePath* aPath, const std::string_view* aPathStr)
+{
+    if (aPathStr && s_dynamicAppearance->IsDynamicValue(*aPathStr))
+    {
+        std::unique_lock _(s_mutex);
+        s_dynamicAppearance->RegisterPath(*aPath, *aPathStr);
     }
 }
 
@@ -257,10 +295,10 @@ void App::PartsOverridesModule::RegisterOffsetOverrides(Core::SharedPtr<EntitySt
     }
 }
 
-void App::PartsOverridesModule::RegisterPartsOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
+void App::PartsOverridesModule::RegisterComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
                                                        Red::Handle<Red::AppearanceDefinition>& aApperance)
 {
-    RegisterPartsOverrides(aEntityState, aHash, aApperance->partsOverrides);
+    RegisterComponentOverrides(aEntityState, aHash, aApperance->partsOverrides);
 
     for (const auto& visualTag : aApperance->visualTags.tags)
     {
@@ -271,7 +309,7 @@ void App::PartsOverridesModule::RegisterPartsOverrides(Core::SharedPtr<EntitySta
     }
 }
 
-void App::PartsOverridesModule::RegisterPartsOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
+void App::PartsOverridesModule::RegisterComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
                                                        Red::DynArray<Red::AppearancePartOverrides>& aOverrides)
 {
     for (const auto& partOverrides : aOverrides)
@@ -292,76 +330,131 @@ void App::PartsOverridesModule::UnregisterOffsetOverrides(Core::SharedPtr<Entity
     aEntityState->RemoveOffsetOverrides(aHash);
 }
 
-void App::PartsOverridesModule::UnregisterPartsOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash)
+void App::PartsOverridesModule::UnregisterComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash)
 {
     aEntityState->RemoveChunkMaskOverrides(aHash);
     aEntityState->RemoveAppearanceOverrides(aHash);
 }
 
-void App::PartsOverridesModule::ApplyResourceOverrides(Core::SharedPtr<App::EntityState>& aEntityState,
-                                                       Red::DynArray<int32_t>& aOffsets,
-                                                       Red::DynArray<Red::ResourcePath>& aResourcePaths)
+void App::PartsOverridesModule::UpdatePartAttributes(Core::SharedPtr<EntityState>& aEntityState,
+                                                     Red::Handle<Red::AppearanceDefinition>& aApperance)
 {
-    if (aOffsets.size != aResourcePaths.size)
+    for (const auto& partValue : aApperance->partsValues)
     {
-        aOffsets.Reserve(aResourcePaths.size);
-    }
-
-    aOffsets.Clear();
-
-    if (s_garmentOffsetsEnabled)
-    {
-        for (auto& resourcePath : aResourcePaths)
-        {
-            aOffsets.PushBack(aEntityState->GetOrderOffset(resourcePath));
-        }
+        aEntityState->LinkPartToAppearance(partValue.resource.path, aApperance->name);
     }
 }
 
-void App::PartsOverridesModule::ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState,
-                                                        Red::DynArray<Red::Handle<Red::ent::IComponent>>& aComponents,
-                                                        bool aVerbose)
+void App::PartsOverridesModule::UpdatePartAssignments(Red::DynArray<Red::Handle<Red::IComponent>>& aComponents,
+                                                      Red::ResourcePath aPartResource)
 {
-    auto index = 0;
+    for (auto i = 0; i < aComponents.size; ++i)
+    {
+        s_stateManager->LinkComponentToPart(aComponents[i], aPartResource);
+    }
+}
+
+void App::PartsOverridesModule::UpdatePartAssignments(Core::SharedPtr<App::EntityState>& aEntityState,
+                                                      Red::DynArray<Red::Handle<Red::IComponent>>& aComponents,
+                                                      Red::DynArray<Red::ResourcePath>& aPartResources)
+{
+    for (auto i = 0; i < aComponents.size; ++i)
+    {
+        aEntityState->LinkComponentToPart(aComponents[i], aPartResources[i]);
+    }
+}
+
+void App::PartsOverridesModule::UpdateDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState)
+{
+    aEntityState->UpdateDynamicAttributes();
+}
+
+void App::PartsOverridesModule::ApplyDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState,
+                                                       Red::DynArray<Red::Handle<Red::IComponent>>& aComponents)
+{
+    aEntityState->ProcessConditionalComponents(aComponents);
 
     for (auto& component : aComponents)
     {
-        aEntityState->ApplyChunkMasks(component);
-        aEntityState->ApplyAppearance(component);
+        aEntityState->ApplyDynamicAppearance(component);
+    }
+}
 
-        if (EnableDebugOutput && aVerbose && component->isEnabled)
+void App::PartsOverridesModule::ApplyDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState)
+{
+    ApplyDynamicAppearance(aEntityState, Raw::Entity::GetComponents(aEntityState->GetEntity()));
+}
+
+void App::PartsOverridesModule::ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState,
+                                                        Red::DynArray<Red::Handle<Red::IComponent>>& aComponents,
+                                                        bool aVerbose)
+{
+    for (auto& component : aComponents)
+    {
+        aEntityState->ApplyAppearanceOverride(component);
+        aEntityState->ApplyChunkMaskOverride(component);
+    }
+
+    if constexpr (EnableDebugOutput)
+    {
+        if (aVerbose)
         {
-            auto wrapper = ComponentWrapper(component);
+            auto index = 0;
+            for (auto& component : aComponents)
+            {
+                auto wrapper = ComponentWrapper(component);
 
-            if (wrapper.IsSupported())
-            {
-                LogDebug("|{}| [entity={} index={} component={} type={} app={} chunks={:064b}].",
-                         ModuleName,
-                         aEntityState->GetName(),
-                         index,
-                         component->name.ToString(),
-                         component->GetType()->GetName().ToString(),
-                         wrapper.GetAppearance().ToString(),
-                         wrapper.GetChunkMask());
-            }
-            else
-            {
-                LogDebug("|{}| [entity={} index={} component={} type={}].",
-                         ModuleName,
-                         aEntityState->GetName(),
-                         index,
-                         component->name.ToString(),
-                         component->GetType()->GetName().ToString());
+                if (wrapper.IsMeshComponent())
+                {
+                    LogDebug("|{}| [entity={} index={} component={} type={} enabled={} app={} chunks={:064b}].",
+                             ModuleName,
+                             aEntityState->GetName(),
+                             index,
+                             component->name.ToString(),
+                             component->GetType()->GetName().ToString(),
+                             component->isEnabled,
+                             wrapper.GetAppearance().ToString(),
+                             wrapper.GetChunkMask());
+                }
+                else
+                {
+                    LogDebug("|{}| [entity={} index={} component={} type={} enabled={}].",
+                             ModuleName,
+                             aEntityState->GetName(),
+                             index,
+                             component->name.ToString(),
+                             component->GetType()->GetName().ToString(),
+                             component->isEnabled);
+                }
+
+                ++index;
             }
         }
-
-        ++index;
     }
 }
 
 void App::PartsOverridesModule::ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, bool aVerbose)
 {
     ApplyComponentOverrides(aEntityState, Raw::Entity::GetComponents(aEntityState->GetEntity()), aVerbose);
+}
+
+void App::PartsOverridesModule::ApplyOffsetOverrides(Core::SharedPtr<App::EntityState>& aEntityState,
+                                                     Red::DynArray<int32_t>& aOffsets,
+                                                     Red::DynArray<Red::ResourcePath>& aResourcePaths)
+{
+    if (aOffsets.size != aResourcePaths.size)
+    {
+        aOffsets.Reserve(aResourcePaths.size);
+    }
+
+    if (s_garmentOffsetsEnabled)
+    {
+        aEntityState->ApplyOffsetOverrides(aResourcePaths, aOffsets);
+    }
+    else
+    {
+        aOffsets.Clear();
+    }
 }
 
 void App::PartsOverridesModule::EnableGarmentOffsets()

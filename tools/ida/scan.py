@@ -21,6 +21,10 @@ def patterns():
                      pattern="48 89 5C 24 08 48 89 74 24 10 48 89 7C 24 18 4C 89 64 24 20 55 41 56 41 57 48 8D 6C 24 C0"),
                 Item(name="GetBaseMeshOffset",
                      pattern="4C 8B DC 55 41 56 49 8D 6B ? 48 81 EC ? ? ? ? 48 8D 05 ? ? ? ? 4C 8B F2 48 89 45"),
+                Item(name="GetSuffixValue",
+                     pattern="4C 89 4C 24 ? 55 53 57 41 55 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 40 32 FF 49 8B D9"),
+                Item(name="RegisterPart",
+                     pattern="48 89 5C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 55 41 54 41 55 41 56 41 57 48 8B EC 48 83 EC ? 4C 8B F9"),
             ]),
             Group(name="AppearanceChangeRequest", functions=[
                 Item(name="LoadEntityTemplate",
@@ -215,6 +219,10 @@ def patterns():
                      pattern="48 8B 49 48 48 85 C9 0F 85",
                      expected=9,
                      index=2),
+            ]),
+            Group(name="ResourcePath", functions=[
+                Item(name="Create",
+                     pattern="41 56 48 81 EC ? ? ? ? 44 8B 42 08 4C 8B F1 45 85 C0 75 ? 48 C7 01 00 00 00 00 48 8B C1 48 81 C4"),
             ]),
             Group(name="StreamingWorld", functions=[
                 Item(name="OnLoad",

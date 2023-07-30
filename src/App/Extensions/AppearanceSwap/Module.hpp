@@ -1,6 +1,7 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
+#include "App/Extensions/VisualTags/Module.hpp"
 #include "Red/AppearanceResource.hpp"
 #include "Red/EntityTemplate.hpp"
 
@@ -23,5 +24,7 @@ private:
     static bool OnLoadEntityTemplate(uintptr_t aRequest);
 
     static inline Core::UniquePtr<Red::TemplateAppearance> s_emptyAppearance;
+
+    friend VisualTagsModule;
 };
 }

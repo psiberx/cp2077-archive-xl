@@ -6,6 +6,10 @@
 
 namespace Red
 {
+using EntityTemplate = Red::ent::EntityTemplate;
+using ComponentsStorage = Red::ent::ComponentsStorage;
+using AppearanceDefinition = Red::appearance::AppearanceDefinition;
+
 struct GarmentComputeData
 {
     uint64_t unk00;                                  // 00
@@ -62,6 +66,21 @@ RED4EXT_ASSERT_OFFSET(SomeIterator<AppearanceDescriptor>, end, 0x8);
 
 namespace Raw::AppearanceChanger
 {
+constexpr auto GetSuffixValue = Core::RawFunc<
+    /* addr = */ Red::Addresses::AppearanceChanger_GetSuffixValue,
+    /* type = */ bool (*)(Red::ItemID aItemID,
+                          uint64_t a2, // Must be non-zero
+                          Red::Handle<Red::GameObject>& aOwner,
+                          Red::TweakDBID aSuffixRecordID,
+                          Red::CString& aResult)>();
+
+constexpr auto RegisterPart = Core::RawFunc<
+    /* addr = */ Red::Addresses::AppearanceChanger_RegisterPart,
+    /* type = */ void (*)(uintptr_t,
+                          Red::Handle<Red::EntityTemplate>& aPart,
+                          Red::Handle<Red::ComponentsStorage>& aComponents,
+                          Red::Handle<Red::AppearanceDefinition>& aAppearance)>();
+
 constexpr auto GetBaseMeshOffset = Core::RawFunc<
     /* addr = */ Red::Addresses::AppearanceChanger_GetBaseMeshOffset,
     /* type = */ int64_t (*)(Red::Handle<Red::IComponent>& aComponent,
