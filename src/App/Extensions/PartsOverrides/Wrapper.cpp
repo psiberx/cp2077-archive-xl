@@ -172,6 +172,32 @@ bool App::ComponentWrapper::SetResource(Red::ResourcePath aPath) const
     return false;
 }
 
+bool App::ComponentWrapper::LoadResource() const
+{
+    Red::ResourceReference<Red::CMesh> meshRef;
+
+    switch (m_type)
+    {
+    case ComponentType::MeshComponent:
+        meshRef = GetComponentMesh(m_component.GetPtr<Red::ent::MeshComponent>());
+        break;
+    case ComponentType::SkinnedMeshComponent:
+        meshRef = GetComponentMesh(m_component.GetPtr<Red::ent::SkinnedMeshComponent>());
+        break;
+    case ComponentType::SkinnedClothComponent:
+        break;
+    case ComponentType::MorphTargetSkinnedMeshComponent:
+        meshRef = GetMorphComponentMesh(m_component.GetPtr<Red::ent::MorphTargetSkinnedMeshComponent>());
+        break;
+    case ComponentType::Unknown:
+        break;
+    }
+
+    meshRef.LoadAsync();
+
+    return true;
+}
+
 Red::CName App::ComponentWrapper::GetAppearance() const
 {
     switch (m_type)

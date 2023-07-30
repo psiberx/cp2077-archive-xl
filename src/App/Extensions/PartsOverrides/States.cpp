@@ -455,11 +455,6 @@ bool App::EntityState::ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aCom
     if (!aComponent->isEnabled)
         return false;
 
-    if (aComponent->name == "h1_manavortex_naruto_headband")
-    {
-        int x = 1;
-    }
-
     const auto componentRef = m_dynamicAppearance->ParseReference(aComponent->name);
     const auto& componentState = FindComponentState(componentRef.name);
 
@@ -479,14 +474,21 @@ bool App::EntityState::ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aCom
         const auto originalResource = GetOriginalResource(componentWrapper);
         const auto finalResource = m_dynamicAppearance->ResolvePath(m_entity, activeVariant, originalResource);
 
-        componentWrapper.SetResource(finalResource);
+        if (finalResource != originalResource && finalResource != componentWrapper.GetResource())
+        {
+            componentWrapper.SetResource(finalResource);
+            componentWrapper.LoadResource();
+        }
 
         if (!componentState->ChangesAppearance())
         {
             const auto originalAppearance = GetOriginalAppearance(componentWrapper);
             const auto finalAppearance = m_dynamicAppearance->ResolveName(m_entity, activeVariant, originalAppearance);
 
-            componentWrapper.SetAppearance(finalAppearance);
+            if (finalAppearance != originalAppearance)
+            {
+                componentWrapper.SetAppearance(finalAppearance);
+            }
         }
     }
 
@@ -526,7 +528,7 @@ bool App::EntityState::ApplyAppearanceOverride(Red::Handle<Red::IComponent>& aCo
     if (!finalAppearance)
         return false;
 
-    auto& resourceState = FindResourceState(componentState->GetAppearancePart());
+    const auto& resourceState = FindResourceState(componentState->GetAppearancePart());
     finalAppearance = m_dynamicAppearance->ResolveName(m_entity, resourceState->GetActiveVariant(), finalAppearance);
 
     return finalAppearance && component.SetAppearance(finalAppearance) && component.LoadAppearance();
