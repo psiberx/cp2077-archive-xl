@@ -75,6 +75,22 @@ Red::TemplateAppearance* App::AppearanceSwapModule::OnFindAppearance(Red::Entity
 
     const std::string_view appearanceNameStr = aAppearanceName.ToString();
 
+    const auto magicMarkerPos = appearanceNameStr.find(MagicAppearanceMarker);
+    if (magicMarkerPos != std::string_view::npos)
+    {
+        const auto baseAppearanceName = Red::FNV1a64(reinterpret_cast<const uint8_t*>(appearanceNameStr.data()),
+                                                     magicMarkerPos);
+        const auto baseAppearance = Raw::EntityTemplate::FindAppearance(aTemplate, baseAppearanceName);
+        if (baseAppearance)
+        {
+            aTemplate->appearances.EmplaceBack(*baseAppearance);
+            appearance = aTemplate->appearances.End() - 1;
+            appearance->name = aAppearanceName;
+            appearance->appearanceName = aAppearanceName;
+            return appearance;
+        }
+    }
+
     if (aTemplate->visualTagsSchema)
     {
         const auto& visualTags = aTemplate->visualTagsSchema->visualTags;
@@ -90,22 +106,6 @@ Red::TemplateAppearance* App::AppearanceSwapModule::OnFindAppearance(Red::Entity
                     return appearance;
                 }
             }
-        }
-    }
-
-    const auto magicMarkerPos = appearanceNameStr.find(MagicAppearanceMarker);
-    if (magicMarkerPos != std::string_view::npos)
-    {
-        const auto baseAppearanceName = Red::FNV1a64(reinterpret_cast<const uint8_t*>(appearanceNameStr.data()),
-                                                     magicMarkerPos);
-        const auto baseAppearance = Raw::EntityTemplate::FindAppearance(aTemplate, baseAppearanceName);
-        if (baseAppearance)
-        {
-            aTemplate->appearances.EmplaceBack(*baseAppearance);
-            appearance = aTemplate->appearances.End() - 1;
-            appearance->name = aAppearanceName;
-            appearance->appearanceName = aAppearanceName;
-            return appearance;
         }
     }
 
