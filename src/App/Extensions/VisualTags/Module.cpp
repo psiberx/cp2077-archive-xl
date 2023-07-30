@@ -107,6 +107,7 @@ Red::Handle<Red::AppearanceDefinition> App::VisualTagsModule::FindDefinition(Red
 {
     Red::Handle<Red::AppearanceDefinition> result;
     Raw::AppearanceResource::FindAppearance(aResource, &result, aName, 0, 0);
+    AppearanceSwapModule::OnFindDefinition(aResource, &result, aName, 0, 0);
 
     return result;
 }

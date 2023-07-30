@@ -367,7 +367,7 @@ void App::EntityState::LinkPartToAppearance(Red::ResourcePath aResource, Red::CN
 {
     if (auto& resourceState = GetResourceState(aResource))
     {
-        auto appearanceRef = m_dynamicAppearance->ParseReference(aAppearance);
+        auto appearanceRef = m_dynamicAppearance->ParseReference(aAppearance, true);
         resourceState->LinkToAppearance(aAppearance, appearanceRef.isDynamic, appearanceRef.variant);
     }
 }
@@ -485,9 +485,10 @@ bool App::EntityState::ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aCom
             const auto originalAppearance = GetOriginalAppearance(componentWrapper);
             const auto finalAppearance = m_dynamicAppearance->ResolveName(m_entity, activeVariant, originalAppearance);
 
-            if (finalAppearance != originalAppearance)
+            if (finalAppearance != originalAppearance && finalAppearance != componentWrapper.GetAppearance())
             {
                 componentWrapper.SetAppearance(finalAppearance);
+                componentWrapper.LoadAppearance();
             }
         }
     }

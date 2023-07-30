@@ -40,13 +40,22 @@ constexpr auto DefaultBodyTypeSuffixValue = "BaseBody";
 
 const std::string s_emptyPathStr;
 
-Red::CName SubName(const char* aName, size_t aOffset, size_t aSize)
+Red::CName SubName(const char* aName, size_t aOffset, size_t aSize, bool aRegister = false)
 {
-    return aSize ? Red::FNV1a64(reinterpret_cast<const uint8_t*>(aName + aOffset), aSize) : 0;
+    if (!aSize)
+        return {};
+
+    if (aRegister)
+    {
+        std::string nameStr(aName + aOffset, aSize);
+        return Red::CNamePool::Add(nameStr.c_str());
+    }
+
+    return Red::FNV1a64(reinterpret_cast<const uint8_t*>(aName + aOffset), aSize);
 }
 }
 
-App::DynamicReference App::DynamicAppearanceController::ParseReference(Red::CName aReference) const
+App::DynamicReference App::DynamicAppearanceController::ParseReference(Red::CName aReference, bool aRegister) const
 {
     DynamicReference result{};
 
@@ -65,11 +74,10 @@ App::DynamicReference App::DynamicAppearanceController::ParseReference(Red::CNam
             auto conditionPos = referenceStr.find(ConditionMarker);
 
             result.isConditional = conditionPos != std::string_view::npos;
-            result.variant = SubName(referenceStr.data(), 0, result.isConditional ? conditionPos : referenceStr.size());
 
             if (result.isConditional)
             {
-                result.variant = SubName(referenceStr.data(), 0, conditionPos);
+                result.variant = SubName(referenceStr.data(), 0, conditionPos, aRegister);
                 referenceStr.remove_prefix(conditionPos + 1);
 
                 while (true)
@@ -88,7 +96,7 @@ App::DynamicReference App::DynamicAppearanceController::ParseReference(Red::CNam
             }
             else
             {
-                result.variant = SubName(referenceStr.data(), 0, referenceStr.size());
+                result.variant = SubName(referenceStr.data(), 0, referenceStr.size(), aRegister);
                 result.isConditional = !result.variant.IsNone();
             }
 

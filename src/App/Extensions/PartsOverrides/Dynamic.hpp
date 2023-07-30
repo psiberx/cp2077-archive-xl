@@ -15,7 +15,7 @@ struct DynamicReference
 class DynamicAppearanceController
 {
 public:
-    [[nodiscard]] DynamicReference ParseReference(Red::CName aReference) const;
+    [[nodiscard]] DynamicReference ParseReference(Red::CName aReference, bool aRegister = false) const;
     [[nodiscard]] bool MatchReference(Red::Entity* aEntity, Red::CName aVariant,
                                       const DynamicReference& aReference) const;
 
