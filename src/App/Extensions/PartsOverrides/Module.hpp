@@ -32,7 +32,12 @@ private:
     static void OnRegisterPart(uintptr_t, Red::Handle<Red::EntityTemplate>& aPart,
                                Red::Handle<Red::ComponentsStorage>& aComponents,
                                Red::Handle<Red::AppearanceDefinition>& aAppearance);
-
+    static uintptr_t OnProcessGarment(Red::SharedPtr<Red::GarmentProcessor>& aProcessor, uintptr_t a2, uintptr_t a3,
+                                      Red::Handle<Red::Entity>& aEntity);
+    static void OnProcessGarmentMesh(Red::GarmentProcessor* aProcessor, uint32_t,
+                                     Red::Handle<Red::EntityTemplate>& aPartTemplate,
+                                     Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,
+                                     Red::Handle<Red::IComponent>& aComponent, Red::JobGroup& aJobGroup);
     static int64_t OnGetBaseMeshOffset(Red::Handle<Red::IComponent>& aComponent,
                                        Red::Handle<Red::EntityTemplate>& aTemplate);
     static void OnComputeGarment(Red::Handle<Red::Entity>&, Red::DynArray<int32_t>&,
@@ -59,7 +64,8 @@ private:
     static void UpdatePartAssignments(Red::DynArray<Red::Handle<Red::IComponent>>& aComponents,
                                       Red::ResourcePath aPartResource);
 
-    static void UpdateDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState);
+    static void UpdateDynamicAttributes(Core::SharedPtr<EntityState>& aEntityState);
+    static void UpdateDynamicAttributes();
 
     static void ApplyDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState);
     static void ApplyDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState,

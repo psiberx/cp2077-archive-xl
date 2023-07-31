@@ -24,7 +24,7 @@ public:
 
     [[nodiscard]] Red::ResourcePath GetResource() const;
     bool SetResource(Red::ResourcePath aPath) const;
-    bool LoadResource() const;
+    [[nodiscard]] Red::SharedPtr<Red::ResourceToken<Red::CMesh>> LoadResource(bool aWait = false) const;
 
     [[nodiscard]] Red::CName GetAppearance() const;
     bool SetAppearance(Red::CName aAppearance) const;

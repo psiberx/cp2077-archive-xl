@@ -172,7 +172,7 @@ bool App::ComponentWrapper::SetResource(Red::ResourcePath aPath) const
     return false;
 }
 
-bool App::ComponentWrapper::LoadResource() const
+Red::SharedPtr<Red::ResourceToken<Red::CMesh>> App::ComponentWrapper::LoadResource(bool aWait) const
 {
     Red::ResourceReference<Red::CMesh> meshRef;
 
@@ -184,18 +184,31 @@ bool App::ComponentWrapper::LoadResource() const
     case ComponentType::SkinnedMeshComponent:
         meshRef = GetComponentMesh(m_component.GetPtr<Red::ent::SkinnedMeshComponent>());
         break;
-    case ComponentType::SkinnedClothComponent:
         break;
     case ComponentType::MorphTargetSkinnedMeshComponent:
         meshRef = GetMorphComponentMesh(m_component.GetPtr<Red::ent::MorphTargetSkinnedMeshComponent>());
         break;
+    case ComponentType::SkinnedClothComponent:
     case ComponentType::Unknown:
         break;
     }
 
-    meshRef.LoadAsync();
+    if (meshRef.path)
+    {
+        meshRef.LoadAsync();
 
-    return true;
+        if (aWait && !meshRef.IsLoaded() && !meshRef.IsFailed())
+        {
+            std::mutex mutex;
+            std::unique_lock lock(mutex);
+            std::condition_variable cv;
+            meshRef.token->OnLoaded([&lock](Red::Handle<Red::CMesh>&) { lock.release(); });
+            cv.wait_for(lock, std::chrono::milliseconds(200));
+            mutex.unlock();
+        }
+    }
+
+    return meshRef.token;
 }
 
 Red::CName App::ComponentWrapper::GetAppearance() const

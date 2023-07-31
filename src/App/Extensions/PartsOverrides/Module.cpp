@@ -31,6 +31,15 @@ bool App::PartsOverridesModule::Load()
     if (!HookBefore<Raw::GarmentAssembler::RemoveItem>(&OnRemoveItem))
         throw std::runtime_error("Failed to hook [GarmentAssembler::RemoveItem].");
 
+    if (!Hook<Raw::GarmentAssembler::ProcessGarment>(&OnProcessGarment))
+        throw std::runtime_error("Failed to hook [GarmentAssembler::ProcessGarment].");
+
+    if (!HookBefore<Raw::GarmentAssembler::ProcessSkinnedMesh>(&OnProcessGarmentMesh))
+        throw std::runtime_error("Failed to hook [GarmentAssembler::ProcessSkinnedMesh].");
+
+    if (!HookBefore<Raw::GarmentAssembler::ProcessMorphedMesh>(&OnProcessGarmentMesh))
+        throw std::runtime_error("Failed to hook [GarmentAssembler::ProcessMorphedMesh].");
+
     if (!HookBefore<Raw::GarmentAssembler::OnGameDetach>(&OnGameDetach))
         throw std::runtime_error("Failed to hook [GarmentAssembler::OnGameDetach].");
 
@@ -70,6 +79,9 @@ bool App::PartsOverridesModule::Unload()
     Unhook<Raw::GarmentAssembler::ChangeItem>();
     Unhook<Raw::GarmentAssembler::ChangeCustomItem>();
     Unhook<Raw::GarmentAssembler::RemoveItem>();
+    Unhook<Raw::GarmentAssembler::ProcessGarment>();
+    Unhook<Raw::GarmentAssembler::ProcessSkinnedMesh>();
+    Unhook<Raw::GarmentAssembler::ProcessMorphedMesh>();
     Unhook<Raw::GarmentAssembler::OnGameDetach>();
     Unhook<Raw::AppearanceChanger::RegisterPart>();
     Unhook<Raw::AppearanceChanger::GetBaseMeshOffset>();
@@ -209,6 +221,40 @@ void App::PartsOverridesModule::OnRegisterPart(uintptr_t, Red::Handle<Red::Entit
 {
     std::unique_lock _(s_mutex);
     UpdatePartAssignments(aComponentStorage->components, aPart->path);
+    UpdateDynamicAttributes();
+}
+
+uintptr_t App::PartsOverridesModule::OnProcessGarment(Red::SharedPtr<Red::GarmentProcessor>& aProcessor,
+                                                      uintptr_t a2, uintptr_t a3, Red::Handle<Red::Entity>& aEntity)
+{
+    std::unique_lock _(s_mutex);
+    if (auto& entityState = s_stateManager->FindEntityState(aEntity))
+    {
+        UpdateDynamicAttributes(entityState);
+    }
+
+    auto result = Raw::GarmentAssembler::ProcessGarment(aProcessor, a2, a3, aEntity);
+
+    s_stateManager->LinkEntityToAssembler(aEntity, aProcessor);
+
+    return result;
+}
+
+void App::PartsOverridesModule::OnProcessGarmentMesh(Red::GarmentProcessor* aProcessor, uint32_t,
+                                                     Red::Handle<Red::EntityTemplate>& aPartTemplate,
+                                                     Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,
+                                                     Red::Handle<Red::IComponent>& aComponent,
+                                                     Red::JobGroup& aJobGroup)
+{
+    if (aMeshToken->IsFailed())
+    {
+        std::unique_lock _(s_mutex);
+        if (auto& entityState = s_stateManager->FindEntityState(aProcessor))
+        {
+            entityState->ApplyDynamicAppearance(aComponent, aPartTemplate->path);
+            aMeshToken = ComponentWrapper(aComponent).LoadResource(true);
+        }
+    }
 }
 
 int64_t App::PartsOverridesModule::OnGetBaseMeshOffset(Red::Handle<Red::IComponent>& aComponent,
@@ -245,7 +291,7 @@ void App::PartsOverridesModule::OnComputeGarment(Red::Handle<Red::Entity>& aEnti
         }
 
         UpdatePartAssignments(entityState, aData->components, aData->resources);
-        UpdateDynamicAppearance(entityState);
+        UpdateDynamicAttributes(entityState);
 
         ApplyDynamicAppearance(entityState, aData->components);
         ApplyComponentOverrides(entityState, aData->components, true);
@@ -364,9 +410,14 @@ void App::PartsOverridesModule::UpdatePartAssignments(Core::SharedPtr<App::Entit
     }
 }
 
-void App::PartsOverridesModule::UpdateDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState)
+void App::PartsOverridesModule::UpdateDynamicAttributes(Core::SharedPtr<EntityState>& aEntityState)
 {
     aEntityState->UpdateDynamicAttributes();
+}
+
+void App::PartsOverridesModule::UpdateDynamicAttributes()
+{
+    s_stateManager->UpdateDynamicAttributes();
 }
 
 void App::PartsOverridesModule::ApplyDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState,

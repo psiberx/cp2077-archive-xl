@@ -468,13 +468,30 @@ bool App::EntityState::ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aCom
     if (!resourceState /*|| !resourceState->IsDynamicPart()*/)
         return false;
 
+    return ApplyDynamicAppearance(aComponent, resourceState->GetActiveVariantParts(),
+                                  !componentState->ChangesAppearance());
+}
+
+bool App::EntityState::ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aComponent,
+                                              Red::ResourcePath aResource)
+{
+    const auto& resourceState = FindResourceState(aResource);
+
+    if (!resourceState /*|| !resourceState->IsDynamicPart()*/)
+        return false;
+
+    return ApplyDynamicAppearance(aComponent, resourceState->GetActiveVariantParts(), true);
+}
+
+bool App::EntityState::ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aComponent, const DynamicPartList& aVariant,
+                                              bool aSetAppearance)
+{
     ComponentWrapper componentWrapper(aComponent);
 
     if (componentWrapper.IsMeshComponent())
     {
-        const auto& activeVariant = resourceState->GetActiveVariantParts();
         const auto originalResource = GetOriginalResource(componentWrapper);
-        const auto finalResource = m_dynamicAppearance->ResolvePath(m_entity, activeVariant, originalResource);
+        const auto finalResource = m_dynamicAppearance->ResolvePath(m_entity, aVariant, originalResource);
 
         if (finalResource != originalResource && finalResource != componentWrapper.GetResource())
         {
@@ -482,10 +499,10 @@ bool App::EntityState::ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aCom
             // componentWrapper.LoadResource();
         }
 
-        if (!componentState->ChangesAppearance())
+        if (aSetAppearance)
         {
             const auto originalAppearance = GetOriginalAppearance(componentWrapper);
-            const auto finalAppearance = m_dynamicAppearance->ResolveName(m_entity, activeVariant, originalAppearance);
+            const auto finalAppearance = m_dynamicAppearance->ResolveName(m_entity, aVariant, originalAppearance);
 
             if (finalAppearance != originalAppearance && finalAppearance != componentWrapper.GetAppearance())
             {
@@ -682,10 +699,34 @@ Core::SharedPtr<App::EntityState>& App::OverrideStateManager::FindEntityState(Re
     return it.value();
 }
 
+Core::SharedPtr<App::EntityState>& App::OverrideStateManager::FindEntityState(Red::GarmentProcessor* aProcessor)
+{
+    if (!aProcessor)
+        return s_nullEntityState;
+
+    auto it = m_entityStatesByProcessor.find(aProcessor);
+
+    if (it == m_entityStatesByProcessor.end())
+        return s_nullEntityState;
+
+    return it.value();
+}
+
 void App::OverrideStateManager::ClearStates()
 {
     m_entityStates.clear();
     m_entityStatesByPath.clear();
+    m_entityStatesByProcessor.clear();
+}
+
+void App::OverrideStateManager::LinkEntityToAssembler(Red::Entity* aEntity, Red::GarmentProcessor* aProcessor)
+{
+    auto it = m_entityStates.find(aEntity);
+
+    if (it != m_entityStates.end())
+    {
+        m_entityStatesByProcessor[aProcessor] = it.value();
+    }
 }
 
 void App::OverrideStateManager::LinkComponentToPart(Red::Handle<Red::IComponent>& aComponent,
@@ -694,5 +735,13 @@ void App::OverrideStateManager::LinkComponentToPart(Red::Handle<Red::IComponent>
     for (auto& [_, entityState] : m_entityStates)
     {
         entityState->LinkComponentToPart(aComponent, aResource);
+    }
+}
+
+void App::OverrideStateManager::UpdateDynamicAttributes()
+{
+    for (auto& [_, entityState] : m_entityStates)
+    {
+        entityState->UpdateDynamicAttributes();
     }
 }

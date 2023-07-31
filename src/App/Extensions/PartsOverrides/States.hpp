@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Dynamic.hpp"
-#include "Prefix.hpp"
-#include "Tags.hpp"
-#include "Wrapper.hpp"
+#include "App/Extensions/PartsOverrides/Dynamic.hpp"
+#include "App/Extensions/PartsOverrides/Prefix.hpp"
+#include "App/Extensions/PartsOverrides/Tags.hpp"
+#include "App/Extensions/PartsOverrides/Wrapper.hpp"
+#include "Red/GarmentAssembler.hpp"
 
 namespace App
 {
@@ -105,6 +106,7 @@ public:
 
     void ProcessConditionalComponents(Red::DynArray<Red::Handle<Red::IComponent>>& aComponents);
     bool ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aComponent);
+    bool ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aComponent, Red::ResourcePath aResource);
     void LinkComponentToPart(Red::Handle<Red::IComponent>& aComponent, Red::ResourcePath aResource);
     void LinkPartToAppearance(Red::ResourcePath aResource, Red::CName aAppearance);
     void UpdateDynamicAttributes();
@@ -112,6 +114,9 @@ public:
     void RemoveAllOverrides(uint64_t aHash);
 
 private:
+    bool ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aComponent, const DynamicPartList& aVariant,
+                                bool aSetAppearance);
+
     Red::ResourcePath GetOriginalResource(ComponentWrapper& aComponent);
     Red::CName GetOriginalAppearance(ComponentWrapper& aComponent);
     uint64_t GetOriginalChunkMask(ComponentWrapper& aComponent);
@@ -135,13 +140,17 @@ public:
     Core::SharedPtr<EntityState>& GetEntityState(Red::Entity* aEntity);
     Core::SharedPtr<EntityState>& FindEntityState(Red::Entity* aEntity);
     Core::SharedPtr<EntityState>& FindEntityState(Red::ResourcePath aPath);
+    Core::SharedPtr<EntityState>& FindEntityState(Red::GarmentProcessor* aProcessor);
     void ClearStates();
 
+    void LinkEntityToAssembler(Red::Entity* aEntity, Red::GarmentProcessor* aProcessor);
     void LinkComponentToPart(Red::Handle<Red::IComponent>& aComponent, Red::ResourcePath aResource);
+    void UpdateDynamicAttributes();
 
 private:
     Core::Map<Red::Entity*, Core::SharedPtr<EntityState>> m_entityStates;
     Core::Map<Red::ResourcePath, Core::SharedPtr<EntityState>> m_entityStatesByPath;
+    Core::Map<Red::GarmentProcessor*, Core::SharedPtr<EntityState>> m_entityStatesByProcessor;
     Core::SharedPtr<DynamicAppearanceController> m_dynamicAppearance;
 };
 }

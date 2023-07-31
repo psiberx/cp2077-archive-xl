@@ -5,8 +5,11 @@
 
 namespace Red
 {
+using EntityTemplate = ent::EntityTemplate;
 using AppearanceDefinition = appearance::AppearanceDefinition;
 using AppearancePartOverrides = appearance::AppearancePartOverrides;
+
+struct GarmentProcessor {};
 
 struct GarmentItemAddRequest
 {
@@ -81,6 +84,30 @@ constexpr auto ChangeCustomItem = Core::RawFunc<
 constexpr auto RemoveItem = Core::RawFunc<
     /* addr = */ Red::Addresses::GarmentAssembler_RemoveItem,
     /* type = */ bool (*)(uintptr_t, Red::WeakHandle<Red::ent::Entity>&, Red::GarmentItemRemoveRequest&)>();
+
+constexpr auto ProcessGarment = Core::RawFunc<
+    /* addr = */ Red::Addresses::GarmentAssembler_ProcessGarment,
+    /* type = */ uintptr_t (*)(Red::SharedPtr<Red::GarmentProcessor>& aProcessor,
+                               uintptr_t a2, uintptr_t a3,
+                               Red::Handle<Red::Entity>& aEntity)>();
+
+constexpr auto ProcessSkinnedMesh = Core::RawFunc<
+    /* addr = */ Red::Addresses::GarmentAssembler_ProcessSkinnedMesh,
+    /* type = */ void (*)(Red::GarmentProcessor* aProcessor,
+                          uint32_t aIndex,
+                          Red::Handle<Red::EntityTemplate>& aPartTemplate,
+                          Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,
+                          Red::Handle<Red::IComponent>& aComponent,
+                          Red::JobGroup& aJobGroup)>();
+
+constexpr auto ProcessMorphedMesh = Core::RawFunc<
+    /* addr = */ Red::Addresses::GarmentAssembler_ProcessMorphedMesh,
+    /* type = */ void (*)(Red::GarmentProcessor* aProcessor,
+                          uint32_t aIndex,
+                          Red::Handle<Red::EntityTemplate>& aPartTemplate,
+                          Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,
+                          Red::Handle<Red::IComponent>& aComponent,
+                          Red::JobGroup& aJobGroup)>();
 
 constexpr auto OnGameDetach = Core::RawFunc<
     /* addr = */ Red::Addresses::GarmentAssembler_OnGameDetach,
