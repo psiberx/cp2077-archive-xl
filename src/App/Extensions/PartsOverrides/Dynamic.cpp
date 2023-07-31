@@ -368,7 +368,7 @@ App::DynamicAppearanceController::DynamicString App::DynamicAppearanceController
 
         str = attrClose + 1;
 
-        const auto attr = Red::FNV1a64(reinterpret_cast<const uint8_t*>(attrOpen + 1), attrClose - attrOpen - 1); // fixme
+        const auto attr = Red::FNV1a64(reinterpret_cast<const uint8_t*>(attrOpen + 1), attrClose - attrOpen - 1);
         const char* value = nullptr;
 
         // Simple check based on the fact that there's no attribute starting with 'v'
