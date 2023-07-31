@@ -24,6 +24,7 @@ private:
     static bool OnLoadEntityTemplate(uintptr_t aRequest);
 
     static inline Core::UniquePtr<Red::TemplateAppearance> s_emptyAppearance;
+    static inline std::shared_mutex s_mutex;
 
     friend VisualTagsModule;
 };

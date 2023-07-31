@@ -83,8 +83,12 @@ Red::TemplateAppearance* App::AppearanceSwapModule::OnFindAppearance(Red::Entity
         const auto baseAppearance = Raw::EntityTemplate::FindAppearance(aTemplate, baseAppearanceName);
         if (baseAppearance)
         {
-            aTemplate->appearances.EmplaceBack(*baseAppearance);
-            appearance = aTemplate->appearances.End() - 1;
+            {
+                std::unique_lock _(s_mutex);
+                aTemplate->appearances.EmplaceBack(*baseAppearance);
+                appearance = aTemplate->appearances.End() - 1;
+            }
+
             appearance->name = aAppearanceName;
             appearance->appearanceName = aAppearanceName;
             return appearance;
@@ -100,8 +104,12 @@ Red::TemplateAppearance* App::AppearanceSwapModule::OnFindAppearance(Red::Entity
             {
                 if (visualTags.Contains(tag.first) && appearanceNameStr.find(tag.second) != std::string_view::npos)
                 {
-                    aTemplate->appearances.EmplaceBack(*s_emptyAppearance);
-                    appearance = aTemplate->appearances.End() - 1;
+                    {
+                        std::unique_lock _(s_mutex);
+                        aTemplate->appearances.EmplaceBack(*s_emptyAppearance);
+                        appearance = aTemplate->appearances.End() - 1;
+                    }
+
                     appearance->name = aAppearanceName;
                     return appearance;
                 }
