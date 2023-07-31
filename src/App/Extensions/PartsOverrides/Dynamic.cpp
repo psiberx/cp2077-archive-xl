@@ -1,4 +1,5 @@
 #include "Dynamic.hpp"
+#include "App/Utils/Str.hpp"
 #include "Red/AppearanceChanger.hpp"
 #include "Red/CharacterCustomization.hpp"
 #include "Red/Entity.hpp"
@@ -29,18 +30,17 @@ constexpr auto CameraSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.Camer
 constexpr auto BodyTypeSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.BodyType");
 constexpr auto LegsStateSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.LegsState");
 
+constexpr auto MaleAttrValue = "m";
+constexpr auto FemaleAttrValue = "w";
 constexpr auto MaleSuffixValue = "Male";
 constexpr auto FemaleSuffixValue = "Female";
 
-constexpr auto MaleAttrValue = "m";
-constexpr auto FemaleAttrValue = "w";
+constexpr auto DefaultBodyTypeAttrValue = "base"; // FIXME: Better name?
+constexpr auto DefaultBodyTypeSuffixValue = "BaseBody";
 
 constexpr auto MaleBodyComponent = Red::CName("t0_000_pma_base__full");
 constexpr auto FemaleBodyComponent1 = Red::CName("t0_000_pwa_base__full");
 constexpr auto FemaleBodyComponent2 = Red::CName("t0_000_pwa_fpp__torso");
-
-constexpr auto DefaultBodyTypeAttrValue = "base"; // FIXME: Better name?
-constexpr auto DefaultBodyTypeSuffixValue = "BaseBody";
 
 const std::string s_emptyPathStr;
 
@@ -433,8 +433,6 @@ void App::DynamicAppearanceController::UpdateState(Red::Entity* aEntity)
     {
         state.conditions.insert(attribute.suffix.data());
     }
-
-    int x= 1; // fixme
 }
 
 void App::DynamicAppearanceController::RemoveState(Red::Entity* aEntity)
@@ -489,9 +487,7 @@ App::DynamicAppearanceController::AttributeData App::DynamicAppearanceController
     }
     else
     {
-        data.value.resize(data.suffix.size());
-        std::transform(data.suffix.begin(), data.suffix.end(), data.value.begin(),
-                       [](unsigned char c) { return std::tolower(c); });
+        data.value = Str::SnakeCase(data.suffix);
     }
 
     return data;
