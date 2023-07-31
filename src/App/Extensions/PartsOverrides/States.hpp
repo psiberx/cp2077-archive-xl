@@ -60,15 +60,14 @@ public:
     bool RemoveOffsetOverride(uint64_t aHash);
     int32_t GetOverriddenOffset();
 
-    void LinkToAppearance(Red::CName aAppearance, bool isDynamic, Red::CName aAvariant);
+    void LinkToAppearance(DynamicAppearanceName aAppearance);
     [[nodiscard]] bool IsDynamicPart() const;
     [[nodiscard]] Red::CName GetActiveVariant() const;
+    [[nodiscard]] const DynamicPartList& GetActiveVariantParts() const;
 
 private:
     Red::ResourcePath m_path;
-    Red::CName m_appearance;
-    Red::CName m_variant;
-    bool m_isDynamic;
+    DynamicAppearanceName m_appearance;
     Core::Map<uint64_t, int32_t> m_overridenOffsets;
 };
 

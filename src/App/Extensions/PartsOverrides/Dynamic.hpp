@@ -2,11 +2,30 @@
 
 namespace App
 {
-struct DynamicReference
+using DynamicPartList = Core::Map<Red::CName, Red::CName>;
+using DynamicTagList = Core::Set<Red::CName>;
+
+struct DynamicAppearanceName
 {
+    DynamicAppearanceName();
+    explicit DynamicAppearanceName(Red::CName aAppearance);
+
     Red::CName name;
     Red::CName variant;
-    Core::Set<Red::CName> conditions;
+    DynamicPartList parts;
+    bool isDynamic;
+};
+
+struct DynamicReference
+{
+    explicit DynamicReference(Red::CName aReference);
+
+    [[nodiscard]] bool Match(Red::CName aVariant) const;
+    [[nodiscard]] bool Match(const DynamicTagList& aConditions) const;
+
+    Red::CName name;
+    DynamicTagList variants;
+    DynamicTagList conditions;
     bool isDynamic;
     bool isConditional;
     uint8_t weight;
@@ -15,12 +34,14 @@ struct DynamicReference
 class DynamicAppearanceController
 {
 public:
-    [[nodiscard]] DynamicReference ParseReference(Red::CName aReference, bool aRegister = false) const;
+    [[nodiscard]] DynamicAppearanceName ParseAppearance(Red::CName aAppearance) const;
+    [[nodiscard]] DynamicReference ParseReference(Red::CName aReference) const;
     [[nodiscard]] bool MatchReference(Red::Entity* aEntity, Red::CName aVariant,
                                       const DynamicReference& aReference) const;
 
-    [[nodiscard]] Red::CName ResolveName(Red::Entity* aEntity, Red::CName aVariant, Red::CName aName) const;
-    [[nodiscard]] Red::ResourcePath ResolvePath(Red::Entity* aEntity, Red::CName aVariant,
+    [[nodiscard]] Red::CName ResolveName(Red::Entity* aEntity, const DynamicPartList& aVariant,
+                                         Red::CName aName) const;
+    [[nodiscard]] Red::ResourcePath ResolvePath(Red::Entity* aEntity, const DynamicPartList& aVariant,
                                                 Red::ResourcePath aPath) const;
 
     void UpdateState(Red::Entity* aEntity);
@@ -41,22 +62,24 @@ private:
         std::string suffix;
     };
 
+    using DynamicAttrList = Core::Map<Red::CName, AttributeData>;
+
     struct EntityState
     {
-        Core::Map<Red::CName, AttributeData> values;
-        Core::Map<Red::CName, AttributeData> fallback;
-        Core::Set<Red::CName> conditions;
+        DynamicAttrList values;
+        DynamicAttrList fallback;
+        DynamicTagList conditions;
     };
 
     struct DynamicString
     {
         bool valid;
         std::string value;
-        Core::Set<Red::CName> attributes;
+        DynamicTagList attributes;
     };
 
-    DynamicString ProcessString(const Core::Map<Red::CName, AttributeData>& aValues,
-                                Red::CName aVariant, const char* aInput) const;
+    DynamicString ProcessString(const DynamicAttrList& aAttrs, const DynamicPartList& aVariant,
+                                const char* aInput) const;
 
     AttributeData GetAttributeData(Red::Entity* aEntity, Red::CName aAttribute) const;
     AttributeData GetSuffixData(Red::Entity* aEntity, Red::TweakDBID aSuffixID) const;
