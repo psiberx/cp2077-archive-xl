@@ -8,7 +8,15 @@ namespace Red
 {
 using EntityTemplate = Red::ent::EntityTemplate;
 using ComponentsStorage = Red::ent::ComponentsStorage;
+using AppearanceResource = Red::appearance::AppearanceResource;
 using AppearanceDefinition = Red::appearance::AppearanceDefinition;
+
+template<typename T>
+using ResourceTokenPtr = Red::SharedPtr<Red::ResourceToken<T>>;
+
+struct ItemFactoryRequest {};
+
+struct ItemFactoryAppearanceChangeRequest {};
 
 struct GarmentComputeData
 {
@@ -97,11 +105,40 @@ constexpr auto ComputePlayerGarment = Core::RawFunc<
                           bool a7)>();
 }
 
-namespace Raw::AppearanceChangeRequest
+namespace Raw::ItemFactoryRequest
 {
-constexpr auto LoadEntityTemplate = Core::RawFunc<
-    /* addr = */ Red::Addresses::AppearanceChangeRequest_LoadEntityTemplate,
-    /* type = */ bool (*)(uintptr_t aRequest)>();
+using Entity = Core::OffsetPtr<0x28, Red::WeakHandle<Red::Entity>>;
+using EntityTemplate = Core::OffsetPtr<0x138, Red::ResourceTokenPtr<Red::EntityTemplate>>;
+using AppearanceToken = Core::OffsetPtr<0x148, Red::ResourceTokenPtr<Red::AppearanceResource>>;
+using AppearanceName = Core::OffsetPtr<0x158, Red::CName>;
+
+constexpr auto LoadAppearance = Core::RawFunc<
+    /* addr = */ Red::Addresses::ItemFactoryRequest_LoadAppearance,
+    /* type = */ bool (*)(Red::ItemFactoryRequest* aRequest)>();
+
+// constexpr auto ApplyAppearance = Core::RawFunc<
+//     /* addr = */ Red::Addresses::ItemFactoryRequest_ApplyAppearance,
+//     /* type = */ bool (*)(Red::ItemFactoryRequest* aRequest)>();
+};
+
+namespace Raw::ItemFactoryAppearanceChangeRequest
+{
+using Entity = Core::OffsetPtr<0x80, Red::WeakHandle<Red::Entity>>;
+using EntityTemplate = Core::OffsetPtr<0xA8, Red::ResourceTokenPtr<Red::EntityTemplate>>;
+using AppearanceToken = Core::OffsetPtr<0xB8, Red::ResourceTokenPtr<Red::AppearanceResource>>;
+using AppearanceName = Core::OffsetPtr<0x48, Red::CName>;
+
+constexpr auto LoadTemplate = Core::RawFunc<
+    /* addr = */ Red::Addresses::ItemFactoryAppearanceChangeRequest_LoadTemplate,
+    /* type = */ bool (*)(Red::ItemFactoryAppearanceChangeRequest* aRequest)>();
+
+constexpr auto LoadAppearance = Core::RawFunc<
+    /* addr = */ Red::Addresses::ItemFactoryAppearanceChangeRequest_LoadAppearance,
+    /* type = */ bool (*)(Red::ItemFactoryAppearanceChangeRequest* aRequest)>();
+
+// constexpr auto ApplyAppearance = Core::RawFunc<
+//     /* addr = */ Red::Addresses::ItemFactoryAppearanceChangeRequest_ApplyAppearance,
+//     /* type = */ bool (*)(Red::ItemFactoryAppearanceChangeRequest* aRequest)>();
 }
 
 namespace Raw::RuntimeSystemEntityAppearanceChanger

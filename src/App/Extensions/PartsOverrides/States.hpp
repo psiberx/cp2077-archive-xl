@@ -4,6 +4,7 @@
 #include "App/Extensions/PartsOverrides/Prefix.hpp"
 #include "App/Extensions/PartsOverrides/Tags.hpp"
 #include "App/Extensions/PartsOverrides/Wrapper.hpp"
+#include "Red/AppearanceResource.hpp"
 #include "Red/GarmentAssembler.hpp"
 
 namespace App
@@ -104,16 +105,39 @@ public:
     void AddOffsetOverride(uint64_t aHash, Red::ResourcePath aResourcePath, int32_t aOffset);
     void RemoveOffsetOverrides(uint64_t aHash);
 
+    bool SelectTemplateAppearance(DynamicAppearanceName& aSelector, Red::EntityTemplate* aResource,
+                                  Red::TemplateAppearance*& aAppearance);
+    bool SelectConditionalAppearance(DynamicAppearanceName& aSelector, Red::AppearanceResource* aResource,
+                                     Red::Handle<Red::AppearanceDefinition>& aDefinition);
     void ProcessConditionalComponents(Red::DynArray<Red::Handle<Red::IComponent>>& aComponents);
     bool ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aComponent);
     bool ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aComponent, Red::ResourcePath aResource);
     void LinkComponentToPart(Red::Handle<Red::IComponent>& aComponent, Red::ResourcePath aResource);
+    void LinkPartToAppearance(Red::ResourcePath aResource, DynamicAppearanceName& aAppearance);
     void LinkPartToAppearance(Red::ResourcePath aResource, Red::CName aAppearance);
     void UpdateDynamicAttributes();
 
     void RemoveAllOverrides(uint64_t aHash);
 
 private:
+    struct WeightedAppearanceMatch
+    {
+        int8_t weight;
+        Red::Handle<Red::AppearanceDefinition>& definition;
+    };
+
+    struct WeightedComponentMatch
+    {
+        int8_t weight;
+        Red::Handle<Red::IComponent>& component;
+    };
+
+    struct WeightedComponentGroup
+    {
+        int8_t maxWeight = 0;
+        Core::Vector<WeightedComponentMatch> matches;
+    };
+
     bool ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aComponent, const DynamicPartList& aVariant,
                                 bool aSetAppearance);
 
@@ -137,10 +161,14 @@ class OverrideStateManager
 public:
     explicit OverrideStateManager(Core::SharedPtr<DynamicAppearanceController> aDynamicAppearance);
 
+    Core::SharedPtr<EntityState>& GetEntityState(uint64_t aContext);
     Core::SharedPtr<EntityState>& GetEntityState(Red::Entity* aEntity);
+
+    Core::SharedPtr<EntityState>& FindEntityState(uint64_t aContext);
     Core::SharedPtr<EntityState>& FindEntityState(Red::Entity* aEntity);
     Core::SharedPtr<EntityState>& FindEntityState(Red::ResourcePath aPath);
     Core::SharedPtr<EntityState>& FindEntityState(Red::GarmentProcessor* aProcessor);
+
     void ClearStates();
 
     void LinkEntityToAssembler(Red::Entity* aEntity, Red::GarmentProcessor* aProcessor);

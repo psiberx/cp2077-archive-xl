@@ -166,6 +166,11 @@ public:
     static constexpr uintptr_t offset = A;
     static constexpr bool indirect = std::is_pointer_v<T>;
 
+    constexpr OffsetPtr(uintptr_t aBase)
+        : base(aBase)
+    {
+    }
+
     constexpr OffsetPtr(void* aBase)
         : base(reinterpret_cast<uintptr_t>(aBase))
     {

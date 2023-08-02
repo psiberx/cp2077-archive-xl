@@ -1,19 +1,24 @@
 #include "Dynamic.hpp"
+#include "App/Utils/Num.hpp"
 #include "App/Utils/Str.hpp"
 #include "Red/AppearanceChanger.hpp"
 #include "Red/CharacterCustomization.hpp"
 #include "Red/Entity.hpp"
+#include "Red/TweakDB.hpp"
 
 namespace
 {
-constexpr auto DynamicValueMarker = '*';
+constexpr auto DynamicAppearanceTag = Red::CName("DynamicAppearance");
 
+constexpr auto ContextMarker = '%';
 constexpr auto VariantMarker = '!';
 constexpr auto PartSeparator = '+';
 constexpr auto PartNameGlue = '.';
 constexpr auto ConditionMarker = '&';
+constexpr auto AppearanceMarkers = "!%";
 constexpr auto ReferenceMarkers = "!&";
 
+constexpr auto DynamicValueMarker = '*';
 constexpr auto AttrOpen = '{';
 constexpr auto AttrClose = '}';
 
@@ -61,19 +66,31 @@ Red::CName ExtractName(const char* aName, size_t aOffset, size_t aSize, bool aRe
 
 App::DynamicAppearanceName::DynamicAppearanceName()
     : isDynamic(false)
+    , context(0)
 {
 }
 
 App::DynamicAppearanceName::DynamicAppearanceName(Red::CName aAppearance)
     : isDynamic(false)
+    , context(0)
+    , value(aAppearance)
 {
     std::string_view str = aAppearance.ToString();
-    auto markerPos = str.find_first_of(VariantMarker);
 
+    auto markerPos = str.find_first_of(VariantMarker);
     if (markerPos != std::string_view::npos)
     {
         {
-            auto suffixPos = str.find(ConditionMarker, markerPos);
+            auto contextPos = str.find_last_of(ContextMarker);
+            if (contextPos != std::string_view::npos)
+            {
+                ParseInt(str.data() + contextPos + 1, str.size() - contextPos - 1, context);
+                str.remove_suffix(str.size() - contextPos);
+            }
+        }
+
+        {
+            auto suffixPos = str.find_last_of(ConditionMarker, markerPos);
             if (suffixPos != std::string_view::npos)
             {
                 str.remove_suffix(str.size() - suffixPos);
@@ -131,10 +148,11 @@ App::DynamicAppearanceName::DynamicAppearanceName(Red::CName aAppearance)
 App::DynamicReference::DynamicReference(Red::CName aReference)
     : isDynamic(false)
     , isConditional(false)
+    , value(aReference)
 {
     std::string_view str = aReference.ToString();
-    auto markerPos = str.find_first_of(ReferenceMarkers);
 
+    auto markerPos = str.find_first_of(ReferenceMarkers);
     if (markerPos != std::string_view::npos)
     {
         isDynamic = true;
@@ -196,7 +214,7 @@ App::DynamicReference::DynamicReference(Red::CName aReference)
                 }
             }
 
-            weight = conditions.size() + (variants.empty() ? 0 : 100);
+            weight = static_cast<int8_t>((variants.empty() ? 0 : 100) + conditions.size());
             isConditional = weight > 0;
         }
     }
@@ -232,8 +250,8 @@ App::DynamicReference App::DynamicAppearanceController::ParseReference(Red::CNam
     return DynamicReference(aReference);
 }
 
-bool App::DynamicAppearanceController::MatchReference(Red::Entity* aEntity, Red::CName aVariant,
-                                                      const DynamicReference& aReference) const
+bool App::DynamicAppearanceController::MatchReference(const DynamicReference& aReference, Red::Entity* aEntity,
+                                                      Red::CName aVariant) const
 {
     if (!aReference.variants.empty() )
     {
@@ -467,6 +485,7 @@ App::DynamicAppearanceController::AttributeData App::DynamicAppearanceController
 {
     AttributeData data;
 
+    if (Red::RecordExists(aSuffixID))
     {
         auto* handle = reinterpret_cast<Red::Handle<Red::GameObject>*>(&aEntity->ref);
 
@@ -485,7 +504,7 @@ App::DynamicAppearanceController::AttributeData App::DynamicAppearanceController
         data.suffix = DefaultBodyTypeSuffixValue;
         data.value = DefaultBodyTypeAttrValue;
     }
-    else
+    else if (!data.suffix.empty())
     {
         data.value = Str::SnakeCase(data.suffix);
     }
@@ -584,4 +603,60 @@ const std::string& App::DynamicAppearanceController::GetPathStr(Red::ResourcePat
         return s_emptyPathStr;
 
     return it.value();
+}
+
+bool App::DynamicAppearanceController::SupportsDynamicAppearance(const Red::EntityTemplate* aTemplate)
+{
+    return aTemplate->visualTagsSchema &&
+           aTemplate->visualTagsSchema->visualTags.Contains(DynamicAppearanceTag);
+}
+
+void App::DynamicAppearanceController::MarkDynamicAppearanceName(Red::CName& aAppearanceName, Red::Entity* aEntity)
+{
+    std::string_view appearanceName = aAppearanceName.ToString();
+
+    {
+        auto suffixPos = appearanceName.find_last_of(ConditionMarker);
+        if (suffixPos != std::string_view::npos)
+        {
+            appearanceName.remove_suffix(appearanceName.size() - suffixPos);
+        }
+    }
+
+    std::string dynamicName(appearanceName);
+
+    if (dynamicName.find_last_of(VariantMarker) == std::string::npos)
+    {
+        dynamicName += VariantMarker;
+    }
+
+    {
+        auto contextPos = appearanceName.find(ContextMarker);
+        if (contextPos != std::string_view::npos)
+        {
+            appearanceName.remove_suffix(appearanceName.size() - contextPos);
+        }
+    }
+
+    dynamicName += ContextMarker;
+    dynamicName += std::to_string(reinterpret_cast<uint64_t>(aEntity));
+
+    aAppearanceName = Red::CNamePool::Add(dynamicName.c_str());
+}
+
+void App::DynamicAppearanceController::MarkDynamicAppearanceName(Red::CName& aAppearanceName,
+                                                                 DynamicAppearanceName& aSelector)
+{
+    std::string dynamicName(aAppearanceName.ToString());
+    dynamicName += VariantMarker;
+
+    if (aSelector.variant)
+    {
+        dynamicName += aSelector.variant.ToString();
+    }
+
+    dynamicName += ContextMarker;
+    dynamicName += std::to_string(aSelector.context);
+
+    aAppearanceName = Red::CNamePool::Add(dynamicName.c_str());
 }

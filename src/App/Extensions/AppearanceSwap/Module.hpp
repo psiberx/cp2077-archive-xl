@@ -1,9 +1,7 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
-#include "App/Extensions/VisualTags/Module.hpp"
-#include "Red/AppearanceResource.hpp"
-#include "Red/EntityTemplate.hpp"
+#include "Red/AppearanceChanger.hpp"
 
 namespace App
 {
@@ -15,17 +13,6 @@ public:
     std::string_view GetName() override;
 
 private:
-    static Red::TemplateAppearance* OnFindAppearance(Red::EntityTemplate* aTemplate,
-                                                     Red::CName aAppearanceName);
-    static void OnFindDefinition(Red::AppearanceResource* aResource,
-                                 Red::Handle<Red::AppearanceDefinition>* aDefinition,
-                                 Red::CName aAppearanceName,
-                                 uint32_t a4, uint8_t a5);
-    static bool OnLoadEntityTemplate(uintptr_t aRequest);
-
-    static inline Core::UniquePtr<Red::TemplateAppearance> s_emptyAppearance;
-    static inline std::shared_mutex s_mutex;
-
-    friend VisualTagsModule;
+    static bool OnLoadTemplate(Red::ItemFactoryAppearanceChangeRequest* aRequest);
 };
 }

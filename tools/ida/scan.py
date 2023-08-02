@@ -26,10 +26,6 @@ def patterns():
                 Item(name="RegisterPart",
                      pattern="48 89 5C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 55 41 54 41 55 41 56 41 57 48 8B EC 48 83 EC ? 4C 8B F9"),
             ]),
-            Group(name="AppearanceChangeRequest", functions=[
-                Item(name="LoadEntityTemplate",
-                     pattern="48 89 5C 24 18 48 89 74 24 20 55 57 41 56 48 8D 6C 24 B9 48 81 EC C0 00 00 00 45 32 F6 48 8B F9"),
-            ]),
             Group(name="AppearanceChangeSystem", functions=[
                 Item(name="ChangeAppearance",
                      pattern="4C 8B DC 49 89 53 10 49 89 4B 08 55 53 56 41 54 41 57 49 8D AB 58 FE FF FF 48 81 EC 80 02 00 00"),
@@ -163,6 +159,16 @@ def patterns():
                      pattern="40 53 48 83 EC 20 48 8B DA 49 8B D0 E8 ? ? ? ? 48 85 C0 74 ? 48 8B  D3 48 8B C8 E8",
                      expected=2,
                      index=1),
+            ]),
+            Group(name="ItemFactoryAppearanceChangeRequest", functions=[
+                Item(name="LoadTemplate",
+                     pattern="48 89 5C 24 18 48 89 74 24 20 55 57 41 56 48 8D 6C 24 B9 48 81 EC C0 00 00 00 45 32 F6 48 8B F9"),
+                Item(name="LoadAppearance",
+                     pattern="40 55 57 41 56 48 8B EC 48 81 EC ? ? ? ? 48 89 B4 24 ? ? ? ? 45 32 F6 48 8B F1 48 8B 49"),
+            ]),
+            Group(name="ItemFactoryRequest", functions=[
+                Item(name="LoadAppearance",
+                     pattern="40 55 56 41 56 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 89 BC 24 ? ? ? ? 45 32 F6 48 8B F9 48 8B 49"),
             ]),
             Group(name="JobHandle", functions=[
                 Item(name="Wait",

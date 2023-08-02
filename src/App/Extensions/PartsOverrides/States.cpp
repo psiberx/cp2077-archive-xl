@@ -3,7 +3,7 @@
 
 namespace
 {
-constexpr auto DefaultAppearance = Red::CName("default");
+constexpr auto DefaultAppearanceName = Red::CName("default");
 
 Core::SharedPtr<App::EntityState> s_nullEntityState;
 Core::SharedPtr<App::ComponentState> s_nullComponentState;
@@ -107,7 +107,7 @@ void App::ComponentState::AddAppearanceOverride(uint64_t aHash, Red::CName aAppe
     auto it = m_appearanceNames.find(aHash);
 
     if (it == m_appearanceNames.end())
-        it = m_appearanceNames.emplace(aHash, DefaultAppearance).first;
+        it = m_appearanceNames.emplace(aHash, DefaultAppearanceName).first;
 
     it.value() = aAppearance;
 
@@ -122,7 +122,7 @@ bool App::ComponentState::RemoveAppearanceOverride(uint64_t aHash)
 Red::CName App::ComponentState::GetAppearanceOverridde()
 {
     if (m_appearanceNames.empty())
-        return DefaultAppearance;
+        return DefaultAppearanceName;
 
     return m_appearanceNames.begin().value();
 }
@@ -316,7 +316,7 @@ void App::EntityState::RemoveChunkMaskOverrides(uint64_t aHash)
 
 void App::EntityState::AddAppearanceOverride(uint64_t aHash, Red::CName aComponentName, Red::CName aAppearance)
 {
-    if (aAppearance && aAppearance != DefaultAppearance)
+    if (aAppearance && aAppearance != DefaultAppearanceName)
     {
         if (auto& componentState = GetComponentState(aComponentName))
         {
@@ -365,12 +365,19 @@ void App::EntityState::LinkComponentToPart(Red::Handle<Red::IComponent>& aCompon
     }
 }
 
+void App::EntityState::LinkPartToAppearance(Red::ResourcePath aResource, DynamicAppearanceName& aAppearance)
+{
+    if (auto& resourceState = GetResourceState(aResource))
+    {
+        resourceState->LinkToAppearance(aAppearance);
+    }
+}
+
 void App::EntityState::LinkPartToAppearance(Red::ResourcePath aResource, Red::CName aAppearance)
 {
     if (auto& resourceState = GetResourceState(aResource))
     {
-        auto appearanceRef = m_dynamicAppearance->ParseAppearance(aAppearance);
-        resourceState->LinkToAppearance(appearanceRef);
+        resourceState->LinkToAppearance(m_dynamicAppearance->ParseAppearance(aAppearance));
     }
 }
 
@@ -379,21 +386,114 @@ void App::EntityState::UpdateDynamicAttributes()
     m_dynamicAppearance->UpdateState(m_entity);
 }
 
+bool App::EntityState::SelectTemplateAppearance(App::DynamicAppearanceName& aSelector, Red::EntityTemplate* aResource,
+                                                Red::TemplateAppearance*& aAppearance)
+{
+    if (!aAppearance)
+    {
+        auto baseAppearance = Raw::EntityTemplate::FindAppearance(aResource, aSelector.name);
+
+        if (!baseAppearance)
+            return false;
+
+        const auto baseAppearanceIndex = baseAppearance - aResource->appearances.Begin();
+
+        aResource->appearances.EmplaceBack();
+        aAppearance = aResource->appearances.End() - 1;
+
+        baseAppearance = &aResource->appearances[baseAppearanceIndex];
+
+        aAppearance->appearanceResource = baseAppearance->appearanceResource;
+        aAppearance->appearanceName = baseAppearance->appearanceName
+                                         ? baseAppearance->appearanceName
+                                         : baseAppearance->name;
+    }
+    else if (aSelector.isDynamic)
+    {
+        return true;
+    }
+
+    m_dynamicAppearance->MarkDynamicAppearanceName(aAppearance->appearanceName, aSelector);
+
+    aAppearance->name = aAppearance->appearanceName;
+
+    return true;
+}
+
+bool App::EntityState::SelectConditionalAppearance(DynamicAppearanceName& aSelector, Red::AppearanceResource* aResource,
+                                                   Red::Handle<Red::AppearanceDefinition>& aDefinition)
+{
+    int8_t maxWeight = -1;
+    int8_t numCandidates = 0;
+    Red::Handle<Red::AppearanceDefinition> match;
+
+    for (auto& definition : aResource->appearances)
+    {
+        auto appearanceRef = m_dynamicAppearance->ParseReference(definition->name);
+        if (appearanceRef.name == aSelector.name)
+        {
+            ++numCandidates;
+            if (!appearanceRef.isConditional)
+            {
+                if (maxWeight < 0)
+                {
+                    maxWeight = 0;
+                    match = definition;
+                }
+            }
+            else if (m_dynamicAppearance->MatchReference(appearanceRef, m_entity, aSelector.variant))
+            {
+                if (maxWeight < appearanceRef.weight)
+                {
+                    maxWeight = appearanceRef.weight;
+                    match = definition;
+                }
+            }
+        }
+    }
+
+    if (match)
+    {
+        if (match->name != aSelector.value)
+        {
+            auto definition = Red::MakeHandle<Red::AppearanceDefinition>();
+            for (const auto prop : Red::GetClass<Red::AppearanceDefinition>()->props)
+            {
+                prop->SetValue(definition.instance, prop->GetValuePtr<void>(match.instance));
+            }
+
+            definition->name = aSelector.value;
+
+            {
+                std::unique_lock _(*Raw::AppearanceResource::Mutex(aResource));
+                aResource->appearances.PushBack(definition);
+            }
+
+            aDefinition = std::move(definition);
+        }
+
+        for (const auto& partValue : match->partsValues)
+        {
+            LinkPartToAppearance(partValue.resource.path, aSelector);
+        }
+
+        return true;
+    }
+
+    if (aSelector.isDynamic && numCandidates > 0)
+    {
+        aDefinition = Red::MakeHandle<Red::AppearanceDefinition>();
+        aDefinition->name = aSelector.value;
+
+        return true;
+    }
+
+    return false;
+}
+
 void App::EntityState::ProcessConditionalComponents(Red::DynArray<Red::Handle<Red::IComponent>>& aComponents)
 {
-    struct WeightedMember
-    {
-        uint8_t weight;
-        Red::Handle<Red::IComponent>& component;
-    };
-
-    struct WeightedGroup
-    {
-        uint8_t maxWeight = 0;
-        Core::Vector<WeightedMember> members;
-    };
-
-    Core::Map<Red::CName, WeightedGroup> groups;
+    Core::Map<Red::CName, WeightedComponentGroup> groups;
 
     for (auto& component : aComponents)
     {
@@ -402,7 +502,7 @@ void App::EntityState::ProcessConditionalComponents(Red::DynArray<Red::Handle<Re
         if (!componentRef.isConditional)
         {
             auto& group = groups[componentRef.name];
-            group.members.push_back({0, component});
+            group.matches.push_back({0, component});
             continue;
         }
 
@@ -418,12 +518,12 @@ void App::EntityState::ProcessConditionalComponents(Red::DynArray<Red::Handle<Re
 
         const auto activeVariant = resourceState->GetActiveVariant();
 
-        component->isEnabled = m_dynamicAppearance->MatchReference(m_entity, activeVariant, componentRef);
+        component->isEnabled = m_dynamicAppearance->MatchReference(componentRef, m_entity, activeVariant);
 
         if (component->isEnabled)
         {
             auto& group = groups[componentRef.name];
-            group.members.push_back({componentRef.weight, component});
+            group.matches.push_back({componentRef.weight, component});
 
             if (group.maxWeight < componentRef.weight)
             {
@@ -434,14 +534,14 @@ void App::EntityState::ProcessConditionalComponents(Red::DynArray<Red::Handle<Re
 
     for (auto& [_, group] : groups)
     {
-        if (group.maxWeight > 0 && group.members.size() > 1)
+        if (group.maxWeight > 0 && group.matches.size() > 1)
         {
             bool forceDisable = false;
-            for (auto& member : group.members)
+            for (auto& match : group.matches)
             {
-                if (member.weight < group.maxWeight || forceDisable)
+                if (match.weight < group.maxWeight || forceDisable)
                 {
-                    member.component->isEnabled = false;
+                    match.component->isEnabled = false;
                 }
                 else
                 {
@@ -649,6 +749,16 @@ uint64_t App::EntityState::GetOriginalChunkMask(ComponentWrapper& aComponent)
 App::OverrideStateManager::OverrideStateManager(Core::SharedPtr<DynamicAppearanceController> aDynamicAppearance)
     : m_dynamicAppearance(std::move(aDynamicAppearance))
 {
+}
+
+Core::SharedPtr<App::EntityState>& App::OverrideStateManager::GetEntityState(uint64_t aContext)
+{
+    return GetEntityState(reinterpret_cast<Red::Entity*>(aContext));
+}
+
+Core::SharedPtr<App::EntityState>& App::OverrideStateManager::FindEntityState(uint64_t aContext)
+{
+    return FindEntityState(reinterpret_cast<Red::Entity*>(aContext));
 }
 
 Core::SharedPtr<App::EntityState>& App::OverrideStateManager::GetEntityState(Red::Entity* aEntity)

@@ -1,5 +1,6 @@
 #include "Module.hpp"
 #include "App/Extensions/AppearanceSwap/Module.hpp"
+#include "App/Extensions/PartsOverrides/Module.hpp"
 
 namespace
 {
@@ -98,7 +99,7 @@ void App::VisualTagsModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset&
 
 Red::TemplateAppearance* App::VisualTagsModule::FindAppearance(Red::EntityTemplate* aResource, Red::CName aName)
 {
-    return AppearanceSwapModule::OnFindAppearance(aResource, aName);
+    return PartsOverridesModule::OnResolveAppearance(aResource, aName);
     // return Raw::EntityTemplate::FindAppearance(aResource, aName);
 }
 
@@ -107,7 +108,7 @@ Red::Handle<Red::AppearanceDefinition> App::VisualTagsModule::FindDefinition(Red
 {
     Red::Handle<Red::AppearanceDefinition> result;
     Raw::AppearanceResource::FindAppearance(aResource, &result, aName, 0, 0);
-    AppearanceSwapModule::OnFindDefinition(aResource, &result, aName, 0, 0);
+    PartsOverridesModule::OnResolveDefinition(aResource, &result, aName, 0, 0);
 
     return result;
 }

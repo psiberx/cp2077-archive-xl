@@ -5,7 +5,20 @@
 namespace
 {
 constexpr auto ModuleName = "PartsOverrides";
+
 constexpr auto BodyPartTag = Red::CName("PlayerBodyPart");
+
+constexpr auto DefaultAppearanceName = Red::CName("default");
+constexpr auto EmptyAppearanceName = Red::CName("empty_appearance_default");
+constexpr auto EmptyAppearancePath = Red::ResourcePath(R"(base\characters\appearances\player\items\empty_appearance.app)");
+constexpr auto RandomAppearanceName = Red::CName("random");
+
+constexpr auto EmptyAppearanceTags = {
+    std::pair(Red::CName("EmptyAppearance:FPP"), "&FPP"),
+    std::pair(Red::CName("EmptyAppearance:Male"), "&Male"),
+    std::pair(Red::CName("EmptyAppearance:Female"), "&Female"),
+};
+
 constexpr auto EnableDebugOutput = false;
 }
 
@@ -16,6 +29,18 @@ std::string_view App::PartsOverridesModule::GetName()
 
 bool App::PartsOverridesModule::Load()
 {
+    if (!HookBefore<Raw::ItemFactoryRequest::LoadAppearance>(&OnLoadAppearanceResource))
+        throw std::runtime_error("Failed to hook [ItemFactoryRequest::LoadAppearance].");
+
+    if (!HookBefore<Raw::ItemFactoryAppearanceChangeRequest::LoadAppearance>(&OnChangeAppearanceResource))
+        throw std::runtime_error("Failed to hook [ItemFactoryAppearanceChangeRequest::LoadAppearance].");
+
+    if (!Hook<Raw::EntityTemplate::FindAppearance>(&OnResolveAppearance))
+        throw std::runtime_error("Failed to hook [EntityTemplate::FindAppearance].");
+
+    if (!HookAfter<Raw::AppearanceResource::FindAppearance>(&OnResolveDefinition))
+        throw std::runtime_error("Failed to hook [AppearanceResource::FindAppearance].");
+
     if (!HookBefore<Raw::GarmentAssembler::AddItem>(&OnAddItem))
         throw std::runtime_error("Failed to hook [GarmentAssembler::AddItem].");
 
@@ -58,6 +83,11 @@ bool App::PartsOverridesModule::Load()
     if (!HookAfter<Raw::ResourcePath::Create>(&OnCreateResourcePath))
         throw std::runtime_error("Failed to hook [ResourcePath::Create].");
 
+    s_emptyAppearance = Core::MakeUnique<Red::TemplateAppearance>();
+    s_emptyAppearance->name = EmptyAppearanceName;
+    s_emptyAppearance->appearanceName = DefaultAppearanceName;
+    s_emptyAppearance->appearanceResource = EmptyAppearancePath;
+
     s_dynamicAppearance = Core::MakeShared<DynamicAppearanceController>();
     s_stateManager = Core::MakeUnique<OverrideStateManager>(s_dynamicAppearance);
     s_tagManager = Core::MakeShared<OverrideTagManager>();
@@ -74,6 +104,10 @@ void App::PartsOverridesModule::Reload()
 
 bool App::PartsOverridesModule::Unload()
 {
+    Unhook<Raw::ItemFactoryRequest::LoadAppearance>();
+    Unhook<Raw::ItemFactoryAppearanceChangeRequest::LoadAppearance>();
+    Unhook<Raw::EntityTemplate::FindAppearance>();
+    Unhook<Raw::AppearanceResource::FindAppearance>();
     Unhook<Raw::GarmentAssembler::AddItem>();
     Unhook<Raw::GarmentAssembler::AddCustomItem>();
     Unhook<Raw::GarmentAssembler::ChangeItem>();
@@ -99,12 +133,110 @@ bool App::PartsOverridesModule::Unload()
 void App::PartsOverridesModule::ConfigureTags()
 {
     std::unique_lock _(s_mutex);
-
     for (const auto& unit : m_units)
     {
         for (const auto& tag : unit.tags)
         {
             s_tagManager->DefineTag(tag.first.data(), tag.second);
+        }
+    }
+}
+
+void App::PartsOverridesModule::OnLoadAppearanceResource(Red::ItemFactoryRequest* aRequest)
+{
+    Raw::ItemFactoryRequest::Entity entityWeak(aRequest);
+    Raw::ItemFactoryRequest::EntityTemplate templateToken(aRequest);
+    Raw::ItemFactoryRequest::AppearanceName appearanceName(aRequest);
+
+    if (PrepareDynamicAppearanceName(entityWeak, templateToken, appearanceName))
+    {
+        std::unique_lock _(s_mutex);
+        if (auto& entityState = s_stateManager->GetEntityState(entityWeak->instance))
+        {
+            UpdateDynamicAttributes(entityState);
+        }
+    }
+}
+
+void App::PartsOverridesModule::OnChangeAppearanceResource(Red::ItemFactoryAppearanceChangeRequest* aRequest)
+{
+    Raw::ItemFactoryAppearanceChangeRequest::Entity entityWeak(aRequest);
+    Raw::ItemFactoryAppearanceChangeRequest::EntityTemplate templateToken(aRequest);
+    Raw::ItemFactoryAppearanceChangeRequest::AppearanceName appearanceName(aRequest);
+
+    if (PrepareDynamicAppearanceName(entityWeak, templateToken, appearanceName))
+    {
+        std::unique_lock _(s_mutex);
+        if (auto& entityState = s_stateManager->GetEntityState(entityWeak->instance))
+        {
+            UpdateDynamicAttributes(entityState);
+        }
+    }
+}
+
+Red::TemplateAppearance* App::PartsOverridesModule::OnResolveAppearance(Red::EntityTemplate* aTemplate,
+                                                                        Red::CName aSelector)
+{
+    if (aSelector == EmptyAppearanceName)
+        return s_emptyAppearance.get();
+
+    auto appearance = Raw::EntityTemplate::FindAppearance(aTemplate, aSelector);
+
+    if (!IsUniqueAppearance(aSelector))
+        return appearance;
+
+    if (s_dynamicAppearance->SupportsDynamicAppearance(aTemplate))
+    {
+        auto selector = s_dynamicAppearance->ParseAppearance(aSelector);
+        if (selector.isDynamic && selector.context)
+        {
+            std::unique_lock _(s_mutex);
+            if (auto& entityState = s_stateManager->GetEntityState(selector.context))
+            {
+                SelectDynamicAppearance(entityState, selector, aTemplate, appearance);
+                return appearance;
+            }
+        }
+    }
+
+    if (aTemplate->visualTagsSchema && !aTemplate->visualTagsSchema->visualTags.IsEmpty())
+    {
+        const auto& visualTags = aTemplate->visualTagsSchema->visualTags;
+        std::string_view selectorStr = aSelector.ToString();
+
+        for (const auto& tag : EmptyAppearanceTags)
+        {
+            if (visualTags.Contains(tag.first) && selectorStr.find(tag.second) != std::string_view::npos)
+            {
+                {
+                    std::unique_lock _(s_mutex);
+                    aTemplate->appearances.EmplaceBack(*s_emptyAppearance);
+                    appearance = aTemplate->appearances.End() - 1;
+                }
+
+                appearance->name = aSelector;
+                return appearance;
+            }
+        }
+    }
+
+    return appearance;
+}
+
+void App::PartsOverridesModule::OnResolveDefinition(Red::AppearanceResource* aResource,
+                                                    Red::Handle<Red::AppearanceDefinition>* aDefinition,
+                                                    Red::CName aSelector, uint32_t a4, uint8_t a5)
+{
+    if (!*aDefinition)
+    {
+        auto selector = s_dynamicAppearance->ParseAppearance(aSelector);
+        if (selector.isDynamic && selector.context)
+        {
+            std::unique_lock _(s_mutex);
+            if (auto& entityState = s_stateManager->GetEntityState(selector.context))
+            {
+                SelectDynamicAppearance(entityState, selector, aResource, *aDefinition);
+            }
         }
     }
 }
@@ -410,14 +542,34 @@ void App::PartsOverridesModule::UpdatePartAssignments(Core::SharedPtr<App::Entit
     }
 }
 
-void App::PartsOverridesModule::UpdateDynamicAttributes(Core::SharedPtr<EntityState>& aEntityState)
+bool App::PartsOverridesModule::PrepareDynamicAppearanceName(Red::WeakHandle<Red::Entity>& aEntity,
+                                                             Red::ResourceTokenPtr<Red::EntityTemplate>& aTemplateToken,
+                                                             Red::CName& aAppearanceName)
 {
-    aEntityState->UpdateDynamicAttributes();
+    if (IsUniqueAppearance(aAppearanceName) &&
+        s_dynamicAppearance->SupportsDynamicAppearance(aTemplateToken->resource))
+    {
+        s_dynamicAppearance->MarkDynamicAppearanceName(aAppearanceName, aEntity.instance);
+        return true;
+    }
+
+    return false;
 }
 
-void App::PartsOverridesModule::UpdateDynamicAttributes()
+void App::PartsOverridesModule::SelectDynamicAppearance(Core::SharedPtr<App::EntityState>& aEntityState,
+                                                        App::DynamicAppearanceName& aSelector,
+                                                        Red::EntityTemplate* aResource,
+                                                        Red::TemplateAppearance*& aAppearance)
 {
-    s_stateManager->UpdateDynamicAttributes();
+    aEntityState->SelectTemplateAppearance(aSelector, aResource, aAppearance);
+}
+
+void App::PartsOverridesModule::SelectDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState,
+                                                        DynamicAppearanceName& aSelector,
+                                                        Red::AppearanceResource* aResource,
+                                                        Red::Handle<Red::AppearanceDefinition>& aDefinition)
+{
+    aEntityState->SelectConditionalAppearance(aSelector, aResource, aDefinition);
 }
 
 void App::PartsOverridesModule::ApplyDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState,
@@ -433,7 +585,7 @@ void App::PartsOverridesModule::ApplyDynamicAppearance(Core::SharedPtr<EntitySta
 
 void App::PartsOverridesModule::ApplyDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState)
 {
-    ApplyDynamicAppearance(aEntityState, Raw::Entity::GetComponents(aEntityState->GetEntity()));
+    ApplyDynamicAppearance(aEntityState, Raw::Entity::ComponentsStorage(aEntityState->GetEntity())->components);
 }
 
 void App::PartsOverridesModule::ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState,
@@ -516,4 +668,19 @@ void App::PartsOverridesModule::EnableGarmentOffsets()
 void App::PartsOverridesModule::DisableGarmentOffsets()
 {
     s_garmentOffsetsEnabled = false;
+}
+
+void App::PartsOverridesModule::UpdateDynamicAttributes(Core::SharedPtr<EntityState>& aEntityState)
+{
+    aEntityState->UpdateDynamicAttributes();
+}
+
+void App::PartsOverridesModule::UpdateDynamicAttributes()
+{
+    s_stateManager->UpdateDynamicAttributes();
+}
+
+bool App::PartsOverridesModule::IsUniqueAppearance(Red::CName aName)
+{
+    return aName && aName != DefaultAppearanceName && aName != RandomAppearanceName && aName != EmptyAppearanceName;
 }

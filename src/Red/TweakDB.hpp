@@ -5,7 +5,7 @@
 namespace Red
 {
 template<typename T>
-TweakDBID CreateFlat(TweakDBID aRecordID, const char* aProp, T&& aValue)
+inline TweakDBID CreateFlat(TweakDBID aRecordID, const char* aProp, T&& aValue)
 {
     auto tweakDB = TweakDB::Get();
 
@@ -21,7 +21,7 @@ TweakDBID CreateFlat(TweakDBID aRecordID, const char* aProp, T&& aValue)
 }
 
 template<typename T>
-void AppendToFlat(TweakDBID aRecordID, const char* aProp, const Core::Vector<T>& aValues)
+inline void AppendToFlat(TweakDBID aRecordID, const char* aProp, const Core::Vector<T>& aValues)
 {
     auto tweakDB = TweakDB::Get();
     auto flatID = TweakDBID(aRecordID, aProp);
@@ -51,7 +51,7 @@ void AppendToFlat(TweakDBID aRecordID, const char* aProp, const Core::Vector<T>&
     }
 }
 
-TweakDBID CreateRecord(TweakDBID aRecordID, const char* aType)
+inline TweakDBID CreateRecord(TweakDBID aRecordID, const char* aType)
 {
     auto tweakDB = TweakDB::Get();
 
@@ -64,14 +64,14 @@ TweakDBID CreateRecord(TweakDBID aRecordID, const char* aType)
     return aRecordID;
 }
 
-void UpdateRecord(TweakDBID aRecordID)
+inline void UpdateRecord(TweakDBID aRecordID)
 {
     auto tweakDB = TweakDB::Get();
 
     tweakDB->UpdateRecord(aRecordID);
 }
 
-bool RecordExists(TweakDBID aRecordID)
+inline bool RecordExists(TweakDBID aRecordID)
 {
     auto tweakDB = Red::TweakDB::Get();
 

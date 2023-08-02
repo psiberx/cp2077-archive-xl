@@ -6,6 +6,7 @@
 namespace Red
 {
 using EntityTemplate = ent::EntityTemplate;
+using TemplateAppearance = ent::TemplateAppearance;
 using AppearanceDefinition = appearance::AppearanceDefinition;
 using AppearancePartOverrides = appearance::AppearancePartOverrides;
 

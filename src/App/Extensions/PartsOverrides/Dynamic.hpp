@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Red/EntityTemplate.hpp"
+
 namespace App
 {
 using DynamicPartList = Core::Map<Red::CName, Red::CName>;
@@ -10,9 +12,11 @@ struct DynamicAppearanceName
     DynamicAppearanceName();
     explicit DynamicAppearanceName(Red::CName aAppearance);
 
+    Red::CName value;
     Red::CName name;
     Red::CName variant;
     DynamicPartList parts;
+    uint64_t context;
     bool isDynamic;
 };
 
@@ -23,12 +27,13 @@ struct DynamicReference
     [[nodiscard]] bool Match(Red::CName aVariant) const;
     [[nodiscard]] bool Match(const DynamicTagList& aConditions) const;
 
+    Red::CName value;
     Red::CName name;
     DynamicTagList variants;
     DynamicTagList conditions;
     bool isDynamic;
     bool isConditional;
-    uint8_t weight;
+    int8_t weight;
 };
 
 class DynamicAppearanceController
@@ -36,8 +41,8 @@ class DynamicAppearanceController
 public:
     [[nodiscard]] DynamicAppearanceName ParseAppearance(Red::CName aAppearance) const;
     [[nodiscard]] DynamicReference ParseReference(Red::CName aReference) const;
-    [[nodiscard]] bool MatchReference(Red::Entity* aEntity, Red::CName aVariant,
-                                      const DynamicReference& aReference) const;
+    [[nodiscard]] bool MatchReference(const DynamicReference& aReference, Red::Entity* aEntity,
+                                      Red::CName aVariant) const;
 
     [[nodiscard]] Red::CName ResolveName(Red::Entity* aEntity, const DynamicPartList& aVariant,
                                          Red::CName aName) const;
@@ -54,6 +59,10 @@ public:
     void RegisterPath(Red::ResourcePath aPath, const char* aPathStr);
     void RegisterPath(Red::ResourcePath aPath, const std::string& aPathStr);
     void RegisterPath(Red::ResourcePath aPath, const std::string_view& aPathStr);
+
+    bool SupportsDynamicAppearance(const Red::EntityTemplate* aTemplate);
+    void MarkDynamicAppearanceName(Red::CName& aAppearanceName, Red::Entity* aEntity);
+    void MarkDynamicAppearanceName(Red::CName& aAppearanceName, DynamicAppearanceName& aSelector);
 
 private:
     struct AttributeData
