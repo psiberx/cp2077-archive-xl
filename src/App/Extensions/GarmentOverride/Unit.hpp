@@ -1,11 +1,11 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
-#include "App/Extensions/PartsOverrides/Tags.hpp"
+#include "App/Extensions/GarmentOverride/Tags.hpp"
 
 namespace App
 {
-struct PartsOverridesUnit : ConfigurableUnit
+struct GarmentOverrideUnit : ConfigurableUnit
 {
     using ConfigurableUnit::ConfigurableUnit;
 

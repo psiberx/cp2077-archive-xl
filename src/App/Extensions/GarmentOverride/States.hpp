@@ -1,9 +1,9 @@
 #pragma once
 
-#include "App/Extensions/PartsOverrides/Dynamic.hpp"
-#include "App/Extensions/PartsOverrides/Prefix.hpp"
-#include "App/Extensions/PartsOverrides/Tags.hpp"
-#include "App/Extensions/PartsOverrides/Wrapper.hpp"
+#include "App/Extensions/GarmentOverride/Dynamic.hpp"
+#include "App/Extensions/GarmentOverride/Prefix.hpp"
+#include "App/Extensions/GarmentOverride/Tags.hpp"
+#include "App/Extensions/GarmentOverride/Wrapper.hpp"
 #include "Red/AppearanceResource.hpp"
 #include "Red/GarmentAssembler.hpp"
 

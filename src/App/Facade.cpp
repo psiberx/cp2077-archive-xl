@@ -1,7 +1,7 @@
 #include "Facade.hpp"
 #include "App/Archives/ArchiveService.hpp"
 #include "App/Extensions/ExtensionService.hpp"
-#include "App/Extensions/PartsOverrides/Module.hpp"
+#include "App/Extensions/GarmentOverride/Module.hpp"
 #include "Core/Facades/Container.hpp"
 
 bool App::Facade::RegisterDir(Red::CString& aPath)
@@ -16,12 +16,12 @@ bool App::Facade::RegisterArchive(Red::CString& aPath)
 
 void App::Facade::EnableGarmentOffsets()
 {
-    PartsOverridesModule::EnableGarmentOffsets();
+    GarmentOverrideModule::EnableGarmentOffsets();
 }
 
 void App::Facade::DisableGarmentOffsets()
 {
-    PartsOverridesModule::DisableGarmentOffsets();
+    GarmentOverrideModule::DisableGarmentOffsets();
 }
 
 void App::Facade::Reload()

@@ -7,12 +7,12 @@ constexpr auto OverridesNodeKey = "overrides";
 constexpr auto TagsNodeKey = "tags";
 }
 
-bool App::PartsOverridesUnit::IsDefined()
+bool App::GarmentOverrideUnit::IsDefined()
 {
     return !tags.empty();
 }
 
-void App::PartsOverridesUnit::LoadYAML(const YAML::Node& aNode)
+void App::GarmentOverrideUnit::LoadYAML(const YAML::Node& aNode)
 {
     const auto& overridesNode = aNode[OverridesNodeKey];
 

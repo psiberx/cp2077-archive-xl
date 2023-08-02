@@ -1,5 +1,5 @@
 #include "Module.hpp"
-#include "App/Extensions/PartsOverrides/Dynamic.hpp"
+#include "App/Extensions/GarmentOverride/Dynamic.hpp"
 #include "Red/FactoryIndex.hpp"
 
 namespace

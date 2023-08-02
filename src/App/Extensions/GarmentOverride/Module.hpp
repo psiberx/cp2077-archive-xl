@@ -1,9 +1,9 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
-#include "App/Extensions/PartsOverrides/Dynamic.hpp"
-#include "App/Extensions/PartsOverrides/States.hpp"
-#include "App/Extensions/PartsOverrides/Unit.hpp"
+#include "App/Extensions/GarmentOverride/Dynamic.hpp"
+#include "App/Extensions/GarmentOverride/States.hpp"
+#include "App/Extensions/GarmentOverride/Unit.hpp"
 #include "App/Extensions/VisualTags/Module.hpp"
 #include "Red/AppearanceChanger.hpp"
 #include "Red/EntityTemplate.hpp"
@@ -11,7 +11,7 @@
 
 namespace App
 {
-class PartsOverridesModule : public ConfigurableUnitModule<PartsOverridesUnit>
+class GarmentOverrideModule : public ConfigurableUnitModule<GarmentOverrideUnit>
 {
 public:
     bool Load() override;
