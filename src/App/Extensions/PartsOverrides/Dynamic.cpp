@@ -15,8 +15,8 @@ constexpr auto VariantMarker = '!';
 constexpr auto PartSeparator = '+';
 constexpr auto PartNameGlue = '.';
 constexpr auto ConditionMarker = '&';
-constexpr auto AppearanceMarkers = "!%";
 constexpr auto ReferenceMarkers = "!&";
+constexpr auto TransientMarkers = "%&";
 
 constexpr auto DynamicValueMarker = '*';
 constexpr auto AttrOpen = '{';
@@ -616,7 +616,7 @@ void App::DynamicAppearanceController::MarkDynamicAppearanceName(Red::CName& aAp
     std::string_view appearanceName = aAppearanceName.ToString();
 
     {
-        auto suffixPos = appearanceName.find_last_of(ConditionMarker);
+        auto suffixPos = appearanceName.find_first_of(TransientMarkers);
         if (suffixPos != std::string_view::npos)
         {
             appearanceName.remove_suffix(appearanceName.size() - suffixPos);
@@ -625,17 +625,9 @@ void App::DynamicAppearanceController::MarkDynamicAppearanceName(Red::CName& aAp
 
     std::string dynamicName(appearanceName);
 
-    if (dynamicName.find_last_of(VariantMarker) == std::string::npos)
+    if (dynamicName.find(VariantMarker) == std::string::npos)
     {
         dynamicName += VariantMarker;
-    }
-
-    {
-        auto contextPos = appearanceName.find(ContextMarker);
-        if (contextPos != std::string_view::npos)
-        {
-            appearanceName.remove_suffix(appearanceName.size() - contextPos);
-        }
     }
 
     dynamicName += ContextMarker;
