@@ -754,6 +754,33 @@ public:
     {
     }
 
+    bool HasOption(int64_t aValue)
+    {
+        for (uint32_t i = 0; i != valueList.size; ++i)
+        {
+            if (aValue == valueList.entries[i])
+                return true;
+        }
+
+        return false;
+    }
+
+    bool HasOption(CName aName)
+    {
+        for (uint32_t i = 0; i != valueList.size; ++i)
+        {
+            if (aName == hashList.entries[i])
+                return true;
+        }
+
+        return false;
+    }
+
+    bool HasOption(const char* aName)
+    {
+        return HasOption(CName(aName));
+    }
+
     void AddOption(int64_t aValue, const char* aName)
     {
         if (aValue < Limits::min())
@@ -1182,4 +1209,23 @@ struct GlobalDefinition
         return AScope;
     }
 };
+
+template<typename T>
+inline auto GetDescriptor()
+{
+    auto rtti = CRTTISystem::Get();
+
+    if constexpr (std::is_class_v<T>)
+    {
+        return reinterpret_cast<ClassDescriptor<T>*>(rtti->GetClass(GetTypeName<T>()));
+    }
+    else if constexpr (std::is_enum_v<T>)
+    {
+        return reinterpret_cast<EnumDescriptor<T>*>(rtti->GetEnum(GetTypeName<T>()));
+    }
+    else
+    {
+        return rtti->GetType(GetTypeName<T>());
+    }
+}
 }

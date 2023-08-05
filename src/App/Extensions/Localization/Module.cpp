@@ -130,6 +130,9 @@ bool App::LocalizationModule::MergeTextResource(const std::string& aPath, TextEn
     {
         auto& newEntry = newEntries[i];
 
+        if (IsCommentEntry(newEntry))
+            continue;
+
         if (newEntry.primaryKey == 0)
         {
             if (newEntry.secondaryKey.Length() == 0)
@@ -208,6 +211,15 @@ App::TextEntry* App::LocalizationModule::FindSameTextEntry(TextEntry& aEntry, Te
         return nullptr;
 
     return it;
+}
+
+bool App::LocalizationModule::IsCommentEntry(App::TextEntry& aEntry)
+{
+    if (aEntry.secondaryKey.Length() == 0)
+        return false;
+
+    const auto* keyStr = aEntry.secondaryKey.c_str();
+    return keyStr && (*keyStr == '-' || *keyStr == '=');
 }
 
 void App::LocalizationModule::OnLoadSubtitles(Red::Handle<SubtitleResource>& aSubtitles, Red::ResourcePath aPath)

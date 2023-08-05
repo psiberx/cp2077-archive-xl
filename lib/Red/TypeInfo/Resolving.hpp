@@ -291,6 +291,21 @@ public:
         return reinterpret_cast<CRTTIArrayType*>(s_type);
     }
 
+    static inline CEnum* GetEnum()
+    {
+        if (!s_resolved)
+        {
+            Resolve();
+        }
+
+        if (!s_type || s_type->GetType() != ERTTIType::Enum)
+        {
+            return nullptr;
+        }
+
+        return reinterpret_cast<CEnum*>(s_type);
+    }
+
     static inline bool IsDefined()
     {
         if (!s_resolved)
@@ -395,6 +410,32 @@ inline CClass* GetClass(CName aTypeName)
     }
 
     return reinterpret_cast<CClass*>(type);
+}
+
+template<CName AType>
+inline CEnum* GetEnum()
+{
+    return TypeLocator<AType>::GetEnum();
+}
+
+template<typename TType>
+inline CEnum* GetEnum()
+{
+    constexpr auto name = GetTypeName<TType>();
+
+    return TypeLocator<name>::GetEnum();
+}
+
+inline CEnum* GetEnum(CName aTypeName)
+{
+    auto type = CRTTISystem::Get()->GetType(aTypeName);
+
+    if (!type || type->GetType() != ERTTIType::Enum)
+    {
+        return nullptr;
+    }
+
+    return reinterpret_cast<CEnum*>(type);
 }
 
 template<typename T>

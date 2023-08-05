@@ -167,12 +167,12 @@ public:
     static constexpr bool indirect = std::is_pointer_v<T>;
 
     constexpr OffsetPtr(uintptr_t aBase)
-        : base(aBase)
+        : addr(aBase + offset)
     {
     }
 
     constexpr OffsetPtr(void* aBase)
-        : base(reinterpret_cast<uintptr_t>(aBase))
+        : addr(reinterpret_cast<uintptr_t>(aBase) + offset)
     {
     }
 
@@ -234,7 +234,7 @@ public:
 
     [[nodiscard]] inline uintptr_t GetAddress() const noexcept
     {
-        return base + offset;
+        return addr;
     }
 
     inline static Type* Get(void* aBase)
@@ -247,6 +247,6 @@ public:
         return OffsetPtr(aBase);
     }
 
-    uintptr_t base;
+    uintptr_t addr;
 };
 }

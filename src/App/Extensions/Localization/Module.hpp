@@ -29,15 +29,12 @@ private:
 
     static bool MergeTextResource(const std::string& aPath, TextEntryList& aFinalList, TextEntryMap& aUsedKeyMap,
                                   uint32_t aOriginalCount, uint64_t aOriginalMaxKey, bool aFallback);
-
     static void MergeTextEntry(TextEntryList& aFinalList, TextEntry& aNewEntry, uint32_t aIndex,
                                TextEntryMap& aUsedKeyMap, uint32_t aOriginalCount, uint64_t aOriginalMaxKey,
                                bool aFallback);
-
     static TextEntry* FindSameTextEntry(TextEntry& aEntry, TextEntryList& aList, uint32_t aCount);
-
+    static bool IsCommentEntry(TextEntry& aEntry);
     static bool MergeSubtitleResource(const std::string& aPath, SubtitleEntryList& aFinalList);
-
     static bool MergeLipsyncResource(const Red::Handle<Red::animLipsyncMapping>& aSource,
                                      Red::Handle<Red::animLipsyncMapping>& aTarget);
 
