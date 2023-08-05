@@ -638,7 +638,7 @@ void App::GarmentOverrideModule::ApplyComponentOverrides(Core::SharedPtr<EntityS
 
 void App::GarmentOverrideModule::ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, bool aVerbose)
 {
-    ApplyComponentOverrides(aEntityState, Raw::Entity::GetComponents(aEntityState->GetEntity()), aVerbose);
+    ApplyComponentOverrides(aEntityState, Raw::Entity::ComponentsStorage(aEntityState->GetEntity())->components, aVerbose);
 }
 
 void App::GarmentOverrideModule::ApplyOffsetOverrides(Core::SharedPtr<App::EntityState>& aEntityState,

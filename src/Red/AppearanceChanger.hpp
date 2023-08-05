@@ -81,6 +81,7 @@ constexpr auto GetSuffixValue = Core::RawFunc<
                           Red::Handle<Red::GameObject>& aOwner,
                           Red::TweakDBID aSuffixRecordID,
                           Red::CString& aResult)>();
+using GetSuffixValuePtr = decltype(GetSuffixValue)::Callable;
 
 constexpr auto RegisterPart = Core::RawFunc<
     /* addr = */ Red::Addresses::AppearanceChanger_RegisterPart,

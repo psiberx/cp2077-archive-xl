@@ -1,6 +1,7 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
+#include "Red/AppearanceChanger.hpp"
 #include "Red/AttachmentSlots.hpp"
 #include "Red/CharacterCustomization.hpp"
 #include "Red/TPPRepresentationComponent.hpp"
@@ -26,11 +27,15 @@ private:
     static void OnCheckFeetState(Red::game::ui::CharacterCustomizationFeetController* aComponent,
                                  Red::CharacterFeetState& aLiftedState,
                                  Red::CharacterFeetState& aFlatState);
+    static bool OnGetSuffixValue(Raw::AppearanceChanger::GetSuffixValuePtr aOriginalFunc,
+                                 Red::ItemID aItemID, uint64_t a2, Red::Handle<Red::GameObject>& aOwner,
+                                 Red::TweakDBID aSuffixRecordID, Red::CString& aResult);
 
-    static bool IsVisualTagActive(Red::IComponent* aComponent, Red::TweakDBID aBaseSlotID, Red::CName aVisualTag);
+    static bool IsVisualTagActive(Red::Handle<Red::Entity>& aOwner, Red::TweakDBID aBaseSlotID, Red::CName aVisualTag);
     static bool IsVisualTagActive(Red::ITransactionSystem* aTransactionSystem, Red::Handle<Red::Entity>& aOwner,
                                   Red::TweakDBID aSlotID, Red::CName aVisualTag);
 
+    static inline thread_local bool s_skipVisualTagCheck = false;
     static inline Core::Map<Red::TweakDBID, Core::Set<Red::TweakDBID>> s_extraSlots;
     static inline Core::Map<Red::TweakDBID, Red::TweakDBID> s_baseSlots;
     static inline std::shared_mutex s_slotsMutex;

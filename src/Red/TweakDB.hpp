@@ -79,6 +79,13 @@ inline bool RecordExists(TweakDBID aRecordID)
 
     return tweakDB->recordsByID.Get(aRecordID);
 }
+
+inline CString ToStringDebug(TweakDBID aID)
+{
+    Red::CString str;
+    Red::CallStatic("gamedataTDBIDHelper", "ToStringDEBUG", str, aID);
+    return str;
+}
 }
 
 namespace Raw

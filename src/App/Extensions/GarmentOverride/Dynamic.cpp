@@ -28,12 +28,14 @@ constexpr auto BodyTypeAttr = Red::CName("body_type");
 constexpr auto LegsStateAttr = Red::CName("legs_state");
 constexpr auto SkinColorAttr = Red::CName("skin_color");
 constexpr auto HairColorAttr = Red::CName("hair_color");
+constexpr auto InnerSleevesAttr = Red::CName("sleeves");
 constexpr auto VariantAttr = Red::CName("variant");
 
 constexpr auto GenderSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.Gender");
 constexpr auto CameraSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.Camera");
 constexpr auto BodyTypeSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.BodyType");
 constexpr auto LegsStateSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.LegsState");
+constexpr auto InnerSleevesSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.Partial");
 
 constexpr auto MaleAttrValue = "m";
 constexpr auto FemaleAttrValue = "w";
@@ -440,6 +442,7 @@ void App::DynamicAppearanceController::UpdateState(Red::Entity* aEntity)
     state.values[CameraAttr] = GetSuffixData(aEntity, CameraSuffix);
     state.values[BodyTypeAttr] = GetSuffixData(aEntity, BodyTypeSuffix);
     state.values[LegsStateAttr] = GetSuffixData(aEntity, LegsStateSuffix);
+    state.values[InnerSleevesAttr] = GetSuffixData(aEntity, InnerSleevesSuffix);
     state.values[SkinColorAttr] = GetSkinColorData(aEntity);
     state.values[HairColorAttr] = GetHairColorData(aEntity);
 
@@ -449,7 +452,10 @@ void App::DynamicAppearanceController::UpdateState(Red::Entity* aEntity)
     state.conditions.clear();
     for (const auto& [_, attribute] : state.values)
     {
-        state.conditions.insert(attribute.suffix.data());
+        if (!attribute.suffix.empty())
+        {
+            state.conditions.insert(attribute.suffix.data());
+        }
     }
 }
 
@@ -547,7 +553,7 @@ App::DynamicAppearanceController::AttributeData App::DynamicAppearanceController
 
 bool App::DynamicAppearanceController::IsMale(Red::Entity* aEntity) const
 {
-    for (const auto& component : Raw::Entity::GetComponents(aEntity) | std::views::reverse)
+    for (const auto& component : Raw::Entity::ComponentsStorage(aEntity)->components | std::views::reverse)
     {
         switch (component->name)
         {
