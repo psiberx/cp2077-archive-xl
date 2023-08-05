@@ -81,6 +81,28 @@ public:
 };
 
 template<uintptr_t A, typename T>
+class RawVFunc {};
+
+template<uintptr_t A, typename C, typename R, typename... Args>
+class RawVFunc<A, R (C::*)(Args...)> : public RawBase
+{
+public:
+    using Type = R (*)(C*, Args...);
+    using Callable = Type;
+
+    static constexpr uintptr_t offset = A;
+
+    constexpr RawVFunc() = default;
+
+    R operator()(C* aContext, Args&&... aArgs) const
+    {
+        auto vft = *reinterpret_cast<uintptr_t*>(aContext);
+        auto callable = *reinterpret_cast<Callable*>(vft + offset);
+        return callable(aContext, std::forward<Args>(aArgs)...);
+    }
+};
+
+template<uintptr_t A, typename T>
 class RawPtr : public RawBase
 {
 public:
@@ -167,12 +189,12 @@ public:
     static constexpr bool indirect = std::is_pointer_v<T>;
 
     constexpr OffsetPtr(uintptr_t aBase)
-        : addr(aBase + offset)
+        : address(aBase + offset)
     {
     }
 
     constexpr OffsetPtr(void* aBase)
-        : addr(reinterpret_cast<uintptr_t>(aBase) + offset)
+        : address(reinterpret_cast<uintptr_t>(aBase) + offset)
     {
     }
 
@@ -234,7 +256,7 @@ public:
 
     [[nodiscard]] inline uintptr_t GetAddress() const noexcept
     {
-        return addr;
+        return address;
     }
 
     inline static Type* Get(void* aBase)
@@ -247,6 +269,6 @@ public:
         return OffsetPtr(aBase);
     }
 
-    uintptr_t addr;
+    uintptr_t address;
 };
 }

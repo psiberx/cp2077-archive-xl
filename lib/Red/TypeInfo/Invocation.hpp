@@ -6,6 +6,13 @@ namespace Red
 {
 namespace Detail
 {
+constexpr auto TDBIDHelper = Red::CName("gamedataTDBIDHelper");
+
+constexpr bool IsFakeStatic(Red::CName aTypeName)
+{
+    return aTypeName == TDBIDHelper;
+}
+
 inline CBaseFunction* GetFunction(CClass* aType, CName aName)
 {
     if (aType)
@@ -37,6 +44,11 @@ inline CBaseFunction* GetStaticFunction(CClass* aType, CName aName)
             {
                 return func;
             }
+        }
+
+        if (IsFakeStatic(aType->name))
+        {
+            return GetFunction(aType, aName);
         }
 
         if (aType->parent)
@@ -73,8 +85,16 @@ inline bool CallFunction(CBaseFunction* aFunc, IScriptable* aContext, Args&&... 
     {
         const auto& func = reinterpret_cast<Red::CClassFunction*>(aFunc);
 
-        if (!aContext || !aContext->GetType()->IsA(func->parent))
-            return false;
+        if (!IsFakeStatic(func->parent->name))
+        {
+            if (!aContext || !aContext->GetType()->IsA(func->parent))
+                return false;
+        }
+        else
+        {
+            static char s_dummyContext[sizeof(Red::IScriptable)]{};
+            aContext = reinterpret_cast<IScriptable*>(&s_dummyContext);
+        }
     }
 
     CStack stack(aContext);
