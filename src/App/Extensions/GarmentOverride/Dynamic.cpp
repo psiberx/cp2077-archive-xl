@@ -22,14 +22,15 @@ constexpr auto AllMarkers = "!%&";
 constexpr auto DynamicValueMarker = '*';
 constexpr auto AttrOpen = '{';
 constexpr auto AttrClose = '}';
+constexpr auto ConditionEqual = "=";
 
 constexpr auto GenderAttr = Red::CName("gender");
 constexpr auto CameraAttr = Red::CName("camera");
-constexpr auto BodyTypeAttr = Red::CName("body_type");
-constexpr auto LegsStateAttr = Red::CName("legs_state");
+constexpr auto BodyTypeAttr = Red::CName("body");
+constexpr auto LegsStateAttr = Red::CName("feet");
+constexpr auto InnerSleevesAttr = Red::CName("sleeves");
 constexpr auto SkinColorAttr = Red::CName("skin_color");
 constexpr auto HairColorAttr = Red::CName("hair_color");
-constexpr auto InnerSleevesAttr = Red::CName("sleeves");
 constexpr auto VariantAttr = Red::CName("variant");
 
 constexpr auto GenderSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.Gender");
@@ -451,11 +452,12 @@ void App::DynamicAppearanceController::UpdateState(Red::Entity* aEntity)
     state.fallback[BodyTypeAttr] = {DefaultBodyTypeAttrValue, DefaultBodyTypeSuffixValue};
 
     state.conditions.clear();
-    for (const auto& [_, attribute] : state.values)
+    for (const auto& [attributeName, attributeData] : state.values)
     {
-        if (!attribute.suffix.empty())
+        if (!attributeData.value.empty())
         {
-            state.conditions.insert(attribute.suffix.data());
+            uint64_t condition = Red::FNV1a64(attributeData.value.data(), Red::FNV1a64(ConditionEqual, attributeName));
+            state.conditions.insert(condition);
         }
     }
 }
@@ -465,27 +467,27 @@ void App::DynamicAppearanceController::RemoveState(Red::Entity* aEntity)
     m_states.erase(aEntity);
 }
 
-App::DynamicAppearanceController::AttributeData App::DynamicAppearanceController::GetAttributeData(
-    Red::Entity* aEntity, Red::CName aAttribute) const
-{
-    switch (aAttribute)
-    {
-    case GenderAttr:
-        return GetSuffixData(aEntity, GenderSuffix);
-    case CameraAttr:
-        return GetSuffixData(aEntity, CameraSuffix);
-    case BodyTypeAttr:
-        return GetSuffixData(aEntity, BodyTypeSuffix);
-    case LegsStateAttr:
-        return GetSuffixData(aEntity, LegsStateSuffix);
-    case SkinColorAttr:
-        return GetSkinColorData(aEntity);
-    case HairColorAttr:
-        return GetHairColorData(aEntity);
-    }
-
-    return {};
-}
+// App::DynamicAppearanceController::AttributeData App::DynamicAppearanceController::GetAttributeData(
+//     Red::Entity* aEntity, Red::CName aAttribute) const
+// {
+//     switch (aAttribute)
+//     {
+//     case GenderAttr:
+//         return GetSuffixData(aEntity, GenderSuffix);
+//     case CameraAttr:
+//         return GetSuffixData(aEntity, CameraSuffix);
+//     case BodyTypeAttr:
+//         return GetSuffixData(aEntity, BodyTypeSuffix);
+//     case LegsStateAttr:
+//         return GetSuffixData(aEntity, LegsStateSuffix);
+//     case SkinColorAttr:
+//         return GetSkinColorData(aEntity);
+//     case HairColorAttr:
+//         return GetHairColorData(aEntity);
+//     }
+//
+//     return {};
+// }
 
 App::DynamicAppearanceController::AttributeData App::DynamicAppearanceController::GetSuffixData(
     Red::Entity* aEntity, Red::TweakDBID aSuffixID) const
@@ -530,10 +532,10 @@ App::DynamicAppearanceController::AttributeData App::DynamicAppearanceController
         case MaleBodyComponent:
         case FemaleBodyComponent1:
         case FemaleBodyComponent2:
-            const auto appearance = component.GetPtr<Red::ent::MorphTargetSkinnedMeshComponent>()->meshAppearance;
-            if (appearance)
+            const auto skinColor = component.GetPtr<Red::ent::MorphTargetSkinnedMeshComponent>()->meshAppearance;
+            if (skinColor)
             {
-                return {appearance.ToString() , ""};
+                return {skinColor.ToString() , skinColor.ToString()};
             }
         }
     }
@@ -549,7 +551,7 @@ App::DynamicAppearanceController::AttributeData App::DynamicAppearanceController
     Red::CName hairColor;
     Raw::CharacterCustomizationHelper::GetHairColor(hairColor, system->ref, IsMale(aEntity));
 
-    return {hairColor.ToString(), ""};
+    return {hairColor.ToString(), hairColor.ToString()};
 }
 
 bool App::DynamicAppearanceController::IsMale(Red::Entity* aEntity) const

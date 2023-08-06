@@ -91,7 +91,7 @@ private:
     DynamicString ProcessString(const DynamicAttrList& aAttrs, const DynamicPartList& aVariant,
                                 const char* aInput) const;
 
-    AttributeData GetAttributeData(Red::Entity* aEntity, Red::CName aAttribute) const;
+    // AttributeData GetAttributeData(Red::Entity* aEntity, Red::CName aAttribute) const;
     AttributeData GetSuffixData(Red::Entity* aEntity, Red::TweakDBID aSuffixID) const;
     AttributeData GetSkinColorData(Red::Entity* aEntity) const;
     AttributeData GetHairColorData(Red::Entity* aEntity) const;
