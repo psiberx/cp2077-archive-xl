@@ -1,6 +1,7 @@
 #include "Application.hpp"
-#include "App/Archives/ArchiveService.hpp"
 #include "App/Environment.hpp"
+#include "App/Project.hpp"
+#include "App/Archives/ArchiveService.hpp"
 #include "App/Extensions/ExtensionService.hpp"
 #include "Core/Foundation/RuntimeProvider.hpp"
 #include "Support/MinHook/MinHookProvider.hpp"
@@ -17,4 +18,9 @@ App::Application::Application(HMODULE aHandle, const RED4ext::Sdk* aSdk)
 
     Register<App::ArchiveService>(Env::GameDir());
     Register<App::ExtensionService>();
+}
+
+void App::Application::OnStarting()
+{
+    LogInfo("{} {} is starting...", Project::Name, Project::Version.to_string());
 }
