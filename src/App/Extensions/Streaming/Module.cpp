@@ -6,7 +6,7 @@ constexpr auto ModuleName = "Streaming";
 
 constexpr auto MainWorldResource = Red::ResourcePath(R"(base\worlds\03_night_city\_compiled\default\03_night_city.streamingworld)");
 
-constexpr auto WaitTimeout = std::chrono::milliseconds(200);
+constexpr auto WaitTimeout = std::chrono::milliseconds(2000);
 constexpr auto WaitTick = std::chrono::milliseconds(2);
 }
 

@@ -6,7 +6,7 @@ namespace
 {
 constexpr auto ModuleName = "Localization";
 
-constexpr auto WaitTimeout = std::chrono::milliseconds(500);
+constexpr auto WaitTimeout = std::chrono::milliseconds(2000);
 constexpr auto WaitTick = std::chrono::milliseconds(2);
 }
 

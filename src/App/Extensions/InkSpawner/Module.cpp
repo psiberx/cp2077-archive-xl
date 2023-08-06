@@ -6,7 +6,7 @@ constexpr auto ModuleName = "InkSpawner";
 
 constexpr auto ControllerSeparator = ':';
 
-constexpr auto WaitTimeout = std::chrono::milliseconds(200);
+constexpr auto WaitTimeout = std::chrono::milliseconds(1000);
 constexpr auto WaitTick = std::chrono::milliseconds(2);
 
 Red::ClassLocator<Red::ink::IWidgetController> s_gameControllerType;
