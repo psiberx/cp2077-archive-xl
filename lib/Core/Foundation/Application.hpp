@@ -21,8 +21,10 @@ public:
 protected:
     void OnRegistered(const Core::SharedPtr<Feature>& aFeature) override;
 
-    virtual void OnBootstrap() {};
-    virtual void OnShutdown() {};
+    virtual void OnStarting() {};
+    virtual void OnStarted() {};
+    virtual void OnStopping() {};
+    virtual void OnStopped() {};
 
 private:
     bool m_booted = false;

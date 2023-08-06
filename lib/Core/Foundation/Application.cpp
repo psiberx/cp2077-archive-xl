@@ -7,12 +7,14 @@ void Core::Application::Bootstrap()
 
     m_booted = true;
 
+    OnStarting();
+
     for (const auto& feature : GetRegistered())
     {
         feature->OnBootstrap();
     }
 
-    OnBootstrap();
+    OnStarted();
 }
 
 void Core::Application::Shutdown()
@@ -20,12 +22,14 @@ void Core::Application::Shutdown()
     if (!m_booted)
         return;
 
-    OnShutdown();
+    OnStopping();
 
     for (const auto& feature : GetRegistered())
     {
         feature->OnShutdown();
     }
+
+    OnStopped();
 
     m_booted = false;
 }
