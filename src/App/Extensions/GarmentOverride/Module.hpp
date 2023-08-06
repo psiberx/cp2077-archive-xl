@@ -22,6 +22,10 @@ public:
     static void EnableGarmentOffsets();
     static void DisableGarmentOffsets();
 
+    static bool SupportsDynamicAppearance(const Red::EntityTemplate* aTemplate);
+    static std::string_view GetBaseAppearanceName(Red::CName aName);
+    static bool IsUniqueAppearanceName(Red::CName aName);
+
 private:
     void ConfigureTags();
 
@@ -95,8 +99,6 @@ private:
 
     static void UpdateDynamicAttributes(Core::SharedPtr<EntityState>& aEntityState);
     static void UpdateDynamicAttributes();
-
-    static bool IsUniqueAppearance(Red::CName aName);
 
     static inline Core::UniquePtr<Red::TemplateAppearance> s_emptyAppearance;
     static inline Core::SharedPtr<DynamicAppearanceController> s_dynamicAppearance;

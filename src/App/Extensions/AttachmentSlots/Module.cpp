@@ -261,6 +261,15 @@ bool App::AttachmentSlotsModule::IsVisualTagActive(Red::ITransactionSystem* aTra
         auto debugSlotName = Red::ToStringDebug(aSlotID);
 #endif
 
+        if (slotData->itemObject)
+        {
+            Red::CName itemAppearance;
+            Raw::ItemObject::GetAppearanceName(slotData->itemObject, itemAppearance);
+
+            return itemAppearance && itemAppearance != EmptyAppearanceName &&
+                   aTransactionSystem->MatchVisualTag(slotData->itemObject, aVisualTag, false);
+        }
+
         if (slotData->spawningItemID)
         {
 #ifndef NDEBUG
@@ -277,15 +286,6 @@ bool App::AttachmentSlotsModule::IsVisualTagActive(Red::ITransactionSystem* aTra
 #endif
 
             return aTransactionSystem->MatchVisualTagByItemID(slotData->appearanceItemID, aOwner, aVisualTag);
-        }
-
-        if (slotData->itemObject)
-        {
-            Red::CName itemAppearance;
-            Raw::ItemObject::GetAppearanceName(slotData->itemObject, itemAppearance);
-
-            return itemAppearance && itemAppearance != EmptyAppearanceName &&
-                   aTransactionSystem->MatchVisualTag(slotData->itemObject, aVisualTag, false);
         }
     }
 

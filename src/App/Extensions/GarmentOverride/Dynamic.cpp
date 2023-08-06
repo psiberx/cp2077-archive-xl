@@ -17,6 +17,7 @@ constexpr auto PartNameGlue = '.';
 constexpr auto ConditionMarker = '&';
 constexpr auto ReferenceMarkers = "!&";
 constexpr auto TransientMarkers = "%&";
+constexpr auto AllMarkers = "!%&";
 
 constexpr auto DynamicValueMarker = '*';
 constexpr auto AttrOpen = '{';
@@ -657,4 +658,17 @@ void App::DynamicAppearanceController::MarkDynamicAppearanceName(Red::CName& aAp
     dynamicName += std::to_string(aSelector.context);
 
     aAppearanceName = Red::CNamePool::Add(dynamicName.c_str());
+}
+
+std::string_view App::DynamicAppearanceController::GetBaseAppearanceName(Red::CName aAppearanceName)
+{
+    std::string_view baseName = aAppearanceName.ToString();
+
+    auto markerPos = baseName.find_first_of(AllMarkers);
+    if (markerPos != std::string_view::npos)
+    {
+        baseName.remove_suffix(baseName.size() - markerPos);
+    }
+
+    return baseName;
 }

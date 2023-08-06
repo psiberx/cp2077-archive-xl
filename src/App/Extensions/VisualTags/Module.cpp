@@ -34,15 +34,27 @@ void App::VisualTagsModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset&
 {
     static std::shared_mutex s_autoTagsLock;
     static Core::Map<uint64_t, Red::TagList> s_autoTagsCache;
-    static Red::TagList s_emptyTags{};
+    static Core::Set<Red::ResourcePath> s_dynamicAppearanceEntities;
 
     if (aOutTags.tags.size > 0 || !aAppearanceName)
         return;
 
-    auto cacheKey = Red::FNV1a64(aAppearanceName.ToString(), aEntityPath.hash);
+    uint64_t cacheKey;
 
     {
         std::shared_lock _(s_autoTagsLock);
+
+        if (s_dynamicAppearanceEntities.contains(aEntityPath))
+        {
+            auto baseName = GarmentOverrideModule::GetBaseAppearanceName(aAppearanceName);
+            cacheKey = Red::FNV1a64(reinterpret_cast<const uint8_t*>(baseName.data()), baseName.size(),
+                                    aEntityPath.hash);
+        }
+        else
+        {
+            cacheKey = Red::FNV1a64(aAppearanceName.ToString(), aEntityPath.hash);
+        }
+
         auto cachedTagsIt = s_autoTagsCache.find(cacheKey);
         if (cachedTagsIt != s_autoTagsCache.end())
         {
@@ -62,8 +74,6 @@ void App::VisualTagsModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset&
 
     if (!appearanceTemplate)
     {
-        std::unique_lock _(s_autoTagsLock);
-        s_autoTagsCache.emplace(cacheKey, s_emptyTags);
         return;
     }
 
@@ -77,8 +87,10 @@ void App::VisualTagsModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset&
 
     if (!appearanceDefinition)
     {
-        std::unique_lock _(s_autoTagsLock);
-        s_autoTagsCache.emplace(cacheKey, s_emptyTags);
+        if (entityTemplate->visualTagsSchema)
+        {
+            MergeTags(aOutTags, entityTemplate->visualTagsSchema->visualTags);
+        }
         return;
     }
 
@@ -92,6 +104,16 @@ void App::VisualTagsModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset&
 
     {
         std::unique_lock _(s_autoTagsLock);
+
+        if (GarmentOverrideModule::SupportsDynamicAppearance(entityTemplate))
+        {
+            auto baseName = GarmentOverrideModule::GetBaseAppearanceName(aAppearanceName);
+            cacheKey = Red::FNV1a64(reinterpret_cast<const uint8_t*>(baseName.data()), baseName.size(),
+                                    aEntityPath.hash);
+
+            s_dynamicAppearanceEntities.insert(aEntityPath);
+        }
+
         auto cachedTagsIt = s_autoTagsCache.emplace(cacheKey, autoTags).first;
         MergeTags(aOutTags, cachedTagsIt->second);
     }

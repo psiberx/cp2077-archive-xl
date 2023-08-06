@@ -63,6 +63,7 @@ public:
     bool SupportsDynamicAppearance(const Red::EntityTemplate* aTemplate);
     void MarkDynamicAppearanceName(Red::CName& aAppearanceName, Red::Entity* aEntity);
     void MarkDynamicAppearanceName(Red::CName& aAppearanceName, DynamicAppearanceName& aSelector);
+    std::string_view GetBaseAppearanceName(Red::CName aAppearanceName);
 
 private:
     struct AttributeData
