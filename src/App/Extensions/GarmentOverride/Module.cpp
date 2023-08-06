@@ -151,6 +151,9 @@ void App::GarmentOverrideModule::OnLoadAppearanceResource(Red::ItemFactoryReques
         std::unique_lock _(s_mutex);
         if (auto& entityState = s_stateManager->GetEntityState(entityWeak->instance))
         {
+#ifndef NDEBUG
+            LogDebug("|{}| [event=LoadAppearanceResource entity={}].", ModuleName, entityState->GetName());
+#endif
             UpdateDynamicAttributes(entityState);
         }
     }
@@ -167,6 +170,9 @@ void App::GarmentOverrideModule::OnChangeAppearanceResource(Red::ItemFactoryAppe
         std::unique_lock _(s_mutex);
         if (auto& entityState = s_stateManager->GetEntityState(entityWeak->instance))
         {
+#ifndef NDEBUG
+            LogDebug("|{}| [event=ChangeAppearanceResource entity={}].", ModuleName, entityState->GetName());
+#endif
             UpdateDynamicAttributes(entityState);
         }
     }
@@ -309,8 +315,8 @@ void App::GarmentOverrideModule::OnChangeCustomItem(uintptr_t, Red::WeakHandle<R
         if (auto& entityState = s_stateManager->GetEntityState(entity))
         {
 #ifndef NDEBUG
-                LogDebug("|{}| [event=ChangeCustomItem entity={} item={} app={}].",
-                         ModuleName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
+            LogDebug("|{}| [event=ChangeCustomItem entity={} item={} app={}].",
+                     ModuleName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
 #endif
 
             UnregisterComponentOverrides(entityState, aRequest.hash);
@@ -330,8 +336,8 @@ void App::GarmentOverrideModule::OnRemoveItem(uintptr_t, Red::WeakHandle<Red::En
         if (auto& entityState = s_stateManager->GetEntityState(entity))
         {
 #ifndef NDEBUG
-                LogDebug("|{}| [event=RemoveItem entity={} item={}].",
-                         ModuleName, entityState->GetName(), aRequest.hash);
+            LogDebug("|{}| [event=RemoveItem entity={} item={}].",
+                     ModuleName, entityState->GetName(), aRequest.hash);
 #endif
 
             UnregisterOffsetOverrides(entityState, aRequest.hash);
@@ -344,9 +350,12 @@ void App::GarmentOverrideModule::OnRegisterPart(uintptr_t, Red::Handle<Red::Enti
                                                 Red::Handle<Red::ComponentsStorage>& aComponentStorage,
                                                 Red::Handle<Red::AppearanceDefinition>& aAppearance)
 {
+#ifndef NDEBUG
+    LogDebug("|{}| [event=RegisterPart part={}].", ModuleName, aPart->path.hash);
+#endif
+
     std::unique_lock _(s_mutex);
     UpdatePartAssignments(aComponentStorage->components, aPart->path);
-    UpdateDynamicAttributes();
 }
 
 uintptr_t App::GarmentOverrideModule::OnProcessGarment(Red::SharedPtr<Red::GarmentProcessor>& aProcessor,
@@ -355,6 +364,10 @@ uintptr_t App::GarmentOverrideModule::OnProcessGarment(Red::SharedPtr<Red::Garme
     std::unique_lock _(s_mutex);
     if (auto& entityState = s_stateManager->FindEntityState(aEntity))
     {
+#ifndef NDEBUG
+        LogDebug("|{}| [event=ProcessGarment entity={}].", ModuleName, entityState->GetName());
+#endif
+
         UpdateDynamicAttributes(entityState);
     }
 
@@ -373,6 +386,9 @@ void App::GarmentOverrideModule::OnProcessGarmentMesh(Red::GarmentProcessor* aPr
 {
     if (aMeshToken->IsFailed())
     {
+#ifndef NDEBUG
+        LogDebug("|{}| [event=ProcessGarmentMesh comp={}].", ModuleName, aComponent->name.ToString());
+#endif
         std::unique_lock _(s_mutex);
         if (auto& entityState = s_stateManager->FindEntityState(aProcessor))
         {

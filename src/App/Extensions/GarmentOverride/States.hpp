@@ -83,6 +83,7 @@ public:
 
     [[nodiscard]] const char* GetName() const;
     [[nodiscard]] Red::Entity* GetEntity() const;
+    [[nodiscard]] bool IsValid() const;
 
     [[nodiscard]] const Core::Map<Red::CName, Core::SharedPtr<ComponentState>>& GetComponentStates() const;
     [[nodiscard]] const Core::SharedPtr<ComponentState>& GetComponentState(Red::CName aComponentName);
@@ -147,6 +148,7 @@ private:
 
     std::string m_name;
     Red::Entity* m_entity;
+    Red::WeakHandle<Red::Entity> m_entityWeak;
     Core::Map<Red::CName, Core::SharedPtr<ComponentState>> m_componentStates;
     Core::Map<Red::ResourcePath, Core::SharedPtr<ResourceState>> m_resourceStates;
     Core::Map<uint64_t, Red::ResourcePath> m_originalResources;

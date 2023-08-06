@@ -210,6 +210,7 @@ const App::DynamicPartList& App::ResourceState::GetActiveVariantParts() const
 App::EntityState::EntityState(Red::Entity* aEntity,
                               Core::SharedPtr<DynamicAppearanceController> aDynamicAppearance) noexcept
     : m_entity(aEntity)
+    , m_entityWeak(Red::AsWeakHandle(aEntity))
     , m_dynamicAppearance(std::move(aDynamicAppearance))
     , m_prefixResolver(ComponentPrefixResolver::Get())
 {
@@ -231,6 +232,11 @@ const char* App::EntityState::GetName() const
 Red::Entity* App::EntityState::GetEntity() const
 {
     return m_entity;
+}
+
+bool App::EntityState::IsValid() const
+{
+    return !m_entityWeak.Expired();
 }
 
 const Core::Map<Red::CName, Core::SharedPtr<App::ComponentState>>& App::EntityState::GetComponentStates() const
@@ -842,9 +848,23 @@ void App::OverrideStateManager::LinkEntityToAssembler(Red::Entity* aEntity, Red:
 void App::OverrideStateManager::LinkComponentToPart(Red::Handle<Red::IComponent>& aComponent,
                                                     Red::ResourcePath aResource)
 {
-    for (auto& [_, entityState] : m_entityStates)
+    Core::Vector<Red::Entity*> expired;
+
+    for (auto& [entityKey, entityState] : m_entityStates)
     {
-        entityState->LinkComponentToPart(aComponent, aResource);
+        if (entityState->IsValid())
+        {
+            entityState->LinkComponentToPart(aComponent, aResource);
+        }
+        else
+        {
+            expired.push_back(entityKey);
+        }
+    }
+
+    for (const auto& entityKey : expired)
+    {
+        m_entityStates.erase(entityKey);
     }
 }
 
@@ -852,6 +872,9 @@ void App::OverrideStateManager::UpdateDynamicAttributes()
 {
     for (auto& [_, entityState] : m_entityStates)
     {
-        entityState->UpdateDynamicAttributes();
+        if (entityState->IsValid())
+        {
+            entityState->UpdateDynamicAttributes();
+        }
     }
 }
