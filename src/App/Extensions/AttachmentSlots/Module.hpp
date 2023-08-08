@@ -23,10 +23,10 @@ private:
                                 Red::game::TPPRepresentationComponent* aComponent,
                                 Red::TweakDBID aItemID, Red::TweakDBID aSlotID);
     static void OnCheckHairState(Red::game::ui::CharacterCustomizationHairstyleController* aComponent,
-                                 Red::CharacterHairState& aHairState);
+                                 Red::CharacterBodyPartState& aHairState);
     static void OnCheckFeetState(Red::game::ui::CharacterCustomizationFeetController* aComponent,
-                                 Red::CharacterFeetState& aLiftedState,
-                                 Red::CharacterFeetState& aFlatState);
+                                 Red::CharacterBodyPartState& aLiftedState,
+                                 Red::CharacterBodyPartState& aFlatState);
     static bool OnGetSuffixValue(Raw::AppearanceChanger::GetSuffixValuePtr aOriginalFunc,
                                  Red::ItemID aItemID, uint64_t a2, Red::Handle<Red::GameObject>& aOwner,
                                  Red::TweakDBID aSuffixRecordID, Red::CString& aResult);

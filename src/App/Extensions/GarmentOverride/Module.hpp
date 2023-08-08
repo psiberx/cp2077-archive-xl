@@ -4,16 +4,19 @@
 #include "App/Extensions/GarmentOverride/Dynamic.hpp"
 #include "App/Extensions/GarmentOverride/States.hpp"
 #include "App/Extensions/GarmentOverride/Unit.hpp"
-#include "App/Extensions/VisualTags/Module.hpp"
 #include "Red/AppearanceChanger.hpp"
 #include "Red/EntityTemplate.hpp"
 #include "Red/GarmentAssembler.hpp"
+#include "Red/VisualTagsPreset.hpp"
 
 namespace App
 {
 class GarmentOverrideModule : public ConfigurableUnitModule<GarmentOverrideUnit>
 {
 public:
+    static constexpr auto ForceHairTag = Red::CName("force_Hair");
+    static constexpr auto ForceFlatFeetTag = Red::CName("force_FlatFeet");
+
     bool Load() override;
     void Reload() override;
     bool Unload() override;
@@ -21,10 +24,6 @@ public:
 
     static void EnableGarmentOffsets();
     static void DisableGarmentOffsets();
-
-    static bool SupportsDynamicAppearance(const Red::EntityTemplate* aTemplate);
-    static std::string_view GetBaseAppearanceName(Red::CName aName);
-    static bool IsUniqueAppearanceName(Red::CName aName);
 
 private:
     void ConfigureTags();
@@ -35,6 +34,10 @@ private:
     static void OnResolveDefinition(Red::AppearanceResource* aResource,
                                     Red::Handle<Red::AppearanceDefinition>* aDefinition,
                                     Red::CName aAppearanceSelector, uint32_t a4, uint8_t a5);
+    static void OnGetVisualTags(Red::AppearanceNameVisualTagsPreset& aPreset,
+                                Red::ResourcePath aEntityPath,
+                                Red::CName aAppearanceName,
+                                Red::TagList& aFinalTags);
     static void OnAddItem(uintptr_t, Red::WeakHandle<Red::Entity>&, Red::GarmentItemAddRequest&);
     static void OnAddCustomItem(uintptr_t, Red::WeakHandle<Red::Entity>&, Red::GarmentItemAddCustomRequest&);
     static void OnChangeItem(uintptr_t, Red::WeakHandle<Red::Entity>&, Red::GarmentItemChangeRequest&);
@@ -100,13 +103,13 @@ private:
     static void UpdateDynamicAttributes(Core::SharedPtr<EntityState>& aEntityState);
     static void UpdateDynamicAttributes();
 
+    static bool IsUniqueAppearanceName(Red::CName aName);
+
     static inline Core::UniquePtr<Red::TemplateAppearance> s_emptyAppearance;
     static inline Core::SharedPtr<DynamicAppearanceController> s_dynamicAppearance;
     static inline Core::UniquePtr<OverrideStateManager> s_stateManager;
     static inline Core::SharedPtr<OverrideTagManager> s_tagManager;
     static inline bool s_garmentOffsetsEnabled;
     static inline std::shared_mutex s_mutex;
-
-    friend VisualTagsModule;
 };
 }

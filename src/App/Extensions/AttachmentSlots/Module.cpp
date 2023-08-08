@@ -1,4 +1,5 @@
 #include "Module.hpp"
+#include "App/Extensions/GarmentOverride/Module.hpp"
 #include "Red/Entity.hpp"
 #include "Red/ItemObject.hpp"
 #include "Red/TweakDB.hpp"
@@ -14,9 +15,6 @@ constexpr auto FaceSlot = Red::TweakDBID("AttachmentSlots.Eyes");
 constexpr auto TorsoSlot = Red::TweakDBID("AttachmentSlots.Torso");
 constexpr auto FeetSlot = Red::TweakDBID("AttachmentSlots.Feet");
 constexpr auto TPPAffectedSlots = {HeadSlot, FaceSlot};
-
-constexpr auto ForceHairTag = Red::CName("force_Hair");
-constexpr auto ForceFlatFeetTag = Red::CName("force_FlatFeet");
 
 constexpr auto InnerSleevesSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.Partial");
 constexpr auto HideInnerSleevesTag = Red::CName("hide_T1part");
@@ -99,6 +97,10 @@ void App::AttachmentSlotsModule::OnInitializeSlots(Red::game::AttachmentSlots*, 
 
 bool App::AttachmentSlotsModule::OnSlotSpawningCheck(Red::game::AttachmentSlots* aComponent, Red::TweakDBID aSlotID)
 {
+#ifndef NDEBUG
+    auto debugSlotName = Red::ToStringDebug(aSlotID);
+#endif
+
     bool result = Raw::AttachmentSlots::IsSlotSpawning(aComponent, aSlotID);
 
     if (!result)
@@ -155,41 +157,45 @@ void App::AttachmentSlotsModule::OnItemChangeTPP(Raw::TPPRepresentationComponent
 }
 
 void App::AttachmentSlotsModule::OnCheckHairState(Red::game::ui::CharacterCustomizationHairstyleController* aComponent,
-                                                  Red::CharacterHairState& aHairState)
+                                                  Red::CharacterBodyPartState& aHairState)
 {
-    if (aHairState == Red::CharacterHairState::Hidden)
+    // fixme: combine non empty slot check + tag check
+
+    if (aHairState == Red::CharacterBodyPartState::Hidden)
     {
         auto owner = Red::ToHandle(Raw::IComponent::Owner::Get(aComponent));
-        if (IsVisualTagActive(owner, HeadSlot, ForceHairTag))
+        if (IsVisualTagActive(owner, HeadSlot, GarmentOverrideModule::ForceHairTag))
         {
-            aHairState = Red::CharacterHairState::Visible;
+            aHairState = Red::CharacterBodyPartState::Visible;
         }
     }
 }
 
 void App::AttachmentSlotsModule::OnCheckFeetState(Red::game::ui::CharacterCustomizationFeetController* aComponent,
-                                                  Red::CharacterFeetState& aLiftedState,
-                                                  Red::CharacterFeetState& aFlatState)
+                                                  Red::CharacterBodyPartState& aLiftedState,
+                                                  Red::CharacterBodyPartState& aFlatState)
 {
-    if (aLiftedState != Red::CharacterFeetState::Lifted)
+    // fixme: combine non empty slot check + tag check
+
+    if (aLiftedState != Red::CharacterBodyPartState::Visible)
     {
         auto transactionSystem = Red::GetGameSystem<Red::ITransactionSystem>();
         auto owner = Raw::IComponent::Owner(aComponent);
 
         if (transactionSystem->IsSlotSpawning(owner, FeetSlot))
         {
-            aLiftedState = Red::CharacterFeetState::Lifted;
-            aFlatState = Red::CharacterFeetState::Flat;
+            aLiftedState = Red::CharacterBodyPartState::Visible;
+            aFlatState = Red::CharacterBodyPartState::Hidden;
         }
     }
 
-    if (aLiftedState == Red::CharacterFeetState::Lifted)
+    if (aLiftedState == Red::CharacterBodyPartState::Visible)
     {
         auto owner = Red::ToHandle(Raw::IComponent::Owner::Get(aComponent));
-        if (IsVisualTagActive(owner, FeetSlot, ForceFlatFeetTag))
+        if (IsVisualTagActive(owner, FeetSlot, GarmentOverrideModule::ForceFlatFeetTag))
         {
-            aLiftedState = Red::CharacterFeetState::Flat;
-            aFlatState = Red::CharacterFeetState::Lifted;
+            aLiftedState = Red::CharacterBodyPartState::Hidden;
+            aFlatState = Red::CharacterBodyPartState::Visible;
         }
     }
 }

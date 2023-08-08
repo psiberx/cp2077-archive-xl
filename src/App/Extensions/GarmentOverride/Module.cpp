@@ -39,6 +39,9 @@ bool App::GarmentOverrideModule::Load()
     if (!HookAfter<Raw::AppearanceResource::FindAppearance>(&OnResolveDefinition))
         throw std::runtime_error("Failed to hook [AppearanceResource::FindAppearance].");
 
+    if (!HookAfter<Raw::AppearanceNameVisualTagsPreset::GetVisualTags>(&OnGetVisualTags))
+        throw std::runtime_error("Failed to hook [AppearanceNameVisualTagsPreset::GetVisualTags].");
+
     if (!HookBefore<Raw::GarmentAssembler::AddItem>(&OnAddItem))
         throw std::runtime_error("Failed to hook [GarmentAssembler::AddItem].");
 
@@ -106,6 +109,7 @@ bool App::GarmentOverrideModule::Unload()
     Unhook<Raw::ItemFactoryAppearanceChangeRequest::LoadAppearance>();
     Unhook<Raw::EntityTemplate::FindAppearance>();
     Unhook<Raw::AppearanceResource::FindAppearance>();
+    Unhook<Raw::AppearanceNameVisualTagsPreset::GetVisualTags>();
     Unhook<Raw::GarmentAssembler::AddItem>();
     Unhook<Raw::GarmentAssembler::AddCustomItem>();
     Unhook<Raw::GarmentAssembler::ChangeItem>();
@@ -263,6 +267,94 @@ void App::GarmentOverrideModule::OnAddItem(uintptr_t, Red::WeakHandle<Red::Entit
             RegisterComponentOverrides(entityState, aRequest.hash, aRequest.apperance);
         }
     }
+}
+
+void App::GarmentOverrideModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset& aPreset,
+                                                 Red::ResourcePath aEntityPath, Red::CName aAppearanceName,
+                                                 Red::TagList& aFinalTags)
+{
+    static std::shared_mutex s_autoTagsLock;
+    static Core::Map<uint64_t, Red::TagList> s_autoTagsCache;
+    static Core::Set<Red::ResourcePath> s_dynamicAppearanceEntities;
+
+    if (aFinalTags.tags.size > 0 || !aAppearanceName)
+        return;
+
+    uint64_t cacheKey;
+
+    {
+        std::shared_lock _(s_autoTagsLock);
+
+        if (s_dynamicAppearanceEntities.contains(aEntityPath))
+        {
+            auto baseName = s_dynamicAppearance->GetBaseAppearanceName(aAppearanceName);
+            cacheKey = Red::FNV1a64(reinterpret_cast<const uint8_t*>(baseName.data()), baseName.size(),
+                                    aEntityPath.hash);
+        }
+        else
+        {
+            cacheKey = Red::FNV1a64(aAppearanceName.ToString(), aEntityPath.hash);
+        }
+
+        auto cachedTagsIt = s_autoTagsCache.find(cacheKey);
+        if (cachedTagsIt != s_autoTagsCache.end())
+        {
+            aFinalTags.Add(cachedTagsIt->second);
+            return;
+        }
+    }
+
+    auto loader = Red::ResourceLoader::Get();
+    auto entityToken = loader->FindToken<Red::ent::EntityTemplate>(aEntityPath);
+
+    if (!entityToken || !entityToken->IsLoaded())
+        return;
+
+    auto entityTemplate = entityToken->Get();
+    auto appearanceTemplate = OnResolveAppearance(entityTemplate, aAppearanceName);
+
+    if (!appearanceTemplate)
+        return;
+
+    auto appearancePath = appearanceTemplate->appearanceResource.path;
+    auto appearanceToken = loader->FindToken<Red::appearance::AppearanceResource>(appearancePath);
+
+    if (!appearanceToken || !appearanceToken->IsLoaded())
+        return;
+
+    auto appearanceResource = appearanceToken->Get();
+
+    Red::Handle<Red::AppearanceDefinition> appearanceDefinition;
+    Raw::AppearanceResource::FindAppearance(appearanceResource, &appearanceDefinition,
+                                            appearanceTemplate->appearanceName, 0, 0);
+    OnResolveDefinition(appearanceResource, &appearanceDefinition, appearanceTemplate->appearanceName, 0, 0);
+
+    if (entityTemplate->visualTagsSchema)
+    {
+        aFinalTags.Add(entityTemplate->visualTagsSchema->visualTags);
+    }
+
+    if (!appearanceDefinition)
+        return;
+
+    aFinalTags.Add(appearanceDefinition->visualTags);
+
+    std::unique_lock _(s_autoTagsLock);
+
+    if (s_dynamicAppearance->SupportsDynamicAppearance(entityTemplate))
+    {
+        auto baseName = s_dynamicAppearance->GetBaseAppearanceName(aAppearanceName);
+        cacheKey = Red::FNV1a64(reinterpret_cast<const uint8_t*>(baseName.data()), baseName.size(),
+                                aEntityPath.hash);
+
+        s_dynamicAppearanceEntities.insert(aEntityPath);
+    }
+
+    // fixme: figure out why TagList copy ctor is broken
+    Red::TagList autoTags;
+    autoTags.Add(aFinalTags);
+
+    s_autoTagsCache.emplace(cacheKey, std::move(autoTags));
 }
 
 void App::GarmentOverrideModule::OnAddCustomItem(uintptr_t, Red::WeakHandle<Red::Entity>& aEntityWeak,
@@ -687,14 +779,4 @@ void App::GarmentOverrideModule::UpdateDynamicAttributes()
 bool App::GarmentOverrideModule::IsUniqueAppearanceName(Red::CName aName)
 {
     return aName && aName != DefaultAppearanceName && aName != RandomAppearanceName && aName != EmptyAppearanceName;
-}
-
-bool App::GarmentOverrideModule::SupportsDynamicAppearance(const Red::EntityTemplate* aTemplate)
-{
-    return s_dynamicAppearance->SupportsDynamicAppearance(aTemplate);
-}
-
-std::string_view App::GarmentOverrideModule::GetBaseAppearanceName(Red::CName aName)
-{
-    return s_dynamicAppearance->GetBaseAppearanceName(aName);
 }

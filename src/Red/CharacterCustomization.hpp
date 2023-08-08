@@ -5,14 +5,7 @@
 
 namespace Red
 {
-enum class CharacterFeetState : uint32_t
-{
-    Undefined = 0,
-    Flat = 1,
-    Lifted = 2,
-};
-
-enum class CharacterHairState : uint32_t
+enum class CharacterBodyPartState : uint32_t
 {
     Undefined = 0,
     Hidden = 1,
@@ -25,7 +18,7 @@ namespace Raw::CharacterCustomizationHairstyleController
 constexpr auto CheckState = Core::RawFunc<
     /* addr = */ Red::Addresses::CharacterCustomizationHairstyleController_CheckState,
     /* type = */ void (*)(Red::game::ui::CharacterCustomizationHairstyleController* aComponent,
-                          Red::CharacterHairState& aLiftedState)>();
+                          Red::CharacterBodyPartState& aLiftedState)>();
 }
 
 namespace Raw::CharacterCustomizationFeetController
@@ -38,8 +31,8 @@ namespace Raw::CharacterCustomizationFeetController
 constexpr auto CheckState = Core::RawFunc<
     /* addr = */ Red::Addresses::CharacterCustomizationFeetController_CheckState,
     /* type = */ void (*)(Red::game::ui::CharacterCustomizationFeetController* aComponent,
-                          Red::CharacterFeetState& aLiftedState,
-                          Red::CharacterFeetState& aFlatState)>();
+                          Red::CharacterBodyPartState& aLiftedState,
+                          Red::CharacterBodyPartState& aFlatState)>();
 }
 
 namespace Raw::CharacterCustomizationSystem
