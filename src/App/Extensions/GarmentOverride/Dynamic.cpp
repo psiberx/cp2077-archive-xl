@@ -467,28 +467,6 @@ void App::DynamicAppearanceController::RemoveState(Red::Entity* aEntity)
     m_states.erase(aEntity);
 }
 
-// App::DynamicAppearanceController::AttributeData App::DynamicAppearanceController::GetAttributeData(
-//     Red::Entity* aEntity, Red::CName aAttribute) const
-// {
-//     switch (aAttribute)
-//     {
-//     case GenderAttr:
-//         return GetSuffixData(aEntity, GenderSuffix);
-//     case CameraAttr:
-//         return GetSuffixData(aEntity, CameraSuffix);
-//     case BodyTypeAttr:
-//         return GetSuffixData(aEntity, BodyTypeSuffix);
-//     case LegsStateAttr:
-//         return GetSuffixData(aEntity, LegsStateSuffix);
-//     case SkinColorAttr:
-//         return GetSkinColorData(aEntity);
-//     case HairColorAttr:
-//         return GetHairColorData(aEntity);
-//     }
-//
-//     return {};
-// }
-
 App::DynamicAppearanceController::AttributeData App::DynamicAppearanceController::GetSuffixData(
     Red::Entity* aEntity, Red::TweakDBID aSuffixID) const
 {

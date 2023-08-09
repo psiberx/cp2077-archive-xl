@@ -15,6 +15,10 @@ public:
     bool Unload() override;
     std::string_view GetName() override;
 
+    static bool IsRelatedSlot(Red::TweakDBID aSlotID, Red::TweakDBID aBaseSlotID);
+    static Core::Set<Red::TweakDBID> GetRelatedSlots(Red::TweakDBID aBaseSlotID);
+    static Core::Set<Red::TweakDBID> GetExtraSlots(Red::TweakDBID aBaseSlotID);
+
 private:
     static void OnInitializeSlots(Red::game::AttachmentSlots* aComponent, Red::DynArray<Red::TweakDBID>& aSlotIDs);
     static bool OnSlotSpawningCheck(Red::game::AttachmentSlots* aComponent, Red::TweakDBID aSlotID);

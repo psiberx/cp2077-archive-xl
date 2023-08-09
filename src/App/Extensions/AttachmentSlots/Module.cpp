@@ -8,8 +8,6 @@ namespace
 {
 constexpr auto ModuleName = "AttachmentSlots";
 
-constexpr auto ParentSlotFlat = ".parentSlot";
-
 constexpr auto HeadSlot = Red::TweakDBID("AttachmentSlots.Head");
 constexpr auto FaceSlot = Red::TweakDBID("AttachmentSlots.Eyes");
 constexpr auto TorsoSlot = Red::TweakDBID("AttachmentSlots.Torso");
@@ -81,7 +79,7 @@ void App::AttachmentSlotsModule::OnInitializeSlots(Red::game::AttachmentSlots*, 
 
         for (auto& slotID : aSlotIDs)
         {
-            const auto parentSlotFlat = tweakDB->GetFlatValue({slotID, ParentSlotFlat});
+            const auto parentSlotFlat = tweakDB->GetFlatValue({slotID, ".parentSlot"});
             if (parentSlotFlat)
             {
                 const auto parentSlotID = *parentSlotFlat->GetValue<Red::TweakDBID>();
@@ -160,10 +158,11 @@ void App::AttachmentSlotsModule::OnCheckHairState(Red::game::ui::CharacterCustom
                                                   Red::CharacterBodyPartState& aHairState)
 {
     // fixme: combine non empty slot check + tag check
+    // fixme: add the same check for genitals
 
     if (aHairState == Red::CharacterBodyPartState::Hidden)
     {
-        auto owner = Red::ToHandle(Raw::IComponent::Owner::Get(aComponent));
+        auto owner = Red::ToHandle(Raw::IComponent::Owner::Ptr(aComponent));
         if (IsVisualTagActive(owner, HeadSlot, GarmentOverrideModule::ForceHairTag))
         {
             aHairState = Red::CharacterBodyPartState::Visible;
@@ -191,7 +190,7 @@ void App::AttachmentSlotsModule::OnCheckFeetState(Red::game::ui::CharacterCustom
 
     if (aLiftedState == Red::CharacterBodyPartState::Visible)
     {
-        auto owner = Red::ToHandle(Raw::IComponent::Owner::Get(aComponent));
+        auto owner = Red::ToHandle(Raw::IComponent::Owner::Ptr(aComponent));
         if (IsVisualTagActive(owner, FeetSlot, GarmentOverrideModule::ForceFlatFeetTag))
         {
             aLiftedState = Red::CharacterBodyPartState::Hidden;
@@ -296,4 +295,48 @@ bool App::AttachmentSlotsModule::IsVisualTagActive(Red::ITransactionSystem* aTra
     }
 
     return false;
+}
+
+bool App::AttachmentSlotsModule::IsRelatedSlot(Red::TweakDBID aSlotID, Red::TweakDBID aBaseSlotID)
+{
+    if (aSlotID == aBaseSlotID)
+        return true;
+
+    {
+        std::shared_lock _(s_slotsMutex);
+        const auto& baseSlotIt = s_baseSlots.find(aSlotID);
+
+        if (baseSlotIt != s_baseSlots.end() && baseSlotIt.value() == aBaseSlotID)
+            return true;
+    }
+
+    return false;
+}
+
+Core::Set<Red::TweakDBID> App::AttachmentSlotsModule::GetRelatedSlots(Red::TweakDBID aBaseSlotID)
+{
+    std::shared_lock _(s_slotsMutex);
+    const auto& subSlotsIt = s_extraSlots.find(aBaseSlotID);
+
+    if (subSlotsIt == s_extraSlots.end())
+        return {};
+
+    const auto& subSlots = subSlotsIt.value();
+
+    Core::Set<Red::TweakDBID> result;
+    result.insert(aBaseSlotID);
+    result.insert(subSlots.begin(), subSlots.end());
+
+    return result;
+}
+
+Core::Set<Red::TweakDBID> App::AttachmentSlotsModule::GetExtraSlots(Red::TweakDBID aBaseSlotID)
+{
+    std::shared_lock _(s_slotsMutex);
+    const auto& subSlotsIt = s_extraSlots.find(aBaseSlotID);
+
+    if (subSlotsIt == s_extraSlots.end())
+        return {};
+
+    return subSlotsIt.value();
 }

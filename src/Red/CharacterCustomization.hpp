@@ -13,12 +13,23 @@ enum class CharacterBodyPartState : uint32_t
 };
 }
 
+namespace Raw::CharacterCustomizationGenitalsController
+{
+constexpr auto OnAttach = Core::RawFunc<
+    /* addr = */ Red::Addresses::CharacterCustomizationGenitalsController_OnAttach,
+    /* type = */ void (*)(Red::game::ui::CharacterCustomizationGenitalsController* aComponent)>();
+}
+
 namespace Raw::CharacterCustomizationHairstyleController
 {
+constexpr auto OnDetach = Core::RawFunc<
+    /* addr = */ Red::Addresses::CharacterCustomizationHairstyleController_OnDetach,
+    /* type = */ void (*)(Red::game::ui::CharacterCustomizationHairstyleController* aComponent, uintptr_t a2)>();
+
 constexpr auto CheckState = Core::RawFunc<
     /* addr = */ Red::Addresses::CharacterCustomizationHairstyleController_CheckState,
     /* type = */ void (*)(Red::game::ui::CharacterCustomizationHairstyleController* aComponent,
-                          Red::CharacterBodyPartState& aLiftedState)>();
+                          Red::CharacterBodyPartState& aHairState)>();
 }
 
 namespace Raw::CharacterCustomizationFeetController

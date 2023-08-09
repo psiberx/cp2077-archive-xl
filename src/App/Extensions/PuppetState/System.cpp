@@ -9,7 +9,7 @@ Red::CString App::PuppetStateSystem::GetBodyTypeSuffix(Red::ItemID aItemID,
     auto entityTags = Raw::Entity::Tags(aOwner.instance);
     auto visualTags = Raw::Entity::VisualTags(aOwner.instance);
 
-    for (const auto& bodyType : PuppetStateModule::s_bodyTypes)
+    for (const auto& bodyType : PuppetStateModule::GetBodyTypes())
     {
         if (entityTags->Contains(bodyType))
         {
@@ -23,4 +23,19 @@ Red::CString App::PuppetStateSystem::GetBodyTypeSuffix(Red::ItemID aItemID,
     }
 
     return "";
+}
+
+Red::CString App::PuppetStateSystem::GetLegsStateSuffix(Red::ItemID aItemID,
+                                                        const Red::WeakHandle<Red::GameObject>& aOwner,
+                                                        const Red::Handle<Red::ItemsFactoryAppearanceSuffixBase_Record>&)
+{
+    switch (PuppetStateModule::GetFeetState(aOwner))
+    {
+    case PuppetFeetState::Flat: return "Flat";
+    case PuppetFeetState::Lifted: return "Lifted";
+    case PuppetFeetState::HighHeels: return "HighHeels";
+    case PuppetFeetState::FlatShoes: return "FlatShoes";
+    case PuppetFeetState::None:
+    default: return "";
+    }
 }
