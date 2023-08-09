@@ -107,7 +107,6 @@ class RawPtr : public RawBase
 {
 public:
     using Type = std::remove_pointer_t<T>;
-    using Ptr = Type*;
 
     static constexpr uintptr_t offset = A;
     static constexpr bool indirect = std::is_pointer_v<T>;
@@ -183,7 +182,6 @@ class OffsetPtr
 {
 public:
     using Type = std::remove_pointer_t<T>;
-    using Ptr = Type*;
 
     static constexpr uintptr_t offset = A;
     static constexpr bool indirect = std::is_pointer_v<T>;
@@ -259,14 +257,19 @@ public:
         return address;
     }
 
-    inline static Type* Get(void* aBase)
+    inline static Type* Ptr(void* aBase)
     {
-        return OffsetPtr(aBase);
+        return OffsetPtr(aBase).GetValuePtr();
     }
 
     inline static Type& Ref(void* aBase)
     {
-        return OffsetPtr(aBase);
+        return *OffsetPtr(aBase).GetValuePtr();
+    }
+
+    inline static uintptr_t Addr(void* aBase)
+    {
+        return reinterpret_cast<uintptr_t>(OffsetPtr(aBase).GetValuePtr());
     }
 
     uintptr_t address;

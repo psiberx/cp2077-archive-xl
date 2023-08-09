@@ -38,8 +38,10 @@ inline void AppendToFlat(TweakDBID aRecordID, const char* aProp, const Core::Vec
     auto copy = *reinterpret_cast<DynArray<T>*>(data.value);
     for (const auto& value : aValues)
     {
-        // TODO: Check for duplicates
-        copy.PushBack(value);
+        if (!copy.Contains(value))
+        {
+            copy.PushBack(value);
+        }
     }
 
     const auto offset = tweakDB->CreateFlatValue({data.type, &copy});
@@ -78,6 +80,21 @@ inline bool RecordExists(TweakDBID aRecordID)
     std::shared_lock _(tweakDB->mutex01);
 
     return tweakDB->recordsByID.Get(aRecordID);
+}
+
+template<typename T>
+inline T* GetFlat(TweakDBID aFlatID)
+{
+    auto tweakDB = Red::TweakDB::Get();
+
+    std::shared_lock _(tweakDB->mutex00);
+
+    auto* flatValue = tweakDB->GetFlatValue(aFlatID);
+
+    if (flatValue == nullptr)
+        return nullptr;
+
+    return flatValue->GetValue<T>();
 }
 
 inline CString ToStringDebug(TweakDBID aID)

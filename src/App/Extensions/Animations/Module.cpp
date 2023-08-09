@@ -95,7 +95,7 @@ void App::AnimationsModule::PrepareEntries()
 
 void App::AnimationsModule::OnInitializeAnimations(Red::entAnimatedComponent* aComponent)
 {
-    const auto entity = Raw::IComponent::Owner::Get(aComponent);
+    const auto entity = Raw::IComponent::Owner::Ptr(aComponent);
     const auto templatePath = Raw::Entity::TemplatePath::Ref(entity);
 
     auto anims = m_animsByTarget.find(templatePath);
