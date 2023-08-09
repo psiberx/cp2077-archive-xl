@@ -11,6 +11,8 @@ constexpr auto ModuleName = "AttachmentSlots";
 constexpr auto HeadSlot = Red::TweakDBID("AttachmentSlots.Head");
 constexpr auto FaceSlot = Red::TweakDBID("AttachmentSlots.Eyes");
 constexpr auto TorsoSlot = Red::TweakDBID("AttachmentSlots.Torso");
+constexpr auto ChestSlot = Red::TweakDBID("AttachmentSlots.Chest");
+constexpr auto LegsSlot = Red::TweakDBID("AttachmentSlots.Legs");
 constexpr auto FeetSlot = Red::TweakDBID("AttachmentSlots.Feet");
 constexpr auto TPPAffectedSlots = {HeadSlot, FaceSlot};
 
@@ -53,6 +55,9 @@ bool App::AttachmentSlotsModule::Load()
     if (!HookWrap<Raw::AppearanceChanger::GetSuffixValue>(&OnGetSuffixValue))
         throw std::runtime_error("Failed to hook [AppearanceChanger::GetSuffixValue].");
 
+    s_dependentSlots[TorsoSlot].insert(ChestSlot);
+    s_dependentSlots[FeetSlot].insert(LegsSlot);
+
     return true;
 }
 
@@ -79,15 +84,26 @@ void App::AttachmentSlotsModule::OnInitializeSlots(Red::game::AttachmentSlots*, 
 
         for (auto& slotID : aSlotIDs)
         {
-            const auto parentSlotFlat = tweakDB->GetFlatValue({slotID, ".parentSlot"});
-            if (parentSlotFlat)
+            auto parentSlotID = Red::GetFlatValue<Red::TweakDBID>({slotID, ".parentSlot"});
+            if (parentSlotID)
             {
-                const auto parentSlotID = *parentSlotFlat->GetValue<Red::TweakDBID>();
-                if (parentSlotID)
-                {
-                    s_extraSlots[parentSlotID].insert(slotID);
-                    s_baseSlots[slotID] = parentSlotID;
-                }
+                s_extraSlots[parentSlotID].insert(slotID);
+                s_baseSlots[slotID] = parentSlotID;
+            }
+
+            if (Red::GetFlatValue<Red::TweakDBID>({slotID, ".dependsOnCamera"}))
+            {
+                s_dependentSlots[HeadSlot].insert(slotID);
+            }
+
+            if (Red::GetFlatValue<Red::TweakDBID>({slotID, ".dependsOnSleeves"}))
+            {
+                s_dependentSlots[TorsoSlot].insert(slotID);
+            }
+
+            if (Red::GetFlatValue<Red::TweakDBID>({slotID, ".dependsOnFeet"}))
+            {
+                s_dependentSlots[FeetSlot].insert(slotID);
             }
         }
     }
@@ -127,12 +143,15 @@ void App::AttachmentSlotsModule::OnAttachTPP(Red::game::TPPRepresentationCompone
 
     for (const auto slotID : TPPAffectedSlots)
     {
-        const auto& subSlots = s_extraSlots.find(slotID);
-        if (subSlots != s_extraSlots.end())
+        const auto& subSlots = s_dependentSlots.find(slotID);
+        if (subSlots != s_dependentSlots.end())
         {
             for (const auto& subSlotID : subSlots->second)
             {
-                aComponent->affectedAppearanceSlots.PushBack(subSlotID);
+                if (!aComponent->affectedAppearanceSlots.Contains(subSlotID))
+                {
+                    aComponent->affectedAppearanceSlots.PushBack(subSlotID);
+                }
             }
         }
     }
@@ -297,20 +316,15 @@ bool App::AttachmentSlotsModule::IsVisualTagActive(Red::ITransactionSystem* aTra
     return false;
 }
 
-bool App::AttachmentSlotsModule::IsRelatedSlot(Red::TweakDBID aSlotID, Red::TweakDBID aBaseSlotID)
+Core::Set<Red::TweakDBID> App::AttachmentSlotsModule::GetExtraSlots(Red::TweakDBID aBaseSlotID)
 {
-    if (aSlotID == aBaseSlotID)
-        return true;
+    std::shared_lock _(s_slotsMutex);
+    const auto& subSlotsIt = s_extraSlots.find(aBaseSlotID);
 
-    {
-        std::shared_lock _(s_slotsMutex);
-        const auto& baseSlotIt = s_baseSlots.find(aSlotID);
+    if (subSlotsIt == s_extraSlots.end())
+        return {};
 
-        if (baseSlotIt != s_baseSlots.end() && baseSlotIt.value() == aBaseSlotID)
-            return true;
-    }
-
-    return false;
+    return subSlotsIt.value();
 }
 
 Core::Set<Red::TweakDBID> App::AttachmentSlotsModule::GetRelatedSlots(Red::TweakDBID aBaseSlotID)
@@ -330,12 +344,12 @@ Core::Set<Red::TweakDBID> App::AttachmentSlotsModule::GetRelatedSlots(Red::Tweak
     return result;
 }
 
-Core::Set<Red::TweakDBID> App::AttachmentSlotsModule::GetExtraSlots(Red::TweakDBID aBaseSlotID)
+Core::Set<Red::TweakDBID> App::AttachmentSlotsModule::GetDependentSlots(Red::TweakDBID aBaseSlotID)
 {
     std::shared_lock _(s_slotsMutex);
-    const auto& subSlotsIt = s_extraSlots.find(aBaseSlotID);
+    const auto& subSlotsIt = s_dependentSlots.find(aBaseSlotID);
 
-    if (subSlotsIt == s_extraSlots.end())
+    if (subSlotsIt == s_dependentSlots.end())
         return {};
 
     return subSlotsIt.value();

@@ -41,14 +41,15 @@ private:
     Red::Handle<Red::ItemObject> GetItemInSlot(const Red::Handle<Red::Entity>& aPuppet, Red::TweakDBID aSlotID);
     static bool HasVisibleAppearance(const Red::Handle<Red::ItemObject>& aItemObject);
     static bool ReactsToSleeves(const Red::Handle<Red::ItemObject>& aItemObject);
+    static bool ReactsToFeet(const Red::Handle<Red::ItemObject>& aItemObject);
     void RefreshItemAppearance(const Red::Handle<Red::Entity>& aPuppet,
                                const Red::Handle<Red::ItemObject>& aItemObject);
 
     Red::WeakHandle<Red::Entity> m_puppetWeak;
     Red::ITransactionSystem* m_transactionSystem;
     Core::Set<Red::TweakDBID> m_torsoSlots;
-    Core::Set<Red::TweakDBID> m_chestSlots;
-    Core::Set<Red::TweakDBID> m_legsSlots;
+    Core::Set<Red::TweakDBID> m_torsoDependentSlots;
+    Core::Set<Red::TweakDBID> m_feetDependentSlots;
     Core::Set<Red::TweakDBID> m_feetSlots;
     PuppetFeetState m_feetState;
     Red::CName m_gender;

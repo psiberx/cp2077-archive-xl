@@ -7,16 +7,16 @@
 namespace
 {
 constexpr auto TorsoSlot = Red::TweakDBID("AttachmentSlots.Torso");
-constexpr auto ChestSlot = Red::TweakDBID("AttachmentSlots.Chest");
-constexpr auto LegsSlot = Red::TweakDBID("AttachmentSlots.Legs");
 constexpr auto FeetSlot = Red::TweakDBID("AttachmentSlots.Feet");
 
 constexpr auto HideInnerSleevesTag = Red::CName("hide_T1part");
 constexpr auto HideFootwearTag = Red::CName("hide_S1");
+
 constexpr auto HighHeelsTag = Red::CName("HighHeels");
 constexpr auto FlatShoesTag = Red::CName("FlatShoes");
 
 constexpr auto InnerSleevesSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.Partial");
+constexpr auto FeetStateSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.LegsState");
 
 constexpr auto EmptyAppearanceName = Red::CName("empty_appearance_default");
 constexpr auto MaleGenderName = Red::CName("Male");
@@ -26,9 +26,9 @@ App::PuppetStateHandler::PuppetStateHandler(Red::Entity* aPuppet)
     : m_puppetWeak(Red::ToWeakHandle(aPuppet))
     , m_transactionSystem(Red::GetGameSystem<Red::ITransactionSystem>())
     , m_torsoSlots(AttachmentSlotsModule::GetRelatedSlots(TorsoSlot))
-    , m_chestSlots(AttachmentSlotsModule::GetRelatedSlots(ChestSlot))
-    , m_legsSlots(AttachmentSlotsModule::GetRelatedSlots(LegsSlot))
     , m_feetSlots(AttachmentSlotsModule::GetRelatedSlots(FeetSlot))
+    , m_torsoDependentSlots(AttachmentSlotsModule::GetDependentSlots(TorsoSlot))
+    , m_feetDependentSlots(AttachmentSlotsModule::GetDependentSlots(FeetSlot))
     , m_feetState(PuppetFeetState::None)
 {
     UpdateFeetState(m_puppetWeak.Lock());
@@ -81,7 +81,7 @@ void App::PuppetStateHandler::HandleAppearanceChange(Red::ItemID& aItemID, Red::
 
 void App::PuppetStateHandler::RefreshChestAppearances(const Red::Handle<Red::Entity>& aPuppet)
 {
-    for (const auto& slotID : m_chestSlots)
+    for (const auto& slotID : m_torsoDependentSlots)
     {
         auto itemObject = GetItemInSlot(aPuppet, slotID);
         if (itemObject && HasVisibleAppearance(itemObject) && ReactsToSleeves(itemObject))
@@ -93,10 +93,10 @@ void App::PuppetStateHandler::RefreshChestAppearances(const Red::Handle<Red::Ent
 
 void App::PuppetStateHandler::RefreshLegsAppearances(const Red::Handle<Red::Entity>& aPuppet)
 {
-    for (const auto& slotID : m_legsSlots)
+    for (const auto& slotID : m_feetDependentSlots)
     {
         auto itemObject = GetItemInSlot(aPuppet, slotID);
-        if (itemObject && HasVisibleAppearance(itemObject))
+        if (itemObject && HasVisibleAppearance(itemObject) && ReactsToFeet(itemObject))
         {
             RefreshItemAppearance(aPuppet, itemObject);
         }
@@ -212,9 +212,17 @@ bool App::PuppetStateHandler::HasVisibleAppearance(const Red::Handle<Red::ItemOb
 bool App::PuppetStateHandler::ReactsToSleeves(const Red::Handle<Red::ItemObject>& aItemObject)
 {
     auto itemID = Raw::ItemObject::ItemID(aItemObject);
-    auto appearanceSuffixes = Red::GetFlat<Red::DynArray<Red::TweakDBID>>({itemID->tdbid, ".appearanceSuffixes"});
+    auto appearanceSuffixes = Red::GetFlatPtr<Red::DynArray<Red::TweakDBID>>({itemID->tdbid, ".appearanceSuffixes"});
 
     return appearanceSuffixes->Contains(InnerSleevesSuffix);
+}
+
+bool App::PuppetStateHandler::ReactsToFeet(const Red::Handle<Red::ItemObject>& aItemObject)
+{
+    auto itemID = Raw::ItemObject::ItemID(aItemObject);
+    auto appearanceSuffixes = Red::GetFlatPtr<Red::DynArray<Red::TweakDBID>>({itemID->tdbid, ".appearanceSuffixes"});
+
+    return appearanceSuffixes->Contains(FeetStateSuffix);
 }
 
 void App::PuppetStateHandler::RefreshItemAppearance(const Red::Handle<Red::Entity>& aPuppet,

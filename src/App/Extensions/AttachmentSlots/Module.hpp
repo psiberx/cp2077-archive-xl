@@ -15,9 +15,9 @@ public:
     bool Unload() override;
     std::string_view GetName() override;
 
-    static bool IsRelatedSlot(Red::TweakDBID aSlotID, Red::TweakDBID aBaseSlotID);
-    static Core::Set<Red::TweakDBID> GetRelatedSlots(Red::TweakDBID aBaseSlotID);
     static Core::Set<Red::TweakDBID> GetExtraSlots(Red::TweakDBID aBaseSlotID);
+    static Core::Set<Red::TweakDBID> GetRelatedSlots(Red::TweakDBID aBaseSlotID);
+    static Core::Set<Red::TweakDBID> GetDependentSlots(Red::TweakDBID aBaseSlotID);
 
 private:
     static void OnInitializeSlots(Red::game::AttachmentSlots* aComponent, Red::DynArray<Red::TweakDBID>& aSlotIDs);
@@ -40,6 +40,7 @@ private:
                                   Red::TweakDBID aSlotID, Red::CName aVisualTag);
 
     static inline thread_local bool s_skipVisualTagCheck = false;
+    static inline Core::Map<Red::TweakDBID, Core::Set<Red::TweakDBID>> s_dependentSlots;
     static inline Core::Map<Red::TweakDBID, Core::Set<Red::TweakDBID>> s_extraSlots;
     static inline Core::Map<Red::TweakDBID, Red::TweakDBID> s_baseSlots;
     static inline std::shared_mutex s_slotsMutex;

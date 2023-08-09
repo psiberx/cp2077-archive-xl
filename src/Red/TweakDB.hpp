@@ -83,7 +83,7 @@ inline bool RecordExists(TweakDBID aRecordID)
 }
 
 template<typename T>
-inline T* GetFlat(TweakDBID aFlatID)
+inline T* GetFlatPtr(TweakDBID aFlatID)
 {
     auto tweakDB = Red::TweakDB::Get();
 
@@ -95,6 +95,17 @@ inline T* GetFlat(TweakDBID aFlatID)
         return nullptr;
 
     return flatValue->GetValue<T>();
+}
+
+template<typename T>
+inline T GetFlatValue(TweakDBID aFlatID)
+{
+    auto* flatPtr = GetFlatPtr<T>(aFlatID);
+
+    if (flatPtr == nullptr)
+        return {};
+
+    return *flatPtr;
 }
 
 inline CString ToStringDebug(TweakDBID aID)
