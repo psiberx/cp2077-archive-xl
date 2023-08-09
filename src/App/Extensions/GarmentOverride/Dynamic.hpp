@@ -12,6 +12,8 @@ struct DynamicAppearanceName
     DynamicAppearanceName();
     explicit DynamicAppearanceName(Red::CName aAppearance);
 
+    static bool CheckMark(Red::CName aAppearance);
+
     Red::CName value;
     Red::CName name;
     Red::CName variant;
@@ -20,9 +22,9 @@ struct DynamicAppearanceName
     bool isDynamic;
 };
 
-struct DynamicReference
+struct DynamicAppearanceRef
 {
-    explicit DynamicReference(Red::CName aReference);
+    explicit DynamicAppearanceRef(Red::CName aReference);
 
     [[nodiscard]] bool Match(Red::CName aVariant) const;
     [[nodiscard]] bool Match(const DynamicTagList& aConditions) const;
@@ -40,8 +42,8 @@ class DynamicAppearanceController
 {
 public:
     [[nodiscard]] DynamicAppearanceName ParseAppearance(Red::CName aAppearance) const;
-    [[nodiscard]] DynamicReference ParseReference(Red::CName aReference) const;
-    [[nodiscard]] bool MatchReference(const DynamicReference& aReference, Red::Entity* aEntity,
+    [[nodiscard]] DynamicAppearanceRef ParseReference(Red::CName aReference) const;
+    [[nodiscard]] bool MatchReference(const DynamicAppearanceRef& aReference, Red::Entity* aEntity,
                                       Red::CName aVariant) const;
 
     [[nodiscard]] Red::CName ResolveName(Red::Entity* aEntity, const DynamicPartList& aVariant,

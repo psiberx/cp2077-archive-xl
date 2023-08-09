@@ -149,7 +149,13 @@ App::DynamicAppearanceName::DynamicAppearanceName(Red::CName aAppearance)
     }
 }
 
-App::DynamicReference::DynamicReference(Red::CName aReference)
+bool App::DynamicAppearanceName::CheckMark(Red::CName aAppearance)
+{
+    std::string_view str = aAppearance.ToString();
+    return str.find_first_of(ContextMarker) != std::string_view::npos;
+}
+
+App::DynamicAppearanceRef::DynamicAppearanceRef(Red::CName aReference)
     : isDynamic(false)
     , isConditional(false)
     , value(aReference)
@@ -228,12 +234,12 @@ App::DynamicReference::DynamicReference(Red::CName aReference)
     }
 }
 
-bool App::DynamicReference::Match(Red::CName aVariant) const
+bool App::DynamicAppearanceRef::Match(Red::CName aVariant) const
 {
     return variants.contains(aVariant);
 }
 
-bool App::DynamicReference::Match(const DynamicTagList& aConditions) const
+bool App::DynamicAppearanceRef::Match(const DynamicTagList& aConditions) const
 {
     for (const auto& condition : conditions)
     {
@@ -249,12 +255,12 @@ App::DynamicAppearanceName App::DynamicAppearanceController::ParseAppearance(Red
     return DynamicAppearanceName(aAppearance);
 }
 
-App::DynamicReference App::DynamicAppearanceController::ParseReference(Red::CName aReference) const
+App::DynamicAppearanceRef App::DynamicAppearanceController::ParseReference(Red::CName aReference) const
 {
-    return DynamicReference(aReference);
+    return DynamicAppearanceRef(aReference);
 }
 
-bool App::DynamicAppearanceController::MatchReference(const DynamicReference& aReference, Red::Entity* aEntity,
+bool App::DynamicAppearanceController::MatchReference(const DynamicAppearanceRef& aReference, Red::Entity* aEntity,
                                                       Red::CName aVariant) const
 {
     if (!aReference.variants.empty() )

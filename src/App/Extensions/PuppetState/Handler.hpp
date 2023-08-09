@@ -39,7 +39,8 @@ private:
     bool HasHighHeels(const Red::Handle<Red::ItemObject>& aItemObject);
     bool HasFlatSole(const Red::Handle<Red::ItemObject>& aItemObject);
     Red::Handle<Red::ItemObject> GetItemInSlot(const Red::Handle<Red::Entity>& aPuppet, Red::TweakDBID aSlotID);
-    static bool HasVisibleAppearance(const Red::Handle<Red::ItemObject>& aItemObject);
+    static bool IsVisible(const Red::Handle<Red::ItemObject>& aItemObject);
+    static bool IsDynamicAppearance(const Red::Handle<Red::ItemObject>& aItemObject);
     static bool ReactsToSleeves(const Red::Handle<Red::ItemObject>& aItemObject);
     static bool ReactsToFeet(const Red::Handle<Red::ItemObject>& aItemObject);
     void RefreshItemAppearance(const Red::Handle<Red::Entity>& aPuppet,

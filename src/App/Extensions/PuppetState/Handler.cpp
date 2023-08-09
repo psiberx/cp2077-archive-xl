@@ -84,7 +84,7 @@ void App::PuppetStateHandler::RefreshChestAppearances(const Red::Handle<Red::Ent
     for (const auto& slotID : m_torsoDependentSlots)
     {
         auto itemObject = GetItemInSlot(aPuppet, slotID);
-        if (itemObject && HasVisibleAppearance(itemObject) && ReactsToSleeves(itemObject))
+        if (itemObject && IsVisible(itemObject) && (IsDynamicAppearance(itemObject) || ReactsToSleeves(itemObject)))
         {
             RefreshItemAppearance(aPuppet, itemObject);
         }
@@ -96,7 +96,7 @@ void App::PuppetStateHandler::RefreshLegsAppearances(const Red::Handle<Red::Enti
     for (const auto& slotID : m_feetDependentSlots)
     {
         auto itemObject = GetItemInSlot(aPuppet, slotID);
-        if (itemObject && HasVisibleAppearance(itemObject) && ReactsToFeet(itemObject))
+        if (itemObject && IsVisible(itemObject) && (IsDynamicAppearance(itemObject) || ReactsToFeet(itemObject)))
         {
             RefreshItemAppearance(aPuppet, itemObject);
         }
@@ -113,7 +113,7 @@ App::PuppetFeetState App::PuppetStateHandler::ResolveFeetState(const Red::Handle
     for (const auto& slotID : m_feetSlots)
     {
         auto itemObject = GetItemInSlot(aPuppet, slotID);
-        if (itemObject && HasVisibleAppearance(itemObject))
+        if (itemObject && IsVisible(itemObject))
         {
             if (HasHighHeels(itemObject))
             {
@@ -201,12 +201,20 @@ Red::Handle<Red::ItemObject> App::PuppetStateHandler::GetItemInSlot(const Red::H
     return slotData->itemObject;
 }
 
-bool App::PuppetStateHandler::HasVisibleAppearance(const Red::Handle<Red::ItemObject>& aItemObject)
+bool App::PuppetStateHandler::IsVisible(const Red::Handle<Red::ItemObject>& aItemObject)
 {
     Red::CName itemAppearance;
     Raw::ItemObject::GetAppearanceName(aItemObject, itemAppearance);
 
     return itemAppearance && itemAppearance != EmptyAppearanceName;
+}
+
+bool App::PuppetStateHandler::IsDynamicAppearance(const Red::Handle<Red::ItemObject>& aItemObject)
+{
+    Red::CName itemAppearance;
+    Raw::ItemObject::GetAppearanceName(aItemObject, itemAppearance);
+
+    return DynamicAppearanceName::CheckMark(itemAppearance);
 }
 
 bool App::PuppetStateHandler::ReactsToSleeves(const Red::Handle<Red::ItemObject>& aItemObject)
