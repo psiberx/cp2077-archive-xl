@@ -91,19 +91,13 @@ void App::AttachmentSlotsModule::OnInitializeSlots(Red::game::AttachmentSlots*, 
                 s_baseSlots[slotID] = parentSlotID;
             }
 
-            if (Red::GetFlatValue<Red::TweakDBID>({slotID, ".dependsOnCamera"}))
+            auto dependencySlotIDs = Red::GetFlatPtr<Red::DynArray<Red::TweakDBID>>({slotID, ".dependencySlots"});
+            if (dependencySlotIDs)
             {
-                s_dependentSlots[HeadSlot].insert(slotID);
-            }
-
-            if (Red::GetFlatValue<Red::TweakDBID>({slotID, ".dependsOnSleeves"}))
-            {
-                s_dependentSlots[TorsoSlot].insert(slotID);
-            }
-
-            if (Red::GetFlatValue<Red::TweakDBID>({slotID, ".dependsOnFeet"}))
-            {
-                s_dependentSlots[FeetSlot].insert(slotID);
+                for (const auto dependencySlotID : *dependencySlotIDs)
+                {
+                    s_dependentSlots[dependencySlotID].insert(slotID);
+                }
             }
         }
     }
