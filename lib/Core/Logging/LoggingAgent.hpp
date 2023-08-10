@@ -7,28 +7,48 @@ namespace Core
 class LoggingAgent
 {
 protected:
-    template<typename... Args>
-    inline static void LogInfo(std::string_view aFormat, Args&&... aArgs)
+    inline static void LogInfo(const char* aMessage)
     {
-        GetLoggingDriver().LogInfo(fmt::vformat(aFormat, fmt::make_format_args(std::forward<Args>(aArgs)...)));
+        GetLoggingDriver().LogInfo(aMessage);
+    }
+
+    inline static void LogWarning(const char* aMessage)
+    {
+        GetLoggingDriver().LogWarning(aMessage);
+    }
+
+    inline static void LogError(const char* aMessage)
+    {
+        GetLoggingDriver().LogError(aMessage);
+    }
+
+    inline static void LogDebug(const char* aMessage)
+    {
+        GetLoggingDriver().LogDebug(aMessage);
     }
 
     template<typename... Args>
-    inline static void LogWarning(std::string_view aFormat, Args&&... aArgs)
+    inline static constexpr void LogInfo(std::_Fmt_string<Args...> aFormat, Args&&... aArgs)
     {
-        GetLoggingDriver().LogWarning(fmt::vformat(aFormat, fmt::make_format_args(std::forward<Args>(aArgs)...)));
+        GetLoggingDriver().LogInfo(aFormat, std::forward<Args>(aArgs)...);
     }
 
     template<typename... Args>
-    inline static void LogError(std::string_view aFormat, Args&&... aArgs)
+    inline static constexpr void LogWarning(std::_Fmt_string<Args...> aFormat, Args&&... aArgs)
     {
-        GetLoggingDriver().LogError(fmt::vformat(aFormat, fmt::make_format_args(std::forward<Args>(aArgs)...)));
+        GetLoggingDriver().LogWarning(std::format(aFormat, std::forward<Args>(aArgs)...));
     }
 
     template<typename... Args>
-    inline static void LogDebug(std::string_view aFormat, Args&&... aArgs)
+    inline static constexpr void LogError(std::_Fmt_string<Args...> aFormat, Args&&... aArgs)
     {
-        GetLoggingDriver().LogDebug(fmt::vformat(aFormat, fmt::make_format_args(std::forward<Args>(aArgs)...)));
+        GetLoggingDriver().LogError(std::format(aFormat, std::forward<Args>(aArgs)...));
+    }
+
+    template<typename... Args>
+    inline static constexpr void LogDebug(std::_Fmt_string<Args...> aFormat, Args&&... aArgs)
+    {
+        GetLoggingDriver().LogDebug(std::format(aFormat, std::forward<Args>(aArgs)...));
     }
 
     static void LogFlush();

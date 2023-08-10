@@ -21,24 +21,24 @@ void Support::RED4extProvider::OnInitialize()
     }
 }
 
-void Support::RED4extProvider::LogInfo(const std::string& aMessage)
+void Support::RED4extProvider::LogInfo(const std::string_view& aMessage)
 {
-    m_sdk->logger->Info(m_plugin, aMessage.c_str());
+    m_sdk->logger->Info(m_plugin, aMessage.data());
 }
 
-void Support::RED4extProvider::LogWarning(const std::string& aMessage)
+void Support::RED4extProvider::LogWarning(const std::string_view& aMessage)
 {
-    m_sdk->logger->Warn(m_plugin, aMessage.c_str());
+    m_sdk->logger->Warn(m_plugin, aMessage.data());
 }
 
-void Support::RED4extProvider::LogError(const std::string& aMessage)
+void Support::RED4extProvider::LogError(const std::string_view& aMessage)
 {
-    m_sdk->logger->Error(m_plugin, aMessage.c_str());
+    m_sdk->logger->Error(m_plugin, aMessage.data());
 }
 
-void Support::RED4extProvider::LogDebug(const std::string& aMessage)
+void Support::RED4extProvider::LogDebug(const std::string_view& aMessage)
 {
-    m_sdk->logger->Debug(m_plugin, aMessage.c_str());
+    m_sdk->logger->Debug(m_plugin, aMessage.data());
 }
 
 void Support::RED4extProvider::LogFlush()

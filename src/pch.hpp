@@ -4,6 +4,7 @@
 #include <concepts>
 #include <cstdint>
 #include <filesystem>
+#include <format>
 #include <fstream>
 #include <future>
 #include <map>

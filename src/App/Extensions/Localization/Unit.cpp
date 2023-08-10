@@ -1,8 +1,6 @@
 #include "Unit.hpp"
 #include "Language.hpp"
 
-#include <fmt/format.h>
-
 namespace
 {
 constexpr auto LocalizationNodeKey = "localization";
@@ -62,7 +60,7 @@ bool App::LocalizationUnit::ReadOptions(const YAML::Node& aNode,
 
             if (!Language::IsKnown(language))
             {
-                aIssues.emplace_back(fmt::format("Unknown language code \"{}\".", key));
+                aIssues.emplace_back(std::format("Unknown language code \"{}\".", key));
                 continue;
             }
 

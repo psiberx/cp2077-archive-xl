@@ -14,10 +14,10 @@ class RED4extProvider
 public:
     RED4extProvider(RED4ext::PluginHandle aPlugin, const RED4ext::Sdk* aSdk) noexcept;
 
-    void LogInfo(const std::string& aMessage) override;
-    void LogWarning(const std::string& aMessage) override;
-    void LogError(const std::string& aMessage) override;
-    void LogDebug(const std::string& aMessage) override;
+    void LogInfo(const std::string_view& aMessage) override;
+    void LogWarning(const std::string_view& aMessage) override;
+    void LogError(const std::string_view& aMessage) override;
+    void LogDebug(const std::string_view& aMessage) override;
     void LogFlush() override;
 
     bool HookAttach(uintptr_t aAddress, void* aCallback) override;

@@ -22,22 +22,22 @@ void Support::SpdlogProvider::OnInitialize()
     SetDefault(*this);
 }
 
-void Support::SpdlogProvider::LogInfo(const std::string& aMessage)
+void Support::SpdlogProvider::LogInfo(const std::string_view& aMessage)
 {
     spdlog::default_logger_raw()->info(aMessage);
 }
 
-void Support::SpdlogProvider::LogWarning(const std::string& aMessage)
+void Support::SpdlogProvider::LogWarning(const std::string_view& aMessage)
 {
     spdlog::default_logger_raw()->warn(aMessage);
 }
 
-void Support::SpdlogProvider::LogError(const std::string& aMessage)
+void Support::SpdlogProvider::LogError(const std::string_view& aMessage)
 {
     spdlog::default_logger_raw()->error(aMessage);
 }
 
-void Support::SpdlogProvider::LogDebug(const std::string& aMessage)
+void Support::SpdlogProvider::LogDebug(const std::string_view& aMessage)
 {
     spdlog::default_logger_raw()->debug(aMessage);
 }

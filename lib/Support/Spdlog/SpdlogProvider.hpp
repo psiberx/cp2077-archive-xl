@@ -10,10 +10,10 @@ class SpdlogProvider
     , public Core::LoggingDriver
 {
 public:
-    void LogInfo(const std::string& aMessage) override;
-    void LogWarning(const std::string& aMessage) override;
-    void LogError(const std::string& aMessage) override;
-    void LogDebug(const std::string& aMessage) override;
+    void LogInfo(const std::string_view& aMessage) override;
+    void LogWarning(const std::string_view& aMessage) override;
+    void LogError(const std::string_view& aMessage) override;
+    void LogDebug(const std::string_view& aMessage) override;
     void LogFlush() override;
 
     auto SetLogPath(const std::filesystem::path& aPath) noexcept

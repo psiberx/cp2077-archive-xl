@@ -707,7 +707,6 @@ void App::GarmentOverrideModule::ApplyComponentOverrides(Core::SharedPtr<EntityS
                 {
                     LogDebug("|{}| [index={} component={} type={} enabled={} app={} chunks={:064b}]",
                              ModuleName,
-                             aEntityState->GetName(),
                              index,
                              component->name.ToString(),
                              component->GetType()->GetName().ToString(),
@@ -719,7 +718,6 @@ void App::GarmentOverrideModule::ApplyComponentOverrides(Core::SharedPtr<EntityS
                 {
                     LogDebug("|{}| [index={} component={} type={} enabled={}]",
                              ModuleName,
-                             aEntityState->GetName(),
                              index,
                              component->name.ToString(),
                              component->GetType()->GetName().ToString(),
