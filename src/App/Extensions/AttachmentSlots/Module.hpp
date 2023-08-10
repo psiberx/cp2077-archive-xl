@@ -28,6 +28,9 @@ private:
                                 Red::TweakDBID aItemID, Red::TweakDBID aSlotID);
     static void OnCheckHairState(Red::game::ui::CharacterCustomizationHairstyleController* aComponent,
                                  Red::CharacterBodyPartState& aHairState);
+    static void OnCheckBodyState(Red::game::ui::CharacterCustomizationGenitalsController* aComponent,
+                                 Red::CharacterBodyPartState& aUpperState,
+                                 Red::CharacterBodyPartState& aBottomState);
     static void OnCheckFeetState(Red::game::ui::CharacterCustomizationFeetController* aComponent,
                                  Red::CharacterBodyPartState& aLiftedState,
                                  Red::CharacterBodyPartState& aFlatState);

@@ -65,6 +65,8 @@ def patterns():
             Group(name="CharacterCustomizationGenitalsController", functions=[
                 Item(name="OnAttach",
                      pattern="48 89 5C 24 ? 57 48 83 EC ? 48 8B F9 48 8B DA 48 8D 0D ? ? ? ? E8 ? ? ? ? 48 8B D3 48 8B CF"),
+                Item(name="CheckState",
+                     pattern="4C 89 44 24 ? 48 89 54 24 ? 48 89 4C 24 ? 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 01 4C 8B E2 45 33 ED"),
             ]),
             Group(name="CharacterCustomizationHairstyleController", functions=[
                 Item(name="OnDetach",

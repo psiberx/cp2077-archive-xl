@@ -49,6 +49,9 @@ bool App::AttachmentSlotsModule::Load()
     if (!HookAfter<Raw::CharacterCustomizationHairstyleController::CheckState>(&OnCheckHairState))
         throw std::runtime_error("Failed to hook [CharacterCustomizationHairstyleController::CheckState].");
 
+    // if (!HookAfter<Raw::CharacterCustomizationGenitalsController::CheckState>(&OnCheckBodyState))
+    //     throw std::runtime_error("Failed to hook [CharacterCustomizationGenitalsController::CheckState].");
+
     if (!HookAfter<Raw::CharacterCustomizationFeetController::CheckState>(&OnCheckFeetState))
         throw std::runtime_error("Failed to hook [CharacterCustomizationFeetController::CheckState].");
 
@@ -69,6 +72,7 @@ bool App::AttachmentSlotsModule::Unload()
     Unhook<Raw::TPPRepresentationComponent::OnItemEquipped>();
     Unhook<Raw::TPPRepresentationComponent::OnItemUnequipped>();
     Unhook<Raw::CharacterCustomizationHairstyleController::CheckState>();
+    // Unhook<Raw::CharacterCustomizationGenitalsController::CheckState>();
     Unhook<Raw::CharacterCustomizationFeetController::CheckState>();
     Unhook<Raw::AppearanceChanger::GetSuffixValue>();
 
@@ -170,9 +174,6 @@ void App::AttachmentSlotsModule::OnItemChangeTPP(Raw::TPPRepresentationComponent
 void App::AttachmentSlotsModule::OnCheckHairState(Red::game::ui::CharacterCustomizationHairstyleController* aComponent,
                                                   Red::CharacterBodyPartState& aHairState)
 {
-    // fixme: combine non empty slot check + tag check
-    // fixme: add the same check for genitals
-
     if (aHairState == Red::CharacterBodyPartState::Hidden)
     {
         auto owner = Red::ToHandle(Raw::IComponent::Owner::Ptr(aComponent));
@@ -183,12 +184,16 @@ void App::AttachmentSlotsModule::OnCheckHairState(Red::game::ui::CharacterCustom
     }
 }
 
+void App::AttachmentSlotsModule::OnCheckBodyState(Red::game::ui::CharacterCustomizationGenitalsController* aComponent,
+                                                  Red::CharacterBodyPartState& aUpperState,
+                                                  Red::CharacterBodyPartState& aBottomState)
+{
+}
+
 void App::AttachmentSlotsModule::OnCheckFeetState(Red::game::ui::CharacterCustomizationFeetController* aComponent,
                                                   Red::CharacterBodyPartState& aLiftedState,
                                                   Red::CharacterBodyPartState& aFlatState)
 {
-    // fixme: combine non empty slot check + tag check
-
     if (aLiftedState != Red::CharacterBodyPartState::Visible)
     {
         auto transactionSystem = Red::GetGameSystem<Red::ITransactionSystem>();
