@@ -61,8 +61,13 @@ void App::PuppetStateModule::FillBodyTypes()
 
 void App::PuppetStateModule::OnLoadTweakDB()
 {
-    CreateSuffixRecord(LegsStateSuffixID, Red::GetTypeName<PuppetStateSystem>(), "GetLegsStateSuffix");
-    CreateSuffixRecord(BodyTypeSuffixID, Red::GetTypeName<PuppetStateSystem>(), "GetBodyTypeSuffix");
+    CreateSuffixRecord(LegsStateSuffixID,
+                       RTTI_TYPE_NAME(PuppetStateSystem),
+                       RTTI_FUNC_NAME(PuppetStateSystem::GetLegsStateSuffix));
+
+    CreateSuffixRecord(BodyTypeSuffixID,
+                       RTTI_TYPE_NAME(PuppetStateSystem),
+                       RTTI_FUNC_NAME(PuppetStateSystem::GetBodyTypeSuffix));
 
     ActivateSuffixRecords({LegsStateSuffixID, BodyTypeSuffixID});
 }

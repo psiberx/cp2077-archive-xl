@@ -31,11 +31,16 @@ Red::CString App::PuppetStateSystem::GetLegsStateSuffix(Red::ItemID aItemID,
 {
     switch (PuppetStateModule::GetFeetState(aOwner))
     {
-    case PuppetFeetState::Flat: return "Flat";
-    case PuppetFeetState::Lifted: return "Lifted";
-    case PuppetFeetState::HighHeels: return "HighHeels";
-    case PuppetFeetState::FlatShoes: return "FlatShoes";
+    case PuppetFeetState::Flat:
+        return RTTI_ENUM_NAME_STR(PuppetFeetState::Flat);
+    case PuppetFeetState::Lifted:
+        return RTTI_ENUM_NAME_STR(PuppetFeetState::Lifted);
+    case PuppetFeetState::HighHeels:
+        return RTTI_ENUM_NAME_STR(PuppetFeetState::HighHeels);
+    case PuppetFeetState::FlatShoes:
+        return RTTI_ENUM_NAME_STR(PuppetFeetState::FlatShoes);
     case PuppetFeetState::None:
-    default: return "";
+    default:
+        return "";
     }
 }

@@ -181,6 +181,6 @@ template<typename T, typename U = std::remove_cvref_t<T>>
 concept IsScriptRef = Detail::Specialization<U>::value
     && std::is_same_v<U, ScriptRef<typename Detail::Specialization<U>::argument_type>>;
 
-RTTI_TYPE_PROXY(Optional);
-RTTI_TYPE_PREFIX(ScriptRef, "script_ref:");
+RTTI_MAP_TYPE_PROXY(Optional);
+RTTI_MAP_TYPE_PREFIX(ScriptRef, "script_ref:");
 }
