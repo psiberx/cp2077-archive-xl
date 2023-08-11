@@ -697,39 +697,39 @@ void App::GarmentOverrideModule::ApplyComponentOverrides(Core::SharedPtr<EntityS
         aEntityState->ApplyChunkMaskOverride(component);
     }
 
-#ifndef NDEBUG
-        if (aVerbose)
-        {
-            auto index = 0;
-            for (auto& component : aComponents)
-            {
-                auto wrapper = ComponentWrapper(component);
-
-                if (wrapper.IsMeshComponent())
-                {
-                    LogDebug("|{}| [index={} component={} type={} enabled={} app={} chunks={:064b}]",
-                             ModuleName,
-                             index,
-                             component->name.ToString(),
-                             component->GetType()->GetName().ToString(),
-                             component->isEnabled,
-                             wrapper.GetAppearance().ToString(),
-                             wrapper.GetChunkMask());
-                }
-                else
-                {
-                    LogDebug("|{}| [index={} component={} type={} enabled={}]",
-                             ModuleName,
-                             index,
-                             component->name.ToString(),
-                             component->GetType()->GetName().ToString(),
-                             component->isEnabled);
-                }
-
-                ++index;
-            }
-        }
-#endif
+// #ifndef NDEBUG
+//         if (aVerbose)
+//         {
+//             auto index = 0;
+//             for (auto& component : aComponents)
+//             {
+//                 auto wrapper = ComponentWrapper(component);
+//
+//                 if (wrapper.IsMeshComponent())
+//                 {
+//                     LogDebug("|{}| [index={} component={} type={} enabled={} app={} chunks={:064b}]",
+//                              ModuleName,
+//                              index,
+//                              component->name.ToString(),
+//                              component->GetType()->GetName().ToString(),
+//                              component->isEnabled,
+//                              wrapper.GetAppearance().ToString(),
+//                              wrapper.GetChunkMask());
+//                 }
+//                 else
+//                 {
+//                     LogDebug("|{}| [index={} component={} type={} enabled={}]",
+//                              ModuleName,
+//                              index,
+//                              component->name.ToString(),
+//                              component->GetType()->GetName().ToString(),
+//                              component->isEnabled);
+//                 }
+//
+//                 ++index;
+//             }
+//         }
+// #endif
 }
 
 void App::GarmentOverrideModule::ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, bool aVerbose)

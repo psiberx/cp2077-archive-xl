@@ -67,6 +67,10 @@ void App::PuppetStateModule::OnLoadTweakDB()
                        RTTI_TYPE_NAME(PuppetStateSystem),
                        RTTI_FUNC_NAME(PuppetStateSystem::GetArmsStateSuffix));
 
+    CreateSuffixRecord(LegsStateSuffixID,
+                       RTTI_TYPE_NAME(PuppetStateSystem),
+                       RTTI_FUNC_NAME(PuppetStateSystem::GetFeetStateSuffix));
+
     CreateSuffixRecord(FeetStateSuffixID,
                        RTTI_TYPE_NAME(PuppetStateSystem),
                        RTTI_FUNC_NAME(PuppetStateSystem::GetFeetStateSuffix));
@@ -74,14 +78,15 @@ void App::PuppetStateModule::OnLoadTweakDB()
     ActivateSuffixRecords({
         BodyTypeSuffixID,
         ArmsStateSuffixID,
+        LegsStateSuffixID,
         FeetStateSuffixID,
     });
-
-    CreateSuffixAlias(FeetStateSuffixID, LegsStateSuffixID);
 }
 
 void App::PuppetStateModule::OnAttachPuppet(Red::gameuiCharacterCustomizationGenitalsController * aComponent)
 {
+    std::unique_lock _(s_mutex);
+
     auto owner = Raw::IComponent::Owner::Ptr(aComponent);
 
     auto it = s_handlers.find(owner);
@@ -97,6 +102,8 @@ void App::PuppetStateModule::OnAttachPuppet(Red::gameuiCharacterCustomizationGen
 
 void App::PuppetStateModule::OnDetachPuppet(Red::gameuiCharacterCustomizationHairstyleController* aComponent, uintptr_t)
 {
+    std::unique_lock _(s_mutex);
+
     auto owner = Raw::IComponent::Owner::Ptr(aComponent);
 
     auto it = s_handlers.find(owner);
@@ -112,6 +119,8 @@ void App::PuppetStateModule::OnDetachPuppet(Red::gameuiCharacterCustomizationHai
 
 App::PuppetArmsState App::PuppetStateModule::GetArmsState(const Red::WeakHandle<Red::GameObject>& aPuppet)
 {
+    std::shared_lock _(s_mutex);
+
     auto it = s_handlers.find(aPuppet.instance);
     if (it == s_handlers.end())
         return PuppetArmsState::BaseArms;
@@ -121,6 +130,8 @@ App::PuppetArmsState App::PuppetStateModule::GetArmsState(const Red::WeakHandle<
 
 App::PuppetFeetState App::PuppetStateModule::GetFeetState(const Red::WeakHandle<Red::GameObject>& aPuppet)
 {
+    std::shared_lock _(s_mutex);
+
     auto it = s_handlers.find(aPuppet.instance);
     if (it == s_handlers.end())
         return PuppetFeetState::None;

@@ -328,17 +328,18 @@ Core::Set<Red::TweakDBID> App::AttachmentSlotsModule::GetExtraSlots(Red::TweakDB
 
 Core::Set<Red::TweakDBID> App::AttachmentSlotsModule::GetRelatedSlots(Red::TweakDBID aBaseSlotID)
 {
-    std::shared_lock _(s_slotsMutex);
-    const auto& subSlotsIt = s_extraSlots.find(aBaseSlotID);
-
-    if (subSlotsIt == s_extraSlots.end())
-        return {};
-
-    const auto& subSlots = subSlotsIt.value();
-
     Core::Set<Red::TweakDBID> result;
     result.insert(aBaseSlotID);
-    result.insert(subSlots.begin(), subSlots.end());
+
+    {
+        std::shared_lock _(s_slotsMutex);
+        const auto& subSlotsIt = s_extraSlots.find(aBaseSlotID);
+        if (subSlotsIt != s_extraSlots.end())
+        {
+            const auto& subSlots = subSlotsIt.value();
+            result.insert(subSlots.begin(), subSlots.end());
+        }
+    }
 
     return result;
 }

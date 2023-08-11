@@ -202,8 +202,12 @@ Red::SharedPtr<Red::ResourceToken<Red::CMesh>> App::ComponentWrapper::LoadResour
             std::mutex mutex;
             std::unique_lock lock(mutex);
             std::condition_variable cv;
-            meshRef.token->OnLoaded([&lock](Red::Handle<Red::CMesh>&) { lock.release(); });
-            cv.wait_for(lock, std::chrono::milliseconds(200));
+            meshRef.token->OnLoaded([&lock, &cv](Red::Handle<Red::CMesh>&)
+                                    {
+                                        lock.release();
+                                        cv.notify_all();
+                                    });
+            cv.wait_for(lock, std::chrono::milliseconds(1000));
             mutex.unlock();
         }
     }
