@@ -30,6 +30,8 @@ With the mod you can:
 ## Documentation
 
 - [Dynamic appearances](https://github.com/psiberx/cp2077-archive-xl/wiki#dynamic-appearances)
+- [Body types](https://github.com/psiberx/cp2077-archive-xl/wiki#body-types)
+- [Appearance suffixes](https://github.com/psiberx/cp2077-archive-xl/wiki#appearance-suffixes)
+- [Components overrides](https://github.com/psiberx/cp2077-archive-xl/wiki#components-overrides)
+- [Visual tags](https://github.com/psiberx/cp2077-archive-xl/wiki#visual-tags)
 - [Extending resources](https://github.com/psiberx/cp2077-archive-xl/wiki#extending-resources)
-- [Overriding submeshes](https://github.com/psiberx/cp2077-archive-xl/wiki#overriding-submeshes)
-- [Adding visual tags](https://github.com/psiberx/cp2077-archive-xl/wiki#adding-visual-tags)
