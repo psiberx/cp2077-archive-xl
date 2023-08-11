@@ -4,10 +4,13 @@ namespace App
 {
 struct PuppetStateSystem : Red::ScriptableSystem
 {
+    static constexpr auto BaseBodyName = "BaseBody";
+
     Red::CString GetBodyTypeSuffix(Red::ItemID aItemID, const Red::WeakHandle<Red::GameObject>& aOwner,
                                    const Red::Handle<Red::ItemsFactoryAppearanceSuffixBase_Record>&);
-
-    Red::CString GetLegsStateSuffix(Red::ItemID aItemID, const Red::WeakHandle<Red::GameObject>& aOwner,
+    Red::CString GetArmsStateSuffix(Red::ItemID aItemID, const Red::WeakHandle<Red::GameObject>& aOwner,
+                                    const Red::Handle<Red::ItemsFactoryAppearanceSuffixBase_Record>&);
+    Red::CString GetFeetStateSuffix(Red::ItemID aItemID, const Red::WeakHandle<Red::GameObject>& aOwner,
                                     const Red::Handle<Red::ItemsFactoryAppearanceSuffixBase_Record>&);
 
     RTTI_IMPL_TYPEINFO(App::PuppetStateSystem);
@@ -17,5 +20,6 @@ struct PuppetStateSystem : Red::ScriptableSystem
 
 RTTI_DEFINE_CLASS(App::PuppetStateSystem, {
     RTTI_SCRIPT_METHOD(GetBodyTypeSuffix);
-    RTTI_SCRIPT_METHOD(GetLegsStateSuffix);
+    RTTI_SCRIPT_METHOD(GetArmsStateSuffix);
+    RTTI_SCRIPT_METHOD(GetFeetStateSuffix);
 })

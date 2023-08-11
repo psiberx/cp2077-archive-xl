@@ -22,10 +22,29 @@ Red::CString App::PuppetStateSystem::GetBodyTypeSuffix(Red::ItemID aItemID,
         }
     }
 
-    return "";
+    return BaseBodyName;
 }
 
-Red::CString App::PuppetStateSystem::GetLegsStateSuffix(Red::ItemID aItemID,
+Red::CString App::PuppetStateSystem::GetArmsStateSuffix(Red::ItemID aItemID,
+                                                        const Red::WeakHandle<Red::GameObject>& aOwner,
+                                                        const Red::Handle<Red::ItemsFactoryAppearanceSuffixBase_Record>&)
+{
+    switch (PuppetStateModule::GetArmsState(aOwner))
+    {
+    case PuppetArmsState::BaseArms:
+        return RTTI_ENUM_NAME_STR(PuppetArmsState::BaseArms);
+    case PuppetArmsState::MantisBlades:
+        return RTTI_ENUM_NAME_STR(PuppetArmsState::MantisBlades);
+    case PuppetArmsState::Monowire:
+        return RTTI_ENUM_NAME_STR(PuppetArmsState::Monowire);
+    case PuppetArmsState::ProjectileLauncher:
+        return RTTI_ENUM_NAME_STR(PuppetArmsState::ProjectileLauncher);
+    default:
+        return "";
+    }
+}
+
+Red::CString App::PuppetStateSystem::GetFeetStateSuffix(Red::ItemID aItemID,
                                                         const Red::WeakHandle<Red::GameObject>& aOwner,
                                                         const Red::Handle<Red::ItemsFactoryAppearanceSuffixBase_Record>&)
 {

@@ -498,7 +498,7 @@ int64_t App::GarmentOverrideModule::OnGetBaseMeshOffset(Red::Handle<Red::ICompon
         if (!aTemplate || !aTemplate->visualTagsSchema || !aTemplate->visualTagsSchema->visualTags.Contains(BodyPartTag))
         {
 #ifndef NDEBUG
-                LogDebug("|{}| [event=GetBaseMeshOffset comp={} offset=0]", ModuleName, aComponent->name.ToString());
+            LogDebug("|{}| [event=GetBaseMeshOffset comp={} offset=0]", ModuleName, aComponent->name.ToString());
 #endif
             return 0;
         }
@@ -516,8 +516,8 @@ void App::GarmentOverrideModule::OnComputeGarment(Red::Handle<Red::Entity>& aEnt
     if (auto& entityState = s_stateManager->FindEntityState(aEntity))
     {
 #ifndef NDEBUG
-            LogDebug("|{}| [event=ComputeGarment entity={}]",
-                     ModuleName, entityState->GetName());
+        LogDebug("|{}| [event=ComputeGarment entity={}]",
+                 ModuleName, entityState->GetName());
 #endif
 
         UpdatePartAssignments(entityState, aData->components, aData->resources);
@@ -536,9 +536,11 @@ void App::GarmentOverrideModule::OnReassembleAppearance(Red::Entity* aEntity, ui
     if (auto& entityState = s_stateManager->FindEntityState(aEntity))
     {
 #ifndef NDEBUG
-            LogDebug("|{}| [event=ReassembleAppearance entity={}]",
-                     ModuleName, entityState->GetName());
+        LogDebug("|{}| [event=ReassembleAppearance entity={}]",
+                 ModuleName, entityState->GetName());
 #endif
+
+        UpdateDynamicAttributes(entityState);
 
         ApplyDynamicAppearance(entityState);
         ApplyComponentOverrides(entityState, true);

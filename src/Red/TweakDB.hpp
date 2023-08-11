@@ -48,7 +48,7 @@ inline void AppendToFlat(TweakDBID aRecordID, const char* aProp, const Core::Vec
     flatID.SetTDBOffset(offset);
 
     {
-        std::lock_guard<SharedMutex> _(tweakDB->mutex00);
+        std::unique_lock _(tweakDB->mutex00);
         tweakDB->flats.InsertOrAssign(flatID);
     }
 }
@@ -64,6 +64,21 @@ inline TweakDBID CreateRecord(TweakDBID aRecordID, const char* aType)
     CreateTDBRecord(tweakDB, hash, aRecordID);
 
     return aRecordID;
+}
+
+inline bool CreateRecordAlias(TweakDBID aRecordID, TweakDBID aAliasID)
+{
+    auto tweakDB = TweakDB::Get();
+
+    std::unique_lock _(tweakDB->mutex01);
+
+    auto record = tweakDB->recordsByID.Get(aRecordID);
+
+    if (!record)
+        return false;
+
+    tweakDB->recordsByID.Insert(aAliasID, *record);
+    return true;
 }
 
 inline void UpdateRecord(TweakDBID aRecordID)

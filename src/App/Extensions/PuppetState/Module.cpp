@@ -7,9 +7,6 @@ namespace
 constexpr auto ModuleName = "PuppetState";
 
 constexpr auto SuffixListID = Red::TweakDBID("itemsFactoryAppearanceSuffix.ItemsFactoryAppearanceSuffixOrderDefault");
-
-constexpr auto LegsStateSuffixID = Red::TweakDBID("itemsFactoryAppearanceSuffix.LegsState");
-constexpr auto BodyTypeSuffixID = Red::TweakDBID("itemsFactoryAppearanceSuffix.BodyType");
 }
 
 std::string_view App::PuppetStateModule::GetName()
@@ -62,15 +59,25 @@ void App::PuppetStateModule::FillBodyTypes()
 
 void App::PuppetStateModule::OnLoadTweakDB()
 {
-    CreateSuffixRecord(LegsStateSuffixID,
-                       RTTI_TYPE_NAME(PuppetStateSystem),
-                       RTTI_FUNC_NAME(PuppetStateSystem::GetLegsStateSuffix));
-
     CreateSuffixRecord(BodyTypeSuffixID,
                        RTTI_TYPE_NAME(PuppetStateSystem),
                        RTTI_FUNC_NAME(PuppetStateSystem::GetBodyTypeSuffix));
 
-    ActivateSuffixRecords({LegsStateSuffixID, BodyTypeSuffixID});
+    CreateSuffixRecord(ArmsStateSuffixID,
+                       RTTI_TYPE_NAME(PuppetStateSystem),
+                       RTTI_FUNC_NAME(PuppetStateSystem::GetArmsStateSuffix));
+
+    CreateSuffixRecord(FeetStateSuffixID,
+                       RTTI_TYPE_NAME(PuppetStateSystem),
+                       RTTI_FUNC_NAME(PuppetStateSystem::GetFeetStateSuffix));
+
+    ActivateSuffixRecords({
+        BodyTypeSuffixID,
+        ArmsStateSuffixID,
+        FeetStateSuffixID,
+    });
+
+    CreateSuffixAlias(FeetStateSuffixID, LegsStateSuffixID);
 }
 
 void App::PuppetStateModule::OnAttachPuppet(Red::gameuiCharacterCustomizationGenitalsController * aComponent)
@@ -103,6 +110,15 @@ void App::PuppetStateModule::OnDetachPuppet(Red::gameuiCharacterCustomizationHai
     transactionSystem->RegisterSlotListener(owner, handler);
 }
 
+App::PuppetArmsState App::PuppetStateModule::GetArmsState(const Red::WeakHandle<Red::GameObject>& aPuppet)
+{
+    auto it = s_handlers.find(aPuppet.instance);
+    if (it == s_handlers.end())
+        return PuppetArmsState::BaseArms;
+
+    return it.value()->GetArmsState();
+}
+
 App::PuppetFeetState App::PuppetStateModule::GetFeetState(const Red::WeakHandle<Red::GameObject>& aPuppet)
 {
     auto it = s_handlers.find(aPuppet.instance);
@@ -126,6 +142,14 @@ void App::PuppetStateModule::CreateSuffixRecord(Red::TweakDBID aSuffixID, Red::C
         Red::CreateFlat(aSuffixID, ".scriptedSystem", aSystemName);
         Red::CreateFlat(aSuffixID, ".scriptedFunction", aFunctionName);
         Red::CreateRecord(aSuffixID, "ItemsFactoryAppearanceSuffixBase");
+    }
+}
+
+void App::PuppetStateModule::CreateSuffixAlias(Red::TweakDBID aSuffixID, Red::TweakDBID aAliasID)
+{
+    if (!Red::RecordExists(aAliasID))
+    {
+        Red::CreateRecordAlias(aSuffixID, aAliasID);
     }
 }
 
