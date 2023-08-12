@@ -19,7 +19,7 @@ bool App::PuppetStateModule::Load()
     if (!HookAfter<Raw::LoadTweakDB>(&OnLoadTweakDB))
         throw std::runtime_error("Failed to hook [LoadTweakDB].");
 
-    if (!HookAfter<Raw::CharacterCustomizationGenitalsController::OnAttach>(&OnAttachPuppet))
+    if (!HookBefore<Raw::CharacterCustomizationGenitalsController::OnAttach>(&OnAttachPuppet))
         throw std::runtime_error("Failed to hook [CharacterCustomizationGenitalsController::OnAttach].");
 
     if (!HookBefore<Raw::CharacterCustomizationHairstyleController::OnDetach>(&OnDetachPuppet))
@@ -85,6 +85,10 @@ void App::PuppetStateModule::OnLoadTweakDB()
 
 void App::PuppetStateModule::OnAttachPuppet(Red::gameuiCharacterCustomizationGenitalsController * aComponent)
 {
+#ifndef NDEBUG
+    LogDebug("|{}| [event=AttachPuppet]", ModuleName);
+#endif
+
     std::unique_lock _(s_mutex);
 
     auto owner = Raw::IComponent::Owner::Ptr(aComponent);
@@ -103,6 +107,10 @@ void App::PuppetStateModule::OnAttachPuppet(Red::gameuiCharacterCustomizationGen
 
 void App::PuppetStateModule::OnDetachPuppet(Red::gameuiCharacterCustomizationHairstyleController* aComponent, uintptr_t)
 {
+#ifndef NDEBUG
+    LogDebug("|{}| [event=DetachPuppet]", ModuleName);
+#endif
+
     std::unique_lock _(s_mutex);
 
     auto owner = Raw::IComponent::Owner::Ptr(aComponent);

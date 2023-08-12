@@ -83,6 +83,10 @@ void App::AttachmentSlotsModule::OnInitializeSlots(Red::game::AttachmentSlots*, 
 {
     if (aSlotIDs.size > 0)
     {
+#ifndef NDEBUG
+        LogDebug("|{}| [event=InitializeSlots]", ModuleName);
+#endif
+
         std::unique_lock _(s_slotsMutex);
         auto tweakDB = Red::TweakDB::Get();
 
@@ -117,6 +121,10 @@ bool App::AttachmentSlotsModule::OnSlotSpawningCheck(Red::game::AttachmentSlots*
 
     if (!result)
     {
+#ifndef NDEBUG
+        LogDebug("|{}| [event=SlotSpawningCheck]", ModuleName);
+#endif
+
         std::shared_lock _(s_slotsMutex);
         const auto& subSlots = s_extraSlots.find(aSlotID);
         if (subSlots != s_extraSlots.end())
@@ -137,6 +145,10 @@ bool App::AttachmentSlotsModule::OnSlotSpawningCheck(Red::game::AttachmentSlots*
 
 void App::AttachmentSlotsModule::OnAttachTPP(Red::game::TPPRepresentationComponent* aComponent, uintptr_t)
 {
+#ifndef NDEBUG
+    LogDebug("|{}| [event=AttachTPP]", ModuleName);
+#endif
+
     std::shared_lock _(s_slotsMutex);
 
     for (const auto slotID : TPPAffectedSlots)
@@ -160,6 +172,10 @@ void App::AttachmentSlotsModule::OnItemChangeTPP(Raw::TPPRepresentationComponent
                                                  Red::TweakDBID aItemID, Red::TweakDBID aSlotID)
 {
     {
+#ifndef NDEBUG
+        LogDebug("|{}| [event=ItemChangeTPP]", ModuleName);
+#endif
+
         std::shared_lock _(s_slotsMutex);
         const auto& baseSlot = s_baseSlots.find(aSlotID);
         if (baseSlot != s_baseSlots.end())

@@ -52,8 +52,8 @@ private:
     bool IsWeaponSlot(Red::TweakDBID aSlotID);
     bool HidesFootwear(const Red::Handle<Red::Entity>& aPuppet, Red::ItemID& aItemID);
     bool RollsUpSleeves(const Red::Handle<Red::Entity>& aPuppet, Red::ItemID& aItemID);
-    bool HasHighHeels(const Red::Handle<Red::ItemObject>& aItemObject);
-    bool HasFlatSole(const Red::Handle<Red::ItemObject>& aItemObject);
+    bool IsHighHeels(const Red::Handle<Red::ItemObject>& aItemObject);
+    bool IsFlatSole(const Red::Handle<Red::ItemObject>& aItemObject);
     Red::Handle<Red::ItemObject> GetItemInSlot(const Red::Handle<Red::Entity>& aPuppet, Red::TweakDBID aSlotID);
     static bool IsVisible(const Red::Handle<Red::ItemObject>& aItemObject);
     static bool IsDynamicAppearance(const Red::Handle<Red::ItemObject>& aItemObject);
@@ -66,10 +66,10 @@ private:
     Red::WeakHandle<Red::Entity> m_puppetWeak;
     Red::ITransactionSystem* m_transactionSystem;
     Core::Set<Red::TweakDBID> m_torsoSlots;
+    Core::Set<Red::TweakDBID> m_feetSlots;
     Core::Set<Red::TweakDBID> m_torsoDependentSlots;
     Core::Set<Red::TweakDBID> m_handsDependentSlots;
     Core::Set<Red::TweakDBID> m_feetDependentSlots;
-    Core::Set<Red::TweakDBID> m_feetSlots;
     PuppetArmsState m_armsState;
     PuppetFeetState m_feetState;
     Red::CName m_gender;

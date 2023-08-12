@@ -154,13 +154,13 @@ App::PuppetFeetState App::PuppetStateHandler::ResolveFeetState(const Red::Handle
         auto itemObject = GetItemInSlot(aPuppet, slotID);
         if (itemObject && IsVisible(itemObject))
         {
-            if (HasHighHeels(itemObject))
+            if (IsHighHeels(itemObject))
             {
                 state = PuppetFeetState::HighHeels;
                 break;
             }
 
-            if (HasFlatSole(itemObject))
+            if (IsFlatSole(itemObject))
             {
                 state = PuppetFeetState::FlatShoes;
                 break;
@@ -245,12 +245,12 @@ bool App::PuppetStateHandler::RollsUpSleeves(const Red::Handle<Red::Entity>& aPu
     return m_transactionSystem->MatchVisualTagByItemID(aItemID, aPuppet, HideInnerSleevesTag);
 }
 
-bool App::PuppetStateHandler::HasHighHeels(const Red::Handle<Red::ItemObject>& aItemObject)
+bool App::PuppetStateHandler::IsHighHeels(const Red::Handle<Red::ItemObject>& aItemObject)
 {
     return m_transactionSystem->MatchVisualTag(aItemObject, HighHeelsTag, false);
 }
 
-bool App::PuppetStateHandler::HasFlatSole(const Red::Handle<Red::ItemObject>& aItemObject)
+bool App::PuppetStateHandler::IsFlatSole(const Red::Handle<Red::ItemObject>& aItemObject)
 {
     return m_transactionSystem->MatchVisualTag(aItemObject, FlatShoesTag, false)
         || m_transactionSystem->MatchVisualTag(aItemObject, ForceFlatFeetTag, false);
