@@ -24,6 +24,7 @@ constexpr auto ForceFlatFeetTag = App::GarmentOverrideModule::ForceFlatFeetTag;
 constexpr auto InnerSleevesSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.Partial");
 constexpr auto ArmsStateSuffix = App::PuppetStateModule::ArmsStateSuffixID;
 constexpr auto FeetStateSuffix = App::PuppetStateModule::FeetStateSuffixID;
+constexpr auto LegsStateSuffix = App::PuppetStateModule::LegsStateSuffixID;
 
 constexpr auto EmptyAppearanceName = Red::CName("empty_appearance_default");
 constexpr auto MaleGenderName = Red::CName("Male");
@@ -307,7 +308,7 @@ bool App::PuppetStateHandler::ReactsToFeet(const Red::Handle<Red::ItemObject>& a
     auto itemID = Raw::ItemObject::ItemID(aItemObject);
     auto appearanceSuffixes = Red::GetFlatPtr<Red::DynArray<Red::TweakDBID>>({itemID->tdbid, ".appearanceSuffixes"});
 
-    return appearanceSuffixes->Contains(FeetStateSuffix);
+    return appearanceSuffixes->Contains(FeetStateSuffix) || appearanceSuffixes->Contains(LegsStateSuffix);
 }
 
 void App::PuppetStateHandler::RefreshItemAppearance(const Red::Handle<Red::Entity>& aPuppet,

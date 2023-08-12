@@ -94,8 +94,10 @@ void App::PuppetStateModule::OnAttachPuppet(Red::gameuiCharacterCustomizationGen
         return;
 
     auto handler = Red::MakeHandle<PuppetStateHandler>(owner);
+
     auto transactionSystem = Red::GetGameSystem<Red::ITransactionSystem>();
     transactionSystem->RegisterSlotListener(owner, handler);
+
     s_handlers.insert({owner, handler});
 }
 
@@ -110,8 +112,10 @@ void App::PuppetStateModule::OnDetachPuppet(Red::gameuiCharacterCustomizationHai
         return;
 
     auto handler = it.value();
+
     auto transactionSystem = Red::GetGameSystem<Red::ITransactionSystem>();
     transactionSystem->UnregisterSlotListener(owner, handler);
+
     s_handlers.erase(owner);
 }
 
