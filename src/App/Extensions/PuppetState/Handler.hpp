@@ -75,7 +75,7 @@ private:
     Red::CName m_gender;
 
     RTTI_IMPL_TYPEINFO(App::PuppetStateHandler);
-    RTTI_IMPL_ALLOCATOR();
+    RTTI_IMPL_ALLOCATOR(Red::Memory::DefaultAllocator);
 };
 }
 

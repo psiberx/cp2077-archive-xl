@@ -83,7 +83,7 @@ void App::PuppetStateModule::OnLoadTweakDB()
     });
 }
 
-void App::PuppetStateModule::OnAttachPuppet(Red::gameuiCharacterCustomizationGenitalsController * aComponent)
+void App::PuppetStateModule::OnAttachPuppet(Red::gameuiCharacterCustomizationGenitalsController* aComponent)
 {
 #ifndef NDEBUG
     LogDebug("|{}| [event=AttachPuppet]", ModuleName);
@@ -98,11 +98,10 @@ void App::PuppetStateModule::OnAttachPuppet(Red::gameuiCharacterCustomizationGen
         return;
 
     auto handler = Red::MakeHandle<PuppetStateHandler>(owner);
+    s_handlers.insert({owner, handler});
 
     auto transactionSystem = Red::GetGameSystem<Red::ITransactionSystem>();
     transactionSystem->RegisterSlotListener(owner, handler);
-
-    s_handlers.insert({owner, handler});
 }
 
 void App::PuppetStateModule::OnDetachPuppet(Red::gameuiCharacterCustomizationHairstyleController* aComponent, uintptr_t)
@@ -120,11 +119,10 @@ void App::PuppetStateModule::OnDetachPuppet(Red::gameuiCharacterCustomizationHai
         return;
 
     auto handler = it.value();
+    s_handlers.erase(owner);
 
     auto transactionSystem = Red::GetGameSystem<Red::ITransactionSystem>();
     transactionSystem->UnregisterSlotListener(owner, handler);
-
-    s_handlers.erase(owner);
 }
 
 App::PuppetArmsState App::PuppetStateModule::GetArmsState(const Red::WeakHandle<Red::GameObject>& aPuppet)
