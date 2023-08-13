@@ -7,10 +7,16 @@ namespace
 constexpr auto ModuleName = "Journal";
 
 constexpr auto MappinsResource = Red::ResourcePath(R"(base\worlds\03_night_city\_compiled\default\03_night_city.mappins)");
+constexpr auto PoiResource = Red::ResourcePath(R"(base\worlds\03_night_city\_compiled\default\03_night_city.poimappins)");
 
 constexpr auto PathSeparator = '/';
 constexpr auto EditMarker = '*';
 constexpr auto IdentityProp = Red::CName("id");
+
+const Red::ClassLocator<Red::gameJournalQuestMapPin> s_questMappinType;
+const Red::ClassLocator<Red::gameJournalQuestMapPinBase> s_questMappinBaseType;
+const Red::ClassLocator<Red::gameJournalPointOfInterestMappin> s_pointOfInterestType;
+const Red::TypeLocator<"LocalizationString"> s_localizationStringType;
 }
 
 std::string_view App::JournalModule::GetName()
@@ -125,79 +131,127 @@ void App::JournalModule::OnInitializeRoot(Red::game::JournalRootFolderEntry* aJo
 
 }
 
-Red::game::CookedMappinData* App::JournalModule::OnGetMappinData(Red::game::MappinResource* aResource, uint32_t aHash)
+void* App::JournalModule::OnGetMappinData(Red::CResource* aResource, uint32_t aHash)
 {
-    if (aResource->cookedData.size == aResource->cookedData.capacity && aResource->path == MappinsResource)
+    if (aResource->path == MappinsResource)
     {
-        const auto reserve = std::max(m_mappins.size() << 1, aResource->cookedData.size / 2ull);
-        aResource->cookedData.Reserve(aResource->cookedData.size + reserve);
+        auto resource = reinterpret_cast<Red::gameMappinResource*>(aResource);
+        if (resource->cookedData.size == resource->cookedData.capacity)
+        {
+            const auto reserve = std::max(m_mappins.size() << 1, resource->cookedData.size / 2ull);
+            resource->cookedData.Reserve(resource->cookedData.size + reserve);
+        }
+    }
+    else if (aResource->path == PoiResource)
+    {
+        auto resource = reinterpret_cast<Red::gamePointOfInterestMappinResource*>(aResource);
+        if (resource->cookedData.size == resource->cookedData.capacity)
+        {
+            const auto reserve = std::max(m_mappins.size() << 1, resource->cookedData.size / 2ull);
+            resource->cookedData.Reserve(resource->cookedData.size + reserve);
+        }
     }
 
     auto result = Raw::MappinResource::GetMappinData(aResource, aHash);
 
-    if (!result && !m_mappins.empty() && aResource->path == MappinsResource)
+    if (!result && !m_mappins.empty())
     {
-        const auto it = m_mappins.find(aHash);
-        if (it != m_mappins.end())
+        if (aResource->path == MappinsResource)
         {
-            // LogInfo("|{}| Uncooked mappin #{} requested...", ModuleName, aHash);
-
-            Red::game::CookedMappinData cookedMappin{};
-            cookedMappin.journalPathHash = aHash;
-
-            const auto& mappin = it.value();
-
-            if (mappin->reference.reference.hash)
+            const auto it = m_mappins.find(aHash);
+            if (it != m_mappins.end())
             {
-                Red::world::GlobalNodeRef context{};
-                Red::ExecuteFunction("worldGlobalNodeID", "GetRoot", &context);
+                const auto journalMappin = it.value();
 
-                if (!context.hash)
+                Red::gameCookedMappinData cookedMappin{};
+
+                if (ResolveMappinPosition(aHash, journalMappin, cookedMappin.position))
                 {
-                    LogError("|{}| Can't resolve mappin #{} context.", ModuleName, aHash);
-                    return nullptr;
+                    cookedMappin.journalPathHash = aHash;
+
+                    std::unique_lock _(m_mappinsLock);
+                    auto resource = reinterpret_cast<Red::gameMappinResource*>(aResource);
+                    resource->cookedData.PushBack(std::move(cookedMappin));
+
+                    result = resource->cookedData.End() - 1;
                 }
-
-                Red::NodeRef reference = mappin->reference.reference;
-                Red::world::GlobalNodeRef resolved{};
-                Red::ExecuteGlobalFunction("ResolveNodeRef", &resolved, reference, context);
-
-                if (!resolved.hash)
-                {
-                    LogError("|{}| Can't resolve mappin #{} reference.", ModuleName, aHash);
-                    return nullptr;
-                }
-
-                bool success{};
-                Red::Transform transform{};
-                Red::ScriptGameInstance game{};
-                Red::ExecuteFunction("ScriptGameInstance", "GetNodeTransform", &success, game, resolved, transform);
-
-                if (!success)
-                {
-                    LogError("|{}| Can't resolve mappin #{} position.", ModuleName, aHash);
-                    return nullptr;
-                }
-
-                cookedMappin.position.X = transform.position.X;
-                cookedMappin.position.Y = transform.position.Y;
-                cookedMappin.position.Z = transform.position.Z;
             }
-            else
+        }
+        else if (aResource->path == PoiResource)
+        {
+            const auto it = m_mappins.find(aHash);
+            if (it != m_mappins.end())
             {
-                cookedMappin.position = mappin->offset;
-                mappin->offset = {};
-            }
+                const auto journalMappin = it.value();
 
-            {
-                std::unique_lock _(m_mappinsLock);
-                aResource->cookedData.PushBack(std::move(cookedMappin));
-                return aResource->cookedData.End() - 1;
+                Red::gameCookedPointOfInterestMappinData cookedMappin{};
+
+                if (ResolveMappinPosition(aHash, journalMappin, cookedMappin.position))
+                {
+                    cookedMappin.journalPathHash = aHash;
+                    cookedMappin.entityID.hash = journalMappin.reference.hash;
+
+                    std::unique_lock _(m_mappinsLock);
+                    auto resource = reinterpret_cast<Red::gamePointOfInterestMappinResource*>(aResource);
+                    resource->cookedData.PushBack(std::move(cookedMappin));
+
+                    result = resource->cookedData.End() - 1;
+                }
             }
         }
     }
 
     return result;
+}
+
+bool App::JournalModule::ResolveMappinPosition(uint32_t aHash, const JournalMappin& aMappin, Red::Vector3& aResult)
+{
+    LogInfo("|{}| Cooked mappin #{} requested...", ModuleName, aHash);
+
+    if (aMappin.reference.hash)
+    {
+        Red::world::GlobalNodeRef context{};
+        Red::ExecuteFunction("worldGlobalNodeID", "GetRoot", &context);
+
+        if (!context.hash)
+        {
+            LogError("|{}| Can't resolve mappin #{} context.", ModuleName, aHash);
+            return false;
+        }
+
+        Red::NodeRef reference = aMappin.reference;
+        Red::world::GlobalNodeRef resolved{};
+        Red::ExecuteGlobalFunction("ResolveNodeRef", &resolved, reference, context);
+
+        if (!resolved.hash)
+        {
+            LogError("|{}| Can't resolve mappin #{} reference.", ModuleName, aHash);
+            return false;
+        }
+
+        bool success{};
+        Red::Transform transform{};
+        Red::ScriptGameInstance game{};
+        Red::ExecuteFunction("ScriptGameInstance", "GetNodeTransform", &success, game, resolved, transform);
+
+        if (!success)
+        {
+            LogError("|{}| Can't resolve mappin #{} position.", ModuleName, aHash);
+            return false;
+        }
+
+        aResult.X = transform.position.X;
+        aResult.Y = transform.position.Y;
+        aResult.Z = transform.position.Z;
+
+        LogInfo("|{}| Cooked mappin #{} resolved to NodeRef #{}.",  ModuleName, aHash, aMappin.reference.hash);
+    }
+    else
+    {
+        aResult = aMappin.offset;
+
+        LogInfo("|{}| Cooked mappin #{} resolved to static offset.", ModuleName, aHash);
+    }
 }
 
 App::JournalModule::EntrySearchResult App::JournalModule::FindEntry(Red::game::JournalEntry* aParent,
@@ -348,8 +402,6 @@ void App::JournalModule::ProcessNewEntries(Red::game::JournalEntry* aEntry, cons
 
 void App::JournalModule::ConvertLocKeys(Red::game::JournalEntry* aEntry)
 {
-    static const auto s_localizationStringType = Red::GetType<"LocalizationString">();
-
     Red::DynArray<Red::CProperty*> props;
     aEntry->GetType()->GetProperties(props);
 
@@ -376,13 +428,41 @@ void App::JournalModule::ConvertLocKeys(Red::game::JournalEntry* aEntry)
 
 void App::JournalModule::CollectMappin(Red::game::JournalEntry* aEntry, const std::string& aPath)
 {
-    static const auto s_mappinEntryType = Red::GetClass<Red::game::JournalQuestMapPin>();
+    auto entryType = aEntry->GetType();
 
-    if (aEntry->GetType()->IsA(s_mappinEntryType))
+    if (entryType->IsA(s_questMappinType))
     {
-        const auto hash = CalculateJournalHash(aPath);
+        auto hash = CalculateJournalHash(aPath);
+        auto entry = reinterpret_cast<Red::gameJournalQuestMapPin*>(aEntry);
 
-        m_mappins.emplace(hash, reinterpret_cast<Red::game::JournalQuestMapPin*>(aEntry));
+        if (!entry->reference.dynamicEntityUniqueName)
+        {
+            m_mappins.insert({hash, {entry->reference.reference, entry->offset}});
+
+            if (!entry->reference.reference.hash)
+            {
+                entry->offset = {};
+            }
+        }
+    }
+    else if (entryType->IsA(s_questMappinBaseType))
+    {
+        auto hash = CalculateJournalHash(aPath);
+        auto entry = reinterpret_cast<Red::gameJournalQuestMapPinBase*>(aEntry);
+
+        m_mappins.insert({hash, {0, entry->offset}});
+    }
+    else if (entryType->IsA(s_pointOfInterestType))
+    {
+        auto hash = CalculateJournalHash(aPath);
+        auto entry = reinterpret_cast<Red::gameJournalPointOfInterestMappin*>(aEntry);
+
+        m_mappins.insert({hash, {entry->staticNodeRef, entry->offset}});
+
+        if (!entry->staticNodeRef.hash)
+        {
+            entry->offset = {};
+        }
     }
 }
 
@@ -457,5 +537,5 @@ std::string App::JournalModule::MakePath(const std::string& aPath, const std::st
 
 uint32_t App::JournalModule::CalculateJournalHash(const std::string& aPath)
 {
-    return Red::Murmur3_32(reinterpret_cast<const uint8_t*>(aPath.data()), aPath.length(), 0X5EEDBA5E);
+    return Red::Murmur3_32(reinterpret_cast<const uint8_t*>(aPath.data()), aPath.length());
 }

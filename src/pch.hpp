@@ -59,12 +59,14 @@
 #include <RED4ext/Scripting/Natives/Generated/game/IHitShape.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ITransactionSystem.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/JournalManager.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/JournalPointOfInterestMapPin.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/JournalQuestMapPin.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/JournalResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/JournalRootFolderEntry.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/JournalTree.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/MappinResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/PersistentState.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/PointOfInterestMappinResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/Puppet.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ScriptableSystem.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/TPPRepresentationComponent.hpp>

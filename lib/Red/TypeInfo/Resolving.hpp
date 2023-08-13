@@ -221,7 +221,7 @@ template<CName AType>
 class TypeLocator
 {
 public:
-    static inline CBaseRTTIType* Get()
+    static inline CBaseRTTIType* Get() noexcept
     {
         if (!s_resolved)
         {
@@ -231,7 +231,7 @@ public:
         return s_type;
     }
 
-    static inline CClass* GetClass()
+    static inline CClass* GetClass() noexcept
     {
         if (!s_resolved)
         {
@@ -246,7 +246,7 @@ public:
         return reinterpret_cast<CClass*>(s_type);
     }
 
-    static inline CRTTIHandleType* GetHandle()
+    static inline CRTTIHandleType* GetHandle() noexcept
     {
         if (!s_resolved)
         {
@@ -261,7 +261,7 @@ public:
         return reinterpret_cast<CRTTIHandleType*>(s_type);
     }
 
-    static inline CRTTIWeakHandleType* GetWeakHandle()
+    static inline CRTTIWeakHandleType* GetWeakHandle() noexcept
     {
         if (!s_resolved)
         {
@@ -276,7 +276,7 @@ public:
         return reinterpret_cast<CRTTIWeakHandleType*>(s_type);
     }
 
-    static inline CRTTIArrayType* GetArray()
+    static inline CRTTIArrayType* GetArray() noexcept
     {
         if (!s_resolved)
         {
@@ -291,7 +291,7 @@ public:
         return reinterpret_cast<CRTTIArrayType*>(s_type);
     }
 
-    static inline CEnum* GetEnum()
+    static inline CEnum* GetEnum() noexcept
     {
         if (!s_resolved)
         {
@@ -306,7 +306,7 @@ public:
         return reinterpret_cast<CEnum*>(s_type);
     }
 
-    static inline bool IsDefined()
+    static inline bool IsDefined() noexcept
     {
         if (!s_resolved)
         {
@@ -316,46 +316,49 @@ public:
         return s_type;
     }
 
-    operator CBaseRTTIType*() const
+    operator CBaseRTTIType*() const noexcept
     {
         return Get();
     }
 
-    operator CClass*() const
+    operator CClass*() const noexcept
     {
         return GetClass();
     }
 
-    operator CRTTIHandleType*() const
+    operator CRTTIHandleType*() const noexcept
     {
         return GetHandle();
     }
 
-    operator CRTTIWeakHandleType*() const
+    operator CRTTIWeakHandleType*() const noexcept
     {
         return GetWeakHandle();
     }
 
-    operator CRTTIArrayType*() const
+    operator CRTTIArrayType*() const noexcept
     {
         return GetArray();
     }
 
-    [[nodiscard]] inline CBaseRTTIType* operator->() const
+    [[nodiscard]] inline CBaseRTTIType* operator->() const noexcept
     {
         return Get();
     }
 
-    operator bool()
+    operator bool() noexcept
     {
         return IsDefined();
     }
 
 private:
-    static inline void Resolve()
+    static inline void Resolve() noexcept
     {
-        s_type = CRTTISystem::Get()->GetType(AType);
-        s_resolved = true;
+        if (auto rtti = CRTTISystem::Get())
+        {
+            s_type = rtti->GetType(AType);
+            s_resolved = true;
+        }
     }
 
     static inline CBaseRTTIType* s_type;
@@ -368,13 +371,13 @@ class ClassLocator : public TypeLocator<GetTypeName<T>()>
 };
 
 template<CName AType>
-inline CBaseRTTIType* GetType()
+inline CBaseRTTIType* GetType() noexcept
 {
     return TypeLocator<AType>::Get();
 }
 
 template<typename TType>
-inline CBaseRTTIType* GetType()
+inline CBaseRTTIType* GetType() noexcept
 {
     constexpr auto name = GetTypeName<TType>();
 
@@ -387,13 +390,13 @@ inline CBaseRTTIType* GetType(CName aTypeName)
 }
 
 template<CName AType>
-inline CClass* GetClass()
+inline CClass* GetClass() noexcept
 {
     return TypeLocator<AType>::GetClass();
 }
 
 template<typename TType>
-inline CClass* GetClass()
+inline CClass* GetClass() noexcept
 {
     constexpr auto name = GetTypeName<TType>();
 
@@ -413,13 +416,13 @@ inline CClass* GetClass(CName aTypeName)
 }
 
 template<CName AType>
-inline CEnum* GetEnum()
+inline CEnum* GetEnum() noexcept
 {
     return TypeLocator<AType>::GetEnum();
 }
 
 template<typename TType>
-inline CEnum* GetEnum()
+inline CEnum* GetEnum() noexcept
 {
     constexpr auto name = GetTypeName<TType>();
 

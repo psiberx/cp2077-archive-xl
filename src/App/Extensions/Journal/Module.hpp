@@ -19,9 +19,15 @@ public:
 private:
     using EntrySearchResult = std::tuple<Red::game::JournalEntry*, std::string, Red::game::JournalContainerEntry*, bool>;
 
+    struct JournalMappin
+    {
+        Red::NodeRef reference;
+        Red::Vector3 offset;
+    };
+
     void OnLoadJournal(uintptr_t a1, Red::JobGroup& aJobGroup);
     void OnInitializeRoot(Red::game::JournalRootFolderEntry* aRoot, uintptr_t, uintptr_t, Red::JobQueue& aJobQueue);
-    Red::game::CookedMappinData* OnGetMappinData(Red::game::MappinResource* aResource, uint32_t aHash);
+    void* OnGetMappinData(Red::CResource* aResource, uint32_t aHash);
 
     EntrySearchResult FindEntry(Red::game::JournalEntry* aParent, Red::CString& aPath);
     bool MergeEntries(Red::game::JournalContainerEntry* aTarget, Red::game::JournalContainerEntry* aSource,
@@ -31,6 +37,7 @@ private:
     void ProcessNewEntries(Red::game::JournalEntry* aEntry, const std::string& aPath, bool aRecursive);
     void ConvertLocKeys(Red::game::JournalEntry* aEntry);
     void CollectMappin(Red::game::JournalEntry* aEntry, const std::string& aPath);
+    bool ResolveMappinPosition(uint32_t aHash, const JournalMappin& aMappin, Red::Vector3& aResult);
     void ResetResourceData();
     void ResetRuntimeData();
     void ReloadJournal();
@@ -40,7 +47,7 @@ private:
 
     Core::Vector<Red::SharedPtr<Red::ResourceToken<Red::game::JournalResource>>> m_resources;
     Core::Map<Red::ResourcePath, std::string> m_paths;
-    Core::Map<uint32_t, Red::game::JournalQuestMapPin*> m_mappins;
+    Core::Map<uint32_t, JournalMappin> m_mappins;
     std::shared_mutex m_mappinsLock;
 };
 }
