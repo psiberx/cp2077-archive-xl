@@ -298,8 +298,12 @@ void App::PuppetStateHandler::RefreshDependentAppearances(const Red::Handle<Red:
                                                           const Core::Set<Red::TweakDBID>& aSlotIDs,
                                                           std::initializer_list<Red::TweakDBID> aSuffixIDs)
 {
-    for (const auto& slotID : m_feetDependentSlots)
+    for (const auto& slotID : aSlotIDs)
     {
+#ifndef NDEBUG
+        auto debugSlotName = Red::ToStringDebug(slotID);
+#endif
+
         auto [itemObject, isSpawning] = GetItemInSlot(aPuppet, slotID);
         if (itemObject)
         {
