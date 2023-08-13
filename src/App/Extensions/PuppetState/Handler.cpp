@@ -21,10 +21,10 @@ constexpr auto HighHeelsTag = Red::CName("HighHeels");
 constexpr auto FlatShoesTag = Red::CName("FlatShoes");
 constexpr auto ForceFlatFeetTag = App::GarmentOverrideModule::ForceFlatFeetTag;
 
-constexpr auto InnerSleevesSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.Partial");
-constexpr auto ArmsStateSuffix = App::PuppetStateModule::ArmsStateSuffixID;
-constexpr auto FeetStateSuffix = App::PuppetStateModule::FeetStateSuffixID;
-constexpr auto LegsStateSuffix = App::PuppetStateModule::LegsStateSuffixID;
+constexpr auto InnerSleevesSuffix = {Red::TweakDBID("itemsFactoryAppearanceSuffix.Partial")};
+constexpr auto ArmsStateSuffix = {App::PuppetStateModule::ArmsStateSuffixID};
+constexpr auto FeetStateSuffixes = {App::PuppetStateModule::FeetStateSuffixID,
+                                    App::PuppetStateModule::LegsStateSuffixID};
 
 constexpr auto EmptyAppearanceName = Red::CName("empty_appearance_default");
 constexpr auto MaleGenderName = Red::CName("Male");
@@ -56,6 +56,11 @@ void App::PuppetStateHandler::OnItemEquipped(Red::ItemID& aItemID, Red::TweakDBI
 void App::PuppetStateHandler::OnItemEquippedVisual(Red::ItemID& aItemID, Red::TweakDBID aSlotID)
 {
     HandleAppearanceChange(aItemID, aSlotID, true);
+}
+
+void App::PuppetStateHandler::OnItemEquippedComplete(Red::ItemID& aItemID, Red::TweakDBID aSlotID)
+{
+    FinalizeAppearanceChange(aItemID, aSlotID);
 }
 
 void App::PuppetStateHandler::OnItemUnequipped(Red::ItemID& aItemID, Red::TweakDBID aSlotID)
@@ -97,6 +102,18 @@ void App::PuppetStateHandler::HandleAppearanceChange(Red::ItemID& aItemID, Red::
         if (IsTorsoSlot(aSlotID) && RollsUpSleeves(puppet, aItemID))
         {
             RefreshChestAppearances(puppet);
+        }
+    }
+}
+
+void App::PuppetStateHandler::FinalizeAppearanceChange(Red::ItemID& aItemID, Red::TweakDBID aSlotID)
+{
+    auto puppet = m_puppetWeak.Lock();
+    if (puppet)
+    {
+        if (PullPendingRefresh(aSlotID))
+        {
+            RefreshItemAppearance(puppet, aItemID);
         }
     }
 }
@@ -151,7 +168,7 @@ App::PuppetFeetState App::PuppetStateHandler::ResolveFeetState(const Red::Handle
 
     for (const auto& slotID : m_feetSlots)
     {
-        auto itemObject = GetItemInSlot(aPuppet, slotID);
+        auto [itemObject, _] = GetItemInSlot(aPuppet, slotID);
         if (itemObject && IsVisible(itemObject))
         {
             if (IsHighHeels(itemObject))
@@ -176,38 +193,17 @@ App::PuppetFeetState App::PuppetStateHandler::ResolveFeetState(const Red::Handle
 
 void App::PuppetStateHandler::RefreshChestAppearances(const Red::Handle<Red::Entity>& aPuppet)
 {
-    for (const auto& slotID : m_torsoDependentSlots)
-    {
-        auto itemObject = GetItemInSlot(aPuppet, slotID);
-        if (itemObject && IsVisible(itemObject) && (IsDynamicAppearance(itemObject) || ReactsToSleeves(itemObject)))
-        {
-            RefreshItemAppearance(aPuppet, itemObject);
-        }
-    }
+    RefreshDependentAppearances(aPuppet, m_torsoDependentSlots, InnerSleevesSuffix);
 }
 
 void App::PuppetStateHandler::RefreshHandsAppearances(const Red::Handle<Red::Entity>& aPuppet)
 {
-    for (const auto& slotID : m_handsDependentSlots)
-    {
-        auto itemObject = GetItemInSlot(aPuppet, slotID);
-        if (itemObject && IsVisible(itemObject) && (IsDynamicAppearance(itemObject) || ReactsToArms(itemObject)))
-        {
-            RefreshItemAppearance(aPuppet, itemObject);
-        }
-    }
+    RefreshDependentAppearances(aPuppet, m_handsDependentSlots, ArmsStateSuffix);
 }
 
 void App::PuppetStateHandler::RefreshLegsAppearances(const Red::Handle<Red::Entity>& aPuppet)
 {
-    for (const auto& slotID : m_feetDependentSlots)
-    {
-        auto itemObject = GetItemInSlot(aPuppet, slotID);
-        if (itemObject && IsVisible(itemObject) && (IsDynamicAppearance(itemObject) || ReactsToFeet(itemObject)))
-        {
-            RefreshItemAppearance(aPuppet, itemObject);
-        }
-    }
+    RefreshDependentAppearances(aPuppet, m_feetDependentSlots, FeetStateSuffixes);
 }
 
 bool App::PuppetStateHandler::IsMale()
@@ -256,8 +252,8 @@ bool App::PuppetStateHandler::IsFlatSole(const Red::Handle<Red::ItemObject>& aIt
         || m_transactionSystem->MatchVisualTag(aItemObject, ForceFlatFeetTag, false);
 }
 
-Red::Handle<Red::ItemObject> App::PuppetStateHandler::GetItemInSlot(const Red::Handle<Red::Entity>& aPuppet,
-                                                                    Red::TweakDBID aSlotID)
+App::PuppetStateHandler::SlotState App::PuppetStateHandler::GetItemInSlot(const Red::Handle<Red::Entity>& aPuppet,
+                                                                          Red::TweakDBID aSlotID)
 {
     auto slotData = m_transactionSystem->FindSlotData(aPuppet,
                                                       [aSlotID](const Red::AttachmentSlotData& aSlotData)
@@ -268,7 +264,7 @@ Red::Handle<Red::ItemObject> App::PuppetStateHandler::GetItemInSlot(const Red::H
     if (!slotData)
         return {};
 
-    return slotData->itemObject;
+    return {slotData->itemObject, slotData->spawningItemID.IsValid()};
 }
 
 bool App::PuppetStateHandler::IsVisible(const Red::Handle<Red::ItemObject>& aItemObject)
@@ -287,34 +283,58 @@ bool App::PuppetStateHandler::IsDynamicAppearance(const Red::Handle<Red::ItemObj
     return DynamicAppearanceName::CheckMark(itemAppearance);
 }
 
-bool App::PuppetStateHandler::ReactsToSleeves(const Red::Handle<Red::ItemObject>& aItemObject)
+bool App::PuppetStateHandler::ReactsToSuffix(const Red::Handle<Red::ItemObject>& aItemObject,
+                                             std::initializer_list<Red::TweakDBID> aSuffixIDs)
 {
     auto itemID = Raw::ItemObject::ItemID(aItemObject);
     auto appearanceSuffixes = Red::GetFlatPtr<Red::DynArray<Red::TweakDBID>>({itemID->tdbid, ".appearanceSuffixes"});
 
-    return appearanceSuffixes->Contains(InnerSleevesSuffix);
+    return std::ranges::any_of(aSuffixIDs, [&appearanceSuffixes](const Red::TweakDBID& aSuffixID) {
+        return appearanceSuffixes->Contains(aSuffixID);
+    });
 }
 
-bool App::PuppetStateHandler::ReactsToArms(const Red::Handle<Red::ItemObject>& aItemObject)
+void App::PuppetStateHandler::RefreshDependentAppearances(const Red::Handle<Red::Entity>& aPuppet,
+                                                          const Core::Set<Red::TweakDBID>& aSlotIDs,
+                                                          std::initializer_list<Red::TweakDBID> aSuffixIDs)
 {
-    auto itemID = Raw::ItemObject::ItemID(aItemObject);
-    auto appearanceSuffixes = Red::GetFlatPtr<Red::DynArray<Red::TweakDBID>>({itemID->tdbid, ".appearanceSuffixes"});
-
-    return appearanceSuffixes->Contains(ArmsStateSuffix);
-}
-
-bool App::PuppetStateHandler::ReactsToFeet(const Red::Handle<Red::ItemObject>& aItemObject)
-{
-    auto itemID = Raw::ItemObject::ItemID(aItemObject);
-    auto appearanceSuffixes = Red::GetFlatPtr<Red::DynArray<Red::TweakDBID>>({itemID->tdbid, ".appearanceSuffixes"});
-
-    return appearanceSuffixes->Contains(FeetStateSuffix) || appearanceSuffixes->Contains(LegsStateSuffix);
+    for (const auto& slotID : m_feetDependentSlots)
+    {
+        auto [itemObject, isSpawning] = GetItemInSlot(aPuppet, slotID);
+        if (itemObject)
+        {
+            if (IsVisible(itemObject) && (IsDynamicAppearance(itemObject) || ReactsToSuffix(itemObject, aSuffixIDs)))
+            {
+                RefreshItemAppearance(aPuppet, itemObject);
+            }
+        }
+        else if (isSpawning)
+        {
+            AddPendingRefresh(slotID);
+        }
+    }
 }
 
 void App::PuppetStateHandler::RefreshItemAppearance(const Red::Handle<Red::Entity>& aPuppet,
                                                     const Red::Handle<Red::ItemObject>& aItemObject)
 {
     m_transactionSystem->ResetItemAppearance(aPuppet, Raw::ItemObject::ItemID(aItemObject));
+}
+
+void App::PuppetStateHandler::RefreshItemAppearance(const Red::Handle<Red::Entity>& aPuppet,
+                                                    Red::ItemID& aItemID)
+{
+    m_transactionSystem->ResetItemAppearance(aPuppet, aItemID);
+}
+
+void App::PuppetStateHandler::AddPendingRefresh(Red::TweakDBID aSlotID)
+{
+    m_pendingRefreshes.insert(aSlotID);
+}
+
+bool App::PuppetStateHandler::PullPendingRefresh(Red::TweakDBID aSlotID)
+{
+    return m_pendingRefreshes.erase(aSlotID) != 0;
 }
 
 App::PuppetArmsState App::PuppetStateHandler::GetArmsState()
