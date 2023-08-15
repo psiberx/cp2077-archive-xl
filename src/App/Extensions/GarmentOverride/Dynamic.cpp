@@ -538,7 +538,7 @@ App::DynamicAppearanceController::AttributeData App::DynamicAppearanceController
     return {hairColor.ToString(), hairColor.ToString()};
 }
 
-bool App::DynamicAppearanceController::IsMale(Red::Entity* aEntity) const
+bool App::DynamicAppearanceController::IsMale(Red::Entity* aEntity)
 {
     for (const auto& component : Raw::Entity::ComponentsStorage(aEntity)->components | std::views::reverse)
     {

@@ -67,6 +67,8 @@ public:
     void MarkDynamicAppearanceName(Red::CName& aAppearanceName, DynamicAppearanceName& aSelector);
     std::string_view GetBaseAppearanceName(Red::CName aAppearanceName);
 
+    static bool IsMale(Red::Entity* aEntity);
+
 private:
     struct AttributeData
     {
@@ -97,7 +99,6 @@ private:
     AttributeData GetSuffixData(Red::Entity* aEntity, Red::TweakDBID aSuffixID) const;
     AttributeData GetSkinColorData(Red::Entity* aEntity) const;
     AttributeData GetHairColorData(Red::Entity* aEntity) const;
-    bool IsMale(Red::Entity* aEntity) const;
 
     [[nodiscard]] const std::string& GetPathStr(Red::ResourcePath aPath) const;
 

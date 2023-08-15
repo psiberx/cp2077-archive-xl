@@ -27,7 +27,9 @@ constexpr auto FeetStateSuffixes = {App::PuppetStateModule::FeetStateSuffixID,
                                     App::PuppetStateModule::LegsStateSuffixID};
 
 constexpr auto EmptyAppearanceName = Red::CName("empty_appearance_default");
+
 constexpr auto MaleGenderName = Red::CName("Male");
+constexpr auto FemaleGenderName = Red::CName("Female");
 
 constexpr auto MantisBladesName = "mantis_blade";
 constexpr auto MonowireName = "mono_wires";
@@ -210,7 +212,9 @@ bool App::PuppetStateHandler::IsMale()
 {
     if (!m_gender)
     {
-        Red::CallVirtual(m_puppetWeak.instance, "GetResolvedGenderName", m_gender);
+        m_gender = DynamicAppearanceController::IsMale(m_puppetWeak.instance)
+            ? MaleGenderName
+            : FemaleGenderName;
     }
 
     return m_gender == MaleGenderName;
