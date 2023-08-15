@@ -115,7 +115,11 @@ void App::PuppetStateHandler::FinalizeAppearanceChange(Red::ItemID& aItemID, Red
     {
         if (PullPendingRefresh(aSlotID))
         {
-            RefreshItemAppearance(puppet, aItemID);
+            auto [itemObject, _] = GetItemInSlot(puppet, aSlotID);
+            if (itemObject && IsVisible(itemObject))
+            {
+                RefreshItemAppearance(puppet, itemObject);
+            }
         }
     }
 }
