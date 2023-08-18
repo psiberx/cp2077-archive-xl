@@ -244,7 +244,7 @@ bool App::JournalModule::ResolveMappinPosition(uint32_t aHash, const JournalMapp
         aResult.Y = transform.position.Y;
         aResult.Z = transform.position.Z;
 
-        LogInfo("|{}| Cooked mappin #{} resolved to NodeRef #{}.",  ModuleName, aHash, aMappin.reference.hash);
+        LogInfo("|{}| Cooked mappin #{} resolved to NodeRef #{}.",  ModuleName, aHash, resolved.hash);
     }
     else
     {
