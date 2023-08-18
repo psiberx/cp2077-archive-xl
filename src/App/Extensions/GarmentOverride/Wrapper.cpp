@@ -1,5 +1,6 @@
 #include "Wrapper.hpp"
 #include "Red/Mesh.hpp"
+#include "Red/ResourceLoader.hpp"
 
 namespace
 {
@@ -197,18 +198,9 @@ Red::SharedPtr<Red::ResourceToken<Red::CMesh>> App::ComponentWrapper::LoadResour
     {
         meshRef.LoadAsync();
 
-        if (aWait && !meshRef.IsLoaded() && !meshRef.IsFailed())
+        if (aWait)
         {
-            std::mutex mutex;
-            std::unique_lock lock(mutex);
-            std::condition_variable cv;
-            meshRef.token->OnLoaded([&lock, &cv](Red::Handle<Red::CMesh>&)
-                                    {
-                                        lock.release();
-                                        cv.notify_all();
-                                    });
-            cv.wait_for(lock, std::chrono::milliseconds(1000));
-            mutex.unlock();
+            Red::WaitForResource(meshRef.token, std::chrono::milliseconds(1000));
         }
     }
 

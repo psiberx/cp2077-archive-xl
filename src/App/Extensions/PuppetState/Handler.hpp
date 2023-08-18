@@ -31,17 +31,18 @@ public:
 private:
     using SlotState = std::pair<Red::Handle<Red::ItemObject>, bool>;
 
-    void OnItemEquipped(Red::ItemID& aItemID, Red::TweakDBID aSlotID) override;
-    void OnItemEquippedVisual(Red::ItemID& aItemID, Red::TweakDBID aSlotID) override;
-    void OnItemEquippedComplete(Red::ItemID& aItemID, Red::TweakDBID aSlotID) override;
-    void OnItemUnequipped(Red::ItemID& aItemID, Red::TweakDBID aSlotID) override;
-    void OnItemUnequippedComplete(Red::ItemID& aItemID, Red::TweakDBID aSlotID) override;
+    void OnItemEquipped(const Red::ItemID& aItemID, Red::TweakDBID aSlotID) override;
+    void OnItemEquippedVisual(const Red::ItemID& aItemID, Red::TweakDBID aSlotID) override;
+    void OnItemEquippedComplete(const Red::ItemID& aItemID, Red::TweakDBID aSlotID) override;
+    void OnItemUnequipped(const Red::ItemID& aItemID, Red::TweakDBID aSlotID) override;
+    void OnItemUnequippedComplete(const Red::ItemID& aItemID, Red::TweakDBID aSlotID) override;
 
-    void HandleAppearanceChange(Red::ItemID& aItemID, Red::TweakDBID aSlotID, bool aEquipped);
-    void FinalizeAppearanceChange(Red::ItemID& aItemID, Red::TweakDBID aSlotID);
+    void HandleAppearanceChange(const Red::ItemID& aItemID, Red::TweakDBID aSlotID, bool aEquipped);
+    void FinalizeAppearanceChange(const Red::ItemID& aItemID, Red::TweakDBID aSlotID);
 
-    bool UpdateArmsState(const Red::Handle<Red::Entity>& aPuppet, Red::ItemID& aItemID, bool aEquipped);
-    PuppetArmsState ResolveArmsState(const Red::Handle<Red::Entity>& aPuppet, Red::ItemID& aItemID, bool aEquipped);
+    bool UpdateArmsState(const Red::Handle<Red::Entity>& aPuppet, const Red::ItemID& aItemID, bool aEquipped);
+    PuppetArmsState ResolveArmsState(const Red::Handle<Red::Entity>& aPuppet, const Red::ItemID& aItemID,
+                                     bool aEquipped);
 
     bool UpdateFeetState(const Red::Handle<Red::Entity>& aPuppet);
     PuppetFeetState ResolveFeetState(const Red::Handle<Red::Entity>& aPuppet);
@@ -58,8 +59,8 @@ private:
 
     SlotState GetItemInSlot(const Red::Handle<Red::Entity>& aPuppet, Red::TweakDBID aSlotID);
 
-    bool HidesFootwear(const Red::Handle<Red::Entity>& aPuppet, Red::ItemID& aItemID);
-    bool RollsUpSleeves(const Red::Handle<Red::Entity>& aPuppet, Red::ItemID& aItemID);
+    bool HidesFootwear(const Red::Handle<Red::Entity>& aPuppet, const Red::ItemID& aItemID);
+    bool RollsUpSleeves(const Red::Handle<Red::Entity>& aPuppet, const Red::ItemID& aItemID);
 
     bool IsHighHeels(const Red::Handle<Red::ItemObject>& aItemObject);
     bool IsFlatSole(const Red::Handle<Red::ItemObject>& aItemObject);
@@ -73,7 +74,7 @@ private:
                                      const Core::Set<Red::TweakDBID>& aSlotIDs,
                                      std::initializer_list<Red::TweakDBID> aSuffixIDs);
     void RefreshItemAppearance(const Red::Handle<Red::Entity>& aPuppet, const Red::Handle<Red::ItemObject>& aItemObject);
-    void RefreshItemAppearance(const Red::Handle<Red::Entity>& aPuppet, Red::ItemID& aItemID);
+    void RefreshItemAppearance(const Red::Handle<Red::Entity>& aPuppet, const Red::ItemID& aItemID);
 
     void AddPendingRefresh(Red::TweakDBID aSlotID);
     bool PullPendingRefresh(Red::TweakDBID aSlotID);

@@ -252,6 +252,8 @@ bool App::JournalModule::ResolveMappinPosition(uint32_t aHash, const JournalMapp
 
         LogInfo("|{}| Cooked mappin #{} resolved to static offset.", ModuleName, aHash);
     }
+
+    return true;
 }
 
 App::JournalModule::EntrySearchResult App::JournalModule::FindEntry(Red::game::JournalEntry* aParent,

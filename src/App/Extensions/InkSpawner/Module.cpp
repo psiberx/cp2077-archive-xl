@@ -1,13 +1,11 @@
 #include "Module.hpp"
+#include "Red/ResourceLoader.hpp"
 
 namespace
 {
 constexpr auto ModuleName = "InkSpawner";
 
 constexpr auto ControllerSeparator = ':';
-
-constexpr auto WaitTimeout = std::chrono::milliseconds(1000);
-constexpr auto WaitTick = std::chrono::milliseconds(2);
 
 Red::ClassLocator<Red::ink::IWidgetController> s_gameControllerType;
 Red::ClassLocator<Red::ink::WidgetLogicController> s_logicControllerType;
@@ -178,14 +176,7 @@ void App::InkSpawnerModule::InjectDependency(Red::ink::WidgetLibraryResource& aL
         auto* externalLibrary = aLibrary.externalLibraries.End() - 1;
         externalLibrary->LoadAsync();
 
-        const auto start = std::chrono::steady_clock::now();
-        while (!externalLibrary->IsLoaded() && !externalLibrary->IsFailed())
-        {
-            std::this_thread::sleep_for(WaitTick);
-
-            if (std::chrono::steady_clock::now() - start >= WaitTimeout)
-                break;
-        }
+        Red::WaitForResource(externalLibrary->token, std::chrono::milliseconds(1000));
     }
 }
 

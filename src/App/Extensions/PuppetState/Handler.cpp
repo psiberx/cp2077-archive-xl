@@ -31,9 +31,9 @@ constexpr auto EmptyAppearanceName = Red::CName("empty_appearance_default");
 constexpr auto MaleGenderName = Red::CName("Male");
 constexpr auto FemaleGenderName = Red::CName("Female");
 
-constexpr auto MantisBladesName = "mantis_blade";
-constexpr auto MonowireName = "mono_wires";
-constexpr auto ProjectileLauncher = "projectile_launcher";
+constexpr auto MantisBladesType = Red::CName("MantisBlades");
+constexpr auto MonowireType = Red::CName("NanoWires");
+constexpr auto ProjectileLauncherType = Red::CName("ProjectileLauncher");
 }
 
 App::PuppetStateHandler::PuppetStateHandler(Red::Entity* aPuppet)
@@ -50,32 +50,32 @@ App::PuppetStateHandler::PuppetStateHandler(Red::Entity* aPuppet)
     UpdateFeetState(m_puppetWeak.Lock());
 }
 
-void App::PuppetStateHandler::OnItemEquipped(Red::ItemID& aItemID, Red::TweakDBID aSlotID)
+void App::PuppetStateHandler::OnItemEquipped(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
 {
     HandleAppearanceChange(aItemID, aSlotID, true);
 }
 
-void App::PuppetStateHandler::OnItemEquippedVisual(Red::ItemID& aItemID, Red::TweakDBID aSlotID)
+void App::PuppetStateHandler::OnItemEquippedVisual(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
 {
     HandleAppearanceChange(aItemID, aSlotID, true);
 }
 
-void App::PuppetStateHandler::OnItemEquippedComplete(Red::ItemID& aItemID, Red::TweakDBID aSlotID)
+void App::PuppetStateHandler::OnItemEquippedComplete(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
 {
     FinalizeAppearanceChange(aItemID, aSlotID);
 }
 
-void App::PuppetStateHandler::OnItemUnequipped(Red::ItemID& aItemID, Red::TweakDBID aSlotID)
+void App::PuppetStateHandler::OnItemUnequipped(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
 {
     HandleAppearanceChange(aItemID, aSlotID, false);
 }
 
-void App::PuppetStateHandler::OnItemUnequippedComplete(Red::ItemID& aItemID, Red::TweakDBID aSlotID)
+void App::PuppetStateHandler::OnItemUnequippedComplete(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
 {
     HandleAppearanceChange(aItemID, aSlotID, false);
 }
 
-void App::PuppetStateHandler::HandleAppearanceChange(Red::ItemID& aItemID, Red::TweakDBID aSlotID, bool aEquipped)
+void App::PuppetStateHandler::HandleAppearanceChange(const Red::ItemID& aItemID, Red::TweakDBID aSlotID, bool aEquipped)
 {
     auto puppet = m_puppetWeak.Lock();
     if (puppet)
@@ -108,7 +108,7 @@ void App::PuppetStateHandler::HandleAppearanceChange(Red::ItemID& aItemID, Red::
     }
 }
 
-void App::PuppetStateHandler::FinalizeAppearanceChange(Red::ItemID& aItemID, Red::TweakDBID aSlotID)
+void App::PuppetStateHandler::FinalizeAppearanceChange(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
 {
     auto puppet = m_puppetWeak.Lock();
     if (puppet)
@@ -124,7 +124,7 @@ void App::PuppetStateHandler::FinalizeAppearanceChange(Red::ItemID& aItemID, Red
     }
 }
 
-bool App::PuppetStateHandler::UpdateArmsState(const Red::Handle<Red::Entity>& aPuppet, Red::ItemID& aItemID,
+bool App::PuppetStateHandler::UpdateArmsState(const Red::Handle<Red::Entity>& aPuppet, const Red::ItemID& aItemID,
                                               bool aEquipped)
 {
     auto state = ResolveArmsState(aPuppet, aItemID, aEquipped);
@@ -136,20 +136,21 @@ bool App::PuppetStateHandler::UpdateArmsState(const Red::Handle<Red::Entity>& aP
 }
 
 App::PuppetArmsState App::PuppetStateHandler::ResolveArmsState(const Red::Handle<Red::Entity>& aPuppet,
-                                                               Red::ItemID& aItemID, bool aEquipped)
+                                                               const Red::ItemID& aItemID, bool aEquipped)
 {
     if (aEquipped)
     {
-        auto friendlyName = Red::GetFlatValue<Red::CString>({aItemID.tdbid, ".friendlyName"});
+        auto cyberwareType = Red::GetFlatValue<Red::CName>({aItemID.tdbid, ".cyberwareType"});
 
-        if (friendlyName == MantisBladesName)
+        switch (cyberwareType)
+        {
+        case MantisBladesType:
             return PuppetArmsState::MantisBlades;
-
-        if (friendlyName == MonowireName)
+        case MonowireType:
             return PuppetArmsState::Monowire;
-
-        if (friendlyName == ProjectileLauncher)
+        case ProjectileLauncherType:
             return PuppetArmsState::ProjectileLauncher;
+        }
     }
 
     return PuppetArmsState::BaseArms;
@@ -239,12 +240,12 @@ bool App::PuppetStateHandler::IsWeaponSlot(Red::TweakDBID aSlotID)
     return aSlotID == WeaponRightSlot || aSlotID == WeaponLeftSlot;
 }
 
-bool App::PuppetStateHandler::HidesFootwear(const Red::Handle<Red::Entity>& aPuppet, Red::ItemID& aItemID)
+bool App::PuppetStateHandler::HidesFootwear(const Red::Handle<Red::Entity>& aPuppet, const Red::ItemID& aItemID)
 {
     return m_transactionSystem->MatchVisualTagByItemID(aItemID, aPuppet, HideFootwearTag);
 }
 
-bool App::PuppetStateHandler::RollsUpSleeves(const Red::Handle<Red::Entity>& aPuppet, Red::ItemID& aItemID)
+bool App::PuppetStateHandler::RollsUpSleeves(const Red::Handle<Red::Entity>& aPuppet, const Red::ItemID& aItemID)
 {
     return m_transactionSystem->MatchVisualTagByItemID(aItemID, aPuppet, HideInnerSleevesTag);
 }
@@ -334,7 +335,7 @@ void App::PuppetStateHandler::RefreshItemAppearance(const Red::Handle<Red::Entit
 }
 
 void App::PuppetStateHandler::RefreshItemAppearance(const Red::Handle<Red::Entity>& aPuppet,
-                                                    Red::ItemID& aItemID)
+                                                    const Red::ItemID& aItemID)
 {
     m_transactionSystem->ResetItemAppearance(aPuppet, aItemID);
 }
