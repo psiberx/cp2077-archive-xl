@@ -5,9 +5,6 @@ namespace
 constexpr auto ModuleName = "Streaming";
 
 constexpr auto MainWorldResource = Red::ResourcePath(R"(base\worlds\03_night_city\_compiled\default\03_night_city.streamingworld)");
-
-constexpr auto WaitTimeout = std::chrono::milliseconds(2000);
-constexpr auto WaitTick = std::chrono::milliseconds(2);
 }
 
 std::string_view App::StreamingModule::GetName()
@@ -56,28 +53,7 @@ void App::StreamingModule::OnWorldLoad(Red::world::StreamingWorld* aWorld, Red::
             }
         }
 
-        const auto start = std::chrono::steady_clock::now();
-        while (true)
-        {
-            bool allFinished = true;
-
-            for (const auto& blockRef : blockRefs)
-            {
-                if (!blockRef.token->IsFinished())
-                {
-                    allFinished = false;
-                    break;
-                }
-            }
-
-            if (allFinished)
-                break;
-
-            std::this_thread::sleep_for(WaitTick);
-
-            if (std::chrono::steady_clock::now() - start >= WaitTimeout)
-                break;
-        }
+        Red::WaitForResources(blockRefs, std::chrono::milliseconds(5000));
 
         bool allSucceeded = true;
 

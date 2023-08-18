@@ -5,9 +5,6 @@
 namespace
 {
 constexpr auto ModuleName = "Localization";
-
-constexpr auto WaitTimeout = std::chrono::milliseconds(2000);
-constexpr auto WaitTick = std::chrono::milliseconds(2);
 }
 
 std::string_view App::LocalizationModule::GetName()
@@ -392,28 +389,7 @@ void App::LocalizationModule::OnLoadLipsyncs(void* aContext, uint8_t a2)
 
         if (tokens.size)
         {
-            const auto start = std::chrono::steady_clock::now();
-            while (true)
-            {
-                bool allFinished = true;
-
-                for (const auto& token : tokens)
-                {
-                    if (!token->IsFinished())
-                    {
-                        allFinished = false;
-                        break;
-                    }
-                }
-
-                if (allFinished)
-                    break;
-
-                std::this_thread::sleep_for(WaitTick);
-
-                if (std::chrono::steady_clock::now() - start >= WaitTimeout)
-                    break;
-            }
+            Red::WaitForResources(tokens, std::chrono::milliseconds(5000));
 
             if (mainToken->IsFinished())
             {

@@ -1,5 +1,4 @@
 #include "Module.hpp"
-#include "Red/ResourceLoader.hpp"
 
 namespace
 {
