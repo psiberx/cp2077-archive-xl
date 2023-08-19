@@ -48,7 +48,7 @@ private:
                                Red::Handle<Red::ComponentsStorage>& aComponents,
                                Red::Handle<Red::AppearanceDefinition>& aAppearance);
     static uintptr_t OnProcessGarment(Red::SharedPtr<Red::GarmentProcessor>& aProcessor, uintptr_t a2, uintptr_t a3,
-                                      Red::Handle<Red::Entity>& aEntity);
+                                      Red::GarmentProcessorParams* aParams);
     static void OnProcessGarmentMesh(Red::GarmentProcessor* aProcessor, uint32_t,
                                      Red::Handle<Red::EntityTemplate>& aPartTemplate,
                                      Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,

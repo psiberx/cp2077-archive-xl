@@ -69,7 +69,7 @@ inline void WaitForResource(const R& aResource, const W& aTimeout)
         std::unique_lock lock(mutex);
         std::condition_variable cv;
 
-        Red::JobQueue queue;
+        JobQueue queue;
         queue.Wait(Trait::GetJobHandle(aResource));
         queue.Dispatch([&lock, &cv]() {
             lock.release();
@@ -92,7 +92,7 @@ inline void WaitForResources(const V<R, A...>& aResources, const W& aTimeout)
         std::unique_lock lock(mutex);
         std::condition_variable cv;
 
-        Red::JobQueue queue;
+        JobQueue queue;
         for (const auto& resource : aResources)
         {
             queue.Wait(Trait::GetJobHandle(resource));

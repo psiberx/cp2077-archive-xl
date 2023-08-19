@@ -450,11 +450,14 @@ void App::GarmentOverrideModule::OnRegisterPart(uintptr_t, Red::Handle<Red::Enti
     UpdatePartAssignments(aComponentStorage->components, aPart->path);
 }
 
-uintptr_t App::GarmentOverrideModule::OnProcessGarment(Red::SharedPtr<Red::GarmentProcessor>& aProcessor,
-                                                      uintptr_t a2, uintptr_t a3, Red::Handle<Red::Entity>& aEntity)
+uintptr_t App::GarmentOverrideModule::OnProcessGarment(Red::SharedPtr<Red::GarmentProcessor>& aProcessor, uintptr_t a2,
+                                                       uintptr_t a3, Red::GarmentProcessorParams* aParams)
 {
+    if (!aParams)
+        return Raw::GarmentAssembler::ProcessGarment(aProcessor, a2, a3, aParams);
+
     std::unique_lock _(s_mutex);
-    if (auto& entityState = s_stateManager->FindEntityState(aEntity))
+    if (auto& entityState = s_stateManager->FindEntityState(aParams->entity))
     {
 #ifndef NDEBUG
         LogDebug("|{}| [event=ProcessGarment entity={}]", ModuleName, entityState->GetName());
@@ -463,9 +466,9 @@ uintptr_t App::GarmentOverrideModule::OnProcessGarment(Red::SharedPtr<Red::Garme
         UpdateDynamicAttributes(entityState);
     }
 
-    auto result = Raw::GarmentAssembler::ProcessGarment(aProcessor, a2, a3, aEntity);
+    auto result = Raw::GarmentAssembler::ProcessGarment(aProcessor, a2, a3, aParams);
 
-    s_stateManager->LinkEntityToAssembler(aEntity, aProcessor);
+    s_stateManager->LinkEntityToAssembler(aParams->entity, aProcessor);
 
     return result;
 }

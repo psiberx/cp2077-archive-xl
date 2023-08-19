@@ -12,6 +12,11 @@ using AppearancePartOverrides = appearance::AppearancePartOverrides;
 
 struct GarmentProcessor {};
 
+struct GarmentProcessorParams
+{
+    Handle<Entity> entity;
+};
+
 struct GarmentItemAddRequest
 {
     Handle<AppearanceDefinition> apperance; // 00
@@ -88,9 +93,8 @@ constexpr auto RemoveItem = Core::RawFunc<
 
 constexpr auto ProcessGarment = Core::RawFunc<
     /* addr = */ Red::Addresses::GarmentAssembler_ProcessGarment,
-    /* type = */ uintptr_t (*)(Red::SharedPtr<Red::GarmentProcessor>& aProcessor,
-                               uintptr_t a2, uintptr_t a3,
-                               Red::Handle<Red::Entity>& aEntity)>();
+    /* type = */ uintptr_t (*)(Red::SharedPtr<Red::GarmentProcessor>& aProcessor, uintptr_t a2, uintptr_t a3,
+                               Red::GarmentProcessorParams* aParams)>();
 
 constexpr auto ProcessSkinnedMesh = Core::RawFunc<
     /* addr = */ Red::Addresses::GarmentAssembler_ProcessSkinnedMesh,
