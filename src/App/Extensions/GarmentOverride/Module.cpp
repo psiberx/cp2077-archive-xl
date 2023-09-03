@@ -18,6 +18,8 @@ constexpr auto EmptyAppearanceTags = {
     std::pair(Red::CName("EmptyAppearance:Male"), "&Male"),
     std::pair(Red::CName("EmptyAppearance:Female"), "&Female"),
 };
+
+const Red::ClassLocator<Red::CMesh> s_meshResourceType;
 }
 
 std::string_view App::GarmentOverrideModule::GetName()
@@ -550,7 +552,7 @@ void App::GarmentOverrideModule::OnReassembleAppearance(Red::Entity* aEntity, ui
     }
 }
 
-void App::GarmentOverrideModule::OnCreateResourcePath(Red::ResourcePath* aPath, const std::string_view* aPathStr)
+void App::GarmentOverrideModule::OnCreateResourcePath(Red::ResourcePath* aPath, const Red::StringView* aPathStr)
 {
     if (aPathStr && s_dynamicAppearance->IsDynamicValue(*aPathStr))
     {
@@ -663,7 +665,7 @@ void App::GarmentOverrideModule::SelectDynamicAppearance(Core::SharedPtr<App::En
                                                         Red::EntityTemplate* aResource,
                                                         Red::TemplateAppearance*& aAppearance)
 {
-    aEntityState->SelectTemplateAppearance(aSelector, aResource, aAppearance);
+    aEntityState->SelectDynamicAppearance(aSelector, aResource, aAppearance);
 }
 
 void App::GarmentOverrideModule::SelectDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState,
@@ -671,13 +673,13 @@ void App::GarmentOverrideModule::SelectDynamicAppearance(Core::SharedPtr<EntityS
                                                          Red::AppearanceResource* aResource,
                                                          Red::Handle<Red::AppearanceDefinition>& aDefinition)
 {
-    aEntityState->SelectConditionalAppearance(aSelector, aResource, aDefinition);
+    aEntityState->SelectDynamicAppearance(aSelector, aResource, aDefinition);
 }
 
 void App::GarmentOverrideModule::ApplyDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState,
                                                         Red::DynArray<Red::Handle<Red::IComponent>>& aComponents)
 {
-    aEntityState->ProcessConditionalComponents(aComponents);
+    aEntityState->ToggleConditionalComponents(aComponents);
 
     for (auto& component : aComponents)
     {

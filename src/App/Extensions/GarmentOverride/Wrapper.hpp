@@ -26,8 +26,8 @@ public:
     bool SetResource(Red::ResourcePath aPath) const;
     [[nodiscard]] Red::SharedPtr<Red::ResourceToken<Red::CMesh>> LoadResource(bool aWait = false) const;
 
-    [[nodiscard]] Red::CName GetAppearance() const;
-    bool SetAppearance(Red::CName aAppearance) const;
+    [[nodiscard]] Red::CName GetAppearanceName() const;
+    bool SetAppearanceName(Red::CName aAppearance) const;
     bool LoadAppearance() const;
 
     [[nodiscard]] uint64_t GetChunkMask() const;

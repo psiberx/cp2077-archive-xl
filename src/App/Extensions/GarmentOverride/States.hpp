@@ -106,11 +106,11 @@ public:
     void AddOffsetOverride(uint64_t aHash, Red::ResourcePath aResourcePath, int32_t aOffset);
     void RemoveOffsetOverrides(uint64_t aHash);
 
-    bool SelectTemplateAppearance(DynamicAppearanceName& aSelector, Red::EntityTemplate* aResource,
+    bool SelectDynamicAppearance(DynamicAppearanceName& aSelector, Red::EntityTemplate* aResource,
                                   Red::TemplateAppearance*& aAppearance);
-    bool SelectConditionalAppearance(DynamicAppearanceName& aSelector, Red::AppearanceResource* aResource,
-                                     Red::Handle<Red::AppearanceDefinition>& aDefinition);
-    void ProcessConditionalComponents(Red::DynArray<Red::Handle<Red::IComponent>>& aComponents);
+    bool SelectDynamicAppearance(DynamicAppearanceName& aSelector, Red::AppearanceResource* aResource,
+                                 Red::Handle<Red::AppearanceDefinition>& aDefinition);
+    void ToggleConditionalComponents(Red::DynArray<Red::Handle<Red::IComponent>>& aComponents);
     bool ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aComponent);
     bool ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aComponent, Red::ResourcePath aResource);
     void LinkComponentToPart(Red::Handle<Red::IComponent>& aComponent, Red::ResourcePath aResource);

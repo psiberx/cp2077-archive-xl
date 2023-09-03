@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Red/EntityTemplate.hpp"
+#include "Red/ResourcePath.hpp"
 
 namespace App
 {
@@ -57,10 +58,13 @@ public:
     [[nodiscard]] bool IsDynamicValue(const char* aValue) const;
     [[nodiscard]] bool IsDynamicValue(const std::string& aValue) const;
     [[nodiscard]] bool IsDynamicValue(const std::string_view& aValue) const;
+    [[nodiscard]] bool IsDynamicValue(const Red::StringView& aValue) const;
+    [[nodiscard]] bool IsDynamicValue(Red::CName aValue) const;
 
     void RegisterPath(Red::ResourcePath aPath, const char* aPathStr);
     void RegisterPath(Red::ResourcePath aPath, const std::string& aPathStr);
     void RegisterPath(Red::ResourcePath aPath, const std::string_view& aPathStr);
+    void RegisterPath(Red::ResourcePath aPath, const Red::StringView& aPathStr);
 
     bool SupportsDynamicAppearance(const Red::EntityTemplate* aTemplate);
     void MarkDynamicAppearanceName(Red::CName& aAppearanceName, Red::Entity* aEntity);

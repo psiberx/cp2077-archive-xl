@@ -28,6 +28,7 @@
 #include <RED4ext/Scripting/Natives/Generated/IRenderResourceBlob.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ITexture.hpp>
 #include <RED4ext/Scripting/Natives/Generated/JsonResource.hpp>
+#include <RED4ext/Scripting/Natives/Generated/MaterialParameterInstance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/MorphTargetMesh.hpp>
 #include <RED4ext/Scripting/Natives/Generated/anim/LipsyncMapping.hpp>
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearanceDefinition.hpp>

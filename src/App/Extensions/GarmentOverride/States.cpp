@@ -1,5 +1,6 @@
 #include "States.hpp"
 #include "Red/Entity.hpp"
+#include "Red/Mesh.hpp"
 
 namespace
 {
@@ -392,8 +393,8 @@ void App::EntityState::UpdateDynamicAttributes()
     m_dynamicAppearance->UpdateState(m_entity);
 }
 
-bool App::EntityState::SelectTemplateAppearance(App::DynamicAppearanceName& aSelector, Red::EntityTemplate* aResource,
-                                                Red::TemplateAppearance*& aAppearance)
+bool App::EntityState::SelectDynamicAppearance(App::DynamicAppearanceName& aSelector, Red::EntityTemplate* aResource,
+                                               Red::TemplateAppearance*& aAppearance)
 {
     if (!aAppearance)
     {
@@ -426,8 +427,8 @@ bool App::EntityState::SelectTemplateAppearance(App::DynamicAppearanceName& aSel
     return true;
 }
 
-bool App::EntityState::SelectConditionalAppearance(DynamicAppearanceName& aSelector, Red::AppearanceResource* aResource,
-                                                   Red::Handle<Red::AppearanceDefinition>& aDefinition)
+bool App::EntityState::SelectDynamicAppearance(DynamicAppearanceName& aSelector, Red::AppearanceResource* aResource,
+                                               Red::Handle<Red::AppearanceDefinition>& aDefinition)
 {
     int8_t maxWeight = -1;
     int8_t numCandidates = 0;
@@ -497,7 +498,7 @@ bool App::EntityState::SelectConditionalAppearance(DynamicAppearanceName& aSelec
     return false;
 }
 
-void App::EntityState::ProcessConditionalComponents(Red::DynArray<Red::Handle<Red::IComponent>>& aComponents)
+void App::EntityState::ToggleConditionalComponents(Red::DynArray<Red::Handle<Red::IComponent>>& aComponents)
 {
     Core::Map<Red::CName, WeightedComponentGroup> groups;
 
@@ -602,7 +603,6 @@ bool App::EntityState::ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aCom
         if (finalResource != originalResource && finalResource != componentWrapper.GetResource())
         {
             componentWrapper.SetResource(finalResource);
-            // componentWrapper.LoadResource();
         }
 
         if (aSetAppearance)
@@ -610,10 +610,9 @@ bool App::EntityState::ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aCom
             const auto originalAppearance = GetOriginalAppearance(componentWrapper);
             const auto finalAppearance = m_dynamicAppearance->ResolveName(m_entity, aVariant, originalAppearance);
 
-            if (finalAppearance != originalAppearance && finalAppearance != componentWrapper.GetAppearance())
+            if (finalAppearance != originalAppearance && finalAppearance != componentWrapper.GetAppearanceName())
             {
-                componentWrapper.SetAppearance(finalAppearance);
-                // componentWrapper.LoadAppearance();
+                componentWrapper.SetAppearanceName(finalAppearance);
             }
         }
     }
@@ -658,7 +657,7 @@ bool App::EntityState::ApplyAppearanceOverride(Red::Handle<Red::IComponent>& aCo
     const auto& activeVariant = resourceState->GetActiveVariantParts();
     finalAppearance = m_dynamicAppearance->ResolveName(m_entity, activeVariant, finalAppearance);
 
-    return finalAppearance && component.SetAppearance(finalAppearance) && component.LoadAppearance();
+    return finalAppearance && component.SetAppearanceName(finalAppearance) && component.LoadAppearance();
 }
 
 bool App::EntityState::ApplyChunkMaskOverride(Red::Handle<Red::IComponent>& aComponent)
@@ -736,7 +735,7 @@ Red::CName App::EntityState::GetOriginalAppearance(ComponentWrapper& aComponent)
     auto it = m_originalAppearances.find(componentId);
 
     if (it == m_originalAppearances.end())
-        it = m_originalAppearances.emplace(componentId, aComponent.GetAppearance()).first;
+        it = m_originalAppearances.emplace(componentId, aComponent.GetAppearanceName()).first;
 
     return it.value();
 }

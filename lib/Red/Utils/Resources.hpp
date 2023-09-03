@@ -77,7 +77,11 @@ inline void WaitForResource(const R& aResource, const W& aTimeout)
         });
 
         cv.wait_for(lock, aTimeout);
-        mutex.unlock();
+
+        if (!lock.owns_lock())
+        {
+            mutex.unlock();
+        }
     }
 }
 
@@ -103,7 +107,11 @@ inline void WaitForResources(const V<R, A...>& aResources, const W& aTimeout)
         });
 
         cv.wait_for(lock, aTimeout);
-        mutex.unlock();
+
+        if (!lock.owns_lock())
+        {
+            mutex.unlock();
+        }
     }
 }
 }

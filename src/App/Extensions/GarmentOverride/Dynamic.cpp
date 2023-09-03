@@ -570,6 +570,16 @@ bool App::DynamicAppearanceController::IsDynamicValue(const std::string_view& aV
     return aValue.starts_with(DynamicValueMarker);
 }
 
+bool App::DynamicAppearanceController::IsDynamicValue(const Red::StringView& aValue) const
+{
+    return aValue.size > 0 && IsDynamicValue(aValue.data);
+}
+
+bool App::DynamicAppearanceController::IsDynamicValue(Red::CName aValue) const
+{
+    return IsDynamicValue(aValue.ToString());
+}
+
 void App::DynamicAppearanceController::RegisterPath(Red::ResourcePath aPath, const char* aPathStr)
 {
     m_paths.insert_or_assign(aPath, aPathStr);
@@ -583,6 +593,11 @@ void App::DynamicAppearanceController::RegisterPath(Red::ResourcePath aPath, con
 void App::DynamicAppearanceController::RegisterPath(Red::ResourcePath aPath, const std::string_view& aPathStr)
 {
     m_paths.insert_or_assign(aPath, aPathStr);
+}
+
+void App::DynamicAppearanceController::RegisterPath(Red::ResourcePath aPath, const Red::StringView& aPathStr)
+{
+    m_paths.insert_or_assign(aPath, std::string(aPathStr.data, aPathStr.size));
 }
 
 const std::string& App::DynamicAppearanceController::GetPathStr(Red::ResourcePath aPath) const

@@ -35,7 +35,7 @@ inline bool SetMorphComponentMeshPath(T* aComponent, Red::ResourcePath aPath)
 }
 
 template<class T>
-inline Red::CName GetComponentAppearance(T* aComponent)
+inline Red::CName GetComponentAppearanceName(T* aComponent)
 {
     return aComponent->meshAppearance;
 }
@@ -206,18 +206,18 @@ Red::SharedPtr<Red::ResourceToken<Red::CMesh>> App::ComponentWrapper::LoadResour
     return meshRef.token;
 }
 
-Red::CName App::ComponentWrapper::GetAppearance() const
+Red::CName App::ComponentWrapper::GetAppearanceName() const
 {
     switch (m_type)
     {
     case ComponentType::MeshComponent:
-        return GetComponentAppearance(m_component.GetPtr<Red::ent::MeshComponent>());
+        return GetComponentAppearanceName(m_component.GetPtr<Red::ent::MeshComponent>());
     case ComponentType::SkinnedMeshComponent:
-        return GetComponentAppearance(m_component.GetPtr<Red::ent::SkinnedMeshComponent>());
+        return GetComponentAppearanceName(m_component.GetPtr<Red::ent::SkinnedMeshComponent>());
     case ComponentType::SkinnedClothComponent:
-        return GetComponentAppearance(m_component.GetPtr<Red::ent::SkinnedClothComponent>());
+        return GetComponentAppearanceName(m_component.GetPtr<Red::ent::SkinnedClothComponent>());
     case ComponentType::MorphTargetSkinnedMeshComponent:
-        return GetComponentAppearance(m_component.GetPtr<Red::ent::MorphTargetSkinnedMeshComponent>());
+        return GetComponentAppearanceName(m_component.GetPtr<Red::ent::MorphTargetSkinnedMeshComponent>());
     case ComponentType::Unknown:
         break;
     }
@@ -225,7 +225,7 @@ Red::CName App::ComponentWrapper::GetAppearance() const
     return {};
 }
 
-bool App::ComponentWrapper::SetAppearance(Red::CName aAppearance) const
+bool App::ComponentWrapper::SetAppearanceName(Red::CName aAppearance) const
 {
     switch (m_type)
     {
@@ -253,11 +253,11 @@ bool App::ComponentWrapper::LoadAppearance() const
     {
     case ComponentType::MeshComponent:
         meshRef = GetComponentMesh(m_component.GetPtr<Red::ent::MeshComponent>());
-        meshAppName = GetComponentAppearance(m_component.GetPtr<Red::ent::MeshComponent>());
+        meshAppName = GetComponentAppearanceName(m_component.GetPtr<Red::ent::MeshComponent>());
         break;
     case ComponentType::SkinnedMeshComponent:
         meshRef = GetComponentMesh(m_component.GetPtr<Red::ent::SkinnedMeshComponent>());
-        meshAppName = GetComponentAppearance(m_component.GetPtr<Red::ent::SkinnedMeshComponent>());
+        meshAppName = GetComponentAppearanceName(m_component.GetPtr<Red::ent::SkinnedMeshComponent>());
         break;
     case ComponentType::SkinnedClothComponent:
         // meshRef = GetClothComponentMesh(m_component.GetPtr<Red::ent::SkinnedClothComponent>());
@@ -265,7 +265,7 @@ bool App::ComponentWrapper::LoadAppearance() const
         break;
     case ComponentType::MorphTargetSkinnedMeshComponent:
         meshRef = GetMorphComponentMesh(m_component.GetPtr<Red::ent::MorphTargetSkinnedMeshComponent>());
-        meshAppName = GetComponentAppearance(m_component.GetPtr<Red::ent::MorphTargetSkinnedMeshComponent>());
+        meshAppName = GetComponentAppearanceName(m_component.GetPtr<Red::ent::MorphTargetSkinnedMeshComponent>());
         break;
     case ComponentType::Unknown:
         break;
