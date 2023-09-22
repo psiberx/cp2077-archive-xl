@@ -251,26 +251,6 @@ void App::GarmentOverrideModule::OnResolveDefinition(Red::AppearanceResource* aR
     }
 }
 
-void App::GarmentOverrideModule::OnAddItem(uintptr_t, Red::WeakHandle<Red::Entity>& aEntityWeak,
-                                           Red::GarmentItemAddRequest& aRequest)
-{
-    if (auto entity = aEntityWeak.Lock())
-    {
-        std::unique_lock _(s_mutex);
-        if (auto& entityState = s_stateManager->GetEntityState(entity))
-        {
-#ifndef NDEBUG
-            LogDebug("|{}| [event=AddItem entity={} item={} app={}]",
-                     ModuleName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
-#endif
-
-            UpdatePartAttributes(entityState, aRequest.apperance);
-            RegisterOffsetOverrides(entityState, aRequest.hash, aRequest.apperance, aRequest.offset);
-            RegisterComponentOverrides(entityState, aRequest.hash, aRequest.apperance);
-        }
-    }
-}
-
 void App::GarmentOverrideModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset& aPreset,
                                                  Red::ResourcePath aEntityPath, Red::CName aAppearanceName,
                                                  Red::TagList& aFinalTags)
@@ -357,6 +337,26 @@ void App::GarmentOverrideModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPr
     autoTags.Add(aFinalTags);
 
     s_autoTagsCache.emplace(cacheKey, std::move(autoTags));
+}
+
+void App::GarmentOverrideModule::OnAddItem(uintptr_t, Red::WeakHandle<Red::Entity>& aEntityWeak,
+                                           Red::GarmentItemAddRequest& aRequest)
+{
+    if (auto entity = aEntityWeak.Lock())
+    {
+        std::unique_lock _(s_mutex);
+        if (auto& entityState = s_stateManager->GetEntityState(entity))
+        {
+#ifndef NDEBUG
+            LogDebug("|{}| [event=AddItem entity={} item={} app={}]",
+                     ModuleName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
+#endif
+
+            UpdatePartAttributes(entityState, aRequest.apperance);
+            RegisterOffsetOverrides(entityState, aRequest.hash, aRequest.apperance, aRequest.offset);
+            RegisterComponentOverrides(entityState, aRequest.hash, aRequest.apperance);
+        }
+    }
 }
 
 void App::GarmentOverrideModule::OnAddCustomItem(uintptr_t, Red::WeakHandle<Red::Entity>& aEntityWeak,
