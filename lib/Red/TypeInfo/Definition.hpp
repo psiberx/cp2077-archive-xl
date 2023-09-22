@@ -902,85 +902,6 @@ public:
     }
 };
 
-template<typename TClass>
-requires std::is_class_v<TClass>
-struct ClassDefinition
-{
-    using Descriptor = ClassDescriptorDefaultImpl<TClass>;
-    using Specialization = TypeInfoBuilder<Scope::For<TClass>()>;
-
-    static inline void RegisterType()
-    {
-        constexpr auto name = GetTypeNameStr<TClass>();
-
-        auto* type = new Descriptor();
-        type->name = CNamePool::Add(name.data());
-
-        if constexpr (Detail::HasRegisterHandler<Specialization, Descriptor>)
-        {
-            Specialization::Register(type);
-        }
-
-        auto* rtti = CRTTISystem::Get();
-        rtti->RegisterType(type);
-    }
-
-    static inline void DescribeType()
-    {
-        constexpr auto name = GetTypeName<TClass>();
-
-        auto* rtti = CRTTISystem::Get();
-        auto* type = reinterpret_cast<Descriptor*>(rtti->GetClass(name));
-
-        if (!type)
-            return;
-
-        if constexpr (Detail::IsScriptable<TClass>)
-        {
-            if (!type->parent)
-            {
-                if constexpr (Detail::IsGameSystem<TClass>)
-                {
-                    type->parent = GetClass<IGameSystem>();
-                }
-                else if constexpr (Detail::IsScriptableSystem<TClass>)
-                {
-                    type->parent = GetClass<ScriptableSystem>();
-                }
-                else
-                {
-                    type->parent = GetClass<IScriptable>();
-                }
-            }
-        }
-
-        if constexpr (Detail::HasDescribeHandler<Specialization, Descriptor>)
-        {
-            Specialization::Describe(type);
-        }
-
-        type->flags.isNative = true;
-
-        if constexpr (Detail::IsScriptableSystem<TClass>)
-        {
-            type->flags.isScriptedClass = true;
-        }
-
-        if constexpr (Detail::IsGameSystem<TClass>)
-        {
-            SystemBuilder<TClass>::RegisterGetter();
-            SystemBuilder<TClass>::RegisterSystem();
-        }
-    }
-
-    inline static TypeInfoRegistrar s_registrar{&RegisterType, &DescribeType}; // NOLINT(cert-err58-cpp)
-
-    constexpr operator Scope() const noexcept
-    {
-        return Scope::For<TClass>();
-    }
-};
-
 template<typename TSystem>
 struct SystemBuilder
 {
@@ -1064,6 +985,85 @@ struct SystemBuilder
         {
             return MakeHandle<TSystem>();
         }
+    }
+};
+
+template<typename TClass>
+requires std::is_class_v<TClass>
+struct ClassDefinition
+{
+    using Descriptor = ClassDescriptorDefaultImpl<TClass>;
+    using Specialization = TypeInfoBuilder<Scope::For<TClass>()>;
+
+    static inline void RegisterType()
+    {
+        constexpr auto name = GetTypeNameStr<TClass>();
+
+        auto* type = new Descriptor();
+        type->name = CNamePool::Add(name.data());
+
+        if constexpr (Detail::HasRegisterHandler<Specialization, Descriptor>)
+        {
+            Specialization::Register(type);
+        }
+
+        auto* rtti = CRTTISystem::Get();
+        rtti->RegisterType(type);
+    }
+
+    static inline void DescribeType()
+    {
+        constexpr auto name = GetTypeName<TClass>();
+
+        auto* rtti = CRTTISystem::Get();
+        auto* type = reinterpret_cast<Descriptor*>(rtti->GetClass(name));
+
+        if (!type)
+            return;
+
+        if constexpr (Detail::IsScriptable<TClass>)
+        {
+            if (!type->parent)
+            {
+                if constexpr (Detail::IsGameSystem<TClass>)
+                {
+                    type->parent = GetClass<IGameSystem>();
+                }
+                else if constexpr (Detail::IsScriptableSystem<TClass>)
+                {
+                    type->parent = GetClass<ScriptableSystem>();
+                }
+                else
+                {
+                    type->parent = GetClass<IScriptable>();
+                }
+            }
+        }
+
+        if constexpr (Detail::HasDescribeHandler<Specialization, Descriptor>)
+        {
+            Specialization::Describe(type);
+        }
+
+        type->flags.isNative = true;
+
+        if constexpr (Detail::IsScriptableSystem<TClass>)
+        {
+            type->flags.isScriptedClass = true;
+        }
+
+        if constexpr (Detail::IsGameSystem<TClass>)
+        {
+            SystemBuilder<TClass>::RegisterGetter();
+            SystemBuilder<TClass>::RegisterSystem();
+        }
+    }
+
+    inline static TypeInfoRegistrar s_registrar{&RegisterType, &DescribeType}; // NOLINT(cert-err58-cpp)
+
+    constexpr operator Scope() const noexcept
+    {
+        return Scope::For<TClass>();
     }
 };
 
