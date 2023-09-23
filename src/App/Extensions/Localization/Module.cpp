@@ -290,7 +290,7 @@ bool App::LocalizationModule::MergeSubtitleResource(const std::string& aPath, Ap
     return true;
 }
 
-void App::LocalizationModule::OnLoadVoiceOvers(void* aContext)
+void App::LocalizationModule::OnLoadVoiceOvers(void* aContext, uint64_t a2)
 {
     LogInfo("|{}| Initializing voiceover index...", ModuleName);
 

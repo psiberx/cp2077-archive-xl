@@ -44,17 +44,20 @@ bool App::GarmentOverrideModule::Load()
     if (!HookAfter<Raw::AppearanceNameVisualTagsPreset::GetVisualTags>(&OnGetVisualTags))
         throw std::runtime_error("Failed to hook [AppearanceNameVisualTagsPreset::GetVisualTags].");
 
-    if (!HookBefore<Raw::GarmentAssembler::AddItem>(&OnAddItem))
-        throw std::runtime_error("Failed to hook [GarmentAssembler::AddItem].");
+    if (!HookAfter<Raw::GarmentAssembler::FindState>(&OnFindState))
+        throw std::runtime_error("Failed to hook [GarmentAssembler::FindState].");
 
-    if (!HookBefore<Raw::GarmentAssembler::AddCustomItem>(&OnAddCustomItem))
-        throw std::runtime_error("Failed to hook [GarmentAssembler::AddCustomItem].");
+    if (!HookBefore<Raw::GarmentAssemblerState::AddItem>(&OnAddItem))
+        throw std::runtime_error("Failed to hook [GarmentAssemblerState::AddItem].");
 
-    if (!HookBefore<Raw::GarmentAssembler::ChangeItem>(&OnChangeItem))
-        throw std::runtime_error("Failed to hook [GarmentAssembler::ChangeItem].");
+    if (!HookBefore<Raw::GarmentAssemblerState::AddCustomItem>(&OnAddCustomItem))
+        throw std::runtime_error("Failed to hook [GarmentAssemblerState::AddCustomItem].");
 
-    if (!HookBefore<Raw::GarmentAssembler::ChangeCustomItem>(&OnChangeCustomItem))
-        throw std::runtime_error("Failed to hook [GarmentAssembler::ChangeCustomItem].");
+    if (!HookBefore<Raw::GarmentAssemblerState::ChangeItem>(&OnChangeItem))
+        throw std::runtime_error("Failed to hook [GarmentAssemblerState::ChangeItem].");
+
+    if (!HookBefore<Raw::GarmentAssemblerState::ChangeCustomItem>(&OnChangeCustomItem))
+        throw std::runtime_error("Failed to hook [GarmentAssemblerState::ChangeCustomItem].");
 
     if (!HookBefore<Raw::GarmentAssembler::RemoveItem>(&OnRemoveItem))
         throw std::runtime_error("Failed to hook [GarmentAssembler::RemoveItem].");
@@ -112,10 +115,11 @@ bool App::GarmentOverrideModule::Unload()
     Unhook<Raw::EntityTemplate::FindAppearance>();
     Unhook<Raw::AppearanceResource::FindAppearance>();
     Unhook<Raw::AppearanceNameVisualTagsPreset::GetVisualTags>();
-    Unhook<Raw::GarmentAssembler::AddItem>();
-    Unhook<Raw::GarmentAssembler::AddCustomItem>();
-    Unhook<Raw::GarmentAssembler::ChangeItem>();
-    Unhook<Raw::GarmentAssembler::ChangeCustomItem>();
+    Unhook<Raw::GarmentAssembler::FindState>();
+    Unhook<Raw::GarmentAssemblerState::AddItem>();
+    Unhook<Raw::GarmentAssemblerState::AddCustomItem>();
+    Unhook<Raw::GarmentAssemblerState::ChangeItem>();
+    Unhook<Raw::GarmentAssemblerState::ChangeCustomItem>();
     Unhook<Raw::GarmentAssembler::RemoveItem>();
     Unhook<Raw::GarmentAssembler::ProcessGarment>();
     Unhook<Raw::GarmentAssembler::ProcessSkinnedMesh>();
@@ -339,85 +343,86 @@ void App::GarmentOverrideModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPr
     s_autoTagsCache.emplace(cacheKey, std::move(autoTags));
 }
 
-void App::GarmentOverrideModule::OnAddItem(uintptr_t, Red::WeakHandle<Red::Entity>& aEntityWeak,
+void App::GarmentOverrideModule::OnFindState(uintptr_t, Red::GarmentAssemblerState* aState,
+                                                Red::WeakHandle<Red::Entity>& aEntityWeak)
+{
+    if (aState->unk00)
+    {
+        if (auto entity = aEntityWeak.Lock())
+        {
+            std::unique_lock _(s_mutex);
+            s_stateManager->LinkEntityToPointer(entity, aState->unk00);
+        }
+    }
+}
+
+void App::GarmentOverrideModule::OnAddItem(Red::GarmentAssemblerState* aState,
                                            Red::GarmentItemAddRequest& aRequest)
 {
-    if (auto entity = aEntityWeak.Lock())
+    std::unique_lock _(s_mutex);
+    if (auto& entityState = s_stateManager->GetEntityState(aState->unk00))
     {
-        std::unique_lock _(s_mutex);
-        if (auto& entityState = s_stateManager->GetEntityState(entity))
-        {
 #ifndef NDEBUG
-            LogDebug("|{}| [event=AddItem entity={} item={} app={}]",
-                     ModuleName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
+        LogDebug("|{}| [event=AddItem entity={} item={} app={}]",
+                 ModuleName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
 #endif
 
-            UpdatePartAttributes(entityState, aRequest.apperance);
-            RegisterOffsetOverrides(entityState, aRequest.hash, aRequest.apperance, aRequest.offset);
-            RegisterComponentOverrides(entityState, aRequest.hash, aRequest.apperance);
-        }
+        UpdatePartAttributes(entityState, aRequest.apperance);
+        RegisterOffsetOverrides(entityState, aRequest.hash, aRequest.apperance, aRequest.offset);
+        RegisterComponentOverrides(entityState, aRequest.hash, aRequest.apperance);
     }
 }
 
-void App::GarmentOverrideModule::OnAddCustomItem(uintptr_t, Red::WeakHandle<Red::Entity>& aEntityWeak,
+void App::GarmentOverrideModule::OnAddCustomItem(Red::GarmentAssemblerState* aState,
                                                  Red::GarmentItemAddCustomRequest& aRequest)
 {
-    if (auto entity = aEntityWeak.Lock())
+    std::unique_lock _(s_mutex);
+    if (auto& entityState = s_stateManager->GetEntityState(aState->unk00))
     {
-        std::unique_lock _(s_mutex);
-        if (auto& entityState = s_stateManager->GetEntityState(entity))
-        {
 #ifndef NDEBUG
-            LogDebug("|{}| [event=AddCustomItem entity={} item={} app={}]",
-                     ModuleName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
+        LogDebug("|{}| [event=AddCustomItem entity={} item={} app={}]",
+                 ModuleName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
 #endif
 
-            UpdatePartAttributes(entityState, aRequest.apperance);
-            RegisterOffsetOverrides(entityState, aRequest.hash, aRequest.apperance, aRequest.offset);
-            RegisterComponentOverrides(entityState, aRequest.hash, aRequest.apperance);
-            RegisterComponentOverrides(entityState, aRequest.hash, aRequest.overrides);
-        }
+        UpdatePartAttributes(entityState, aRequest.apperance);
+        RegisterOffsetOverrides(entityState, aRequest.hash, aRequest.apperance, aRequest.offset);
+        RegisterComponentOverrides(entityState, aRequest.hash, aRequest.apperance);
+        RegisterComponentOverrides(entityState, aRequest.hash, aRequest.overrides);
     }
 }
 
-void App::GarmentOverrideModule::OnChangeItem(uintptr_t, Red::WeakHandle<Red::Entity>& aEntityWeak,
+void App::GarmentOverrideModule::OnChangeItem(Red::GarmentAssemblerState* aState,
                                               Red::GarmentItemChangeRequest& aRequest)
 {
-    if (auto entity = aEntityWeak.Lock())
+    std::unique_lock _(s_mutex);
+    if (auto& entityState = s_stateManager->GetEntityState(aState->unk00))
     {
-        std::unique_lock _(s_mutex);
-        if (auto& entityState = s_stateManager->GetEntityState(entity))
-        {
 #ifndef NDEBUG
-            LogDebug("|{}| [event=ChangeItem entity={} item={} app={}]",
-                     ModuleName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
+        LogDebug("|{}| [event=ChangeItem entity={} item={} app={}]",
+                 ModuleName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
 #endif
 
-            UnregisterComponentOverrides(entityState, aRequest.hash);
-            UpdatePartAttributes(entityState, aRequest.apperance);
-            RegisterComponentOverrides(entityState, aRequest.hash, aRequest.apperance);
-        }
+        UnregisterComponentOverrides(entityState, aRequest.hash);
+        UpdatePartAttributes(entityState, aRequest.apperance);
+        RegisterComponentOverrides(entityState, aRequest.hash, aRequest.apperance);
     }
 }
 
-void App::GarmentOverrideModule::OnChangeCustomItem(uintptr_t, Red::WeakHandle<Red::Entity>& aEntityWeak,
+void App::GarmentOverrideModule::OnChangeCustomItem(Red::GarmentAssemblerState* aState,
                                                     Red::GarmentItemChangeCustomRequest& aRequest)
 {
-    if (auto entity = aEntityWeak.Lock())
+    std::unique_lock _(s_mutex);
+    if (auto& entityState = s_stateManager->GetEntityState(aState->unk00))
     {
-        std::unique_lock _(s_mutex);
-        if (auto& entityState = s_stateManager->GetEntityState(entity))
-        {
 #ifndef NDEBUG
-            LogDebug("|{}| [event=ChangeCustomItem entity={} item={} app={}]",
-                     ModuleName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
+        LogDebug("|{}| [event=ChangeCustomItem entity={} item={} app={}]",
+                 ModuleName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
 #endif
 
-            UnregisterComponentOverrides(entityState, aRequest.hash);
-            UpdatePartAttributes(entityState, aRequest.apperance);
-            RegisterComponentOverrides(entityState, aRequest.hash, aRequest.apperance);
-            RegisterComponentOverrides(entityState, aRequest.hash, aRequest.overrides);
-        }
+        UnregisterComponentOverrides(entityState, aRequest.hash);
+        UpdatePartAttributes(entityState, aRequest.apperance);
+        RegisterComponentOverrides(entityState, aRequest.hash, aRequest.apperance);
+        RegisterComponentOverrides(entityState, aRequest.hash, aRequest.overrides);
     }
 }
 
@@ -512,7 +517,7 @@ int64_t App::GarmentOverrideModule::OnGetBaseMeshOffset(Red::Handle<Red::ICompon
     return Raw::AppearanceChanger::GetBaseMeshOffset(aComponent, aTemplate);
 }
 
-void App::GarmentOverrideModule::OnComputeGarment(Red::Handle<Red::Entity>& aEntity,
+void App::GarmentOverrideModule::OnComputeGarment(uintptr_t, Red::Handle<Red::Entity>& aEntity,
                                                   Red::DynArray<int32_t>& aOffsets,
                                                   Red::SharedPtr<Red::GarmentComputeData>& aData,
                                                   uintptr_t, uintptr_t, uintptr_t, bool)

@@ -38,10 +38,11 @@ private:
                                 Red::ResourcePath aEntityPath,
                                 Red::CName aAppearanceName,
                                 Red::TagList& aFinalTags);
-    static void OnAddItem(uintptr_t, Red::WeakHandle<Red::Entity>&, Red::GarmentItemAddRequest&);
-    static void OnAddCustomItem(uintptr_t, Red::WeakHandle<Red::Entity>&, Red::GarmentItemAddCustomRequest&);
-    static void OnChangeItem(uintptr_t, Red::WeakHandle<Red::Entity>&, Red::GarmentItemChangeRequest&);
-    static void OnChangeCustomItem(uintptr_t, Red::WeakHandle<Red::Entity>&, Red::GarmentItemChangeCustomRequest&);
+    static void OnFindState(uintptr_t, Red::GarmentAssemblerState* aState, Red::WeakHandle<Red::Entity>& aEntityWeak);
+    static void OnAddItem(Red::GarmentAssemblerState* aState, Red::GarmentItemAddRequest&);
+    static void OnAddCustomItem(Red::GarmentAssemblerState* aState, Red::GarmentItemAddCustomRequest&);
+    static void OnChangeItem(Red::GarmentAssemblerState* aState, Red::GarmentItemChangeRequest&);
+    static void OnChangeCustomItem(Red::GarmentAssemblerState* aState, Red::GarmentItemChangeCustomRequest&);
     static void OnRemoveItem(uintptr_t, Red::WeakHandle<Red::Entity>&, Red::GarmentItemRemoveRequest&);
     static void OnCreateResourcePath(Red::ResourcePath* aPath, const Red::StringView* aPathStr);
     static void OnRegisterPart(uintptr_t, Red::Handle<Red::EntityTemplate>& aPart,
@@ -55,7 +56,7 @@ private:
                                      Red::Handle<Red::IComponent>& aComponent, Red::JobGroup& aJobGroup);
     static int64_t OnGetBaseMeshOffset(Red::Handle<Red::IComponent>& aComponent,
                                        Red::Handle<Red::EntityTemplate>& aTemplate);
-    static void OnComputeGarment(Red::Handle<Red::Entity>&, Red::DynArray<int32_t>&,
+    static void OnComputeGarment(uintptr_t, Red::Handle<Red::Entity>&, Red::DynArray<int32_t>&,
                                  Red::SharedPtr<Red::GarmentComputeData>&, uintptr_t, uintptr_t, uintptr_t, bool);
     static void OnReassembleAppearance(Red::Entity*, uintptr_t, uintptr_t, uintptr_t, uintptr_t, uintptr_t);
     static void OnGameDetach();

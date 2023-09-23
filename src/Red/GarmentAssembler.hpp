@@ -67,25 +67,21 @@ struct GarmentItemRemoveRequest
 };
 RED4EXT_ASSERT_SIZE(GarmentItemRemoveRequest, 0x8);
 RED4EXT_ASSERT_OFFSET(GarmentItemRemoveRequest, hash, 0x0);
+
+struct GarmentAssemblerState
+{
+    uintptr_t unk00; // 00
+    uintptr_t unk08; // 08
+    uintptr_t unk10; // 10
+};
+RED4EXT_ASSERT_SIZE(GarmentAssemblerState, 0x18);
 }
 
 namespace Raw::GarmentAssembler
 {
-constexpr auto AddItem = Core::RawFunc<
-    /* addr = */ Red::Addresses::GarmentAssembler_AddItem,
-    /* type = */ bool (*)(uintptr_t, Red::WeakHandle<Red::ent::Entity>&, Red::GarmentItemAddRequest&)>();
-
-constexpr auto AddCustomItem = Core::RawFunc<
-    /* addr = */ Red::Addresses::GarmentAssembler_AddCustomItem,
-    /* type = */ bool (*)(uintptr_t, Red::WeakHandle<Red::ent::Entity>&, Red::GarmentItemAddCustomRequest&)>();
-
-constexpr auto ChangeItem = Core::RawFunc<
-    /* addr = */ Red::Addresses::GarmentAssembler_ChangeItem,
-    /* type = */ bool (*)(uintptr_t, Red::WeakHandle<Red::ent::Entity>&, Red::GarmentItemChangeRequest&)>();
-
-constexpr auto ChangeCustomItem = Core::RawFunc<
-    /* addr = */ Red::Addresses::GarmentAssembler_ChangeCustomItem,
-    /* type = */ bool (*)(uintptr_t, Red::WeakHandle<Red::ent::Entity>&, Red::GarmentItemChangeCustomRequest&)>();
+constexpr auto FindState = Core::RawFunc<
+    /* addr = */ Red::Addresses::GarmentAssembler_FindState,
+    /* type = */ uintptr_t (*)(uintptr_t, Red::GarmentAssemblerState* aOut, Red::WeakHandle<Red::ent::Entity>&)>();
 
 constexpr auto RemoveItem = Core::RawFunc<
     /* addr = */ Red::Addresses::GarmentAssembler_RemoveItem,
@@ -117,4 +113,23 @@ constexpr auto ProcessMorphedMesh = Core::RawFunc<
 constexpr auto OnGameDetach = Core::RawFunc<
     /* addr = */ Red::Addresses::GarmentAssembler_OnGameDetach,
     /* type = */ void (*)(uintptr_t)>();
+}
+
+namespace Raw::GarmentAssemblerState
+{
+constexpr auto AddItem = Core::RawFunc<
+    /* addr = */ Red::Addresses::GarmentAssemblerState_AddItem,
+    /* type = */ bool (*)(Red::GarmentAssemblerState* aState, Red::GarmentItemAddRequest&)>();
+
+constexpr auto AddCustomItem = Core::RawFunc<
+    /* addr = */ Red::Addresses::GarmentAssemblerState_AddCustomItem,
+    /* type = */ bool (*)(Red::GarmentAssemblerState* aState, Red::GarmentItemAddCustomRequest&)>();
+
+constexpr auto ChangeItem = Core::RawFunc<
+    /* addr = */ Red::Addresses::GarmentAssemblerState_ChangeItem,
+    /* type = */ bool (*)(Red::GarmentAssemblerState* aState, Red::GarmentItemChangeRequest&)>();
+
+constexpr auto ChangeCustomItem = Core::RawFunc<
+    /* addr = */ Red::Addresses::GarmentAssemblerState_ChangeCustomItem,
+    /* type = */ bool (*)(Red::GarmentAssemblerState* aState, Red::GarmentItemChangeCustomRequest&)>();
 }

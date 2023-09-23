@@ -97,13 +97,14 @@ constexpr auto GetBaseMeshOffset = Core::RawFunc<
 
 constexpr auto ComputePlayerGarment = Core::RawFunc<
     /* addr = */ Red::Addresses::AppearanceChanger_ComputePlayerGarment,
-    /* type = */ void (*)(Red::Handle<Red::ent::Entity>& aEntity,
+    /* type = */ void (*)(uintptr_t a1,
+                          Red::Handle<Red::ent::Entity>& aEntity,
                           Red::DynArray<int32_t>& aOffsets,
                           Red::SharedPtr<Red::GarmentComputeData>& aData,
-                          uintptr_t a4,
                           uintptr_t a5,
                           uintptr_t a6,
-                          bool a7)>();
+                          uintptr_t a7,
+                          bool a8)>();
 }
 
 namespace Raw::ItemFactoryRequest

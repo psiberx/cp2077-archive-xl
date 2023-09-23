@@ -1,1 +1,1 @@
-../../../../../Libs/CoreLib/Project/tools/ida/cp77ida.py
+D:/Sandbox/Cyberpunk/Libs/CoreLib/Project/tools/ida/cp77ida.py

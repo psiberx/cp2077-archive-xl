@@ -13,7 +13,7 @@ namespace Raw::AppearanceNameVisualTagsPreset
 {
 constexpr auto GetVisualTags = Core::RawFunc<
     /* addr = */ Red::Addresses::AppearanceNameVisualTagsPreset_GetVisualTags,
-    /* type = */ void (*)(Red::AppearanceNameVisualTagsPreset& aPreset,
+    /* type = */ void (*)(Red::AppearanceNameVisualTagsPreset& aPreset, // FIXME: might not be a preset anymore
                           Red::ResourcePath aEntityPath,
                           Red::CName aAppearanceName,
                           Red::TagList& aOutTags)>();

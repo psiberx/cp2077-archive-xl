@@ -103,8 +103,7 @@ uintptr_t App::InkSpawnerModule::OnSpawnExternal(Red::ink::WidgetLibraryResource
 
 bool App::InkSpawnerModule::OnAsyncSpawnLocal(Red::ink::WidgetLibraryResource& aLibrary,
                                               Red::InkSpawningInfo& aSpawningInfo,
-                                              Red::CName aItemName,
-                                              uint8_t aParam)
+                                              Red::CName aItemName)
 {
     auto* itemNameStr = aItemName.ToString();
     auto* controllerSep = strchr(itemNameStr, ControllerSeparator);
@@ -114,14 +113,13 @@ bool App::InkSpawnerModule::OnAsyncSpawnLocal(Red::ink::WidgetLibraryResource& a
         aItemName = Red::FNV1a64(reinterpret_cast<const uint8_t*>(itemNameStr), controllerSep - itemNameStr);
     }
 
-    return Raw::InkWidgetLibrary::AsyncSpawnFromLocal(aLibrary, aSpawningInfo, aItemName, aParam);
+    return Raw::InkWidgetLibrary::AsyncSpawnFromLocal(aLibrary, aSpawningInfo, aItemName);
 }
 
 bool App::InkSpawnerModule::OnAsyncSpawnExternal(Red::ink::WidgetLibraryResource& aLibrary,
                                                  Red::InkSpawningInfo& aSpawningInfo,
                                                  Red::ResourcePath aExternalPath,
-                                                 Red::CName aItemName,
-                                                 uint8_t aParam)
+                                                 Red::CName aItemName)
 {
     InjectDependency(aLibrary, aExternalPath);
 
@@ -133,7 +131,7 @@ bool App::InkSpawnerModule::OnAsyncSpawnExternal(Red::ink::WidgetLibraryResource
         aItemName = Red::FNV1a64(reinterpret_cast<const uint8_t*>(itemNameStr), controllerSep - itemNameStr);
     }
 
-    return Raw::InkWidgetLibrary::AsyncSpawnFromExternal(aLibrary, aSpawningInfo, aExternalPath, aItemName, aParam);
+    return Raw::InkWidgetLibrary::AsyncSpawnFromExternal(aLibrary, aSpawningInfo, aExternalPath, aItemName);
 }
 
 void App::InkSpawnerModule::OnFinishAsyncSpawn(Red::InkSpawningContext& aContext,

@@ -761,10 +761,10 @@ Core::SharedPtr<App::EntityState>& App::OverrideStateManager::GetEntityState(uin
     return GetEntityState(reinterpret_cast<Red::Entity*>(aContext));
 }
 
-Core::SharedPtr<App::EntityState>& App::OverrideStateManager::FindEntityState(uint64_t aContext)
-{
-    return FindEntityState(reinterpret_cast<Red::Entity*>(aContext));
-}
+// Core::SharedPtr<App::EntityState>& App::OverrideStateManager::FindEntityState(uint64_t aContext)
+// {
+//     return FindEntityState(reinterpret_cast<Red::Entity*>(aContext));
+// }
 
 Core::SharedPtr<App::EntityState>& App::OverrideStateManager::GetEntityState(Red::Entity* aEntity)
 {
@@ -827,11 +827,25 @@ Core::SharedPtr<App::EntityState>& App::OverrideStateManager::FindEntityState(Re
     return it.value();
 }
 
+Core::SharedPtr<App::EntityState>& App::OverrideStateManager::FindEntityState(uintptr_t aPointer)
+{
+    if (!aPointer)
+        return s_nullEntityState;
+
+    auto it = m_entityStatesByPointer.find(aPointer);
+
+    if (it == m_entityStatesByPointer.end())
+        return s_nullEntityState;
+
+    return it.value();
+}
+
 void App::OverrideStateManager::ClearStates()
 {
     m_entityStates.clear();
     m_entityStatesByPath.clear();
     m_entityStatesByProcessor.clear();
+    m_entityStatesByPointer.clear();
 }
 
 void App::OverrideStateManager::LinkEntityToAssembler(Red::Entity* aEntity, Red::GarmentProcessor* aProcessor)
@@ -841,6 +855,20 @@ void App::OverrideStateManager::LinkEntityToAssembler(Red::Entity* aEntity, Red:
     if (it != m_entityStates.end())
     {
         m_entityStatesByProcessor[aProcessor] = it.value();
+    }
+}
+
+void App::OverrideStateManager::LinkEntityToPointer(Red::Entity* aEntity, uintptr_t aPointer)
+{
+    auto it = m_entityStates.find(aEntity);
+
+    if (it != m_entityStates.end())
+    {
+        m_entityStatesByPointer[aPointer] = it.value();
+    }
+    else
+    {
+        m_entityStatesByPointer[aPointer] = GetEntityState(aEntity);
     }
 }
 

@@ -26,7 +26,7 @@ constexpr auto LoadSubtitles = Core::RawFunc<
 
 constexpr auto LoadVoiceOvers = Core::RawFunc<
     /* addr = */ Red::Addresses::Localization_LoadVoiceOvers,
-    /* type = */ void (*)(void* aContext)>();
+    /* type = */ void (*)(void* aContext, uint64_t a2)>();
 
 constexpr auto LoadLipsyncs = Core::RawFunc<
     /* addr = */ Red::Addresses::Localization_LoadLipsyncs,
