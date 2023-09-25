@@ -360,7 +360,7 @@ void App::GarmentOverrideModule::OnAddItem(Red::GarmentAssemblerState* aState,
                                            Red::GarmentItemAddRequest& aRequest)
 {
     std::unique_lock _(s_mutex);
-    if (auto& entityState = s_stateManager->GetEntityState(aState->unk00))
+    if (auto& entityState = s_stateManager->FindEntityState(aState->unk00))
     {
 #ifndef NDEBUG
         LogDebug("|{}| [event=AddItem entity={} item={} app={}]",
@@ -377,7 +377,7 @@ void App::GarmentOverrideModule::OnAddCustomItem(Red::GarmentAssemblerState* aSt
                                                  Red::GarmentItemAddCustomRequest& aRequest)
 {
     std::unique_lock _(s_mutex);
-    if (auto& entityState = s_stateManager->GetEntityState(aState->unk00))
+    if (auto& entityState = s_stateManager->FindEntityState(aState->unk00))
     {
 #ifndef NDEBUG
         LogDebug("|{}| [event=AddCustomItem entity={} item={} app={}]",
@@ -395,7 +395,7 @@ void App::GarmentOverrideModule::OnChangeItem(Red::GarmentAssemblerState* aState
                                               Red::GarmentItemChangeRequest& aRequest)
 {
     std::unique_lock _(s_mutex);
-    if (auto& entityState = s_stateManager->GetEntityState(aState->unk00))
+    if (auto& entityState = s_stateManager->FindEntityState(aState->unk00))
     {
 #ifndef NDEBUG
         LogDebug("|{}| [event=ChangeItem entity={} item={} app={}]",
@@ -412,7 +412,7 @@ void App::GarmentOverrideModule::OnChangeCustomItem(Red::GarmentAssemblerState* 
                                                     Red::GarmentItemChangeCustomRequest& aRequest)
 {
     std::unique_lock _(s_mutex);
-    if (auto& entityState = s_stateManager->GetEntityState(aState->unk00))
+    if (auto& entityState = s_stateManager->FindEntityState(aState->unk00))
     {
 #ifndef NDEBUG
         LogDebug("|{}| [event=ChangeCustomItem entity={} item={} app={}]",
