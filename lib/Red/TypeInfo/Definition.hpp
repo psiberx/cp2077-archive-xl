@@ -971,8 +971,9 @@ struct SystemBuilder
         systemInstance->gameInstance = gameInstance;
         systemInstance->OnInitialize(job);
 
-        gameInstance->systemInstances.PushBack(systemInstance);
         gameInstance->systemMap.Insert(systemType, systemInstance);
+        gameInstance->systemImplementations.Insert(systemType, systemType);
+        gameInstance->systemInstances.EmplaceBack(systemInstance);
     }
 
     static inline Handle<TSystem> BuildSystem()
