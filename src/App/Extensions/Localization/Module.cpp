@@ -20,8 +20,8 @@ bool App::LocalizationModule::Load()
     if (!HookAfter<Raw::Localization::LoadSubtitles>(&LocalizationModule::OnLoadSubtitles))
         throw std::runtime_error("Failed to hook [Localization::LoadSubtitles].");
 
-    if (!HookBefore<Raw::Localization::LoadVoiceOvers>(&LocalizationModule::OnLoadVoiceOvers))
-        throw std::runtime_error("Failed to hook [Localization::LoadVoiceOverMaps].");
+    // if (!HookBefore<Raw::Localization::LoadVoiceOvers>(&LocalizationModule::OnLoadVoiceOvers))
+    //     throw std::runtime_error("Failed to hook [Localization::LoadVoiceOverMaps].");
 
     if (!HookAfter<Raw::Localization::LoadLipsyncs>(&LocalizationModule::OnLoadLipsyncs))
         throw std::runtime_error("Failed to hook [Localization::LoadLipsyncs].");
@@ -300,8 +300,8 @@ void App::LocalizationModule::OnLoadVoiceOvers(void* aContext, uint64_t a2)
     if (!m_units.empty())
     {
         auto depot = Red::ResourceDepot::Get();
-        auto tokens = Raw::Localization::VoiceOverTokens(aContext);
-        auto map = tokens->values[0]->resource->root.GetPtr<Red::locVoLanguageDataMap>();
+        auto& tokens = Raw::Localization::VoiceOverTokens::Ref(aContext);
+        auto map = tokens.values[0]->resource->root.GetPtr<Red::locVoLanguageDataMap>();
 
         for (auto& entry : map->entries)
         {

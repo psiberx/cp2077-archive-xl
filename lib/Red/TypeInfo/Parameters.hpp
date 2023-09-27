@@ -12,6 +12,13 @@ template<typename T, auto ADefault>
 requires (!std::is_void_v<T>)
 struct Optional<T, ADefault>
 {
+    Optional() = default;
+    
+    Optional(T&& aValue)
+        : value(aValue)
+    {
+    }
+
     template<typename U, typename = std::enable_if_t<!std::is_same_v<U, T>>>
     [[nodiscard]] inline explicit operator U()
     {
