@@ -20,6 +20,7 @@ bool App::Language::IsKnown(Red::CName aLanguage)
     case Code::Russian:
     case Code::Thai:
     case Code::Turkish:
+    case Code::Ukrainian:
     case Code::SimplifiedChinese:
     case Code::TraditionalChinese:
         return true;
@@ -48,6 +49,7 @@ Red::CName App::Language::ResolveFromTextResource(Red::ResourcePath aPath)
         { R"(base\localization\ru-ru\onscreens\onscreens.json)", "ru-ru" },
         { R"(base\localization\th-th\onscreens\onscreens.json)", "th-th" },
         { R"(base\localization\tr-tr\onscreens\onscreens.json)", "tr-tr" },
+        { R"(base\localization\ua-ua\onscreens\onscreens.json)", "ua-ua" },
         { R"(base\localization\zh-cn\onscreens\onscreens.json)", "zh-cn" },
         { R"(base\localization\zh-tw\onscreens\onscreens.json)", "zh-tw" },
     };
@@ -80,6 +82,7 @@ Red::CName App::Language::ResolveFromSubtitleResource(Red::ResourcePath aPath)
         { R"(base\localization\ru-ru\subtitles\subtitles.json)", "ru-ru" },
         { R"(base\localization\th-th\subtitles\subtitles.json)", "th-th" },
         { R"(base\localization\tr-tr\subtitles\subtitles.json)", "tr-tr" },
+        { R"(base\localization\ua-ua\subtitles\subtitles.json)", "ua-ua" },
         { R"(base\localization\zh-cn\subtitles\subtitles.json)", "zh-cn" },
         { R"(base\localization\zh-tw\subtitles\subtitles.json)", "zh-tw" },
     };
@@ -112,6 +115,7 @@ Red::CName App::Language::ResolveFromLipsyncResource(Red::ResourcePath aPath)
         { R"(base\localization\ru-ru.lipmap)", "ru-ru" },
         { R"(base\localization\th-th.lipmap)", "th-th" },
         { R"(base\localization\tr-tr.lipmap)", "tr-tr" },
+        { R"(base\localization\ua-ua.lipmap)", "ua-ua" },
         { R"(base\localization\zh-cn.lipmap)", "zh-cn" },
         { R"(base\localization\zh-tw.lipmap)", "zh-tw" },
     };

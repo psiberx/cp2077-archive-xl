@@ -20,6 +20,7 @@ enum Code : uint64_t
     Russian = (uint64_t) Red::CName("ru-ru"),
     Thai = (uint64_t) Red::CName("th-th"),
     Turkish = (uint64_t) Red::CName("tr-tr"),
+    Ukrainian = (uint64_t) Red::CName("ua-ua"),
     SimplifiedChinese = (uint64_t) Red::CName("zh-cn"),
     TraditionalChinese = (uint64_t) Red::CName("zh-tw"),
 };
