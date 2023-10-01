@@ -101,7 +101,9 @@ constexpr uintptr_t Localization_LoadSubtitles = 0x1408494B4 - ImageBase; // 48 
 constexpr uintptr_t Localization_LoadVoiceOvers = 0x141B27630 - ImageBase; // 48 89 5C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 48 89 54 24 ? 55 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC, expected: 1, index: 0
 constexpr uintptr_t Localization_LoadLipsyncs = 0x140A829E4 - ImageBase; // 48 89 5C 24 ? 57 48 83 EC ? 8A DA 48 8B F9 48 8B 15 ? ? ? ? 48 8D 4C 24 ? 48 81 C2 ? ? ? ? E8 ? ? ? ? 48 8D 54 24, expected: 1, index: 0
 
-constexpr uintptr_t MappinResource_GetMappinData = 0x1405C2994 - ImageBase; // 48 8B 41 58 48 85 C0 74 ? 44 8B 40 4C 48 8B 48 40 49 C1 E0 05 4C 03 C1 49 3B C8 74, expected: 1, index: 0
+constexpr uintptr_t MappinSystem_GetMappinData = 0x1405C2994 - ImageBase; // 48 8B 41 58 48 85 C0 74 ? 44 8B 40 4C 48 8B 48 40 49 C1 E0 05 4C 03 C1 49 3B C8 74, expected: 1, index: 0
+constexpr uintptr_t MappinSystem_GetPoiData = 0x14044EF54 - ImageBase; // 48 8B 41 58 48 85 C0 74 ? 44 8B 40 4C 48 8B 48 40 49 C1 E0 05 4C 03 C1 49 3B C8 74, expected: 1, index: 0
+constexpr uintptr_t MappinSystem_OnStreamingWorldLoaded = 0x1402E18BC - ImageBase;
 
 constexpr uintptr_t MeshAppearance_LoadMaterialSetupAsync = 0x14017DBE4 - ImageBase; // 48 89 5C 24 ? 55 56 57 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 65 48 8B 04 25 ? ? ? ? 48 8B D9 B9 ? ? ? ? 0F 57 C0, expected: 1, index: 0
 

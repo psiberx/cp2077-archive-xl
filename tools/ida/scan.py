@@ -212,9 +212,19 @@ def patterns():
                 Item(name="LoadLipsyncs",
                      pattern="48 89 5C 24 ? 57 48 83 EC ? 8A DA 48 8B F9 48 8B 15 ? ? ? ? 48 8D 4C 24 ? 48 81 C2 ? ? ? ? E8 ? ? ? ? 48 8D 54 24"),
             ]),
-            Group(name="MappinResource", functions=[
+            Group(name="MappinSystem", functions=[
                 Item(name="GetMappinData",
-                     pattern="48 8B 41 58 48 85 C0 74 ? 44 8B 40 4C 48 8B 48 40 49 C1 E0 05 4C 03 C1 49 3B C8 74"),
+                     pattern="48 8B 41 ? 48 85 C0 74 ? 44 8B 40 4C 48 8B 48 40 49 C1 E0 05 4C 03 C1 49 3B C8 74",
+                     expected=2,
+                     index=1),
+                Item(name="GetPoiData",
+                     pattern="48 8B 41 ? 48 85 C0 74 ? 44 8B 40 4C 48 8B 48 40 49 C1 E0 05 4C 03 C1 49 3B C8 74",
+                     expected=2,
+                     index=0),
+                Item(name="OnStreamingWorldLoaded",
+                     pattern="",
+                     expected=2,
+                     index=0),
             ]),
             Group(name="MeshAppearance", functions=[
                 Item(name="LoadMaterialSetupAsync",

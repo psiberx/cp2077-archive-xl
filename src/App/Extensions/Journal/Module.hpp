@@ -1,10 +1,10 @@
 #pragma once
 
-#include "App/Extensions/ModuleBase.hpp"
 #include "App/Extensions/Journal/Unit.hpp"
+#include "App/Extensions/ModuleBase.hpp"
 #include "Red/JournalManager.hpp"
 #include "Red/JournalTree.hpp"
-#include "Red/MappinResource.hpp"
+#include "Red/MappinSystem.hpp"
 
 namespace App
 {
@@ -23,11 +23,14 @@ private:
     {
         Red::NodeRef reference;
         Red::Vector3 offset;
+        bool isPointOfInterest;
     };
 
     void OnLoadJournal(uintptr_t a1, Red::JobGroup& aJobGroup);
     void OnInitializeRoot(Red::game::JournalRootFolderEntry* aRoot, uintptr_t, uintptr_t, Red::JobQueue& aJobQueue);
-    void* OnGetMappinData(Red::CResource* aResource, uint32_t aHash);
+    void OnMappinDataLoaded(void* aMappinSystem, Red::worldRuntimeScene*);
+    // void* OnGetMappinData(void* aMappinSystem, uint32_t aHash);
+    // void* OnGetPoiData(void* aMappinSystem, uint32_t aHash);
 
     EntrySearchResult FindEntry(Red::game::JournalEntry* aParent, Red::CString& aPath);
     bool MergeEntries(Red::game::JournalContainerEntry* aTarget, Red::game::JournalContainerEntry* aSource,
@@ -37,7 +40,7 @@ private:
     void ProcessNewEntries(Red::game::JournalEntry* aEntry, const std::string& aPath, bool aRecursive);
     void ConvertLocKeys(Red::game::JournalEntry* aEntry);
     void CollectMappin(Red::game::JournalEntry* aEntry, const std::string& aPath);
-    bool ResolveMappinPosition(uint32_t aHash, const JournalMappin& aMappin, Red::Vector3& aResult);
+    static bool ResolveMappinPosition(uint32_t aHash, const JournalMappin& aMappin, Red::Vector3& aResult);
     void ResetResourceData();
     void ResetRuntimeData();
     void ReloadJournal();
