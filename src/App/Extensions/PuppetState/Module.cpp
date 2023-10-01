@@ -118,7 +118,7 @@ void App::PuppetStateModule::OnDetachPuppet(Red::gameuiCharacterCustomizationHai
     if (it == s_handlers.end())
         return;
 
-    auto handler = it.value();
+    auto& handler = it.value();
     s_handlers.erase(owner);
 
     auto transactionSystem = Red::GetGameSystem<Red::ITransactionSystem>();
