@@ -7,6 +7,7 @@ inline void Channel(Red::CName aChannel, const std::string& aMessage)
     static auto* s_rtti = CRTTISystem::Get();
     static auto* s_logFunc = s_rtti->GetFunction("LogChannel");
     static auto* s_stringType = s_rtti->GetType("String");
+    static auto* s_stringRefType = s_rtti->GetType("script_ref:String");
     static auto* s_nameType = s_rtti->GetType("CName");
 
     CString message(aMessage.c_str());
@@ -17,7 +18,7 @@ inline void Channel(Red::CName aChannel, const std::string& aMessage)
 
     StackArgs_t args;
     args.emplace_back(s_nameType, &aChannel);
-    args.emplace_back(s_stringType, &messageRef);
+    args.emplace_back(s_stringRefType, &messageRef);
 
     CStack stack(nullptr, args.data(), static_cast<uint32_t>(args.size()), nullptr);
 

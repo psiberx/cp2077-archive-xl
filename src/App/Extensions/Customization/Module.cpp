@@ -152,8 +152,12 @@ void App::CustomizationModule::MergeCustomEntries(CustomizationResourceToken& aT
 {
     if (!aTargetResource.instance->finished)
     {
-        LogWarning("Game customization resource is not ready.");
-        return;
+        Red::WaitForResource(aTargetResource, std::chrono::milliseconds(500));
+        if (!aTargetResource.instance->finished)
+        {
+            LogWarning("Game customization resource is not ready.");
+            return;
+        }
     }
 
     auto& gameData = aTargetResource->Get();
@@ -162,7 +166,7 @@ void App::CustomizationModule::MergeCustomEntries(CustomizationResourceToken& aT
     {
         if (!customResource->finished)
         {
-            LogWarning("Custom customization resource is not ready.");
+            LogWarning("Mod customization resource is not ready.");
             continue;
         }
 

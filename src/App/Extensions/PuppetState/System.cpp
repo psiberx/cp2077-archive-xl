@@ -2,7 +2,7 @@
 #include "Module.hpp"
 #include "Red/Entity.hpp"
 
-Red::CString App::PuppetStateSystem::GetBodyTypeSuffix(Red::ItemID aItemID,
+Red::CString App::PuppetStateSystem::GetBodyTypeSuffix(Red::ItemID& aItemID,
                                                        const Red::WeakHandle<Red::GameObject>& aOwner,
                                                        const Red::Handle<Red::ItemsFactoryAppearanceSuffixBase_Record>&)
 {
@@ -25,7 +25,7 @@ Red::CString App::PuppetStateSystem::GetBodyTypeSuffix(Red::ItemID aItemID,
     return BaseBodyName;
 }
 
-Red::CString App::PuppetStateSystem::GetArmsStateSuffix(Red::ItemID aItemID,
+Red::CString App::PuppetStateSystem::GetArmsStateSuffix(Red::ItemID& aItemID,
                                                         const Red::WeakHandle<Red::GameObject>& aOwner,
                                                         const Red::Handle<Red::ItemsFactoryAppearanceSuffixBase_Record>&)
 {
@@ -44,7 +44,7 @@ Red::CString App::PuppetStateSystem::GetArmsStateSuffix(Red::ItemID aItemID,
     }
 }
 
-Red::CString App::PuppetStateSystem::GetFeetStateSuffix(Red::ItemID aItemID,
+Red::CString App::PuppetStateSystem::GetFeetStateSuffix(Red::ItemID& aItemID,
                                                         const Red::WeakHandle<Red::GameObject>& aOwner,
                                                         const Red::Handle<Red::ItemsFactoryAppearanceSuffixBase_Record>&)
 {

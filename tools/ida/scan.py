@@ -222,9 +222,7 @@ def patterns():
                      expected=2,
                      index=0),
                 Item(name="OnStreamingWorldLoaded",
-                     pattern="",
-                     expected=2,
-                     index=0),
+                     pattern="48 89 5C 24 ? 55 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 82 ? ? ? ? 48 8B D9"),
             ]),
             Group(name="MeshAppearance", functions=[
                 Item(name="LoadMaterialSetupAsync",
