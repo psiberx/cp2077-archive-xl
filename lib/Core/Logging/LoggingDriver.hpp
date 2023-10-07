@@ -12,25 +12,25 @@ public:
     virtual void LogFlush() = 0;
 
     template<typename... Args>
-    constexpr void LogInfo(std::_Fmt_string<Args...> aFormat, Args&&... aArgs)
+    constexpr void LogInfo(std::format_string<Args...> aFormat, Args&&... aArgs)
     {
         LogInfo(std::format(aFormat, std::forward<Args>(aArgs)...));
     }
 
     template<typename... Args>
-    constexpr void LogWarning(std::_Fmt_string<Args...> aFormat, Args&&... aArgs)
+    constexpr void LogWarning(std::format_string<Args...> aFormat, Args&&... aArgs)
     {
         LogWarning(std::format(aFormat, std::forward<Args>(aArgs)...));
     }
 
     template<typename... Args>
-    constexpr void LogError(std::_Fmt_string<Args...> aFormat, Args&&... aArgs)
+    constexpr void LogError(std::format_string<Args...> aFormat, Args&&... aArgs)
     {
         LogError(std::format(aFormat, std::forward<Args>(aArgs)...));
     }
 
     template<typename... Args>
-    constexpr void LogDebug(std::_Fmt_string<Args...> aFormat, Args&&... aArgs)
+    constexpr void LogDebug(std::format_string<Args...> aFormat, Args&&... aArgs)
     {
         LogDebug(std::format(aFormat, std::forward<Args>(aArgs)...));
     }

@@ -25,25 +25,25 @@ inline void Debug(const std::string_view& aMessage)
 }
 
 template<typename... Args>
-constexpr void Info(std::_Fmt_string<Args...> aFormat, Args&&... aArgs)
+constexpr void Info(std::format_string<Args...> aFormat, Args&&... aArgs)
 {
     LoggingDriver::GetDefault().LogInfo(std::format(aFormat, std::forward<Args>(aArgs)...));
 }
 
 template<typename... Args>
-constexpr void Warning(std::_Fmt_string<Args...> aFormat, Args&&... aArgs)
+constexpr void Warning(std::format_string<Args...> aFormat, Args&&... aArgs)
 {
     LoggingDriver::GetDefault().LogWarning(std::format(aFormat, std::forward<Args>(aArgs)...));
 }
 
 template<typename... Args>
-constexpr void Error(std::_Fmt_string<Args...> aFormat, Args&&... aArgs)
+constexpr void Error(std::format_string<Args...> aFormat, Args&&... aArgs)
 {
     LoggingDriver::GetDefault().LogError(std::format(aFormat, std::forward<Args>(aArgs)...));
 }
 
 template<typename... Args>
-constexpr void Debug(std::_Fmt_string<Args...> aFormat, Args&&... aArgs)
+constexpr void Debug(std::format_string<Args...> aFormat, Args&&... aArgs)
 {
     LoggingDriver::GetDefault().LogDebug(std::format(aFormat, std::forward<Args>(aArgs)...));
 }

@@ -28,25 +28,25 @@ protected:
     }
 
     template<typename... Args>
-    inline static constexpr void LogInfo(std::_Fmt_string<Args...> aFormat, Args&&... aArgs)
+    inline static constexpr void LogInfo(std::format_string<Args...> aFormat, Args&&... aArgs)
     {
         GetLoggingDriver().LogInfo(aFormat, std::forward<Args>(aArgs)...);
     }
 
     template<typename... Args>
-    inline static constexpr void LogWarning(std::_Fmt_string<Args...> aFormat, Args&&... aArgs)
+    inline static constexpr void LogWarning(std::format_string<Args...> aFormat, Args&&... aArgs)
     {
         GetLoggingDriver().LogWarning(std::format(aFormat, std::forward<Args>(aArgs)...));
     }
 
     template<typename... Args>
-    inline static constexpr void LogError(std::_Fmt_string<Args...> aFormat, Args&&... aArgs)
+    inline static constexpr void LogError(std::format_string<Args...> aFormat, Args&&... aArgs)
     {
         GetLoggingDriver().LogError(std::format(aFormat, std::forward<Args>(aArgs)...));
     }
 
     template<typename... Args>
-    inline static constexpr void LogDebug(std::_Fmt_string<Args...> aFormat, Args&&... aArgs)
+    inline static constexpr void LogDebug(std::format_string<Args...> aFormat, Args&&... aArgs)
     {
         GetLoggingDriver().LogDebug(std::format(aFormat, std::forward<Args>(aArgs)...));
     }

@@ -50,13 +50,13 @@ concept HasMaxValueGetter = requires
 template<typename T>
 concept IsAllocationForwarded = requires
 {
-    { T::ForwardAllocator };
+    typename T::ForwardAllocator;
 };
 
 template<typename T>
 concept IsConstructionForwarded = requires
 {
-    { T::ForwardInitializer };
+    typename T::ForwardInitializer;
 };
 
 template<typename TEnum>

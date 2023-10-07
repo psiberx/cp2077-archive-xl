@@ -26,13 +26,13 @@ inline void Channel(Red::CName aChannel, const std::string& aMessage)
 }
 
 template<typename... Args>
-constexpr void Channel(CName aChannel, std::_Fmt_string<Args...> aFormat, Args&&... aArgs)
+constexpr void Channel(CName aChannel, std::format_string<Args...> aFormat, Args&&... aArgs)
 {
     Channel(aChannel, std::format(aFormat, std::forward<Args>(aArgs)...));
 }
 
 template<typename... Args>
-constexpr void Debug(std::_Fmt_string<Args...> aFormat, Args&&... aArgs)
+constexpr void Debug(std::format_string<Args...> aFormat, Args&&... aArgs)
 {
     Channel("DEBUG", std::format(aFormat, std::forward<Args>(aArgs)...));
 }
