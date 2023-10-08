@@ -82,12 +82,15 @@ bool App::AttachmentSlotsModule::Unload()
     return true;
 }
 
-void App::AttachmentSlotsModule::OnInitializeSlots(Red::game::AttachmentSlots*, Red::DynArray<Red::TweakDBID>& aSlotIDs)
+void App::AttachmentSlotsModule::OnInitializeSlots(Red::game::AttachmentSlots* aComponent,
+                                                   Red::DynArray<Red::TweakDBID>& aSlotIDs)
 {
     if (aSlotIDs.size > 0)
     {
 #ifndef NDEBUG
-        LogDebug("|{}| [event=InitializeSlots]", ModuleName);
+        const auto entity = Raw::IComponent::Owner::Ptr(aComponent);
+        const auto entityID = Raw::Entity::EntityID::Ptr(entity);
+        LogDebug("|{}| [event=InitializeSlots ent={}]", ModuleName, entityID->hash);
 #endif
 
         std::unique_lock _(s_slotsMutex);

@@ -1,6 +1,7 @@
 #include "Module.hpp"
 #include "App/Extensions/GarmentOverride/Dynamic.hpp"
 #include "Red/FactoryIndex.hpp"
+#include "Red/TweakDB.hpp"
 
 namespace
 {
@@ -43,12 +44,16 @@ bool App::AppearanceSwapModule::OnLoadTemplate(Red::ItemFactoryAppearanceChangeR
 
     if (entityFactory && targetEntity && visualRecord)
     {
-        auto tweakDB = Red::TweakDB::Get();
-        auto entityFlat = tweakDB->GetFlatValue({visualRecord->recordID, EntityNameFlat});
+        auto entityFlat = Red::GetFlatPtr<Red::CName>({visualRecord->recordID, EntityNameFlat});
         if (entityFlat)
         {
+#ifndef NDEBUG
+            auto recordName = Red::ToStringDebug(visualRecord->recordID);
+            auto factoryName = entityFlat->ToString();
+#endif
+
             Red::ResourcePath overridePath;
-            Raw::FactoryIndex::ResolveResource(entityFactory, overridePath, *entityFlat->GetValue<Red::CName>());
+            Raw::FactoryIndex::ResolveResource(entityFactory, overridePath, *entityFlat);
 
             if (overridePath)
             {
