@@ -7,7 +7,7 @@ namespace Raw::CMesh
 {
 constexpr auto GetAppearance = Core::RawFunc<
     /* addr = */ Red::Addresses::CMesh_GetAppearance,
-    /* type = */ Red::Handle<Red::mesh::MeshAppearance>& (*)(Red::CMesh& aMesh, Red::CName aAppearance)>();
+    /* type = */ Red::Handle<Red::mesh::MeshAppearance>& (*)(Red::CMesh* aMesh, Red::CName aAppearance)>();
 }
 
 namespace Raw::MeshAppearance

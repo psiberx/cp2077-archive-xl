@@ -4,17 +4,17 @@ namespace App
 {
 enum class ComponentType
 {
-    Unknown,
+    Unsupported,
     MeshComponent,
     SkinnedMeshComponent,
-    SkinnedClothComponent,
     MorphTargetSkinnedMeshComponent,
 };
 
 class ComponentWrapper
 {
 public:
-    ComponentWrapper(Red::Handle<Red::IComponent>& aComponent);
+    explicit ComponentWrapper(Red::IComponent* aComponent);
+    explicit ComponentWrapper(const Red::Handle<Red::IComponent>& aComponent);
 
     [[nodiscard]] bool IsMeshComponent() const;
     [[nodiscard]] uint64_t GetUniqueId();
@@ -34,8 +34,8 @@ public:
     bool SetChunkMask(uint64_t aChunkMask) const;
 
 private:
-    Red::Handle<Red::IComponent>& m_component;
-    ComponentType m_type;
+    Red::IComponent* m_component;
+    ComponentType m_componentType;
     uint64_t m_uniqueId;
 };
 }
