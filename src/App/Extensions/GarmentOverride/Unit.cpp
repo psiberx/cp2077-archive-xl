@@ -1,12 +1,6 @@
 #include "Unit.hpp"
 #include "App/Utils/Num.hpp"
 
-namespace
-{
-constexpr auto OverridesNodeKey = "overrides";
-constexpr auto TagsNodeKey = "tags";
-}
-
 bool App::GarmentOverrideUnit::IsDefined()
 {
     return !tags.empty();
@@ -14,12 +8,12 @@ bool App::GarmentOverrideUnit::IsDefined()
 
 void App::GarmentOverrideUnit::LoadYAML(const YAML::Node& aNode)
 {
-    const auto& overridesNode = aNode[OverridesNodeKey];
+    const auto& overridesNode = aNode["overrides"];
 
     if (!overridesNode.IsDefined())
         return;
 
-    const auto& tagsNode = overridesNode[TagsNodeKey];
+    const auto& tagsNode = overridesNode["tags"];
 
     if (!tagsNode.IsDefined())
         return;
@@ -52,6 +46,33 @@ void App::GarmentOverrideUnit::LoadYAML(const YAML::Node& aNode)
 
             switch (chunksNode.Type())
             {
+                case YAML::NodeType::Map:
+                {
+                    bool success = false;
+                    for (const auto& op : {std::pair{"hide", false}, {"show", true}})
+                    {
+                        const auto& opNode = chunksNode[op.first];
+                        if (opNode.IsDefined())
+                        {
+                            if (opNode.IsSequence())
+                            {
+                                const auto mask = opNode.as<std::vector<uint8_t>>();
+                                tagDefinition.emplace(componentName.data(), ChunkMask(op.second, mask));
+                                success = true;
+                            }
+                            else
+                            {
+                                malformed = true;
+                            }
+                            break;
+                        }
+                    }
+                    if (!success)
+                    {
+                        malformed = true;
+                    }
+                    break;
+                }
                 case YAML::NodeType::Sequence:
                 {
                     const auto mask = chunksNode.as<std::vector<uint8_t>>();
