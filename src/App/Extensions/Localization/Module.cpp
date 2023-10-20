@@ -44,6 +44,9 @@ void App::LocalizationModule::OnLoadTexts(Red::Handle<TextResource>& aOnScreens,
 {
     const auto language = Language::ResolveFromTextResource(aPath);
 
+    if (language.IsNone())
+        return;
+
     LogInfo("|{}| Initializing translations for \"{}\" language...", ModuleName, language.ToString());
 
     auto mergedAny = false;
@@ -107,7 +110,7 @@ void App::LocalizationModule::OnLoadTexts(Red::Handle<TextResource>& aOnScreens,
 
 bool App::LocalizationModule::MergeTextResource(const std::string& aPath, TextEntryList& aFinalList,
                                                 TextEntryMap& aUsedKeyMap, uint32_t aOriginalCount,
-                                            uint64_t aOriginalMaxKey, bool aFallback)
+                                                uint64_t aOriginalMaxKey, bool aFallback)
 {
     Red::Handle<TextResource> resource;
     Raw::Localization::LoadTexts(resource, aPath.c_str());
@@ -157,7 +160,7 @@ bool App::LocalizationModule::MergeTextResource(const std::string& aPath, TextEn
 
 void App::LocalizationModule::MergeTextEntry(TextEntryList& aFinalList, TextEntry& aNewEntry, uint32_t aIndex,
                                              TextEntryMap& aUsedKeyMap, uint32_t aOriginalCount,
-                                         uint64_t aOriginalMaxKey, bool aFallback)
+                                             uint64_t aOriginalMaxKey, bool aFallback)
 {
     const auto& existingIt = aUsedKeyMap.find(aNewEntry.primaryKey);
 
@@ -222,6 +225,9 @@ bool App::LocalizationModule::IsCommentEntry(App::TextEntry& aEntry)
 void App::LocalizationModule::OnLoadSubtitles(Red::Handle<SubtitleResource>& aSubtitles, Red::ResourcePath aPath)
 {
     const auto language = Language::ResolveFromSubtitleResource(aPath);
+
+    if (language.IsNone())
+        return;
 
     LogInfo("|{}| Initializing subtitles for \"{}\" language...", ModuleName, language.ToString());
 
