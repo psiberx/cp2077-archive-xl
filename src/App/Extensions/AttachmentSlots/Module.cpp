@@ -91,11 +91,11 @@ void App::AttachmentSlotsModule::OnInitializeSlots(Red::game::AttachmentSlots* a
 {
     if (aSlotIDs.size > 0)
     {
-#ifndef NDEBUG
-        const auto entity = Raw::IComponent::Owner::Ptr(aComponent);
-        const auto entityID = Raw::Entity::EntityID::Ptr(entity);
-        LogDebug("|{}| [event=InitializeSlots ent={}]", ModuleName, entityID->hash);
-#endif
+// #ifndef NDEBUG
+//         const auto entity = Raw::IComponent::Owner::Ptr(aComponent);
+//         const auto entityID = Raw::Entity::EntityID::Ptr(entity);
+//         LogDebug("|{}| [event=InitializeSlots ent={}]", ModuleName, entityID->hash);
+// #endif
 
         std::unique_lock _(s_slotsMutex);
         auto tweakDB = Red::TweakDB::Get();

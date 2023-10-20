@@ -86,7 +86,9 @@ void App::PuppetStateModule::OnLoadTweakDB()
 void App::PuppetStateModule::OnAttachPuppet(Red::gameuiCharacterCustomizationGenitalsController* aComponent)
 {
 #ifndef NDEBUG
-    LogDebug("|{}| [event=AttachPuppet]", ModuleName);
+    const auto entity = Raw::IComponent::Owner::Ptr(aComponent);
+    const auto entityID = Raw::Entity::EntityID::Ptr(entity);
+    LogDebug("|{}| [event=AttachPuppet ent={}]", ModuleName, entityID->hash);
 #endif
 
     std::unique_lock _(s_mutex);
@@ -107,7 +109,9 @@ void App::PuppetStateModule::OnAttachPuppet(Red::gameuiCharacterCustomizationGen
 void App::PuppetStateModule::OnDetachPuppet(Red::gameuiCharacterCustomizationHairstyleController* aComponent, uintptr_t)
 {
 #ifndef NDEBUG
-    LogDebug("|{}| [event=DetachPuppet]", ModuleName);
+    const auto entity = Raw::IComponent::Owner::Ptr(aComponent);
+    const auto entityID = Raw::Entity::EntityID::Ptr(entity);
+    LogDebug("|{}| [event=DetachPuppet ent={}]", ModuleName, entityID->hash);
 #endif
 
     std::unique_lock _(s_mutex);
