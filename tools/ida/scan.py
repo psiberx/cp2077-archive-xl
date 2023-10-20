@@ -242,6 +242,10 @@ def patterns():
                 Item(name="Create",
                      pattern="40 53 48 81 EC ? ? ? ? 83 7A 08 00 48 8B D9 74 ? F2 0F 10 02 48 8D 4C 24 ? 8B 42 08 48 8D 54 24 ? F2 0F 11 44 24"),
             ]),
+            Group(name="StreamingSector", functions=[
+                Item(name="OnReady",
+                     pattern="48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B 91 ? ? ? ? 33 FF 48 8B D9"),
+            ]),
             Group(name="StreamingWorld", functions=[
                 Item(name="OnLoad",
                      pattern="48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8B EC 48 83 EC ? 4C 8B F2 48 8B F9 E8 ? ? ? ? 41 F6 46 08 02 4C 8D A7"),

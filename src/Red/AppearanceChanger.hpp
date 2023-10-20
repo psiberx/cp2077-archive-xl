@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Raw.hpp"
 #include "Red/Addresses.hpp"
+#include "Red/Common.hpp"
 #include "Red/EntityTemplate.hpp"
 
 namespace Red
@@ -45,31 +45,6 @@ struct AppearanceDescriptor
 RED4EXT_ASSERT_SIZE(AppearanceDescriptor, 0x10);
 RED4EXT_ASSERT_OFFSET(AppearanceDescriptor, resource, 0x0);
 RED4EXT_ASSERT_OFFSET(AppearanceDescriptor, appearance, 0x8);
-
-template<typename T>
-struct SomeIterator
-{
-    constexpr operator bool() const noexcept
-    {
-        return ptr != end;
-    }
-
-    constexpr operator T*() const noexcept
-    {
-        return ptr;
-    }
-
-    constexpr operator T&() const noexcept
-    {
-        return *ptr;
-    }
-
-    T* ptr; // 00
-    T* end; // 08
-};
-RED4EXT_ASSERT_SIZE(SomeIterator<AppearanceDescriptor>, 0x10);
-RED4EXT_ASSERT_OFFSET(SomeIterator<AppearanceDescriptor>, ptr, 0x0);
-RED4EXT_ASSERT_OFFSET(SomeIterator<AppearanceDescriptor>, end, 0x8);
 }
 
 namespace Raw::AppearanceChanger

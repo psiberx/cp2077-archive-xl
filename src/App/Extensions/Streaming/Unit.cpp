@@ -39,12 +39,12 @@ void App::StreamingUnit::LoadYAML(const YAML::Node& aNode)
                 }
 
                 const auto& pathNode = sectorNode["path"];
-                const auto& deletionsNode = sectorNode["deletions"];
-                const auto& validationNode = sectorNode["validation"];
+                const auto& countNode = sectorNode["expectedNodes"];
+                const auto& deletionsNode = sectorNode["nodeDeletions"];
 
                 if (!pathNode.IsDefined() || !pathNode.IsScalar()
                     || !deletionsNode.IsDefined() || !deletionsNode.IsSequence()
-                    || !validationNode.IsDefined()|| !validationNode.IsMap())
+                    || !countNode.IsDefined() || !countNode.IsScalar())
                 {
                     continue;
                 }
@@ -53,18 +53,14 @@ void App::StreamingUnit::LoadYAML(const YAML::Node& aNode)
                 sectorData.mod = name;
                 sectorData.path = pathNode.Scalar();
 
+                if (!ParseInt(countNode.Scalar(), sectorData.expectedNodes))
                 {
-                    const auto& countNode = validationNode["totalNodes"];
+                    continue;
+                }
 
-                    if (!countNode.IsDefined() || !countNode.IsScalar())
-                    {
-                        continue;
-                    }
-
-                    if (!ParseInt(countNode.Scalar(), sectorData.expectedNodes))
-                    {
-                        continue;
-                    }
+                if (sectorData.expectedNodes <= 0)
+                {
+                    continue;
                 }
 
                 for (const auto& deletionNode : deletionsNode)
@@ -90,10 +86,12 @@ void App::StreamingUnit::LoadYAML(const YAML::Node& aNode)
                         continue;
                     }
 
-                    sectorData.deletions.emplace_back(std::move(deletionData));
+                    ParseSubDeletions(deletionNode, deletionData);
+
+                    sectorData.nodeDeletions.emplace_back(std::move(deletionData));
                 }
 
-                if (sectorData.path.empty() || !sectorData.expectedNodes || sectorData.deletions.empty())
+                if (sectorData.path.empty() || !sectorData.expectedNodes || sectorData.nodeDeletions.empty())
                 {
                     continue;
                 }
@@ -102,4 +100,57 @@ void App::StreamingUnit::LoadYAML(const YAML::Node& aNode)
             }
         }
     }
+}
+
+bool App::StreamingUnit::ParseSubDeletions(const YAML::Node& aNode, WorldNodeDeletion& aDeletionData)
+{
+    const auto& subDeletionsNode = aNode["actorDeletions"];
+
+    if (!subDeletionsNode.IsDefined() || !subDeletionsNode.IsSequence())
+    {
+        return false;
+    }
+
+    const auto& subCountNode = aNode["expectedActors"];
+
+    if (!subCountNode.IsDefined() || !subCountNode.IsScalar())
+    {
+        return false;
+    }
+
+    if (!ParseInt(subCountNode.Scalar(), aDeletionData.expectedSubNodes))
+    {
+        return false;
+    }
+
+    if (aDeletionData.expectedSubNodes <= 0)
+    {
+        return false;
+    }
+
+    for (const auto& subDeletionNode : subDeletionsNode)
+    {
+        if (!subDeletionNode.IsScalar())
+        {
+            aDeletionData.subNodeDeletions.clear();
+            return false;
+        }
+
+        int64_t subIndex;
+        if (!ParseInt(subDeletionNode.Scalar(), subIndex))
+        {
+            aDeletionData.subNodeDeletions.clear();
+            return false;
+        }
+
+        if (subIndex < 0 || subIndex >= aDeletionData.expectedSubNodes)
+        {
+            aDeletionData.subNodeDeletions.clear();
+            return false;
+        }
+
+        aDeletionData.subNodeDeletions.push_back(subIndex);
+    }
+
+    return true;
 }

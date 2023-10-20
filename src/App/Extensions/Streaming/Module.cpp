@@ -5,6 +5,7 @@ namespace
 constexpr auto ModuleName = "Streaming";
 
 constexpr auto MainWorldResource = Red::ResourcePath(R"(base\worlds\03_night_city\_compiled\default\03_night_city.streamingworld)");
+constexpr auto CollisionNodeType = Red::GetTypeName<Red::world::CollisionNode>();
 }
 
 std::string_view App::StreamingModule::GetName()
@@ -66,17 +67,17 @@ void App::StreamingModule::PrepareSectors()
 
             bool allNodeTypesValid = true;
 
-            for (const auto& deletion : sectorMod.deletions)
+            for (const auto& nodeDeletion : sectorMod.nodeDeletions)
             {
-                if (!rtti->GetClass(deletion.nodeType))
+                if (!rtti->GetClass(nodeDeletion.nodeType))
                 {
                     allNodeTypesValid = false;
 
-                    if (!invalidNodeTypes.contains(deletion.nodeType))
+                    if (!invalidNodeTypes.contains(nodeDeletion.nodeType))
                     {
                         LogWarning("|{}| Node type \"{}\" doesn't exist. Skipped.", ModuleName,
-                                   deletion.nodeType.ToString());
-                        invalidNodeTypes.insert(deletion.nodeType);
+                                   nodeDeletion.nodeType.ToString());
+                        invalidNodeTypes.insert(nodeDeletion.nodeType);
                     }
                 }
             }
@@ -149,12 +150,12 @@ void App::StreamingModule::OnWorldLoad(Red::world::StreamingWorld* aWorld, Red::
         }
         else
         {
-            LogInfo("|{}| No entries to merge.", ModuleName);
+            LogInfo("|{}| No blocks to merge.", ModuleName);
         }
     }
     else
     {
-        LogInfo("|{}| No entries to merge.", ModuleName);
+        LogInfo("|{}| No blocks to merge.", ModuleName);
     }
 }
 
@@ -177,21 +178,46 @@ void App::StreamingModule::OnSectorReady(Red::world::StreamingSector* aSector, u
             }
             else
             {
-                for (const auto& deletion : sectorMod.deletions)
+                for (const auto& nodeDeletion : sectorMod.nodeDeletions)
                 {
-                    if (deletion.nodeType != buffer.nodes[deletion.nodeIndex]->GetNativeType()->name)
+                    auto& node = buffer.nodes[nodeDeletion.nodeIndex];
+
+                    if (nodeDeletion.nodeType != node->GetNativeType()->name)
                     {
                         isValidSector = false;
                         break;
+                    }
+
+                    if (nodeDeletion.nodeType == CollisionNodeType && !nodeDeletion.subNodeDeletions.empty())
+                    {
+                        auto& actors = Raw::CollisionNode::Actors::Ref(node);
+                        if (actors.GetSize() != nodeDeletion.expectedSubNodes)
+                        {
+                            isValidSector = false;
+                            break;
+                        }
                     }
                 }
             }
 
             if (isValidSector)
             {
-                for (const auto& deletion : sectorMod.deletions)
+                for (const auto& nodeDeletion : sectorMod.nodeDeletions)
                 {
-                    buffer.nodes[deletion.nodeIndex]->isVisibleInGame = false;
+                    auto& node = buffer.nodes[nodeDeletion.nodeIndex];
+
+                    if (nodeDeletion.nodeType == CollisionNodeType && !nodeDeletion.subNodeDeletions.empty())
+                    {
+                        auto& actors = Raw::CollisionNode::Actors::Ref(node);
+                        for (const auto& subNodeIndex : nodeDeletion.subNodeDeletions)
+                        {
+                            constexpr auto DelZ = static_cast<int32_t>(-2000 * (2 << 16));
+                            actors.ptr[subNodeIndex].transform.Position.z.Bits = DelZ;
+                        }
+                        continue;
+                    }
+
+                    node->isVisibleInGame = false;
                 }
 
                 LogInfo("|{}| Sector \"{}\" patched with \"{}\".", ModuleName, sectorMod.path, sectorMod.mod);
