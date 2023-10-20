@@ -257,6 +257,8 @@ def patterns():
                      pattern="4C 89 44 24 ? 48 89 54 24 ? 55 53 56 57 41 54 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 4C 8B F1"),
                 Item(name="OnItemUnequipped",
                      pattern="48 8B C4 48 89 58 ? 48 89 70 ? 4C 89 40 ? 48 89 50 ? 57 48 83 EC ? 48 8B F1 49 8B D8 49 8B C8 48 8B FA E8"),
+                Item(name="IsAffectedSlot",
+                     pattern="48 89 4C 24 ? 48 8D 15 ? ? ? ? 48 8B 02 3B C1 75 ? 48 C1 E8 ? 3A 44 24 ? 74"),
             ]),
 #             Group(name="TransactionSystem", functions=[
 #                 Item(name="IsSlotSpawning",

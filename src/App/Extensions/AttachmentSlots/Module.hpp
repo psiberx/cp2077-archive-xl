@@ -23,9 +23,10 @@ private:
     static void OnInitializeSlots(Red::game::AttachmentSlots* aComponent, Red::DynArray<Red::TweakDBID>& aSlotIDs);
     static bool OnSlotSpawningCheck(Red::game::AttachmentSlots* aComponent, Red::TweakDBID aSlotID);
     static void OnAttachTPP(Red::game::TPPRepresentationComponent* aComponent, uintptr_t);
-    static void OnItemChangeTPP(Raw::TPPRepresentationComponent::SlotListenerCallback aCallback,
-                                Red::game::TPPRepresentationComponent* aComponent,
-                                Red::TweakDBID aItemID, Red::TweakDBID aSlotID);
+    static void OnSlotCheckTPP(bool& aAffected, Red::TweakDBID aSlotID);
+    // static void OnItemChangeTPP(Raw::TPPRepresentationComponent::SlotListenerCallback aCallback,
+    //                             Red::game::TPPRepresentationComponent* aComponent,
+    //                             Red::TweakDBID aItemID, Red::TweakDBID aSlotID);
     static void OnCheckHairState(Red::game::ui::CharacterCustomizationHairstyleController* aComponent,
                                  Red::CharacterBodyPartState& aHairState);
     static void OnCheckBodyState(Red::game::ui::CharacterCustomizationGenitalsController* aComponent,
