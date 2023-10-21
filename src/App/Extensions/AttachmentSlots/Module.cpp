@@ -203,7 +203,11 @@ void App::AttachmentSlotsModule::OnSlotCheckTPP(bool& aAffected, Red::TweakDBID 
     if (!aAffected)
     {
         std::shared_lock _(s_slotsMutex);
-        aAffected = s_baseSlots.contains(aSlotID);
+        const auto& baseSlot = s_baseSlots.find(aSlotID);
+        if (baseSlot != s_baseSlots.end())
+        {
+            aAffected = (baseSlot.value() == HeadSlot || baseSlot.value() == FaceSlot);
+        }
     }
 }
 
