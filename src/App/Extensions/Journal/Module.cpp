@@ -29,8 +29,8 @@ bool App::JournalModule::Load()
     if (!HookBefore<Raw::JournalRootFolderEntry::Initialize>(&JournalModule::OnInitializeRoot))
         throw std::runtime_error("Failed to hook [JournalRootFolderEntry::Initialize].");
 
-    if (!HookAfter<Raw::MappinSystem::OnStreamingWorldLoaded>(&JournalModule::OnMappinDataLoaded))
-        throw std::runtime_error("Failed to hook [MappinSystem::OnStreamingWorldLoaded].");
+    // if (!HookAfter<Raw::MappinSystem::OnStreamingWorldLoaded>(&JournalModule::OnMappinDataLoaded))
+    //     throw std::runtime_error("Failed to hook [MappinSystem::OnStreamingWorldLoaded].");
 
     // if (!Hook<Raw::MappinSystem::GetMappinData>(&JournalModule::OnGetMappinData))
     //     throw std::runtime_error("Failed to hook [MappinSystem::GetMappinData].");
@@ -45,7 +45,7 @@ bool App::JournalModule::Unload()
 {
     Unhook<Raw::JournalTree::ProcessJournalIndex>();
     Unhook<Raw::JournalRootFolderEntry::Initialize>();
-    Unhook<Raw::MappinSystem::OnStreamingWorldLoaded>();
+    // Unhook<Raw::MappinSystem::OnStreamingWorldLoaded>();
     // Unhook<Raw::MappinSystem::GetMappinData>();
     // Unhook<Raw::MappinSystem::GetPoiData>();
 

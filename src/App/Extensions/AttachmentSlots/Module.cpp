@@ -139,9 +139,9 @@ bool App::AttachmentSlotsModule::OnSlotSpawningCheck(Red::game::AttachmentSlots*
 
     if (!result)
     {
-#ifndef NDEBUG
-        LogDebug("|{}| [event=SlotSpawningCheck]", ModuleName);
-#endif
+// #ifndef NDEBUG
+//         LogDebug("|{}| [event=SlotSpawningCheck]", ModuleName);
+// #endif
 
         std::shared_lock _(s_slotsMutex);
         const auto& subSlots = s_extraSlots.find(aSlotID);

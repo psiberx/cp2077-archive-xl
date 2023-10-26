@@ -272,7 +272,7 @@ def patterns():
 #             ]),
             Group(name="TweakDB", functions=[
                 Item(name="Load",
-                     pattern="48 89 5C 24 10 48 89 7C 24 18 55 48 8B EC 48 83 EC ? 48 8B F9 48 8B DA 48 8B 0D ? ? ? ? 48 8B 01 FF 90"),
+                     pattern="48 89 5C 24 ? 48 89 7C 24 ? 55 48 8B EC 48 ? EC ? ? ? ? 48 8B F9 48 8B DA 48 8B 0D"),
             ]),
         ]),
     ]
