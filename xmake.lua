@@ -1,7 +1,7 @@
 set_xmakever("2.5.9")
 
 set_project("ArchiveXL")
-set_version("1.8.0", {build = "%y%m%d%H%M"})
+set_version("1.8.1", {build = "%y%m%d%H%M"})
 
 set_arch("x64")
 set_languages("cxx20", "cxx2a")
@@ -36,7 +36,7 @@ target("ArchiveXL")
     set_kind("shared")
     set_filename("ArchiveXL.dll")
     set_pcxxheader("src/pch.hpp")
-    add_files("src/**.cpp", "src/**.rc", "lib/**.cpp")
+    add_files("src/**.cpp", "src/**.rc", "src/**.asm", "lib/**.cpp")
     add_headerfiles("src/**.hpp", "lib/**.hpp")
     add_includedirs("src/", "lib/")
     add_deps("RED4ext.SDK", "nameof", "semver", "wil")

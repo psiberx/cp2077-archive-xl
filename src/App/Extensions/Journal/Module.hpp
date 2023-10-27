@@ -28,29 +28,29 @@ private:
 
     void OnLoadJournal(uintptr_t a1, Red::JobGroup& aJobGroup);
     void OnInitializeRoot(Red::game::JournalRootFolderEntry* aRoot, uintptr_t, uintptr_t, Red::JobQueue& aJobQueue);
-    void OnMappinDataLoaded(void* aMappinSystem, Red::worldRuntimeScene*);
-    // void* OnGetMappinData(void* aMappinSystem, uint32_t aHash);
-    // void* OnGetPoiData(void* aMappinSystem, uint32_t aHash);
+    static void OnMappinDataLoaded(void* aMappinSystem, Red::worldRuntimeScene*);
+    static void* OnGetMappinData(void* aMappinSystem, uint32_t aHash);
+    static void* OnGetPoiData(void* aMappinSystem, uint32_t aHash);
 
-    EntrySearchResult FindEntry(Red::game::JournalEntry* aParent, Red::CString& aPath);
-    bool MergeEntries(Red::game::JournalContainerEntry* aTarget, Red::game::JournalContainerEntry* aSource,
+    static EntrySearchResult FindEntry(Red::game::JournalEntry* aParent, Red::CString& aPath);
+    static bool MergeEntries(Red::game::JournalContainerEntry* aTarget, Red::game::JournalContainerEntry* aSource,
                       const std::string& aPath = "");
-    bool MergeEntry(Red::game::JournalEntry* aTarget, Red::game::JournalEntry* aSource,
+    static bool MergeEntry(Red::game::JournalEntry* aTarget, Red::game::JournalEntry* aSource,
                     const std::string& aPath, bool aEditProps = false);
-    void ProcessNewEntries(Red::game::JournalEntry* aEntry, const std::string& aPath, bool aRecursive);
-    void ConvertLocKeys(Red::game::JournalEntry* aEntry);
-    void CollectMappin(Red::game::JournalEntry* aEntry, const std::string& aPath);
-    static bool ResolveMappinPosition(uint32_t aHash, const JournalMappin& aMappin, Red::Vector3& aResult);
-    void ResetResourceData();
-    void ResetRuntimeData();
-    void ReloadJournal();
+    static void ProcessNewEntries(Red::game::JournalEntry* aEntry, const std::string& aPath, bool aRecursive);
+    static void ConvertLocKeys(Red::game::JournalEntry* aEntry);
+    static void CollectMappin(Red::game::JournalEntry* aEntry, const std::string& aPath);
+    static bool ResolveMappinPosition(uint32_t aJournalHash, const JournalMappin& aMappin, Red::Vector3& aResult);
+    static void ResetResourceData();
+    static void ResetRuntimeData();
+    static void ReloadJournal();
 
     static std::string MakePath(const std::string& aPath, const std::string& aStep);
     static uint32_t CalculateJournalHash(const std::string& aPath);
 
-    Core::Vector<Red::SharedPtr<Red::ResourceToken<Red::game::JournalResource>>> m_resources;
-    Core::Map<Red::ResourcePath, std::string> m_paths;
-    Core::Map<uint32_t, JournalMappin> m_mappins;
-    std::shared_mutex m_mappinsLock;
+    inline static Core::Vector<Red::SharedPtr<Red::ResourceToken<Red::game::JournalResource>>> s_resources;
+    inline static Core::Map<Red::ResourcePath, std::string> s_paths;
+    inline static Core::Map<uint32_t, JournalMappin> s_mappins;
+    inline static std::shared_mutex s_mappinsLock;
 };
 }
