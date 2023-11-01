@@ -468,6 +468,25 @@ inline void RegisterPendingTypes()
     CRTTISystem::Get()->GetType("Int32");
 }
 
+template<typename T, typename U = ISerializable>
+inline const Handle<T>& Cast(const Handle<U>& aObject)
+{
+    static const Handle<T> s_null;
+    return aObject->GetType()->IsA(Red::GetClass<T>()) ? *reinterpret_cast<const Handle<T>*>(&aObject) : s_null;
+}
+
+template<typename T>
+inline bool IsInstanceOf(CClass* aType)
+{
+    return aType->IsA(Red::GetClass<T>());
+}
+
+template<typename T>
+inline bool IsInstanceOf(ISerializable* aObject)
+{
+    return aObject->GetType()->IsA(Red::GetClass<T>());
+}
+
 inline bool IsCompatible(CBaseRTTIType* aLhsType, CBaseRTTIType* aRhsType)
 {
     if (aLhsType != aRhsType)

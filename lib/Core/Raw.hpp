@@ -94,7 +94,7 @@ public:
 
     constexpr RawVFunc() = default;
 
-    R operator()(C* aContext, Args&&... aArgs) const
+    R operator()(C* aContext, Args... aArgs) const
     {
         auto vft = *reinterpret_cast<uintptr_t*>(aContext);
         auto callable = *reinterpret_cast<Callable*>(vft + offset);

@@ -29,6 +29,15 @@ struct std::hash<RED4ext::ResourcePath>
     }
 };
 
+template<>
+struct std::hash<RED4ext::NodeRef>
+{
+    std::size_t operator()(RED4ext::NodeRef aKey) const
+    {
+        return aKey.hash;
+    }
+};
+
 template<typename T>
 requires std::is_class_v<T> && std::is_convertible_v<T, size_t> && Red::Detail::HasGeneratedTypeName<T>
 struct std::hash<T>

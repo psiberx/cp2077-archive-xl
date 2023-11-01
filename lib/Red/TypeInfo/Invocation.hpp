@@ -139,12 +139,14 @@ inline bool CallFunctionWithArgs(Red::CStackFrame* aFrame, CBaseFunction* aFunc,
                 const auto& param = aFunc->params[i];
                 const auto& arg = stack.args[i];
 
-                if (!arg.value && !param->flags.isOptional)
+                if (arg.value)
                 {
-                    return false;
+                    if (!IsCompatible(param->type, arg.type, arg.value))
+                    {
+                        return false;
+                    }
                 }
-
-                if (!IsCompatible(param->type, arg.type, arg.value))
+                else if (!param->flags.isOptional)
                 {
                     return false;
                 }
