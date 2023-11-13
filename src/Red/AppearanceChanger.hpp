@@ -80,6 +80,15 @@ constexpr auto ComputePlayerGarment = Core::RawFunc<
                           uintptr_t a6,
                           uintptr_t a7,
                           bool a8)>();
+
+constexpr auto SelectAppearanceName = Core::RawFunc<
+    /* addr = */ Red::Addresses::AppearanceChanger_SelectAppearanceName,
+    /* type = */ void* (*)(Red::CName* aOut,
+                           const Red::Handle<Red::TweakDBRecord>& aItemRecord,
+                           const Red::ItemID& aItemID,
+                           const Red::Handle<Red::AppearanceResource>& aAppearanceResource,
+                           uint64_t a5,
+                           Red::CName aAppearanceName)>();
 }
 
 namespace Raw::ItemFactoryRequest

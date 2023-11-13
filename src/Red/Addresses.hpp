@@ -17,6 +17,7 @@ constexpr uintptr_t AppearanceChanger_ComputePlayerGarment = 0x14046590C - Image
 constexpr uintptr_t AppearanceChanger_GetBaseMeshOffset = 0x1404E5404 - ImageBase; // 48 8B C4 48 89 58 ? 48 89 70 ? 48 89 78 ? 55 41 56 41 57 48 8D 68 ? 48 81 EC ? ? ? ? 48 8D 05 ? ? ? ? 4C 8B FA 48 8B 11 48 89 45 ?, expected: 1, index: 0
 constexpr uintptr_t AppearanceChanger_GetSuffixValue = 0x14040D438 - ImageBase; // 48 89 5C 24 ? 4C 89 4C 24 ? 55 56 57 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 40 32 F6, expected: 1, index: 0
 constexpr uintptr_t AppearanceChanger_RegisterPart = 0x140A452B0 - ImageBase; // 48 8B C4 48 89 58 ? 48 89 70 ? 48 89 78 ? 4C 89 70 ? 41 57 48 83 EC ? 48 8D 99 ? ? ? ? 48 8B F9 48 8B CB 4D 8B F1 4D 8B F8  48 8B F2 E8, expected: 1, index: 0
+constexpr uintptr_t AppearanceChanger_SelectAppearanceName = 0x140A3D2E4 - ImageBase; // FIXME
 
 constexpr uintptr_t AppearanceChangeSystem_ChangeAppearance = 0x140A3F5FC - ImageBase; // 48 8B C4 48 89 58 ? 48 89 70 ? 48 89 78 ? 55 41 54 41 55 41 56 41 57 48 8D 68 ? 48 81 EC ? ? ? ? 48 8B 42 ? 4C 8B EA 4C 8B F1, expected: 1, index: 0
 

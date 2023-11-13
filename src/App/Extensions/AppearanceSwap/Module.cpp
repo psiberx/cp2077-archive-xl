@@ -24,12 +24,16 @@ bool App::AppearanceSwapModule::Load()
     if (!Hook<Raw::ItemFactoryAppearanceChangeRequest::LoadTemplate>(&OnLoadTemplate))
         throw std::runtime_error("Failed to hook [AppearanceChangeRequest::LoadTemplate].");
 
+    if (!Hook<Raw::AppearanceChanger::SelectAppearanceName>(&OnSelectAppearance))
+        throw std::runtime_error("Failed to hook [AppearanceChanger::SelectAppearanceName].");
+
     return true;
 }
 
 bool App::AppearanceSwapModule::Unload()
 {
     Unhook<Raw::ItemFactoryAppearanceChangeRequest::LoadTemplate>();
+    Unhook<Raw::AppearanceChanger::SelectAppearanceName>();
 
     return true;
 }
@@ -71,4 +75,30 @@ bool App::AppearanceSwapModule::OnLoadTemplate(Red::ItemFactoryAppearanceChangeR
     }
 
     return result;
+}
+
+void* App::AppearanceSwapModule::OnSelectAppearance(Red::CName* aOut,
+                                                    const Red::Handle<Red::TweakDBRecord>& aItemRecord,
+                                                    const Red::ItemID& aItemID,
+                                                    const Red::Handle<Red::AppearanceResource>& aAppearanceResource,
+                                                    uint64_t a5, Red::CName aAppearanceName)
+{
+    if (!aAppearanceName)
+    {
+        auto appearanceName = Red::GetFlatValue<Red::CName>({aItemRecord->recordID, ".appearanceName"});
+        if (appearanceName)
+        {
+            for (const auto& appearanceDefinition : aAppearanceResource->appearances)
+            {
+                if (appearanceDefinition->name == appearanceName)
+                {
+                    *aOut = appearanceName;
+                    return aOut;
+                }
+            }
+        }
+    }
+
+    return Raw::AppearanceChanger::SelectAppearanceName(aOut, aItemRecord, aItemID, aAppearanceResource,
+                                                        a5, aAppearanceName);
 }
