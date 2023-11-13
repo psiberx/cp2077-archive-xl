@@ -272,6 +272,11 @@ public:
         return reinterpret_cast<uintptr_t>(OffsetPtr(aBase).GetValuePtr());
     }
 
+    inline static void Set(void* aBase, const Type& aValue)
+    {
+        *OffsetPtr(aBase).GetValuePtr() = aValue;
+    }
+
     uintptr_t address;
 };
 }

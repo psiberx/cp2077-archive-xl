@@ -55,4 +55,10 @@ inline Handle<T> ToHandle(U* aInstance)
         return Handle<T>(reinterpret_cast<T*>(instance));
     }
 }
+
+template<typename T = IScriptable>
+inline Handle<T> MakeScriptedHandle(CName aTypeName)
+{
+    return Handle<T>(reinterpret_cast<T*>(GetClass(aTypeName)->CreateInstance(true)));
+}
 }

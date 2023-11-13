@@ -5,3 +5,5 @@
 #include "TypeInfo/Invocation.hpp"
 #include "TypeInfo/Registrar.hpp"
 #include "TypeInfo/Resolving.hpp"
+
+#include "TypeInfo/Mappings.hpp"

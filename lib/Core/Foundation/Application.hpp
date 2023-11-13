@@ -6,6 +6,8 @@
 
 namespace Core
 {
+using AutoDiscoveryCallback = void(*)(Application&);
+
 class Application : public Registry<Feature>
 {
 public:
@@ -18,8 +20,10 @@ public:
     void Bootstrap();
     void Shutdown();
 
+    static bool Discover(AutoDiscoveryCallback aCallback);
+
 protected:
-    void OnRegistered(const Core::SharedPtr<Feature>& aFeature) override;
+    void OnRegistered(const SharedPtr<Feature>& aFeature) override;
 
     virtual void OnStarting() {};
     virtual void OnStarted() {};
@@ -28,5 +32,7 @@ protected:
 
 private:
     bool m_booted = false;
+
+    inline static Vector<AutoDiscoveryCallback> s_discoveryCallbacks;
 };
 }
