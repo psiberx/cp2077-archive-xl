@@ -508,7 +508,7 @@ App::DynamicAppearanceController::AttributeData App::DynamicAppearanceController
 App::DynamicAppearanceController::AttributeData App::DynamicAppearanceController::GetSkinColorData(
     Red::Entity* aEntity) const
 {
-    const auto& components = Raw::Entity::ComponentsStorage(aEntity)->components;
+    const auto& components = Raw::Entity::ComponentsStorage::Ref(aEntity).components;
     for (const auto& component : components | std::views::reverse)
     {
         switch (component->name)
@@ -519,7 +519,7 @@ App::DynamicAppearanceController::AttributeData App::DynamicAppearanceController
             const auto skinColor = component.GetPtr<Red::ent::MorphTargetSkinnedMeshComponent>()->meshAppearance;
             if (skinColor)
             {
-                return {skinColor.ToString() , skinColor.ToString()};
+                return {skinColor.ToString(), skinColor.ToString()};
             }
         }
     }

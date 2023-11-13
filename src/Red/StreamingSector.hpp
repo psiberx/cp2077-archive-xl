@@ -7,8 +7,9 @@ namespace Red
 {
 struct StreamingSectorNodeBuffer
 {
-    uint8_t unk00[0x28];
-    DynArray<Handle<world::Node>> nodes; // 0x28
+    uint8_t unk00[0x28];               // 00
+    DynArray<Handle<worldNode>> nodes; // 28
+    DynArray<NodeRef> nodeRefs;        // 38
 };
 
 struct CollisionActor
@@ -24,7 +25,7 @@ using NodeBuffer = Core::OffsetPtr<0x40, Red::StreamingSectorNodeBuffer>;
 
 constexpr auto OnReady = Core::RawFunc<
     /* addr = */ Red::Addresses::StreamingSector_OnReady,
-    /* type = */ void (*)(Red::world::StreamingSector* aSector, uint64_t a2)>();
+    /* type = */ void (*)(Red::worldStreamingSector* aSector, uint64_t a2)>();
 }
 
 namespace Raw::CollisionNode

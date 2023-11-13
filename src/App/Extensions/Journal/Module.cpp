@@ -479,7 +479,7 @@ void App::JournalModule::CollectMappin(Red::game::JournalEntry* aEntry, const st
         auto hash = CalculateJournalHash(aPath);
         auto entry = reinterpret_cast<Red::gameJournalQuestMapPinBase*>(aEntry);
 
-        s_mappins.insert({hash, {0, entry->offset, false}});
+        s_mappins.insert({hash, {0ull, entry->offset, false}});
     }
     else if (entryType->IsA(s_pointOfInterestType))
     {
