@@ -47,6 +47,7 @@
 #include <RED4ext/Scripting/Natives/Generated/ent/MorphTargetSkinnedMeshComponent.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/SkinnedClothComponent.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/SkinnedMeshComponent.hpp>
+#include <RED4ext/Scripting/Natives/Generated/ent/SkinningBinding.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/SlotComponent.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/TemplateAppearance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/VisualTagsSchema.hpp>
@@ -114,8 +115,7 @@
 #include "Core/Stl.hpp"
 
 #include "Red/Alias.hpp"
-#include "Red/Framework.hpp"
-#include "Red/LogChannel.hpp"
+#include "Red/Engine.hpp"
 #include "Red/TypeInfo.hpp"
 #include "Red/Specializations.hpp"
 #include "Red/Utils.hpp"

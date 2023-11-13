@@ -6,6 +6,7 @@ namespace
 {
 constexpr auto ModuleName = "PuppetState";
 
+constexpr auto BodyTagPrefix = Red::CName("Body:");
 constexpr auto SuffixListID = Red::TweakDBID("itemsFactoryAppearanceSuffix.ItemsFactoryAppearanceSuffixOrderDefault");
 }
 
@@ -47,12 +48,15 @@ void App::PuppetStateModule::Reload()
 void App::PuppetStateModule::FillBodyTypes()
 {
     s_bodyTypes.clear();
+    s_bodyTags.clear();
 
     for (const auto& unit : m_units)
     {
-        for (const auto& bodyType : unit.bodyTypes)
+        for (const auto& bodyTypeName : unit.bodyTypes)
         {
-            s_bodyTypes.emplace(bodyType.c_str());
+            auto bodyType = Red::CNamePool::Add(bodyTypeName.c_str());
+            s_bodyTypes.emplace(bodyType);
+            s_bodyTags.emplace(Red::FNV1a64(bodyTypeName.c_str(), BodyTagPrefix), bodyType);
         }
     }
 }
@@ -154,6 +158,11 @@ App::PuppetFeetState App::PuppetStateModule::GetFeetState(const Red::WeakHandle<
 const Core::Set<Red::CName>& App::PuppetStateModule::GetBodyTypes()
 {
     return s_bodyTypes;
+}
+
+const Core::Map<Red::CName, Red::CName>& App::PuppetStateModule::GetBodyTags()
+{
+    return s_bodyTags;
 }
 
 void App::PuppetStateModule::CreateSuffixRecord(Red::TweakDBID aSuffixID, Red::CName aSystemName,

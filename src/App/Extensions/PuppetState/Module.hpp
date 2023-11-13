@@ -23,6 +23,7 @@ public:
     std::string_view GetName() override;
 
     static const Core::Set<Red::CName>& GetBodyTypes();
+    static const Core::Map<Red::CName, Red::CName>& GetBodyTags();
 
     static PuppetArmsState GetArmsState(const Red::WeakHandle<Red::GameObject>& aPuppet);
     static PuppetFeetState GetFeetState(const Red::WeakHandle<Red::GameObject>& aPuppet);
@@ -39,6 +40,7 @@ private:
     static void ActivateSuffixRecords(const Core::Vector<Red::TweakDBID>& aSuffixIDs);
 
     inline static Core::Set<Red::CName> s_bodyTypes;
+    inline static Core::Map<Red::CName, Red::CName> s_bodyTags;
     inline static Core::Map<Red::Entity*, Red::Handle<PuppetStateHandler>> s_handlers;
     static inline std::shared_mutex s_mutex;
 };

@@ -6,19 +6,57 @@ Red::CString App::PuppetStateSystem::GetBodyTypeSuffix(Red::ItemID& aItemID,
                                                        const Red::WeakHandle<Red::GameObject>& aOwner,
                                                        const Red::Handle<Red::ItemsFactoryAppearanceSuffixBase_Record>&)
 {
-    auto entityTags = Raw::Entity::Tags(aOwner.instance);
-    auto visualTags = Raw::Entity::VisualTags(aOwner.instance);
-
-    for (const auto& bodyType : PuppetStateModule::GetBodyTypes())
+    if (!aOwner)
     {
-        if (entityTags->Contains(bodyType))
-        {
-            return bodyType.ToString();
-        }
+        return BaseBodyName;
+    }
 
-        if (visualTags->Contains(bodyType))
+    const auto& bodyTags = PuppetStateModule::GetBodyTags();
+
+    if (bodyTags.empty())
+    {
+        return BaseBodyName;
+    }
+
+    const auto& entityTags = Raw::Entity::EntityTags::Ref(aOwner.instance);
+    const auto& visualTags = Raw::Entity::VisualTags::Ref(aOwner.instance);
+
+    if (!entityTags.IsEmpty() || !visualTags.IsEmpty())
+    {
+        for (const auto& [bodyTag, bodyType] : bodyTags)
         {
-            return bodyType.ToString();
+            if (entityTags.Contains(bodyTag))
+            {
+                return bodyType.ToString();
+            }
+
+            if (visualTags.Contains(bodyTag))
+            {
+                return bodyType.ToString();
+            }
+        }
+    }
+
+    const auto& components = Raw::Entity::ComponentsStorage::Ref(aOwner.instance).components;
+
+    for (const auto& component : components | std::views::reverse)
+    {
+        const auto& morphTarget = Red::Cast<Red::entMorphTargetSkinnedMeshComponent>(component);
+
+        for (const auto& [bodyTag, bodyType] : bodyTags)
+        {
+            if (component->name == bodyTag)
+            {
+                return bodyType.ToString();
+            }
+
+            if (morphTarget)
+            {
+                if (morphTarget->tags.Contains(bodyTag))
+                {
+                    return bodyType.ToString();
+                }
+            }
         }
     }
 
