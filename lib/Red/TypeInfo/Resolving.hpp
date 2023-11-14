@@ -469,6 +469,14 @@ inline void RegisterPendingTypes()
 }
 
 template<typename T, typename U = ISerializable>
+inline T* Cast(U* aObject)
+{
+    return (aObject && aObject->GetType()->IsA(Red::GetClass<T>()))
+               ? reinterpret_cast<T*>(aObject)
+               : nullptr;
+}
+
+template<typename T, typename U = ISerializable>
 inline const Handle<T>& Cast(const Handle<U>& aObject)
 {
     static const Handle<T> s_null;
