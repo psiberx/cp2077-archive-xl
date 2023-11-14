@@ -22,7 +22,6 @@
 #include <RED4ext/JobQueue.hpp>
 #include <RED4ext/ResourceDepot.hpp>
 #include <RED4ext/ResourceLoader.hpp>
-#include <RED4ext/Scripting/Natives/ScriptGameInstance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/CMaterialInstance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/CMesh.hpp>
 #include <RED4ext/Scripting/Natives/Generated/IRenderResourceBlob.hpp>
@@ -30,6 +29,7 @@
 #include <RED4ext/Scripting/Natives/Generated/JsonResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/MaterialParameterInstance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/MorphTargetMesh.hpp>
+#include <RED4ext/Scripting/Natives/Generated/Transform.hpp>
 #include <RED4ext/Scripting/Natives/Generated/anim/LipsyncMapping.hpp>
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearanceDefinition.hpp>
 #include <RED4ext/Scripting/Natives/Generated/appearance/AppearancePartOverrides.hpp>
@@ -97,6 +97,7 @@
 #include <RED4ext/Scripting/Natives/Generated/mesh/MeshAppearance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/mesh/MeshParameter.hpp>
 #include <RED4ext/Scripting/Natives/Generated/red/TagList.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/AudioTagNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/CollisionNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/GlobalNodeID.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/GlobalNodeRef.hpp>
@@ -105,6 +106,7 @@
 #include <RED4ext/Scripting/Natives/Generated/world/StreamingBlock.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/StreamingSector.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/StreamingWorld.hpp>
+#include <RED4ext/Scripting/Natives/ScriptGameInstance.hpp>
 
 #include <nameof.hpp>
 #include <semver.hpp>

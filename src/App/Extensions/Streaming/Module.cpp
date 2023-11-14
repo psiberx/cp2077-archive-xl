@@ -6,6 +6,8 @@ constexpr auto ModuleName = "Streaming";
 
 constexpr auto MainWorldResource = Red::ResourcePath(R"(base\worlds\03_night_city\_compiled\default\03_night_city.streamingworld)");
 constexpr auto CollisionNodeType = Red::GetTypeName<Red::world::CollisionNode>();
+
+Red::Handle<Red::worldAudioTagNode> s_dummyNode;
 }
 
 std::string_view App::StreamingModule::GetName()
@@ -18,10 +20,14 @@ bool App::StreamingModule::Load()
     if (!HookAfter<Raw::StreamingWorld::OnLoad>(&StreamingModule::OnWorldLoad))
         throw std::runtime_error("Failed to hook [StreamingWorld::OnLoad].");
 
-    if (!HookBefore<Raw::StreamingSector::OnReady>(&OnSectorReady))
+    if (!HookAfter<Raw::StreamingSector::OnReady>(&OnSectorReady))
         throw std::runtime_error("Failed to hook [StreamingSector::OnReady].");
 
     PrepareSectors();
+
+    s_dummyNode = Red::MakeHandle<Red::worldAudioTagNode>();
+    s_dummyNode->isVisibleInGame = false;
+    s_dummyNode->radius = 0.00001;
 
     return true;
 }
@@ -162,70 +168,79 @@ void App::StreamingModule::OnWorldLoad(Red::world::StreamingWorld* aWorld, Red::
 void App::StreamingModule::OnSectorReady(Red::world::StreamingSector* aSector, uint64_t)
 {
     const auto& sectorMods = s_sectors.find(aSector->path);
-    if (sectorMods != s_sectors.end())
+
+    if (sectorMods == s_sectors.end())
+        return;
+
+    LogInfo("|{}| Patching sector \"{}\"...", ModuleName, sectorMods.value().begin()->path);
+
+    for (const auto& sectorMod : sectorMods.value())
     {
-        auto& buffer = Raw::StreamingSector::NodeBuffer::Ref(aSector);
-
-        LogInfo("|{}| Patching \"{}\"...", ModuleName, sectorMods.value().begin()->path);
-
-        for (const auto& sectorMod : sectorMods.value())
+        if (PatchSector(aSector, sectorMod))
         {
-            auto isValidSector = true;
+            LogInfo(R"(|{}| Sector "{}" patched with "{}".)", ModuleName, sectorMod.path, sectorMod.mod);
+        }
+        else
+        {
+            LogWarning(R"(|{}| Sector "{}" can't be patched with "{}".)", ModuleName, sectorMod.path, sectorMod.mod);
+        }
+    }
+}
 
-            if (buffer.nodes.size != sectorMod.expectedNodes)
+bool App::StreamingModule::PatchSector(Red::world::StreamingSector* aSector, const App::StreamingSectorMod& aSectorMod)
+{
+    auto& buffer = Raw::StreamingSector::NodeBuffer::Ref(aSector);
+
+    if (buffer.nodeSetups.GetInstanceCount() != aSectorMod.expectedNodes)
+    {
+        return false;
+    }
+
+    for (const auto& nodeDeletion : aSectorMod.nodeDeletions)
+    {
+        auto nodeInstance = buffer.nodeSetups.GetInstance(nodeDeletion.nodeIndex);
+
+        if (nodeDeletion.nodeType != nodeInstance->node->GetNativeType()->name)
+        {
+            return false;
+        }
+
+        if (nodeDeletion.nodeType == CollisionNodeType && !nodeDeletion.subNodeDeletions.empty())
+        {
+            auto& actors = Raw::CollisionNode::Actors::Ref(nodeInstance->node);
+            if (actors.GetSize() != nodeDeletion.expectedSubNodes)
             {
-                isValidSector = false;
-            }
-            else
-            {
-                for (const auto& nodeDeletion : sectorMod.nodeDeletions)
-                {
-                    auto& node = buffer.nodes[nodeDeletion.nodeIndex];
-
-                    if (nodeDeletion.nodeType != node->GetNativeType()->name)
-                    {
-                        isValidSector = false;
-                        break;
-                    }
-
-                    if (nodeDeletion.nodeType == CollisionNodeType && !nodeDeletion.subNodeDeletions.empty())
-                    {
-                        auto& actors = Raw::CollisionNode::Actors::Ref(node);
-                        if (actors.GetSize() != nodeDeletion.expectedSubNodes)
-                        {
-                            isValidSector = false;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (isValidSector)
-            {
-                for (const auto& nodeDeletion : sectorMod.nodeDeletions)
-                {
-                    auto& node = buffer.nodes[nodeDeletion.nodeIndex];
-
-                    if (nodeDeletion.nodeType == CollisionNodeType && !nodeDeletion.subNodeDeletions.empty())
-                    {
-                        auto& actors = Raw::CollisionNode::Actors::Ref(node);
-                        for (const auto& subNodeIndex : nodeDeletion.subNodeDeletions)
-                        {
-                            constexpr auto DelZ = static_cast<int32_t>(-2000 * (2 << 16));
-                            actors.ptr[subNodeIndex].transform.Position.z.Bits = DelZ;
-                        }
-                        continue;
-                    }
-
-                    node->isVisibleInGame = false;
-                }
-
-                LogInfo("|{}| Sector \"{}\" patched with \"{}\".", ModuleName, sectorMod.path, sectorMod.mod);
-            }
-            else
-            {
-                LogWarning("|{}| Sector \"{}\" patching failed for \"{}\".", ModuleName, sectorMod.path, sectorMod.mod);
+                return false;
             }
         }
     }
+
+    for (const auto& nodeDeletion : aSectorMod.nodeDeletions)
+    {
+        auto nodeInstance = buffer.nodeSetups.GetInstance(nodeDeletion.nodeIndex);
+
+        if (nodeDeletion.nodeType == CollisionNodeType)
+        {
+            if (!nodeDeletion.subNodeDeletions.empty())
+            {
+                auto& actors = Raw::CollisionNode::Actors::Ref(nodeInstance->node);
+                for (const auto& subNodeIndex : nodeDeletion.subNodeDeletions)
+                {
+                    constexpr auto DelZ = static_cast<int32_t>(-2000 * (2 << 16));
+                    actors.ptr[subNodeIndex].transform.Position.z.Bits = DelZ;
+                }
+                continue;
+            }
+        }
+
+        nodeInstance->transform.position.Z = -2000;
+        nodeInstance->scale.X = 0;
+        nodeInstance->scale.Y = 0;
+        nodeInstance->scale.Z = 0;
+
+        nodeInstance->node->isVisibleInGame = false;
+        nodeInstance->node = s_dummyNode.instance;
+    }
+
+    return true;
 }

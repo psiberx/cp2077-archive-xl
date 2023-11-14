@@ -21,6 +21,7 @@ private:
     void PrepareSectors();
     void OnWorldLoad(Red::world::StreamingWorld* aWorld, Red::BaseStream* aStream);
     static void OnSectorReady(Red::world::StreamingSector* aSector, uint64_t);
+    static bool PatchSector(Red::world::StreamingSector* aSector, const StreamingSectorMod& aSectorMod);
 
     inline static Core::Map<Red::ResourcePath, Core::Vector<StreamingSectorMod>> s_sectors;
 };

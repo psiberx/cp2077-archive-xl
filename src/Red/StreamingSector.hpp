@@ -3,8 +3,6 @@
 #include "Red/Addresses.hpp"
 #include "Red/Common.hpp"
 
-#include <RED4ext/Scripting/Natives/Generated/Transform.hpp>
-
 namespace Red
 {
 struct __declspec(align(0x10)) CompiledNodeInstanceSetupInfo
@@ -44,6 +42,16 @@ struct CompiledNodeInstanceSetupInfoBuffer : DataBuffer
         return reinterpret_cast<CompiledNodeInstanceSetupInfo*>(reinterpret_cast<uintptr_t>(buffer.data) +
                                                                 buffer.size);
     }
+
+    CompiledNodeInstanceSetupInfo* GetInstance(int64_t aIndex)
+    {
+        return begin() + aIndex;
+    }
+
+    uint32_t GetInstanceCount()
+    {
+        return buffer.size / sizeof(CompiledNodeInstanceSetupInfo);
+    }
 };
 RED4EXT_ASSERT_SIZE(CompiledNodeInstanceSetupInfoBuffer, 0x28);
 
@@ -55,6 +63,12 @@ struct StreamingSectorNodeBuffer
 };
 RED4EXT_ASSERT_OFFSET(StreamingSectorNodeBuffer, nodes, 0x28);
 RED4EXT_ASSERT_OFFSET(StreamingSectorNodeBuffer, nodeRefs, 0x38);
+
+struct CollisionActor
+{
+    WorldTransform transform;
+    uint64_t unk20;
+};
 }
 
 namespace Raw::StreamingSector
