@@ -3,7 +3,7 @@
 namespace Red
 {
 template<typename T>
-struct SomeIterator
+struct Range
 {
     constexpr operator bool() const noexcept
     {
@@ -28,7 +28,7 @@ struct SomeIterator
     T* ptr; // 00
     T* end; // 08
 };
-RED4EXT_ASSERT_SIZE(SomeIterator<int32_t>, 0x10);
-RED4EXT_ASSERT_OFFSET(SomeIterator<int32_t>, ptr, 0x0);
-RED4EXT_ASSERT_OFFSET(SomeIterator<int32_t>, end, 0x8);
+RED4EXT_ASSERT_SIZE(Range<int32_t>, 0x10);
+RED4EXT_ASSERT_OFFSET(Range<int32_t>, ptr, 0x0);
+RED4EXT_ASSERT_OFFSET(Range<int32_t>, end, 0x8);
 }

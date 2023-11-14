@@ -133,8 +133,8 @@ constexpr auto ChangeAppearance = Core::RawFunc<
     /* addr = */ Red::Addresses::AppearanceChangeSystem_ChangeAppearance,
     /* type = */ void (*)(Red::world::RuntimeSystemEntityAppearanceChanger& aSystem,
                           Red::Handle<Red::game::Puppet>& aTarget,
-                          Red::SomeIterator<Red::AppearanceDescriptor>& aOldApp,
-                          Red::SomeIterator<Red::AppearanceDescriptor>& aNewApp,
+                          Red::Range<Red::AppearanceDescriptor>& aOldApp,
+                          Red::Range<Red::AppearanceDescriptor>& aNewApp,
                           uintptr_t a5,
                           uint8_t a6)>();
 }

@@ -499,8 +499,8 @@ void App::CustomizationModule::OnInitSwitcherOption(App::CustomizationSystem& aS
 
 void App::CustomizationModule::OnChangeAppearance(App::AppearanceChangerSystem& aSystem,
                                                   App::CustomizationPuppet& aPuppet,
-                                                  Red::SomeIterator<Red::AppearanceDescriptor>& aOldApp,
-                                                  Red::SomeIterator<Red::AppearanceDescriptor>& aNewApp,
+                                                  Red::Range<Red::AppearanceDescriptor>& aOldApp,
+                                                  Red::Range<Red::AppearanceDescriptor>& aNewApp,
                                                   uintptr_t a5,
                                                   uint8_t a6)
 {
