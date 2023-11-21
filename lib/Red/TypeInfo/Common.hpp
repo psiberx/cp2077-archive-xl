@@ -152,4 +152,8 @@ struct Specialization<G<A, V>> : public std::true_type
 template<typename T>
 concept IsSpecialization = Specialization<T>::value;
 }
+
+template<typename T, typename U = std::remove_cvref_t<T>>
+concept IsArray = Detail::Specialization<U>::value
+    && std::is_same_v<U, DynArray<typename Detail::Specialization<U>::argument_type>>;
 }

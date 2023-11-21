@@ -18,7 +18,12 @@ inline void WaitForJob(JobHandle& aJob, const W& aTimeout)
 
     cv.wait_for(lock, aTimeout);
 
-    if (!lock.owns_lock())
+    if (lock)
+    {
+        cv.wait_for(lock, aTimeout);
+    }
+
+    if (!lock || !lock.owns_lock())
     {
         mutex.unlock();
     }
