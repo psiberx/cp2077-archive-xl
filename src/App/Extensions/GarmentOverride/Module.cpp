@@ -503,18 +503,18 @@ void App::GarmentOverrideModule::OnProcessGarmentMesh(Red::GarmentProcessor* aPr
 int64_t App::GarmentOverrideModule::OnGetBaseMeshOffset(Red::Handle<Red::IComponent>& aComponent,
                                                         Red::Handle<Red::EntityTemplate>& aTemplate)
 {
+    auto offset = Raw::AppearanceChanger::GetBaseMeshOffset(aComponent, aTemplate);
+
     if (s_garmentOffsetsEnabled)
     {
-        if (!aTemplate || !aTemplate->visualTagsSchema || !aTemplate->visualTagsSchema->visualTags.Contains(BodyPartTag))
-        {
+        offset %= 1000;
+
 #ifndef NDEBUG
-            LogDebug("|{}| [event=GetBaseMeshOffset comp={} offset=0]", ModuleName, aComponent->name.ToString());
+        LogDebug("|{}| [event=GetBaseMeshOffset comp={} offset={}]", ModuleName, aComponent->name.ToString(), offset);
 #endif
-            return 0;
-        }
     }
 
-    return Raw::AppearanceChanger::GetBaseMeshOffset(aComponent, aTemplate);
+    return offset;
 }
 
 void App::GarmentOverrideModule::OnComputeGarment(uintptr_t, Red::Handle<Red::Entity>& aEntity,
