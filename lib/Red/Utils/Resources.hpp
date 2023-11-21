@@ -76,7 +76,7 @@ inline void WaitForResource(const R& aResource, const W& aTimeout)
             cv.notify_all();
         });
 
-        if (lock)
+        if (lock.owns_lock())
         {
             cv.wait_for(lock, aTimeout);
         }
@@ -109,7 +109,7 @@ inline void WaitForResources(const V<R, A...>& aResources, const W& aTimeout)
             cv.notify_all();
         });
 
-        if (lock)
+        if (lock.owns_lock())
         {
             cv.wait_for(lock, aTimeout);
         }

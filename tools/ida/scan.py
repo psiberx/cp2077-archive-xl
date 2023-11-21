@@ -22,7 +22,9 @@ def patterns():
                 Item(name="GetSuffixValue",
                      pattern="48 89 5C 24 ? 4C 89 4C 24 ? 55 56 57 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 40 32 F6"),
                 Item(name="RegisterPart",
-                     pattern="48 8B C4 48 89 58 ? 48 89 70 ? 48 89 78 ? 4C 89 70 ? 41 57 48 83 EC ? 48 8D 99 ? ? ? ? 48 8B F9 48 8B CB 4D 8B F1 4D 8B F8  48 8B F2 E8"),
+                     pattern="48 8B C4 48 89 58 ? 48 89 70 ? 48 89 78 ? 4C 89 70 ? 41 57 48 83 EC ? 48 8D 99 ? ? ? ? 48 8B F9 48 8B CB 4D 8B F1 4D 8B F8 48 8B F2 E8"),
+                Item(name="SelectAppearanceName",
+                     pattern="48 89 5C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 55 41 56 41 57 48 8B EC 48 83 EC ? 48 83 21 00 4D 8B F8 4C 8B 45 ? 49 8B F1 48 8B DA"),
             ]),
             Group(name="AppearanceChangeSystem", functions=[
                 Item(name="ChangeAppearance",
@@ -227,6 +229,10 @@ def patterns():
             Group(name="MeshAppearance", functions=[
                 Item(name="LoadMaterialSetupAsync",
                      pattern="48 89 5C 24 ? 55 56 57 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 65 48 8B 04 25 ? ? ? ? 48 8B D9 B9 ? ? ? ? 0F 57 C0"),
+            ]),
+            Group(name="QuestLoader", functions=[
+                Item(name="ProcessPhaseResource",
+                     pattern="48 89 5C 24 ? 48 89 74 24 ? 48 89 54 24 ? 55 57 41 56 48 8B EC 48 83 EC ? 48 8D 59 ? 48 8B F9 48 8B CB 4D 8B F0 E8"),
             ]),
             Group(name="ResourceDepot", functions=[
                 Item(name="InitializeArchives",

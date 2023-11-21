@@ -86,6 +86,9 @@
 #include <RED4ext/Scripting/Natives/Generated/game/ui/MorphInfo.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/OptionsGroup.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/SwitcherInfo.hpp>
+#include <RED4ext/Scripting/Natives/Generated/graph/GraphConnectionDefinition.hpp>
+#include <RED4ext/Scripting/Natives/Generated/graph/GraphDefinition.hpp>
+#include <RED4ext/Scripting/Natives/Generated/graph/GraphSocketDefinition.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/IWidgetController.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/Widget.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/WidgetLibraryItemInstance.hpp>
@@ -96,6 +99,11 @@
 #include <RED4ext/Scripting/Natives/Generated/localization/PersistenceSubtitleMap.hpp>
 #include <RED4ext/Scripting/Natives/Generated/mesh/MeshAppearance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/mesh/MeshParameter.hpp>
+#include <RED4ext/Scripting/Natives/Generated/quest/GraphDefinition.hpp>
+#include <RED4ext/Scripting/Natives/Generated/quest/PhaseNodeDefinition.hpp>
+#include <RED4ext/Scripting/Natives/Generated/quest/QuestPhaseResource.hpp>
+#include <RED4ext/Scripting/Natives/Generated/quest/SocketDefinition.hpp>
+#include <RED4ext/Scripting/Natives/Generated/quest/SocketType.hpp>
 #include <RED4ext/Scripting/Natives/Generated/red/TagList.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/AudioTagNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/CollisionNode.hpp>

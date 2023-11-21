@@ -178,11 +178,11 @@ void App::WorldStreamingModule::OnSectorReady(Red::world::StreamingSector* aSect
     {
         if (PatchSector(aSector, sectorMod))
         {
-            LogInfo(R"(|{}| Sector "{}" patched with "{}".)", ModuleName, sectorMod.path, sectorMod.mod);
+            LogInfo(R"(|{}| Sector "{}" patched by "{}".)", ModuleName, sectorMod.path, sectorMod.mod);
         }
         else
         {
-            LogWarning(R"(|{}| Sector "{}" can't be patched with "{}".)", ModuleName, sectorMod.path, sectorMod.mod);
+            LogWarning(R"(|{}| Sector "{}" can't be patched by "{}".)", ModuleName, sectorMod.path, sectorMod.mod);
         }
     }
 }
