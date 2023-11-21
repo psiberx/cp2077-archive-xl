@@ -12,7 +12,7 @@ struct WorldNodeDeletion
     Core::Vector<int64_t> subNodeDeletions;
 };
 
-struct StreamingSectorMod
+struct WorldSectorMod
 {
     std::string mod;
     std::string path;
@@ -20,7 +20,7 @@ struct StreamingSectorMod
     Core::Vector<WorldNodeDeletion> nodeDeletions;
 };
 
-struct StreamingUnit : ConfigurableUnit
+struct WorldStreamingUnit : ConfigurableUnit
 {
     using ConfigurableUnit::ConfigurableUnit;
 
@@ -29,6 +29,6 @@ struct StreamingUnit : ConfigurableUnit
     bool ParseSubDeletions(const YAML::Node& aNode, WorldNodeDeletion& aDeletionData);
 
     Core::Vector<std::string> blocks;
-    Core::Vector<StreamingSectorMod> sectors;
+    Core::Vector<WorldSectorMod> sectors;
 };
 }

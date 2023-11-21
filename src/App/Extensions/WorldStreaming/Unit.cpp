@@ -1,12 +1,12 @@
 #include "Unit.hpp"
 #include "App/Utils/Num.hpp"
 
-bool App::StreamingUnit::IsDefined()
+bool App::WorldStreamingUnit::IsDefined()
 {
     return !blocks.empty() || !sectors.empty();
 }
 
-void App::StreamingUnit::LoadYAML(const YAML::Node& aNode)
+void App::WorldStreamingUnit::LoadYAML(const YAML::Node& aNode)
 {
     const auto& streamingNode = aNode["streaming"];
 
@@ -49,7 +49,7 @@ void App::StreamingUnit::LoadYAML(const YAML::Node& aNode)
                     continue;
                 }
 
-                StreamingSectorMod sectorData{};
+                WorldSectorMod sectorData{};
                 sectorData.mod = name;
                 sectorData.path = pathNode.Scalar();
 
@@ -102,7 +102,7 @@ void App::StreamingUnit::LoadYAML(const YAML::Node& aNode)
     }
 }
 
-bool App::StreamingUnit::ParseSubDeletions(const YAML::Node& aNode, WorldNodeDeletion& aDeletionData)
+bool App::WorldStreamingUnit::ParseSubDeletions(const YAML::Node& aNode, WorldNodeDeletion& aDeletionData)
 {
     const auto& subDeletionsNode = aNode["actorDeletions"];
 

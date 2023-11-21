@@ -9,7 +9,7 @@
 #include "App/Extensions/Localization/Module.hpp"
 #include "App/Extensions/GarmentOverride/Module.hpp"
 #include "App/Extensions/PuppetState/Module.hpp"
-#include "App/Extensions/Streaming/Module.hpp"
+#include "App/Extensions/WorldStreaming/Module.hpp"
 #include "Red/GameApplication.hpp"
 #include "Red/GameEngine.hpp"
 #include "Red/ResourceLoader.hpp"
@@ -28,7 +28,7 @@ void App::ExtensionService::OnBootstrap()
     m_loader->Add<LocalizationModule>();
     m_loader->Add<GarmentOverrideModule>();
     m_loader->Add<PuppetStateModule>();
-    m_loader->Add<StreamingModule>();
+    m_loader->Add<WorldStreamingModule>();
 
     HookOnceAfter<Raw::GameApplication::InitResourceDepot>([&]() {
         m_loader->Configure();

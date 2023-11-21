@@ -118,6 +118,6 @@
 
 #include "Red/Alias.hpp"
 #include "Red/Engine.hpp"
-#include "Red/TypeInfo.hpp"
 #include "Red/Specializations.hpp"
+#include "Red/TypeInfo.hpp"
 #include "Red/Utils.hpp"

@@ -2,7 +2,7 @@
 
 namespace
 {
-constexpr auto ModuleName = "Streaming";
+constexpr auto ModuleName = "WorldStreaming";
 
 constexpr auto MainWorldResource = Red::ResourcePath(R"(base\worlds\03_night_city\_compiled\default\03_night_city.streamingworld)");
 constexpr auto CollisionNodeType = Red::GetTypeName<Red::world::CollisionNode>();
@@ -10,14 +10,14 @@ constexpr auto CollisionNodeType = Red::GetTypeName<Red::world::CollisionNode>()
 Red::Handle<Red::worldAudioTagNode> s_dummyNode;
 }
 
-std::string_view App::StreamingModule::GetName()
+std::string_view App::WorldStreamingModule::GetName()
 {
     return ModuleName;
 }
 
-bool App::StreamingModule::Load()
+bool App::WorldStreamingModule::Load()
 {
-    if (!HookAfter<Raw::StreamingWorld::OnLoad>(&StreamingModule::OnWorldLoad))
+    if (!HookAfter<Raw::StreamingWorld::OnLoad>(&WorldStreamingModule::OnWorldLoad))
         throw std::runtime_error("Failed to hook [StreamingWorld::OnLoad].");
 
     if (!HookAfter<Raw::StreamingSector::OnReady>(&OnSectorReady))
@@ -32,12 +32,12 @@ bool App::StreamingModule::Load()
     return true;
 }
 
-void App::StreamingModule::Reload()
+void App::WorldStreamingModule::Reload()
 {
     PrepareSectors();
 }
 
-bool App::StreamingModule::Unload()
+bool App::WorldStreamingModule::Unload()
 {
     Unhook<Raw::StreamingWorld::OnLoad>();
     Unhook<Raw::StreamingSector::OnReady>();
@@ -45,7 +45,7 @@ bool App::StreamingModule::Unload()
     return true;
 }
 
-void App::StreamingModule::PrepareSectors()
+void App::WorldStreamingModule::PrepareSectors()
 {
     s_sectors.clear();
 
@@ -98,7 +98,7 @@ void App::StreamingModule::PrepareSectors()
     }
 }
 
-void App::StreamingModule::OnWorldLoad(Red::world::StreamingWorld* aWorld, Red::BaseStream* aStream)
+void App::WorldStreamingModule::OnWorldLoad(Red::world::StreamingWorld* aWorld, Red::BaseStream* aStream)
 {
     if (aWorld->path != MainWorldResource)
         return;
@@ -165,7 +165,7 @@ void App::StreamingModule::OnWorldLoad(Red::world::StreamingWorld* aWorld, Red::
     }
 }
 
-void App::StreamingModule::OnSectorReady(Red::world::StreamingSector* aSector, uint64_t)
+void App::WorldStreamingModule::OnSectorReady(Red::world::StreamingSector* aSector, uint64_t)
 {
     const auto& sectorMods = s_sectors.find(aSector->path);
 
@@ -187,7 +187,7 @@ void App::StreamingModule::OnSectorReady(Red::world::StreamingSector* aSector, u
     }
 }
 
-bool App::StreamingModule::PatchSector(Red::world::StreamingSector* aSector, const App::StreamingSectorMod& aSectorMod)
+bool App::WorldStreamingModule::PatchSector(Red::world::StreamingSector* aSector, const App::WorldSectorMod& aSectorMod)
 {
     auto& buffer = Raw::StreamingSector::NodeBuffer::Ref(aSector);
 
