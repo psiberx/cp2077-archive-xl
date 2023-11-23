@@ -18,7 +18,7 @@ inline void WaitForJob(JobHandle& aJob, const W& aTimeout)
 
     cv.wait_for(lock, aTimeout);
 
-    if (lock)
+    if (lock.owns_lock())
     {
         cv.wait_for(lock, aTimeout);
     }

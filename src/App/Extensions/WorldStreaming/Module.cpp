@@ -65,7 +65,8 @@ void App::WorldStreamingModule::PrepareSectors()
             {
                 if (!invalidPaths.contains(sectorPath))
                 {
-                    LogWarning("|{}| Sector \"{}\" doesn't exist. Skipped.", ModuleName, sectorMod.path);
+                    LogError("|{}| {}: Sector \"{}\" doesn't exist.",
+                             ModuleName, sectorMod.mod, sectorMod.path);
                     invalidPaths.insert(sectorPath);
                 }
                 continue;
@@ -81,8 +82,8 @@ void App::WorldStreamingModule::PrepareSectors()
 
                     if (!invalidNodeTypes.contains(nodeDeletion.nodeType))
                     {
-                        LogWarning("|{}| Node type \"{}\" doesn't exist. Skipped.", ModuleName,
-                                   nodeDeletion.nodeType.ToString());
+                        LogError("|{}| {}: Node type \"{}\" doesn't exist.",
+                                 ModuleName, sectorMod.mod, nodeDeletion.nodeType.ToString());
                         invalidNodeTypes.insert(nodeDeletion.nodeType);
                     }
                 }
@@ -172,37 +173,59 @@ void App::WorldStreamingModule::OnSectorReady(Red::world::StreamingSector* aSect
     if (sectorMods == s_sectors.end())
         return;
 
-    LogInfo("|{}| Patching sector \"{}\"...", ModuleName, sectorMods.value().begin()->path);
+    const auto& sectorPath = sectorMods.value().begin()->path;
+    auto patchedAny = false;
+    auto successAll = true;
+
+    LogInfo("|{}| Patching sector \"{}\"...", ModuleName, sectorPath);
 
     for (const auto& sectorMod : sectorMods.value())
     {
+        LogInfo("|{}| Applying changes from \"{}\"...", ModuleName, sectorMod.mod);
+
         if (PatchSector(aSector, sectorMod))
         {
-            LogInfo(R"(|{}| Sector "{}" patched by "{}".)", ModuleName, sectorMod.path, sectorMod.mod);
+            patchedAny = true;
         }
         else
         {
-            LogWarning(R"(|{}| Sector "{}" can't be patched by "{}".)", ModuleName, sectorMod.path, sectorMod.mod);
+            successAll = false;
         }
     }
+
+    if (successAll)
+        LogInfo("|{}| All patches have been applied to \"{}\".", ModuleName, sectorPath);
+    else if (patchedAny)
+        LogWarning("|{}| Some patches have not been applied to \"{}\".", ModuleName, sectorPath);
+    else
+        LogWarning("|{}| No patches have been applied to \"{}\".", ModuleName, sectorPath);
 }
 
 bool App::WorldStreamingModule::PatchSector(Red::world::StreamingSector* aSector, const App::WorldSectorMod& aSectorMod)
 {
     auto& buffer = Raw::StreamingSector::NodeBuffer::Ref(aSector);
+    auto nodeCount = buffer.nodeSetups.GetInstanceCount();
 
     if (buffer.nodeSetups.GetInstanceCount() != aSectorMod.expectedNodes)
     {
+        LogError(R"(|{}| {}: The sector has {} node(s), but the mod expects {}.)",
+                 ModuleName, aSectorMod.mod, nodeCount, aSectorMod.expectedNodes);
         return false;
     }
 
+    bool nodeValidationPassed = true;
     for (const auto& nodeDeletion : aSectorMod.nodeDeletions)
     {
         auto nodeInstance = buffer.nodeSetups.GetInstance(nodeDeletion.nodeIndex);
 
         if (nodeDeletion.nodeType != nodeInstance->node->GetNativeType()->name)
         {
-            return false;
+            LogError(R"(|{}| {}: The node #{} has type {}, but the mod expects {}.)",
+                     ModuleName, aSectorMod.mod, nodeDeletion.nodeIndex,
+                     nodeInstance->node->GetNativeType()->name.ToString(),
+                     nodeDeletion.nodeType.ToString());
+            nodeValidationPassed = false;
+            continue;
         }
 
         if (nodeDeletion.nodeType == CollisionNodeType && !nodeDeletion.subNodeDeletions.empty())
@@ -210,9 +233,18 @@ bool App::WorldStreamingModule::PatchSector(Red::world::StreamingSector* aSector
             auto& actors = Raw::CollisionNode::Actors::Ref(nodeInstance->node);
             if (actors.GetSize() != nodeDeletion.expectedSubNodes)
             {
-                return false;
+                LogError(R"(|{}| {}: The node #{} has {} actor(s), but the mod expects {}.)",
+                         ModuleName, aSectorMod.mod, nodeDeletion.nodeIndex,
+                         actors.GetSize(), nodeDeletion.expectedSubNodes);
+                nodeValidationPassed = false;
+                continue;
             }
         }
+    }
+
+    if (!nodeValidationPassed)
+    {
+        return false;
     }
 
     for (const auto& nodeDeletion : aSectorMod.nodeDeletions)
