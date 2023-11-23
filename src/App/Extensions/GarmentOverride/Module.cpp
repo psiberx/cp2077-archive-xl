@@ -759,6 +759,14 @@ void App::GarmentOverrideModule::ApplyOffsetOverrides(Core::SharedPtr<App::Entit
     if (s_garmentOffsetsEnabled)
     {
         aEntityState->ApplyOffsetOverrides(aResourcePaths, aOffsets);
+
+        for (auto& offset : aOffsets)
+        {
+            if (offset > 0 && offset < 1000)
+            {
+                offset *= 100;
+            }
+        }
     }
     else
     {
