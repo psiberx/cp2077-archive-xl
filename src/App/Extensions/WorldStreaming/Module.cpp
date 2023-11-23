@@ -216,13 +216,14 @@ bool App::WorldStreamingModule::PatchSector(Red::world::StreamingSector* aSector
     bool nodeValidationPassed = true;
     for (const auto& nodeDeletion : aSectorMod.nodeDeletions)
     {
-        auto nodeInstance = buffer.nodeSetups.GetInstance(nodeDeletion.nodeIndex);
+        auto* nodeInstance = buffer.nodeSetups.GetInstance(nodeDeletion.nodeIndex);
+        auto* nodeDefinition = buffer.nodes[nodeInstance->nodeIndex].instance;
 
-        if (nodeDeletion.nodeType != nodeInstance->node->GetNativeType()->name)
+        if (nodeDeletion.nodeType != nodeDefinition->GetNativeType()->name)
         {
             LogError(R"(|{}| {}: The node #{} has type {}, but the mod expects {}.)",
                      ModuleName, aSectorMod.mod, nodeDeletion.nodeIndex,
-                     nodeInstance->node->GetNativeType()->name.ToString(),
+                     nodeDefinition->GetNativeType()->name.ToString(),
                      nodeDeletion.nodeType.ToString());
             nodeValidationPassed = false;
             continue;
@@ -230,7 +231,7 @@ bool App::WorldStreamingModule::PatchSector(Red::world::StreamingSector* aSector
 
         if (nodeDeletion.nodeType == CollisionNodeType && !nodeDeletion.subNodeDeletions.empty())
         {
-            auto& actors = Raw::CollisionNode::Actors::Ref(nodeInstance->node);
+            auto& actors = Raw::CollisionNode::Actors::Ref(nodeDefinition);
             if (actors.GetSize() != nodeDeletion.expectedSubNodes)
             {
                 LogError(R"(|{}| {}: The node #{} has {} actor(s), but the mod expects {}.)",
@@ -249,13 +250,14 @@ bool App::WorldStreamingModule::PatchSector(Red::world::StreamingSector* aSector
 
     for (const auto& nodeDeletion : aSectorMod.nodeDeletions)
     {
-        auto nodeInstance = buffer.nodeSetups.GetInstance(nodeDeletion.nodeIndex);
+        auto* nodeInstance = buffer.nodeSetups.GetInstance(nodeDeletion.nodeIndex);
+        auto* nodeDefinition = buffer.nodes[nodeInstance->nodeIndex].instance;
 
         if (nodeDeletion.nodeType == CollisionNodeType)
         {
             if (!nodeDeletion.subNodeDeletions.empty())
             {
-                auto& actors = Raw::CollisionNode::Actors::Ref(nodeInstance->node);
+                auto& actors = Raw::CollisionNode::Actors::Ref(nodeDefinition);
                 for (const auto& subNodeIndex : nodeDeletion.subNodeDeletions)
                 {
                     constexpr auto DelZ = static_cast<int32_t>(-2000 * (2 << 16));
