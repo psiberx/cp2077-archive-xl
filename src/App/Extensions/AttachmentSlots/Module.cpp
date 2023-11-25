@@ -37,17 +37,11 @@ bool App::AttachmentSlotsModule::Load()
     if (!Hook<Raw::AttachmentSlots::IsSlotSpawning>(&OnSlotSpawningCheck))
         throw std::runtime_error("Failed to hook [AttachmentSlots::IsSlotSpawning].");
 
-    if (!HookBefore<Raw::TPPRepresentationComponent::OnAttach>(&OnAttachTPP))
+    if (!HookAfter<Raw::TPPRepresentationComponent::OnAttach>(&OnAttachTPP))
         throw std::runtime_error("Failed to hook [TPPRepresentationComponent::OnAttach].");
 
     if (!HookAfter<Raw::TPPRepresentationComponent::IsAffectedSlot>(&OnSlotCheckTPP))
         throw std::runtime_error("Failed to hook [TPPRepresentationComponent::IsAffectedSlot].");
-
-    // if (!HookWrap<Raw::TPPRepresentationComponent::OnItemEquipped>(&OnItemChangeTPP))
-    //     throw std::runtime_error("Failed to hook [TPPRepresentationComponent::OnItemEquipped].");
-    //
-    // if (!HookWrap<Raw::TPPRepresentationComponent::OnItemUnequipped>(&OnItemChangeTPP))
-    //     throw std::runtime_error("Failed to hook [TPPRepresentationComponent::OnItemUnequipped].");
 
     if (!HookAfter<Raw::CharacterCustomizationHairstyleController::CheckState>(&OnCheckHairState))
         throw std::runtime_error("Failed to hook [CharacterCustomizationHairstyleController::CheckState].");
@@ -76,8 +70,6 @@ bool App::AttachmentSlotsModule::Unload()
     Unhook<Raw::AttachmentSlots::IsSlotSpawning>();
     Unhook<Raw::TPPRepresentationComponent::OnAttach>();
     Unhook<Raw::TPPRepresentationComponent::IsAffectedSlot>();
-    // Unhook<Raw::TPPRepresentationComponent::OnItemEquipped>();
-    // Unhook<Raw::TPPRepresentationComponent::OnItemUnequipped>();
     Unhook<Raw::CharacterCustomizationHairstyleController::CheckState>();
     // Unhook<Raw::CharacterCustomizationGenitalsController::CheckState>();
     Unhook<Raw::CharacterCustomizationFeetController::CheckState>();
@@ -167,20 +159,10 @@ void App::AttachmentSlotsModule::OnAttachTPP(Red::game::TPPRepresentationCompone
     LogDebug("|{}| [event=AttachTPP]", ModuleName);
 #endif
 
-    std::shared_lock _(s_slotsMutex);
+    auto transactionSystem = Red::GetGameSystem<Red::ITransactionSystem>();
+    auto owner = Raw::IComponent::Owner::Ptr(aComponent);
 
-    // {
-    //     constexpr auto equipItemFuncIndex = 0x128 / sizeof(void*);
-    //     constexpr auto equipVisualFuncIndex = 0x130 / sizeof(void*);
-    //
-    //     auto slotListener = Raw::TPPRepresentationComponent::SlotListener::Ptr(aComponent);
-    //     auto slotListenerVFT = *reinterpret_cast<uintptr_t**>(slotListener->instance);
-    //
-    //     DWORD oldProtect = 0;
-    //     VirtualProtect(&slotListenerVFT[equipVisualFuncIndex], 8, PAGE_EXECUTE_WRITECOPY, &oldProtect);
-    //     slotListenerVFT[equipVisualFuncIndex] = slotListenerVFT[equipItemFuncIndex];
-    //     VirtualProtect(&slotListenerVFT[equipVisualFuncIndex], 8, oldProtect, nullptr);
-    // }
+    std::shared_lock _(s_slotsMutex);
 
     for (const auto slotID : TPPAffectedSlots)
     {
@@ -193,6 +175,27 @@ void App::AttachmentSlotsModule::OnAttachTPP(Red::game::TPPRepresentationCompone
                 {
                     aComponent->affectedAppearanceSlots.PushBack(subSlotID);
                 }
+
+                if (owner)
+                {
+#ifndef NDEBUG
+                    auto debugSlotName = Red::ToStringDebug(subSlotID);
+#endif
+
+                    auto slotData = transactionSystem->FindSlotData(owner,
+                                                                   [subSlotID](const Red::AttachmentSlotData& aSlotData)
+                                                                   {
+                                                                       return aSlotData.slotID == subSlotID;
+                                                                   });
+                    if (slotData && slotData->itemObject)
+                    {
+                        const auto& itemID = Raw::ItemObject::ItemID::Ref(slotData->itemObject).tdbid;
+#ifndef NDEBUG
+                        auto debugItemName = Red::ToStringDebug(itemID);
+#endif
+                        Raw::TPPRepresentationComponent::RegisterAffectedItem(aComponent, itemID, slotData->itemObject);
+                    }
+                }
             }
         }
     }
@@ -202,6 +205,10 @@ void App::AttachmentSlotsModule::OnSlotCheckTPP(bool& aAffected, Red::TweakDBID 
 {
     if (!aAffected)
     {
+#ifndef NDEBUG
+        auto debugSlotName = Red::ToStringDebug(aSlotID);
+#endif
+
         std::shared_lock _(s_slotsMutex);
         const auto& baseSlot = s_baseSlots.find(aSlotID);
         if (baseSlot != s_baseSlots.end())
@@ -210,26 +217,6 @@ void App::AttachmentSlotsModule::OnSlotCheckTPP(bool& aAffected, Red::TweakDBID 
         }
     }
 }
-
-// void App::AttachmentSlotsModule::OnItemChangeTPP(Raw::TPPRepresentationComponent::SlotListenerCallback aCallback,
-//                                                  Red::game::TPPRepresentationComponent* aComponent,
-//                                                  Red::TweakDBID aItemID, Red::TweakDBID aSlotID)
-// {
-//     {
-// #ifndef NDEBUG
-//         LogDebug("|{}| [event=ItemChangeTPP]", ModuleName);
-// #endif
-//
-//         std::shared_lock _(s_slotsMutex);
-//         const auto& baseSlot = s_baseSlots.find(aSlotID);
-//         if (baseSlot != s_baseSlots.end())
-//         {
-//             aSlotID = baseSlot.value();
-//         }
-//     }
-//
-//     aCallback(aComponent, aItemID, aSlotID);
-// }
 
 void App::AttachmentSlotsModule::OnCheckHairState(Red::game::ui::CharacterCustomizationHairstyleController* aComponent,
                                                   Red::CharacterBodyPartState& aHairState)
