@@ -1,4 +1,5 @@
 #include "Dynamic.hpp"
+#include "App/Extensions/GarmentOverride/Wrapper.hpp"
 #include "App/Extensions/PuppetState/Module.hpp"
 #include "App/Extensions/PuppetState/System.hpp"
 #include "App/Utils/Num.hpp"
@@ -516,7 +517,7 @@ App::DynamicAppearanceController::AttributeData App::DynamicAppearanceController
         case MaleBodyComponent:
         case FemaleBodyComponent1:
         case FemaleBodyComponent2:
-            const auto skinColor = component.GetPtr<Red::ent::MorphTargetSkinnedMeshComponent>()->meshAppearance;
+            const auto skinColor = ComponentWrapper(component).GetAppearanceName();
             if (skinColor)
             {
                 return {skinColor.ToString(), skinColor.ToString()};
