@@ -94,10 +94,9 @@ private:
     static void ApplyDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState);
     static void ApplyDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState,
                                         Red::DynArray<Red::Handle<Red::IComponent>>& aComponents);
-    static void ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, bool aVerbose = false);
+    static void ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, bool aForceUpdate);
     static void ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState,
-                                        Red::DynArray<Red::Handle<Red::IComponent>>& aComponents,
-                                        bool aVerbose = false);
+                                        Red::DynArray<Red::Handle<Red::IComponent>>& aComponents, bool aForceUpdate);
     static void ApplyOffsetOverrides(Core::SharedPtr<EntityState>& aEntityState, Red::DynArray<int32_t>& aOffsets,
                                      Red::DynArray<Red::ResourcePath>& aResourcePaths);
 

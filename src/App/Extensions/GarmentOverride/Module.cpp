@@ -495,7 +495,7 @@ void App::GarmentOverrideModule::OnProcessGarmentMesh(Red::GarmentProcessor* aPr
         if (auto& entityState = s_stateManager->FindEntityState(aProcessor))
         {
             entityState->ApplyDynamicAppearance(aComponent, aPartTemplate->path);
-            aMeshToken = ComponentWrapper(aComponent).LoadResource(true);
+            aMeshToken = ComponentWrapper(aComponent).LoadResourceToken(true);
         }
     }
 }
@@ -534,7 +534,7 @@ void App::GarmentOverrideModule::OnComputeGarment(uintptr_t, Red::Handle<Red::En
         UpdateDynamicAttributes(entityState);
 
         ApplyDynamicAppearance(entityState, aData->components);
-        ApplyComponentOverrides(entityState, aData->components, true);
+        ApplyComponentOverrides(entityState, aData->components, false);
         ApplyOffsetOverrides(entityState, aOffsets, aData->resources);
     }
 }
@@ -697,54 +697,64 @@ void App::GarmentOverrideModule::ApplyDynamicAppearance(Core::SharedPtr<EntitySt
     ApplyDynamicAppearance(aEntityState, Raw::Entity::ComponentsStorage(aEntityState->GetEntity())->components);
 }
 
+void App::GarmentOverrideModule::ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, bool aForceUpdate)
+{
+    ApplyComponentOverrides(aEntityState, Raw::Entity::ComponentsStorage(aEntityState->GetEntity())->components,
+                            aForceUpdate);
+}
+
 void App::GarmentOverrideModule::ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState,
                                                          Red::DynArray<Red::Handle<Red::IComponent>>& aComponents,
-                                                         bool aVerbose)
+                                                         bool aForceUpdate)
 {
     for (auto& component : aComponents)
     {
-        aEntityState->ApplyAppearanceOverride(component);
-        aEntityState->ApplyChunkMaskOverride(component);
+        auto isAppearnceUpdated = aEntityState->ApplyAppearanceOverride(component);
+        auto isChunkMaskUpdated = aEntityState->ApplyChunkMaskOverride(component);
+
+        if (aForceUpdate && (isAppearnceUpdated || isChunkMaskUpdated))
+        {
+            ComponentWrapper wrapper{component};
+            if (wrapper.IsMeshComponent() && !wrapper.IsGarmentComponent())
+            {
+                Raw::IComponent::UpdateRenderer(component);
+            }
+        }
     }
 
 // #ifndef NDEBUG
-//         if (aVerbose)
+//     if (aVerbose)
+//     {
+//         auto index = 0;
+//         for (auto& component : aComponents)
 //         {
-//             auto index = 0;
-//             for (auto& component : aComponents)
+//             auto wrapper = ComponentWrapper(component);
+//
+//             if (wrapper.IsMeshComponent())
 //             {
-//                 auto wrapper = ComponentWrapper(component);
-//
-//                 if (wrapper.IsMeshComponent())
-//                 {
-//                     LogDebug("|{}| [index={} component={} type={} enabled={} app={} chunks={:064b}]",
-//                              ModuleName,
-//                              index,
-//                              component->name.ToString(),
-//                              component->GetType()->GetName().ToString(),
-//                              component->isEnabled,
-//                              wrapper.GetAppearance().ToString(),
-//                              wrapper.GetChunkMask());
-//                 }
-//                 else
-//                 {
-//                     LogDebug("|{}| [index={} component={} type={} enabled={}]",
-//                              ModuleName,
-//                              index,
-//                              component->name.ToString(),
-//                              component->GetType()->GetName().ToString(),
-//                              component->isEnabled);
-//                 }
-//
-//                 ++index;
+//                 LogDebug("|{}| [index={} component={} type={} enabled={} app={} chunks={:064b}]",
+//                          ModuleName,
+//                          index,
+//                          component->name.ToString(),
+//                          component->GetType()->GetName().ToString(),
+//                          component->isEnabled,
+//                          wrapper.GetAppearanceName().ToString(),
+//                          wrapper.GetChunkMask());
 //             }
+//             else
+//             {
+//                 LogDebug("|{}| [index={} component={} type={} enabled={}]",
+//                          ModuleName,
+//                          index,
+//                          component->name.ToString(),
+//                          component->GetType()->GetName().ToString(),
+//                          component->isEnabled);
+//             }
+//
+//             ++index;
 //         }
+//     }
 // #endif
-}
-
-void App::GarmentOverrideModule::ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, bool aVerbose)
-{
-    ApplyComponentOverrides(aEntityState, Raw::Entity::ComponentsStorage(aEntityState->GetEntity())->components, aVerbose);
 }
 
 void App::GarmentOverrideModule::ApplyOffsetOverrides(Core::SharedPtr<App::EntityState>& aEntityState,

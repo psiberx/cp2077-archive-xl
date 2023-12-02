@@ -7,6 +7,7 @@ enum class ComponentType
     Unsupported,
     MeshComponent,
     SkinnedMeshComponent,
+    GarmentSkinnedMeshComponent,
     MorphTargetSkinnedMeshComponent,
 };
 
@@ -17,14 +18,15 @@ public:
     explicit ComponentWrapper(const Red::Handle<Red::IComponent>& aComponent);
 
     [[nodiscard]] bool IsMeshComponent() const;
+    [[nodiscard]] bool IsGarmentComponent() const;
     [[nodiscard]] uint64_t GetUniqueId();
 
     [[nodiscard]] bool IsEnabled() const;
     bool SetEnabled(bool isEnabled) const;
 
-    [[nodiscard]] Red::ResourcePath GetResource() const;
-    bool SetResource(Red::ResourcePath aPath) const;
-    [[nodiscard]] Red::SharedPtr<Red::ResourceToken<Red::CMesh>> LoadResource(bool aWait = false) const;
+    [[nodiscard]] Red::ResourcePath GetResourcePath() const;
+    bool SetResourcePath(Red::ResourcePath aPath) const;
+    [[nodiscard]] Red::SharedPtr<Red::ResourceToken<Red::CMesh>> LoadResourceToken(bool aWait = false) const;
 
     [[nodiscard]] Red::CName GetAppearanceName() const;
     bool SetAppearanceName(Red::CName aAppearance) const;

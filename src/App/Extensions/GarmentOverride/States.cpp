@@ -600,9 +600,9 @@ bool App::EntityState::ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aCom
         const auto originalResource = GetOriginalResource(componentWrapper);
         const auto finalResource = m_dynamicAppearance->ResolvePath(m_entity, aVariant, originalResource);
 
-        if (finalResource != originalResource && finalResource != componentWrapper.GetResource())
+        if (finalResource != originalResource && finalResource != componentWrapper.GetResourcePath())
         {
-            componentWrapper.SetResource(finalResource);
+            componentWrapper.SetResourcePath(finalResource);
         }
 
         if (aSetAppearance)
@@ -724,7 +724,7 @@ Red::ResourcePath App::EntityState::GetOriginalResource(ComponentWrapper& aCompo
     auto it = m_originalResources.find(componentId);
 
     if (it == m_originalResources.end())
-        it = m_originalResources.emplace(componentId, aComponent.GetResource()).first;
+        it = m_originalResources.emplace(componentId, aComponent.GetResourcePath()).first;
 
     return it.value();
 }
