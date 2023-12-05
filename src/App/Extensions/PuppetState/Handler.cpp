@@ -2,6 +2,7 @@
 #include "App/Extensions/AttachmentSlots/Module.hpp"
 #include "App/Extensions/GarmentOverride/Module.hpp"
 #include "App/Extensions/PuppetState/Module.hpp"
+#include "Core/Facades/Log.hpp"
 #include "Red/ItemObject.hpp"
 #include "Red/TweakDB.hpp"
 
@@ -52,26 +53,61 @@ App::PuppetStateHandler::PuppetStateHandler(Red::Entity* aPuppet)
 
 void App::PuppetStateHandler::OnItemEquipped(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
 {
+#ifndef NDEBUG
+    auto debugSlotName = Red::ToStringDebug(aSlotID);
+    auto debugItemName = Red::ToStringDebug(aItemID.tdbid);
+    Core::Log::Debug("|PuppetStateHandler| [event=OnItemEquipped slot={} item={}]",
+                     debugSlotName.c_str(), debugItemName.c_str());
+#endif
+
     HandleAppearanceChange(aItemID, aSlotID, true);
 }
 
 void App::PuppetStateHandler::OnItemEquippedVisual(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
 {
+#ifndef NDEBUG
+    auto debugSlotName = Red::ToStringDebug(aSlotID);
+    auto debugItemName = Red::ToStringDebug(aItemID.tdbid);
+    Core::Log::Debug("|PuppetStateHandler| [event=OnItemEquippedVisual slot={} item={}]",
+                     debugSlotName.c_str(), debugItemName.c_str());
+#endif
+
     HandleAppearanceChange(aItemID, aSlotID, true);
 }
 
 void App::PuppetStateHandler::OnItemEquippedComplete(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
 {
+#ifndef NDEBUG
+    auto debugSlotName = Red::ToStringDebug(aSlotID);
+    auto debugItemName = Red::ToStringDebug(aItemID.tdbid);
+    Core::Log::Debug("|PuppetStateHandler| [event=OnItemEquippedComplete slot={} item={}]",
+                     debugSlotName.c_str(), debugItemName.c_str());
+#endif
+
     FinalizeAppearanceChange(aItemID, aSlotID);
 }
 
 void App::PuppetStateHandler::OnItemUnequipped(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
 {
+#ifndef NDEBUG
+    auto debugSlotName = Red::ToStringDebug(aSlotID);
+    auto debugItemName = Red::ToStringDebug(aItemID.tdbid);
+    Core::Log::Debug("|PuppetStateHandler| [event=OnItemUnequipped slot={} item={}]",
+                     debugSlotName.c_str(), debugItemName.c_str());
+#endif
+
     HandleAppearanceChange(aItemID, aSlotID, false);
 }
 
 void App::PuppetStateHandler::OnItemUnequippedComplete(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
 {
+#ifndef NDEBUG
+    auto debugSlotName = Red::ToStringDebug(aSlotID);
+    auto debugItemName = Red::ToStringDebug(aItemID.tdbid);
+    Core::Log::Debug("|PuppetStateHandler| [event=OnItemUnequippedComplete slot={} item={}]",
+                     debugSlotName.c_str(), debugItemName.c_str());
+#endif
+
     HandleAppearanceChange(aItemID, aSlotID, false);
 }
 

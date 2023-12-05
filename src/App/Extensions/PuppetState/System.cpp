@@ -67,18 +67,18 @@ Red::CString App::PuppetStateSystem::GetArmsStateSuffix(Red::ItemID& aItemID,
                                                         const Red::WeakHandle<Red::GameObject>& aOwner,
                                                         const Red::Handle<Red::ItemsFactoryAppearanceSuffixBase_Record>&)
 {
+    constexpr auto BaseArmsStr = RTTI_ENUM_NAME_STR(PuppetArmsState::BaseArms);
+    constexpr auto MantisBladesStr = RTTI_ENUM_NAME_STR(PuppetArmsState::MantisBlades);
+    constexpr auto MonowireStr = RTTI_ENUM_NAME_STR(PuppetArmsState::Monowire);
+    constexpr auto ProjectileLauncherStr = RTTI_ENUM_NAME_STR(PuppetArmsState::ProjectileLauncher);
+
     switch (PuppetStateModule::GetArmsState(aOwner))
     {
-    case PuppetArmsState::BaseArms:
-        return RTTI_ENUM_NAME_STR(PuppetArmsState::BaseArms);
-    case PuppetArmsState::MantisBlades:
-        return RTTI_ENUM_NAME_STR(PuppetArmsState::MantisBlades);
-    case PuppetArmsState::Monowire:
-        return RTTI_ENUM_NAME_STR(PuppetArmsState::Monowire);
-    case PuppetArmsState::ProjectileLauncher:
-        return RTTI_ENUM_NAME_STR(PuppetArmsState::ProjectileLauncher);
-    default:
-        return "";
+    case PuppetArmsState::BaseArms: return BaseArmsStr;
+    case PuppetArmsState::MantisBlades: return MantisBladesStr;
+    case PuppetArmsState::Monowire: return MonowireStr;
+    case PuppetArmsState::ProjectileLauncher: return ProjectileLauncherStr;
+    default: return "";
     }
 }
 
@@ -86,18 +86,17 @@ Red::CString App::PuppetStateSystem::GetFeetStateSuffix(Red::ItemID& aItemID,
                                                         const Red::WeakHandle<Red::GameObject>& aOwner,
                                                         const Red::Handle<Red::ItemsFactoryAppearanceSuffixBase_Record>&)
 {
+    constexpr auto FlatStr = RTTI_ENUM_NAME_STR(PuppetFeetState::Flat);
+    constexpr auto LiftedStr = RTTI_ENUM_NAME_STR(PuppetFeetState::Lifted);
+    constexpr auto HighHeelsStr = RTTI_ENUM_NAME_STR(PuppetFeetState::HighHeels);
+    constexpr auto FlatShoesStr = RTTI_ENUM_NAME_STR(PuppetFeetState::FlatShoes);
+
     switch (PuppetStateModule::GetFeetState(aOwner))
     {
-    case PuppetFeetState::Flat:
-        return RTTI_ENUM_NAME_STR(PuppetFeetState::Flat);
-    case PuppetFeetState::Lifted:
-        return RTTI_ENUM_NAME_STR(PuppetFeetState::Lifted);
-    case PuppetFeetState::HighHeels:
-        return RTTI_ENUM_NAME_STR(PuppetFeetState::HighHeels);
-    case PuppetFeetState::FlatShoes:
-        return RTTI_ENUM_NAME_STR(PuppetFeetState::FlatShoes);
-    case PuppetFeetState::None:
-    default:
-        return "";
+    case PuppetFeetState::Flat: return FlatStr;
+    case PuppetFeetState::Lifted: return LiftedStr;
+    case PuppetFeetState::HighHeels: return HighHeelsStr;
+    case PuppetFeetState::FlatShoes: return FlatShoesStr;
+    default: return "";
     }
 }
