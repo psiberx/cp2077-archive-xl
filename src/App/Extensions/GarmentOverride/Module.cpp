@@ -202,12 +202,23 @@ Red::TemplateAppearance* App::GarmentOverrideModule::OnResolveAppearance(Red::En
     if (s_dynamicAppearance->SupportsDynamicAppearance(aTemplate))
     {
         auto selector = s_dynamicAppearance->ParseAppearance(aSelector);
-        if (selector.isDynamic && selector.context)
+        if (selector.isDynamic)
         {
-            std::unique_lock _(s_mutex);
-            if (auto& entityState = s_stateManager->GetEntityState(selector.context))
+            if (selector.context)
             {
-                SelectDynamicAppearance(entityState, selector, aTemplate, appearance);
+                std::unique_lock _(s_mutex);
+                if (auto& entityState = s_stateManager->GetEntityState(selector.context))
+                {
+                    SelectDynamicAppearance(entityState, selector, aTemplate, appearance);
+                    return appearance;
+                }
+            }
+            else
+            {
+                if (selector.name != aSelector)
+                {
+                    appearance = Raw::EntityTemplate::FindAppearance(aTemplate, selector.name);
+                }
                 return appearance;
             }
         }
