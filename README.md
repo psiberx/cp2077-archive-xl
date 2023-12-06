@@ -14,18 +14,15 @@ With the mod you can:
 
 ## Getting Started
 
-### Prerequisites
-
-- [RED4ext](https://docs.red4ext.com/getting-started/installing-red4ext) 1.18.0+
-
 ### Compatibility
 
-- Cyberpunk 2077 2.02
+- Cyberpunk 2077 2.1
 
 ### Installation
 
-1. Download [the latest release](https://github.com/psiberx/cp2077-archive-xl/releases) archive
-2. Extract the archive into the Cyberpunk 2077 installation directory
+1. Install requirements:
+   - [RED4ext](https://docs.red4ext.com/getting-started/installing-red4ext) 1.19.0+
+2. Extract the release archive `ArchiveXL-x.x.x.zip` into the Cyberpunk 2077 directory.
 
 ## Documentation
 
