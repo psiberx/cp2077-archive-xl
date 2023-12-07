@@ -76,6 +76,23 @@ public:
 private:
     struct AttributeData
     {
+        AttributeData() = default;
+
+        AttributeData(const std::string& aValue, const std::string& aSuffix)
+            : value(aValue)
+            , suffix(aSuffix)
+        {
+        }
+
+        AttributeData(Red::CName aName)
+        {
+            if (aName)
+            {
+                value = aName.ToString();
+                suffix = value;
+            }
+        }
+
         std::string value;
         std::string suffix;
     };
@@ -96,13 +113,19 @@ private:
         DynamicTagList attributes;
     };
 
+    struct CustomizationData
+    {
+        bool isMale;
+        Red::CName skinColor;
+        Red::CName eyesColor;
+        Red::CName hairColor;
+    };
+
     DynamicString ProcessString(const DynamicAttrList& aAttrs, const DynamicPartList& aVariant,
                                 const char* aInput) const;
 
-    // AttributeData GetAttributeData(Red::Entity* aEntity, Red::CName aAttribute) const;
     AttributeData GetSuffixData(Red::Entity* aEntity, Red::TweakDBID aSuffixID) const;
-    AttributeData GetSkinColorData(Red::Entity* aEntity) const;
-    AttributeData GetHairColorData(Red::Entity* aEntity) const;
+    CustomizationData GetCustomizationData(Red::Entity* aEntity) const;
 
     [[nodiscard]] const std::string& GetPathStr(Red::ResourcePath aPath) const;
 
