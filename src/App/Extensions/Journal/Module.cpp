@@ -57,6 +57,7 @@ void App::JournalModule::Reload()
 {
     if (!m_units.empty() && s_resources.empty())
     {
+        ResetResourceData();
         ResetRuntimeData();
         ReloadJournal();
     }
@@ -103,6 +104,7 @@ void App::JournalModule::OnInitializeRoot(Red::game::JournalRootFolderEntry* aJo
         return;
 
     auto successAll = true;
+    auto mergedAny = false;
 
     for (const auto& resource : s_resources)
     {
@@ -123,18 +125,22 @@ void App::JournalModule::OnInitializeRoot(Red::game::JournalRootFolderEntry* aJo
             continue;
         }
 
+        if (root->id != aJournalRoot->id)
+            continue;
+
         LogInfo("|{}| Merging entries from \"{}\"...", ModuleName, s_paths[resource->path]);
 
         successAll &= MergeEntries(aJournalRoot, root);
+        mergedAny = true;
     }
 
-    ResetResourceData();
-
-    if (successAll)
-        LogInfo("|{}| All journal entries merged.", ModuleName);
-    else
-        LogWarning("|{}| Journal entries merged with issues.", ModuleName);
-
+    if (mergedAny)
+    {
+        if (successAll)
+            LogInfo("|{}| All journal entries merged.", ModuleName);
+        else
+            LogWarning("|{}| Journal entries merged with issues.", ModuleName);
+    }
 }
 
 void App::JournalModule::OnMappinDataLoaded(void* aMappinSystem, Red::worldRuntimeScene*)
@@ -209,18 +215,36 @@ void* App::JournalModule::OnGetPoiData(void* aMappinSystem, uint32_t aHash)
         {
             const auto& journalMappin = it.value();
 
-            Red::gameCookedPointOfInterestMappinData cookedMappin{};
-
-            if (ResolveMappinPosition(aHash, journalMappin, cookedMappin.position))
+            if (journalMappin.isPointOfInterest)
             {
-                cookedMappin.journalPathHash = aHash;
-                cookedMappin.entityID.hash = journalMappin.reference.hash;
+                Red::gameCookedPointOfInterestMappinData cookedMappin{};
 
-                std::unique_lock _(s_mappinsLock);
-                auto resource = Raw::MappinSystem::CookedPoiResource::Ptr(aMappinSystem)->instance;
-                resource->cookedData.PushBack(std::move(cookedMappin));
+                if (ResolveMappinPosition(aHash, journalMappin, cookedMappin.position))
+                {
+                    cookedMappin.journalPathHash = aHash;
+                    cookedMappin.entityID.hash = journalMappin.reference.hash;
 
-                result = resource->cookedData.End() - 1;
+                    std::unique_lock _(s_mappinsLock);
+                    auto resource = Raw::MappinSystem::CookedPoiResource::Ptr(aMappinSystem)->instance;
+                    resource->cookedData.PushBack(std::move(cookedMappin));
+
+                    result = resource->cookedData.End() - 1;
+                }
+            }
+            else
+            {
+                Red::gameCookedMappinData cookedMappin{};
+
+                if (ResolveMappinPosition(aHash, journalMappin, cookedMappin.position))
+                {
+                    cookedMappin.journalPathHash = aHash;
+
+                    std::unique_lock _(s_mappinsLock);
+                    auto resource = Raw::MappinSystem::CookedMappinResource::Ptr(aMappinSystem)->instance;
+                    resource->cookedData.PushBack(std::move(cookedMappin));
+
+                    result = resource->cookedData.End() - 1;
+                }
             }
         }
 
