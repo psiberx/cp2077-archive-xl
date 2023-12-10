@@ -272,7 +272,6 @@ bool App::WorldStreamingModule::PatchSector(Red::world::StreamingSector* aSector
         nodeInstance->scale.Y = 0;
         nodeInstance->scale.Z = 0;
 
-        nodeInstance->node->isVisibleInGame = false;
         nodeInstance->node = s_dummyNode.instance;
     }
 
