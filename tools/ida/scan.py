@@ -173,28 +173,8 @@ def patterns():
             Group(name="JournalManager", functions=[
                 Item(name="LoadJournal",
                      pattern="48 8B C4 48 89 58 ? 48 89 70 ? 48 89 78 ? 55 48 8D 68 ? 48 81 EC ? ? ? ? 48 8B F2 48 8B F9 E8 ? ? ? ? 48 8D 57"),
-                # FIXME Use VFT
-                Item(name="GetEntryHash",
-                     pattern="48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B F9 48 8B F2 48 83 C1 ? E8 ? ? ? ? 48 8D 8F ? ? ? ? 48 8B D6 4C 8D 4C 24"),
-                # FIXME Use VFT
-                Item(name="GetEntryByHash",
-                     pattern="44 89 44 24 ? 53 56 57 48 83 EC ? 48 8D 59 ? 48 8B F9 48 8B CB 48 8B F2 E8 ? ? ? ? 48 8D 4F ? 4C 8D 4C 24 ? 4C 8D 44 24"),
-                # FIXME Use VFT
-                Item(name="GetTrackedQuest",
-                     pattern="48 8B 81 ? ? ? ? 48 89 02 48 8B 81 ? ? ? ? 48 89 42 08 48 85 C0 74 03 F0 FF 00 48 8B C2 C3",
-                     expected=53,
-                     index=23),
-                # FIXME Use VFT
-                Item(name="GetTrackedPointOfInterest",
-                     pattern="48 8B 81 ? ? ? ? 48 89 02 48 8B 81 ? ? ? ? 48 89 42 08 48 85 C0 74 03 F0 FF 00 48 8B C2 C3",
-                     expected=53,
-                     index=37),
-                # FIXME Use VFT TrackQuestByHash
                 Item(name="TrackQuest",
                      pattern="40 55 53 56 57 41 54 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B F1 33 FF 48 8B CA 44 0F B6 FF 4C 8B F2 E8"),
-                # FIXME Use VFT
-                Item(name="TrackPointOfInterest",
-                     pattern="48 81 C1 38 01 00 00 E9"),
             ]),
             Group(name="JournalRootFolderEntry", functions=[
                 Item(name="Initialize",

@@ -7,5 +7,5 @@ namespace Raw::JobHandle
 {
 constexpr auto Wait = Core::RawFunc<
     /* addr = */ Red::Addresses::JobHandle_Wait,
-    /* type = */ void (*)(Red::JobHandle& aJob)>();
+    /* type = */ bool (*)(Red::JobHandle& aJob)>();
 }

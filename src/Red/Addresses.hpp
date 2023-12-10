@@ -86,12 +86,7 @@ constexpr uintptr_t ItemFactoryRequest_LoadAppearance = 0x14040B67C - ImageBase;
 constexpr uintptr_t JobHandle_Wait = 0x1405FBCA4 - ImageBase; // 48 8B 11 41 83 C9 FF 48 8B 0D ? ? ? ? 45 33 C0 E9, expected: 1, index: 0
 
 constexpr uintptr_t JournalManager_LoadJournal = 0x1406DBB0C - ImageBase; // 48 8B C4 48 89 58 ? 48 89 70 ? 48 89 78 ? 55 48 8D 68 ? 48 81 EC ? ? ? ? 48 8B F2 48 8B F9 E8 ? ? ? ? 48 8D 57, expected: 1, index: 0
-constexpr uintptr_t JournalManager_GetEntryHash = 0x140425D58 - ImageBase; // 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B F9 48 8B F2 48 83 C1 ? E8 ? ? ? ? 48 8D 8F ? ? ? ? 48 8B D6 4C 8D 4C 24, expected: 1, index: 0
-constexpr uintptr_t JournalManager_GetEntryByHash = 0x14062C538 - ImageBase; // 44 89 44 24 ? 53 56 57 48 83 EC ? 48 8D 59 ? 48 8B F9 48 8B CB 48 8B F2 E8 ? ? ? ? 48 8D 4F ? 4C 8D 4C 24 ? 4C 8D 44 24, expected: 1, index: 0
-constexpr uintptr_t JournalManager_GetTrackedQuest = 0x1408B81AC - ImageBase; // 48 8B 81 ? ? ? ? 48 89 02 48 8B 81 ? ? ? ? 48 89 42 08 48 85 C0 74 03 F0 FF 00 48 8B C2 C3, expected: 53, index: 23
-constexpr uintptr_t JournalManager_GetTrackedPointOfInterest = 0x142383710 - ImageBase; // 48 8B 81 ? ? ? ? 48 89 02 48 8B 81 ? ? ? ? 48 89 42 08 48 85 C0 74 03 F0 FF 00 48 8B C2 C3, expected: 53, index: 37
 constexpr uintptr_t JournalManager_TrackQuest = 0x1407DC4FC - ImageBase; // 40 55 53 56 57 41 54 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B F1 33 FF 48 8B CA 44 0F B6 FF 4C 8B F2 E8, expected: 1, index: 0
-constexpr uintptr_t JournalManager_TrackPointOfInterest = 0x1407DC4F0 - ImageBase; // 48 81 C1 38 01 00 00 E9, expected: 1, index: 0
 
 constexpr uintptr_t JournalRootFolderEntry_Initialize = 0x1406DA58C - ImageBase; // 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 4D 8B C1 49 8B F1 48 8B DA 48 8B F9 E8 ? ? ? ? 4C 8B C6 48 8B D3, expected: 1, index: 0
 

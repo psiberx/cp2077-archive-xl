@@ -55,7 +55,7 @@ bool App::JournalModule::Unload()
 
 void App::JournalModule::Reload()
 {
-    if (!m_units.empty() && s_resources.empty())
+    if (!m_units.empty())
     {
         ResetResourceData();
         ResetRuntimeData();

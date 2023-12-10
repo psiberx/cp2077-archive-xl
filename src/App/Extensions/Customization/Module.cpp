@@ -63,8 +63,12 @@ bool App::CustomizationModule::Unload()
 
 void App::CustomizationModule::Reload()
 {
-    RemoveCustomEntries();
-    ResetCustomResources();
+    if (!m_customMaleResources.empty() || !m_customFemaleResources.empty())
+    {
+        RemoveCustomEntries();
+        ResetCustomResources();
+    }
+
     PrefetchCustomResources();
 }
 
