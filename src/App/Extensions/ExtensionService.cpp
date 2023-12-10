@@ -50,9 +50,17 @@ void App::ExtensionService::OnShutdown()
 
 void App::ExtensionService::Configure()
 {
-    m_loader->Configure();
+    std::unique_lock _(m_reloadMutex);
 
-    HookOnceAfter<Raw::ResourceLoader::OnUpdate>([&]() {
-        m_loader->Reload();
-    });
+    if (!m_reloadScheduled && !IsHooked<Raw::ResourceLoader::OnUpdate>())
+    {
+        m_reloadScheduled = true;
+
+        HookOnceAfter<Raw::ResourceLoader::OnUpdate>([&]() {
+            m_loader->Configure();
+            m_loader->Reload();
+
+            m_reloadScheduled = false;
+        });
+    }
 }

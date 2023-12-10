@@ -20,5 +20,7 @@ protected:
     void OnShutdown() override;
 
     Core::UniquePtr<ModuleLoader> m_loader;
+    std::mutex m_reloadMutex;
+    bool m_reloadScheduled;
 };
 }

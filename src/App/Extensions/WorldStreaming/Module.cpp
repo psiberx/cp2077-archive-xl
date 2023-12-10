@@ -47,6 +47,8 @@ bool App::WorldStreamingModule::Unload()
 
 void App::WorldStreamingModule::PrepareSectors()
 {
+    std::unique_lock _(s_sectorsLock);
+
     s_sectors.clear();
 
     auto depot = Red::ResourceDepot::Get();
@@ -168,6 +170,8 @@ void App::WorldStreamingModule::OnWorldLoad(Red::world::StreamingWorld* aWorld, 
 
 void App::WorldStreamingModule::OnSectorReady(Red::world::StreamingSector* aSector, uint64_t)
 {
+    std::shared_lock _(s_sectorsLock);
+
     const auto& sectorMods = s_sectors.find(aSector->path);
 
     if (sectorMods == s_sectors.end())
