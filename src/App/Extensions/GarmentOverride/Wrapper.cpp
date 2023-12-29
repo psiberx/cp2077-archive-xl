@@ -181,6 +181,22 @@ bool App::ComponentWrapper::SetResourcePath(Red::ResourcePath aPath) const
     return false;
 }
 
+bool App::ComponentWrapper::LoadResource(bool aWait) const
+{
+    if (!IsMeshComponent())
+        return false;
+
+    Red::JobQueue jobQueue;
+    Raw::MeshComponent::LoadResource(m_component, jobQueue);
+
+    if (aWait)
+    {
+        Red::WaitForQueue(jobQueue, std::chrono::milliseconds(1000));
+    }
+
+    return true;
+}
+
 Red::SharedPtr<Red::ResourceToken<Red::CMesh>> App::ComponentWrapper::LoadResourceToken(bool aWait) const
 {
     Red::ResourceReference<Red::CMesh> meshRef;
