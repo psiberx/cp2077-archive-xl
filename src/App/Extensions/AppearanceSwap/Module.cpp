@@ -85,15 +85,32 @@ void* App::AppearanceSwapModule::OnSelectAppearance(Red::CName* aOut,
 {
     if (!aAppearanceName)
     {
-        auto appearanceName = Red::GetFlatValue<Red::CName>({aItemRecord->recordID, ".appearanceName"});
-        if (appearanceName)
         {
-            for (const auto& appearanceDefinition : aAppearanceResource->appearances)
+            auto appearanceName = Red::GetFlatValue<Red::CName>({aItemRecord->recordID, ".appearanceName"});
+            if (appearanceName)
             {
-                if (appearanceDefinition->name == appearanceName)
+                for (const auto& appearanceDefinition : aAppearanceResource->appearances)
                 {
-                    *aOut = appearanceName;
-                    return aOut;
+                    if (appearanceDefinition->name == appearanceName)
+                    {
+                        *aOut = appearanceName;
+                        return aOut;
+                    }
+                }
+            }
+        }
+        {
+            auto visualTags = Red::GetFlatPtr<Red::DynArray<Red::CName>>({aItemRecord->recordID, ".visualTags"});
+            if (visualTags && visualTags->size == 1)
+            {
+                auto& appearanceName = visualTags->entries[0];
+                for (const auto& appearanceDefinition : aAppearanceResource->appearances)
+                {
+                    if (appearanceDefinition->name == appearanceName)
+                    {
+                        *aOut = appearanceName;
+                        return aOut;
+                    }
                 }
             }
         }
