@@ -1,5 +1,7 @@
 #pragma once
 
+#include "JobQueues.hpp"
+
 namespace Red
 {
 namespace Detail
@@ -65,26 +67,7 @@ inline void WaitForResource(const R& aResource, const W& aTimeout)
 
     if (!Trait::IsFinished(aResource))
     {
-        std::mutex mutex;
-        std::unique_lock lock(mutex);
-        std::condition_variable cv;
-
-        JobQueue queue;
-        queue.Wait(Trait::GetJobHandle(aResource));
-        queue.Dispatch([&lock, &cv]() {
-            lock.release();
-            cv.notify_all();
-        });
-
-        if (lock.owns_lock())
-        {
-            cv.wait_for(lock, aTimeout);
-        }
-
-        if (!lock || !lock.owns_lock())
-        {
-            mutex.unlock();
-        }
+        WaitForJob(Trait::GetJobHandle(aResource), aTimeout);
     }
 }
 
@@ -95,29 +78,12 @@ inline void WaitForResources(const V<R, A...>& aResources, const W& aTimeout)
 
     if (!Trait::AllFinished(aResources))
     {
-        std::mutex mutex;
-        std::unique_lock lock(mutex);
-        std::condition_variable cv;
-
         JobQueue queue;
         for (const auto& resource : aResources)
         {
             queue.Wait(Trait::GetJobHandle(resource));
         }
-        queue.Dispatch([&lock, &cv]() {
-            lock.release();
-            cv.notify_all();
-        });
-
-        if (lock.owns_lock())
-        {
-            cv.wait_for(lock, aTimeout);
-        }
-
-        if (!lock || !lock.owns_lock())
-        {
-            mutex.unlock();
-        }
+        WaitForQueue(queue, aTimeout);
     }
 }
 }
