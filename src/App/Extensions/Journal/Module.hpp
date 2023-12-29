@@ -40,6 +40,8 @@ private:
     static void ProcessNewEntries(Red::game::JournalEntry* aEntry, const std::string& aPath, bool aRecursive);
     static void ConvertLocKeys(Red::game::JournalEntry* aEntry);
     static void CollectMappin(Red::game::JournalEntry* aEntry, const std::string& aPath);
+    static void ResolveCookedMappin(void* aMappinSystem, uint32_t aHash, const JournalMappin& aJournalMappin,
+                                    void*& aCookedMappin);
     static bool ResolveMappinPosition(uint32_t aJournalHash, const JournalMappin& aMappin, Red::Vector3& aResult);
     static void ResetResourceData();
     static void ResetRuntimeData();

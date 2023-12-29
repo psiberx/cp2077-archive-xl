@@ -178,20 +178,7 @@ void* App::JournalModule::OnGetMappinData(void* aMappinSystem, uint32_t aHash)
         const auto it = s_mappins.find(aHash);
         if (it != s_mappins.end())
         {
-            const auto& journalMappin = it.value();
-
-            Red::gameCookedMappinData cookedMappin{};
-
-            if (ResolveMappinPosition(aHash, journalMappin, cookedMappin.position))
-            {
-                cookedMappin.journalPathHash = aHash;
-
-                std::unique_lock _(s_mappinsLock);
-                auto resource = Raw::MappinSystem::CookedMappinResource::Ptr(aMappinSystem)->instance;
-                resource->cookedData.PushBack(std::move(cookedMappin));
-
-                result = resource->cookedData.End() - 1;
-            }
+            ResolveCookedMappin(aMappinSystem, aHash, it.value(), result);
         }
 
         set_r8(r8);
@@ -213,39 +200,7 @@ void* App::JournalModule::OnGetPoiData(void* aMappinSystem, uint32_t aHash)
         const auto it = s_mappins.find(aHash);
         if (it != s_mappins.end())
         {
-            const auto& journalMappin = it.value();
-
-            if (journalMappin.isPointOfInterest)
-            {
-                Red::gameCookedPointOfInterestMappinData cookedMappin{};
-
-                if (ResolveMappinPosition(aHash, journalMappin, cookedMappin.position))
-                {
-                    cookedMappin.journalPathHash = aHash;
-                    cookedMappin.entityID.hash = journalMappin.reference.hash;
-
-                    std::unique_lock _(s_mappinsLock);
-                    auto resource = Raw::MappinSystem::CookedPoiResource::Ptr(aMappinSystem)->instance;
-                    resource->cookedData.PushBack(std::move(cookedMappin));
-
-                    result = resource->cookedData.End() - 1;
-                }
-            }
-            else
-            {
-                Red::gameCookedMappinData cookedMappin{};
-
-                if (ResolveMappinPosition(aHash, journalMappin, cookedMappin.position))
-                {
-                    cookedMappin.journalPathHash = aHash;
-
-                    std::unique_lock _(s_mappinsLock);
-                    auto resource = Raw::MappinSystem::CookedMappinResource::Ptr(aMappinSystem)->instance;
-                    resource->cookedData.PushBack(std::move(cookedMappin));
-
-                    result = resource->cookedData.End() - 1;
-                }
-            }
+            ResolveCookedMappin(aMappinSystem, aHash, it.value(), result);
         }
 
         set_r8(r8);
@@ -253,6 +208,42 @@ void* App::JournalModule::OnGetPoiData(void* aMappinSystem, uint32_t aHash)
     }
 
     return result;
+}
+
+void App::JournalModule::ResolveCookedMappin(void* aMappinSystem, uint32_t aHash, const JournalMappin& aJournalMappin,
+                                             void*& aCookedMappin)
+{
+    if (aJournalMappin.isPointOfInterest)
+    {
+        Red::gameCookedPointOfInterestMappinData cookedMappin{};
+
+        if (ResolveMappinPosition(aHash, aJournalMappin, cookedMappin.position))
+        {
+            cookedMappin.journalPathHash = aHash;
+            cookedMappin.entityID.hash = aJournalMappin.reference.hash;
+
+            std::unique_lock _(s_mappinsLock);
+            auto resource = Raw::MappinSystem::CookedPoiResource::Ptr(aMappinSystem)->instance;
+            resource->cookedData.PushBack(std::move(cookedMappin));
+
+            aCookedMappin = resource->cookedData.End() - 1;
+        }
+    }
+    else
+    {
+        Red::gameCookedMappinData cookedMappin{};
+
+        if (ResolveMappinPosition(aHash, aJournalMappin, cookedMappin.position))
+        {
+            cookedMappin.journalPathHash = aHash;
+
+            std::unique_lock _(s_mappinsLock);
+            auto resource = Raw::MappinSystem::CookedMappinResource::Ptr(aMappinSystem)->instance;
+            resource->cookedData.PushBack(std::move(cookedMappin));
+
+            aCookedMappin = resource->cookedData.End() - 1;
+        }
+    }
 }
 
 bool App::JournalModule::ResolveMappinPosition(uint32_t aHash, const JournalMappin& aMappin, Red::Vector3& aResult)
