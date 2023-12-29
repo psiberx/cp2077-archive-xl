@@ -17,3 +17,10 @@ constexpr auto LoadMaterialSetupAsync = Core::RawFunc<
     /* type = */ void (*)(Red::mesh::MeshAppearance& aAppearance, Red::Handle<Red::mesh::MeshAppearance>& aOut,
                           uint8_t a3)>();
 }
+
+namespace Raw::MeshComponent
+{
+constexpr auto LoadResource = Core::RawVFunc<
+        /* offset = */ 0x260,
+        /* type = */ uint64_t(Red::IComponent::*)(Red::JobQueue& aQueue)>();
+}
