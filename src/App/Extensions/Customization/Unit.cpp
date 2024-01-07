@@ -33,33 +33,33 @@ void App::CustomizationUnit::LoadYAML(const YAML::Node& aNode)
 
 bool App::CustomizationUnit::ReadOptions(const YAML::Node& aNode, Core::Vector<std::string>& aOptions)
 {
-    if (!aNode.IsDefined())
-        return true;
-
     bool malformed = false;
 
-    switch (aNode.Type())
+    if (aNode.IsDefined())
     {
-    case YAML::NodeType::Sequence:
-    {
-        for (const auto& pathNode : aNode)
+        switch (aNode.Type())
         {
-            if (pathNode.IsScalar())
-                aOptions.emplace_back(pathNode.Scalar());
-            else
-                malformed = true;
+        case YAML::NodeType::Sequence:
+        {
+            for (const auto& pathNode : aNode)
+            {
+                if (pathNode.IsScalar())
+                    aOptions.emplace_back(pathNode.Scalar());
+                else
+                    malformed = true;
+            }
+            break;
         }
-        break;
-    }
-    case YAML::NodeType::Scalar:
-    {
-        aOptions.emplace_back(aNode.Scalar());
-        break;
-    }
-    default:
-    {
-        malformed = true;
-    }
+        case YAML::NodeType::Scalar:
+        {
+            aOptions.emplace_back(aNode.Scalar());
+            break;
+        }
+        default:
+        {
+            malformed = true;
+        }
+        }
     }
 
     return malformed;
