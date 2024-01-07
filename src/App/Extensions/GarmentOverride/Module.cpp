@@ -1,6 +1,7 @@
 #include "Module.hpp"
 #include "Red/Entity.hpp"
 #include "Red/ResourcePath.hpp"
+#include "Red/TweakDB.hpp"
 
 namespace
 {
@@ -152,14 +153,23 @@ void App::GarmentOverrideModule::ConfigureTags()
 
 void App::GarmentOverrideModule::OnLoadAppearanceResource(Red::ItemFactoryRequest* aRequest)
 {
-    Raw::ItemFactoryRequest::Entity entityWeak(aRequest);
-    Raw::ItemFactoryRequest::EntityTemplate templateToken(aRequest);
-    Raw::ItemFactoryRequest::AppearanceName appearanceName(aRequest);
+    auto& entityWeak = Raw::ItemFactoryRequest::Entity::Ref(aRequest);
+    auto& templateToken = Raw::ItemFactoryRequest::EntityTemplate::Ref(aRequest);
+    auto& appearanceName = Raw::ItemFactoryRequest::AppearanceName::Ref(aRequest);
+
+    if (!appearanceName)
+    {
+        auto itemRecord = Raw::ItemFactoryRequest::ItemRecord::Ptr(aRequest);
+        if (itemRecord)
+        {
+            appearanceName = Red::GetFlatValue<Red::CName>({itemRecord->recordID, ".appearanceName"});
+        }
+    }
 
     if (PrepareDynamicAppearanceName(entityWeak, templateToken, appearanceName))
     {
         std::unique_lock _(s_mutex);
-        if (auto& entityState = s_stateManager->GetEntityState(entityWeak->instance))
+        if (auto& entityState = s_stateManager->GetEntityState(entityWeak.instance))
         {
 #ifndef NDEBUG
             LogDebug("|{}| [event=LoadAppearanceResource entity={}]", ModuleName, entityState->GetName());
@@ -171,14 +181,23 @@ void App::GarmentOverrideModule::OnLoadAppearanceResource(Red::ItemFactoryReques
 
 void App::GarmentOverrideModule::OnChangeAppearanceResource(Red::ItemFactoryAppearanceChangeRequest* aRequest)
 {
-    Raw::ItemFactoryAppearanceChangeRequest::Entity entityWeak(aRequest);
-    Raw::ItemFactoryAppearanceChangeRequest::EntityTemplate templateToken(aRequest);
-    Raw::ItemFactoryAppearanceChangeRequest::AppearanceName appearanceName(aRequest);
+    auto& entityWeak = Raw::ItemFactoryAppearanceChangeRequest::Entity::Ref(aRequest);
+    auto& templateToken = Raw::ItemFactoryAppearanceChangeRequest::EntityTemplate::Ref(aRequest);
+    auto& appearanceName = Raw::ItemFactoryAppearanceChangeRequest::AppearanceName::Ref(aRequest);
+
+    if (!appearanceName)
+    {
+        auto itemRecord = Raw::ItemFactoryAppearanceChangeRequest::ItemRecord::Ptr(aRequest);
+        if (itemRecord)
+        {
+            appearanceName = Red::GetFlatValue<Red::CName>({itemRecord->recordID, ".appearanceName"});
+        }
+    }
 
     if (PrepareDynamicAppearanceName(entityWeak, templateToken, appearanceName))
     {
         std::unique_lock _(s_mutex);
-        if (auto& entityState = s_stateManager->GetEntityState(entityWeak->instance))
+        if (auto& entityState = s_stateManager->GetEntityState(entityWeak.instance))
         {
 #ifndef NDEBUG
             LogDebug("|{}| [event=ChangeAppearanceResource entity={}]", ModuleName, entityState->GetName());

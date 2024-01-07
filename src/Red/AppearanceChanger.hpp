@@ -97,6 +97,7 @@ using Entity = Core::OffsetPtr<0x28, Red::WeakHandle<Red::Entity>>;
 using EntityTemplate = Core::OffsetPtr<0x138, Red::ResourceTokenPtr<Red::EntityTemplate>>;
 using AppearanceToken = Core::OffsetPtr<0x148, Red::ResourceTokenPtr<Red::AppearanceResource>>;
 using AppearanceName = Core::OffsetPtr<0x158, Red::CName>;
+using ItemRecord = Core::OffsetPtr<0x160, Red::gamedataTweakDBRecord*>;
 
 constexpr auto LoadAppearance = Core::RawFunc<
     /* addr = */ Red::Addresses::ItemFactoryRequest_LoadAppearance,
@@ -113,6 +114,7 @@ using Entity = Core::OffsetPtr<0x80, Red::WeakHandle<Red::Entity>>;
 using EntityTemplate = Core::OffsetPtr<0xA8, Red::ResourceTokenPtr<Red::EntityTemplate>>;
 using AppearanceToken = Core::OffsetPtr<0xB8, Red::ResourceTokenPtr<Red::AppearanceResource>>;
 using AppearanceName = Core::OffsetPtr<0x48, Red::CName>;
+using ItemRecord = Core::OffsetPtr<0x100, Red::gamedataTweakDBRecord*>;
 
 constexpr auto LoadTemplate = Core::RawFunc<
     /* addr = */ Red::Addresses::ItemFactoryAppearanceChangeRequest_LoadTemplate,
