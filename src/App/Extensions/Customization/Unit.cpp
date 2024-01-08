@@ -62,5 +62,5 @@ bool App::CustomizationUnit::ReadOptions(const YAML::Node& aNode, Core::Vector<s
         }
     }
 
-    return malformed;
+    return !malformed;
 }

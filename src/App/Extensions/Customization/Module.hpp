@@ -44,7 +44,7 @@ private:
     void PrefetchCustomResources(Core::Vector<CustomizationResourceToken>& aResources,
                                  const Core::Vector<std::string>& aPaths);
 
-    void MergeCustomEntries();
+    void MergeCustomEntries(CustomizationSystem* aSystem);
     void MergeCustomEntries(CustomizationResourceToken& aTargetResource,
                             Core::Vector<CustomizationResourceToken>& aSourceResources);
     void MergeCustomGroups(Red::DynArray<CustomizationGroup>& aTargetGroups,
@@ -59,19 +59,19 @@ private:
 
     void ResetCustomResources();
 
-    void OnActivateSystem(CustomizationSystem& aSystem, CustomizationPuppet& aPuppet, bool aIsMale, uintptr_t a4);
-    void OnDeactivateSystem(CustomizationSystem& aSystem);
-    void OnEnsureState(CustomizationSystem& aSystem, CustomizationState& aState);
-    void OnInitAppOption(CustomizationSystem& aSystem,
+    void OnActivateSystem(CustomizationSystem* aSystem, CustomizationPuppet& aPuppet, bool aIsMale, uintptr_t a4);
+    void OnDeactivateSystem(CustomizationSystem* aSystem);
+    void OnEnsureState(CustomizationSystem* aSystem, CustomizationState& aState);
+    void OnInitAppOption(CustomizationSystem* aSystem,
                          CustomizationPart aPartType,
                          CustomizationStateOption& aOption,
                          Red::SortedUniqueArray<Red::CName>& aStateOptions,
                          Red::Map<Red::CName, CustomizationStateOption>& aUiSlots);
-    void OnInitMorphOption(CustomizationSystem& aSystem,
+    void OnInitMorphOption(CustomizationSystem* aSystem,
                            CustomizationStateOption& aOption,
                            Red::SortedUniqueArray<Red::CName>& aStateOptions,
                            Red::Map<Red::CName, CustomizationStateOption>& aUiSlots);
-    void OnInitSwitcherOption(CustomizationSystem& aSystem,
+    void OnInitSwitcherOption(CustomizationSystem* aSystem,
                               CustomizationPart aPartType,
                               CustomizationStateOption& aOption,
                               int32_t aCurrentIndex,
@@ -84,6 +84,8 @@ private:
                             uintptr_t a5,
                             uint8_t a6);
 
+    CustomizationResourceToken m_baseMaleResource;
+    CustomizationResourceToken m_baseFemaleResource;
     Core::Vector<CustomizationResourceToken> m_customMaleResources;
     Core::Vector<CustomizationResourceToken> m_customFemaleResources;
     Core::Map<Red::AppearanceDescriptor::Hash, Red::AppearanceDescriptor> m_customAppOverrides;

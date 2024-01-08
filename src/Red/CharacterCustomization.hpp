@@ -54,23 +54,26 @@ constexpr auto CheckState = Core::RawFunc<
 
 namespace Raw::CharacterCustomizationSystem
 {
+using FemaleResource = Core::OffsetPtr<0x58, Red::SharedPtr<Red::ResourceToken<Red::gameuiCharacterCustomizationInfoResource>>>;
+using MaleResource = Core::OffsetPtr<0x48, Red::SharedPtr<Red::ResourceToken<Red::gameuiCharacterCustomizationInfoResource>>>;
+
 constexpr auto Initialize = Core::RawFunc<
     /* addr = */ Red::Addresses::CharacterCustomizationSystem_Initialize,
-    /* type = */ void (*)(Red::game::ui::ICharacterCustomizationSystem& aSystem,
+    /* type = */ void (*)(Red::gameuiICharacterCustomizationSystem* aSystem,
                           Red::Handle<Red::game::Puppet>& aPuppet, bool aIsMale, uintptr_t a4)>();
 
 constexpr auto Uninitialize = Core::RawFunc<
     /* addr = */ Red::Addresses::CharacterCustomizationSystem_Uninitialize,
-    /* type = */ void (*)(Red::game::ui::ICharacterCustomizationSystem& aSystem)>();
+    /* type = */ void (*)(Red::gameuiICharacterCustomizationSystem* aSystem)>();
 
 constexpr auto EnsureState = Core::RawFunc<
     /* addr = */ Red::Addresses::CharacterCustomizationSystem_EnsureState,
-    /* type = */ void (*)(Red::game::ui::ICharacterCustomizationSystem& aSystem,
+    /* type = */ void (*)(Red::gameuiICharacterCustomizationSystem* aSystem,
                           Red::Handle<Red::game::ui::CharacterCustomizationState>& aState)>();
 
 constexpr auto InitializeAppOption = Core::RawFunc<
     /* addr = */ Red::Addresses::CharacterCustomizationSystem_InitializeAppOption,
-    /* type = */ void (*)(Red::game::ui::ICharacterCustomizationSystem& aSystem,
+    /* type = */ void (*)(Red::gameuiICharacterCustomizationSystem* aSystem,
                           Red::game::ui::CharacterCustomizationPart aPartType,
                           Red::Handle<Red::game::ui::CharacterCustomizationOption>& aOption,
                           Red::SortedUniqueArray<Red::CName>& aStateOptions,
@@ -78,14 +81,14 @@ constexpr auto InitializeAppOption = Core::RawFunc<
 
 constexpr auto InitializeMorphOption = Core::RawFunc<
     /* addr = */ Red::Addresses::CharacterCustomizationSystem_InitializeMorphOption,
-    /* type = */ void (*)(Red::game::ui::ICharacterCustomizationSystem& aSystem,
+    /* type = */ void (*)(Red::gameuiICharacterCustomizationSystem* aSystem,
                           Red::Handle<Red::game::ui::CharacterCustomizationOption>& aOption,
                           Red::SortedUniqueArray<Red::CName>& aStateOptions,
                           Red::Map<Red::CName, Red::Handle<Red::game::ui::CharacterCustomizationOption>>& aUiSlots)>();
 
 constexpr auto InitializeSwitcherOption = Core::RawFunc<
     /* addr = */ Red::Addresses::CharacterCustomizationSystem_InitializeSwitcherOption,
-    /* type = */ bool (*)(Red::game::ui::ICharacterCustomizationSystem& aSystem,
+    /* type = */ bool (*)(Red::gameuiICharacterCustomizationSystem* aSystem,
                           Red::game::ui::CharacterCustomizationPart aPartType,
                           Red::Handle<Red::game::ui::CharacterCustomizationOption>& aOption,
                           int32_t aCurrentIndex,

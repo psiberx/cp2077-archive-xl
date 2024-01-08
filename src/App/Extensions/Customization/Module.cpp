@@ -4,9 +4,6 @@ namespace
 {
 constexpr auto ModuleName = "Customization";
 
-constexpr auto MaleResource = Red::ResourcePath(R"(base\gameplay\gui\fullscreen\main_menu\male_cco.inkcharcustomization)");
-constexpr auto FemaleResource = Red::ResourcePath(R"(base\gameplay\gui\fullscreen\main_menu\female_cco.inkcharcustomization)");
-
 Red::ClassLocator<Red::game::ui::AppearanceInfo> s_AppInfoType;
 Red::ClassLocator<Red::game::ui::MorphInfo> s_MorphInfoType;
 Red::ClassLocator<Red::game::ui::SwitcherInfo> s_SwitcherInfoType;
@@ -133,20 +130,18 @@ void App::CustomizationModule::PrefetchCustomResources(Core::Vector<Customizatio
     }
 }
 
-void App::CustomizationModule::MergeCustomEntries()
+void App::CustomizationModule::MergeCustomEntries(App::CustomizationSystem* aSystem)
 {
     std::unique_lock _(m_customEntriesMergeLock);
 
     if (m_customEntriesMerged)
         return;
 
-    auto loader = Red::ResourceLoader::Get();
+    m_baseMaleResource = Raw::CharacterCustomizationSystem::MaleResource::Ref(aSystem);
+    m_baseFemaleResource = Raw::CharacterCustomizationSystem::FemaleResource::Ref(aSystem);
 
-    auto maleResource = loader->LoadAsync<CustomizationResource>(MaleResource);
-    auto femaleResource = loader->LoadAsync<CustomizationResource>(FemaleResource);
-
-    MergeCustomEntries(maleResource, m_customMaleResources);
-    MergeCustomEntries(femaleResource, m_customFemaleResources);
+    MergeCustomEntries(m_baseMaleResource, m_customMaleResources);
+    MergeCustomEntries(m_baseFemaleResource, m_customFemaleResources);
 
     m_customEntriesMerged = true;
 }
@@ -331,16 +326,11 @@ void App::CustomizationModule::RemoveCustomEntries()
     if (!m_customEntriesMerged)
         return;
 
-    auto loader = Red::ResourceLoader::Get();
+    RemoveCustomEntries(m_baseMaleResource);
+    RemoveCustomEntries(m_baseFemaleResource);
 
-    if (!loader)
-        return;
-
-    auto maleResource = loader->LoadAsync<CustomizationResource>(MaleResource);
-    auto femaleResource = loader->LoadAsync<CustomizationResource>(FemaleResource);
-
-    RemoveCustomEntries(maleResource);
-    RemoveCustomEntries(femaleResource);
+    m_baseMaleResource = nullptr;
+    m_baseFemaleResource = nullptr;
 
     m_customAppOverrides.clear();
     m_customEntryNames.clear();
@@ -434,25 +424,25 @@ void App::CustomizationModule::ResetCustomResources()
     m_customFemaleResources.clear();
 }
 
-void App::CustomizationModule::OnActivateSystem(App::CustomizationSystem& aSystem, App::CustomizationPuppet& aPuppet,
+void App::CustomizationModule::OnActivateSystem(App::CustomizationSystem* aSystem, App::CustomizationPuppet& aPuppet,
                                                 bool aIsMale, uintptr_t a4)
 {
-    MergeCustomEntries();
+    MergeCustomEntries(aSystem);
 
     m_customizationActive = true;
 }
 
-void App::CustomizationModule::OnDeactivateSystem(App::CustomizationSystem& aSystem)
+void App::CustomizationModule::OnDeactivateSystem(App::CustomizationSystem* aSystem)
 {
     m_customizationActive = false;
 }
 
-void App::CustomizationModule::OnEnsureState(App::CustomizationSystem& aSystem, App::CustomizationState& aState)
+void App::CustomizationModule::OnEnsureState(App::CustomizationSystem* aSystem, App::CustomizationState& aState)
 {
-    MergeCustomEntries();
+    MergeCustomEntries(aSystem);
 }
 
-void App::CustomizationModule::OnInitAppOption(App::CustomizationSystem& aSystem,
+void App::CustomizationModule::OnInitAppOption(App::CustomizationSystem* aSystem,
                                                App::CustomizationPart aPartType,
                                                App::CustomizationStateOption& aOption,
                                                Red::SortedUniqueArray<Red::CName>& aStateOptions,
@@ -469,7 +459,7 @@ void App::CustomizationModule::OnInitAppOption(App::CustomizationSystem& aSystem
     }
 }
 
-void App::CustomizationModule::OnInitMorphOption(App::CustomizationSystem& aSystem,
+void App::CustomizationModule::OnInitMorphOption(App::CustomizationSystem* aSystem,
                                                  App::CustomizationStateOption& aOption,
                                                  Red::SortedUniqueArray<Red::CName>& aStateOptions,
                                                  Red::Map<Red::CName, App::CustomizationStateOption>& aUiSlots)
@@ -485,7 +475,7 @@ void App::CustomizationModule::OnInitMorphOption(App::CustomizationSystem& aSyst
     }
 }
 
-void App::CustomizationModule::OnInitSwitcherOption(App::CustomizationSystem& aSystem,
+void App::CustomizationModule::OnInitSwitcherOption(App::CustomizationSystem* aSystem,
                                                     App::CustomizationPart aPartType,
                                                     App::CustomizationStateOption& aOption,
                                                     int32_t aCurrentIndex,
