@@ -210,7 +210,6 @@ Red::SharedPtr<Red::ResourceToken<Red::CMesh>> App::ComponentWrapper::LoadResour
     case ComponentType::GarmentSkinnedMeshComponent:
         meshRef = GetComponentMeshReference(reinterpret_cast<Red::ent::SkinnedMeshComponent*>(m_component));
         break;
-        break;
     case ComponentType::MorphTargetSkinnedMeshComponent:
         meshRef = GetComponentMeshReference(reinterpret_cast<Red::ent::MorphTargetSkinnedMeshComponent*>(m_component));
         break;

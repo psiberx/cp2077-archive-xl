@@ -52,6 +52,8 @@ constexpr auto FemaleSuffixValue = "Female";
 
 constexpr auto DefaultBodyTypeAttrValue = "base_body";
 constexpr auto DefaultBodyTypeSuffixValue = App::PuppetStateSystem::BaseBodyName;
+constexpr auto DefaultFeetStateAttrValue = "flat";
+constexpr auto DefaultFeetStateSuffixValue = "Flat";
 
 constexpr auto MaleBodyComponent = Red::CName("t0_000_pma_base__full");
 constexpr auto FemaleBodyComponent1 = Red::CName("t0_000_pwa_base__full");
@@ -337,9 +339,9 @@ Red::ResourcePath App::DynamicAppearanceController::ResolvePath(Red::Entity* aEn
 
     Red::ResourcePath finalPath = result.value.data();
 
-    if (result.attributes.contains(BodyTypeAttr))
+    if (!Red::ResourceDepot::Get()->ResourceExists(finalPath))
     {
-        if (!Red::ResourceDepot::Get()->ResourceExists(finalPath))
+        if (result.attributes.contains(BodyTypeAttr) || result.attributes.contains(FeetStateAttr))
         {
             result = ProcessString(state.fallback, aVariant, pathStr.data());
             finalPath = result.value.data();
@@ -469,6 +471,7 @@ void App::DynamicAppearanceController::UpdateState(Red::Entity* aEntity)
 
     state.fallback = state.values;
     state.fallback[BodyTypeAttr] = {DefaultBodyTypeAttrValue, DefaultBodyTypeSuffixValue};
+    state.fallback[FeetStateAttr] = {DefaultFeetStateAttrValue, DefaultFeetStateSuffixValue};
 
     state.conditions.clear();
     for (const auto& [attributeName, attributeData] : state.values)
