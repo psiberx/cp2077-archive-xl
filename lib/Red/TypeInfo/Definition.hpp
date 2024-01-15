@@ -936,7 +936,7 @@ struct SystemBuilder
     {
         constexpr auto systemRefStr = GetTypeNameStr<Handle<TSystem>>();
         constexpr auto systemTypeStr = GetTypeNameStr<TSystem>();
-        constexpr auto systemNameStr = Red::Detail::UpFirstConstStr<systemTypeStr.size()>(systemTypeStr.data());
+        constexpr auto systemNameStr = Detail::UpFirstConstStr<systemTypeStr.size()>(systemTypeStr.data());
         constexpr auto getterNameStr = Detail::ConcatConstStr<3, systemNameStr.size() - 1>("Get", systemNameStr.data());
 
         auto gameType = GetClass<ScriptGameInstance>();
