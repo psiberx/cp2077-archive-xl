@@ -45,7 +45,7 @@ protected:
         {
             if (--m_instance.m_deferChain == 0)
             {
-                reinterpret_cast<Feature&>(m_instance).OnInitialize();
+                static_cast<Feature&>(m_instance).OnInitialize();
             }
         }
 

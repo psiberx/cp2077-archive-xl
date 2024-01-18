@@ -18,13 +18,34 @@ public:
 
     auto SetLogPath(const std::filesystem::path& aPath) noexcept
     {
-        m_logPath = aPath;
+        m_baseLogPath = aPath;
+        return Defer(this);
+    }
+
+    auto AppendTimestampToLogName() noexcept
+    {
+        m_appendTimestamp = true;
+        return Defer(this);
+    }
+
+    auto CreateRecentLogSymlink() noexcept
+    {
+        m_recentSymlink = true;
+        return Defer(this);
+    }
+
+    auto SetMaxLogFiles(int32_t aMaxFiles) noexcept
+    {
+        m_maxLogCount = aMaxFiles;
         return Defer(this);
     }
 
 protected:
     void OnInitialize() override;
 
-    std::filesystem::path m_logPath;
+    std::filesystem::path m_baseLogPath;
+    bool m_appendTimestamp{ false };
+    bool m_recentSymlink{ false };
+    int32_t m_maxLogCount{ 10 };
 };
 }
