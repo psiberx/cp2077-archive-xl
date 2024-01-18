@@ -2,13 +2,11 @@
 #include "App/Project.hpp"
 #include "Core/Facades/Hook.hpp"
 #include "Core/Facades/Runtime.hpp"
-#include "Core/Runtime/OwnerMutex.hpp"
 #include "Red/Addresses.hpp"
 
 namespace
 {
 Core::UniquePtr<App::Application> g_app;
-Core::UniquePtr<Core::OwnerMutex> g_mutex;
 }
 
 // RED4ext
@@ -20,25 +18,14 @@ RED4EXT_C_EXPORT bool RED4EXT_CALL Main(RED4ext::PluginHandle aHandle, RED4ext::
     {
     case RED4ext::EMainReason::Load:
     {
-        g_mutex = Core::MakeUnique<Core::OwnerMutex>(App::Project::Name);
-
-        if (g_mutex->Obtain())
-        {
-            g_app = Core::MakeUnique<App::Application>(aHandle, aSdk);
-            g_app->Bootstrap();
-        }
+        g_app = Core::MakeUnique<App::Application>(aHandle, aSdk);
+        g_app->Bootstrap();
         break;
     }
     case RED4ext::EMainReason::Unload:
     {
-        if (g_mutex->IsOwner())
-        {
-            g_app->Shutdown();
-            g_app = nullptr;
-
-            g_mutex->Release();
-            g_mutex = nullptr;
-        }
+        g_app->Shutdown();
+        g_app = nullptr;
         break;
     }
     }
@@ -80,28 +67,20 @@ BOOL APIENTRY DllMain(HMODULE aHandle, DWORD aReason, LPVOID)
 
         if (s_isGame && s_isASI)
         {
-            g_mutex = Core::MakeUnique<Core::OwnerMutex>(App::Project::Name);
+            g_app = Core::MakeUnique<App::Application>(aHandle);
 
-            if (g_mutex->Obtain())
-            {
-                g_app = Core::MakeUnique<App::Application>(aHandle);
-
-                Core::Hook::Before<GameMain>(+[]() {
-                    g_app->Bootstrap();
-                });
-            }
+            Core::Hook::Before<GameMain>(+[]() {
+                g_app->Bootstrap();
+            });
         }
         break;
     }
     case DLL_PROCESS_DETACH:
     {
-        if (s_isGame && s_isASI && g_mutex->IsOwner())
+        if (s_isGame && s_isASI)
         {
             g_app->Shutdown();
             g_app = nullptr;
-
-            g_mutex->Release();
-            g_mutex = nullptr;
         }
         break;
     }
