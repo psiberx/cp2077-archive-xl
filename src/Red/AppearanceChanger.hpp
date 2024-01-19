@@ -67,7 +67,7 @@ constexpr auto RegisterPart = Core::RawFunc<
 
 constexpr auto GetBaseMeshOffset = Core::RawFunc<
     /* addr = */ Red::Addresses::AppearanceChanger_GetBaseMeshOffset,
-    /* type = */ int64_t (*)(Red::Handle<Red::IComponent>& aComponent,
+    /* type = */ int32_t (*)(Red::Handle<Red::IComponent>& aComponent,
                              Red::Handle<Red::EntityTemplate>& aTemplate)>();
 
 constexpr auto ComputePlayerGarment = Core::RawFunc<

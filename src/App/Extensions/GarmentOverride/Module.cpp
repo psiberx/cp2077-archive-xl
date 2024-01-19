@@ -78,8 +78,8 @@ bool App::GarmentOverrideModule::Load()
     if (!HookBefore<Raw::AppearanceChanger::RegisterPart>(&OnRegisterPart))
         throw std::runtime_error("Failed to hook [AppearanceChanger::RegisterPart].");
 
-    if (!Hook<Raw::AppearanceChanger::GetBaseMeshOffset>(&OnGetBaseMeshOffset))
-        throw std::runtime_error("Failed to hook [AppearanceChanger::GetBaseMeshOffset].");
+    // if (!Hook<Raw::AppearanceChanger::GetBaseMeshOffset>(&OnGetBaseMeshOffset))
+    //     throw std::runtime_error("Failed to hook [AppearanceChanger::GetBaseMeshOffset].");
 
     if (!HookBefore<Raw::AppearanceChanger::ComputePlayerGarment>(&OnComputeGarment))
         throw std::runtime_error("Failed to hook [AppearanceChanger::ComputePlayerGarment].");
@@ -127,7 +127,7 @@ bool App::GarmentOverrideModule::Unload()
     Unhook<Raw::GarmentAssembler::ProcessMorphedMesh>();
     Unhook<Raw::GarmentAssembler::OnGameDetach>();
     Unhook<Raw::AppearanceChanger::RegisterPart>();
-    Unhook<Raw::AppearanceChanger::GetBaseMeshOffset>();
+    // Unhook<Raw::AppearanceChanger::GetBaseMeshOffset>();
     Unhook<Raw::AppearanceChanger::ComputePlayerGarment>();
     Unhook<Raw::Entity::ReassembleAppearance>();
     Unhook<Raw::ResourcePath::Create>();
@@ -530,22 +530,25 @@ void App::GarmentOverrideModule::OnProcessGarmentMesh(Red::GarmentProcessor* aPr
     }
 }
 
-int64_t App::GarmentOverrideModule::OnGetBaseMeshOffset(Red::Handle<Red::IComponent>& aComponent,
-                                                        Red::Handle<Red::EntityTemplate>& aTemplate)
-{
-    auto offset = Raw::AppearanceChanger::GetBaseMeshOffset(aComponent, aTemplate);
-
-    if (s_garmentOffsetsEnabled)
-    {
-        offset %= 1000;
-
-#ifndef NDEBUG
-        LogDebug("|{}| [event=GetBaseMeshOffset comp={} offset={}]", ModuleName, aComponent->name.ToString(), offset);
-#endif
-    }
-
-    return offset;
-}
+// int32_t App::GarmentOverrideModule::OnGetBaseMeshOffset(Red::Handle<Red::IComponent>& aComponent,
+//                                                         Red::Handle<Red::EntityTemplate>& aTemplate)
+// {
+//     auto offset = Raw::AppearanceChanger::GetBaseMeshOffset(aComponent, aTemplate);
+//
+//     if (s_garmentOffsetsEnabled)
+//     {
+//         if (offset >= -1000)
+//         {
+//             offset %= 1000;
+//
+// #ifndef NDEBUG
+//             LogDebug("|{}| [event=GetBaseMeshOffset comp={} offset={}]", ModuleName, aComponent->name.ToString(), offset);
+// #endif
+//         }
+//     }
+//
+//     return offset;
+// }
 
 void App::GarmentOverrideModule::OnComputeGarment(uintptr_t, Red::Handle<Red::Entity>& aEntity,
                                                   Red::DynArray<int32_t>& aOffsets,
@@ -799,14 +802,6 @@ void App::GarmentOverrideModule::ApplyOffsetOverrides(Core::SharedPtr<App::Entit
     if (s_garmentOffsetsEnabled)
     {
         aEntityState->ApplyOffsetOverrides(aResourcePaths, aOffsets);
-
-        for (auto& offset : aOffsets)
-        {
-            if (offset > 0 && offset < 1000)
-            {
-                offset *= 100;
-            }
-        }
     }
     else
     {

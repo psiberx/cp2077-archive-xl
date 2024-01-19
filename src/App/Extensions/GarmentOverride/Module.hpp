@@ -54,8 +54,8 @@ private:
                                      Red::Handle<Red::EntityTemplate>& aPartTemplate,
                                      Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,
                                      Red::Handle<Red::IComponent>& aComponent, Red::JobGroup& aJobGroup);
-    static int64_t OnGetBaseMeshOffset(Red::Handle<Red::IComponent>& aComponent,
-                                       Red::Handle<Red::EntityTemplate>& aTemplate);
+    // static int32_t OnGetBaseMeshOffset(Red::Handle<Red::IComponent>& aComponent,
+    //                                    Red::Handle<Red::EntityTemplate>& aTemplate);
     static void OnComputeGarment(uintptr_t, Red::Handle<Red::Entity>&, Red::DynArray<int32_t>&,
                                  Red::SharedPtr<Red::GarmentComputeData>&, uintptr_t, uintptr_t, uintptr_t, bool);
     static void OnReassembleAppearance(Red::Entity*, uintptr_t, uintptr_t, uintptr_t, uintptr_t, uintptr_t);
