@@ -166,8 +166,8 @@ void App::AttachmentSlotsModule::OnAttachTPP(Red::game::TPPRepresentationCompone
 
     for (const auto slotID : TPPAffectedSlots)
     {
-        const auto& subSlots = s_dependentSlots.find(slotID);
-        if (subSlots != s_dependentSlots.end())
+        const auto& subSlots = s_extraSlots.find(slotID);
+        if (subSlots != s_extraSlots.end())
         {
             for (const auto& subSlotID : subSlots->second)
             {

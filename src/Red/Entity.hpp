@@ -18,7 +18,9 @@ constexpr auto ReassembleAppearance = Core::RawFunc<
 
 namespace Raw::IComponent
 {
+using AppearanceName = Core::OffsetPtr<0x48, Red::CName>;
 using Owner = Core::OffsetPtr<0x50, Red::Entity*>;
+using AppearancePath = Core::OffsetPtr<0x68, Red::ResourcePath>;
 
 constexpr auto UpdateRenderer = Core::RawVFunc<
     /* offset = */ 0x280,
