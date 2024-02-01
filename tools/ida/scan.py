@@ -44,11 +44,11 @@ def patterns():
                 Item(name="IsSlotEmpty",
                      pattern="48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8D B9 ? ? ? ? 48 8B F1 48 8B CF 48 8B DA E8 ? ? ? ? 48 8B D3 48 8B CE E8 ? ? ? ? 33 ? 48 85 C0 74",
                      expected=3,
-                     index=0),
+                     index=1),
                 Item(name="IsSlotSpawning",
                      pattern="48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8D B9 ? ? ? ? 48 8B F1 48 8B CF 48 8B DA E8 ? ? ? ? 48 8B D3 48 8B CE E8 ? ? ? ? 33 ? 48 85 C0 74",
                      expected=3,
-                     index=1),
+                     index=0),
             ]),
             Group(name="CBaseEngine", functions=[
                 Item(name="LoadGatheredResources",
