@@ -47,15 +47,17 @@ private:
     bool UpdateFeetState(const Red::Handle<Red::Entity>& aPuppet);
     PuppetFeetState ResolveFeetState(const Red::Handle<Red::Entity>& aPuppet);
 
-    void RefreshChestAppearances(const Red::Handle<Red::Entity>& aPuppet);
-    void RefreshHandsAppearances(const Red::Handle<Red::Entity>& aPuppet);
-    void RefreshLegsAppearances(const Red::Handle<Red::Entity>& aPuppet);
+    void RefreshCameraDependentAppearances(const Red::Handle<Red::Entity>& aPuppet);
+    void RefreshSleevesDependentAppearances(const Red::Handle<Red::Entity>& aPuppet);
+    void RefreshArmsDependentAppearances(const Red::Handle<Red::Entity>& aPuppet);
+    void RefreshFeetDependentAppearances(const Red::Handle<Red::Entity>& aPuppet);
 
     bool IsMale();
 
     bool IsTorsoSlot(Red::TweakDBID aSlotID);
     bool IsFeetSlot(Red::TweakDBID aSlotID);
     static bool IsWeaponSlot(Red::TweakDBID aSlotID);
+    static bool IsTppHeadSlot(Red::TweakDBID aSlotID);
 
     SlotState GetItemInSlot(const Red::Handle<Red::Entity>& aPuppet, Red::TweakDBID aSlotID);
 
@@ -83,6 +85,7 @@ private:
     Red::ITransactionSystem* m_transactionSystem;
     Core::Set<Red::TweakDBID> m_torsoSlots;
     Core::Set<Red::TweakDBID> m_feetSlots;
+    Core::Set<Red::TweakDBID> m_headDependentSlots;
     Core::Set<Red::TweakDBID> m_torsoDependentSlots;
     Core::Set<Red::TweakDBID> m_handsDependentSlots;
     Core::Set<Red::TweakDBID> m_feetDependentSlots;
