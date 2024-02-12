@@ -147,7 +147,7 @@ bool App::LocalizationModule::MergeTextResource(const std::string& aPath, TextEn
 
             newEntry.primaryKey = Red::FNV1a64(newEntry.secondaryKey.c_str());
             newEntry.secondaryKey = "";
-            MergeTextEntry(aFinalList, newEntry, i, aUsedKeyMap, aOriginalCount, aOriginalMaxKey, aFallback);
+            MergeTextEntry(aFinalList, newEntry, i, aUsedKeyMap, aOriginalCount, aOriginalMaxKey, aFallback, true);
         }
         else
         {
@@ -160,7 +160,7 @@ bool App::LocalizationModule::MergeTextResource(const std::string& aPath, TextEn
 
 void App::LocalizationModule::MergeTextEntry(TextEntryList& aFinalList, TextEntry& aNewEntry, uint32_t aIndex,
                                              TextEntryMap& aUsedKeyMap, uint32_t aOriginalCount,
-                                             uint64_t aOriginalMaxKey, bool aFallback)
+                                             uint64_t aOriginalMaxKey, bool aFallback, bool aExtraEntry)
 {
     const auto& existingIt = aUsedKeyMap.find(aNewEntry.primaryKey);
 
@@ -180,19 +180,22 @@ void App::LocalizationModule::MergeTextEntry(TextEntryList& aFinalList, TextEntr
             }
         }
 
+        aUsedKeyMap.emplace(aNewEntry.primaryKey, aFinalList.size);
         aFinalList.EmplaceBack(aNewEntry);
-        aUsedKeyMap.emplace(aNewEntry.primaryKey, aFinalList.End() - 1);
     }
     else if (!aFallback)
     {
-        auto* originalEntry = existingIt.value();
+        auto* originalEntry = aFinalList.Begin() + existingIt.value();
 
-        if (originalEntry->secondaryKey.Length() == 0)
-            LogWarning("|{}| Item #{} overwrites entry {}.",
-                       ModuleName, aIndex, originalEntry->primaryKey);
-        else
-            LogWarning("|{}| Item #{} overwrites entry {} aka {}.",
-                       ModuleName, aIndex, originalEntry->primaryKey, originalEntry->secondaryKey.c_str());
+        if (!aExtraEntry)
+        {
+            if (originalEntry->secondaryKey.Length() == 0)
+                LogWarning("|{}| Item #{} overwrites entry {}.",
+                           ModuleName, aIndex, originalEntry->primaryKey);
+            else
+                LogWarning("|{}| Item #{} overwrites entry {} aka {}.",
+                           ModuleName, aIndex, originalEntry->primaryKey, originalEntry->secondaryKey.c_str());
+        }
 
         *originalEntry = aNewEntry;
     }

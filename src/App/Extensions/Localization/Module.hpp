@@ -8,7 +8,7 @@ namespace App
 using TextResource = Red::localization::PersistenceOnScreenEntries;
 using TextEntry = Red::localization::PersistenceOnScreenEntry;
 using TextEntryList = Red::DynArray<TextEntry>;
-using TextEntryMap = Core::Map<uint64_t, TextEntry*>;
+using TextEntryMap = Core::Map<uint64_t, uint32_t>;
 
 using SubtitleResource = Red::localization::PersistenceSubtitleMap;
 using SubtitleEntry = Red::localization::PersistenceSubtitleMapEntry;
@@ -31,7 +31,7 @@ private:
                                   uint32_t aOriginalCount, uint64_t aOriginalMaxKey, bool aFallback);
     static void MergeTextEntry(TextEntryList& aFinalList, TextEntry& aNewEntry, uint32_t aIndex,
                                TextEntryMap& aUsedKeyMap, uint32_t aOriginalCount, uint64_t aOriginalMaxKey,
-                               bool aFallback);
+                               bool aFallback, bool aExtraEntry = false);
     static TextEntry* FindSameTextEntry(TextEntry& aEntry, TextEntryList& aList, uint32_t aCount);
     static bool IsCommentEntry(TextEntry& aEntry);
     static bool MergeSubtitleResource(const std::string& aPath, SubtitleEntryList& aFinalList);
