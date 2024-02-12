@@ -748,7 +748,7 @@ void App::GarmentOverrideModule::ApplyComponentOverrides(Core::SharedPtr<EntityS
         if (aForceUpdate && (isAppearnceUpdated || isChunkMaskUpdated))
         {
             ComponentWrapper wrapper{component};
-            if (wrapper.IsMeshComponent() && !wrapper.IsGarmentComponent())
+            if (wrapper.IsMeshComponent() /*&& !wrapper.IsGarmentComponent()*/)
             {
                 Raw::IComponent::UpdateRenderer(component);
             }
