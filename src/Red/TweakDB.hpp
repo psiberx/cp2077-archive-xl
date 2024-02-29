@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Red/Addresses.hpp"
-
 namespace Red
 {
 template<typename T>
@@ -134,6 +132,6 @@ inline CString ToStringDebug(TweakDBID aID)
 namespace Raw
 {
 constexpr auto LoadTweakDB = Core::RawFunc<
-    /* addr = */ Red::Addresses::TweakDB_Load,
+    /* addr = */ Red::AddressLib::TweakDB_Load,
     /* type = */ void (*)(Red::TweakDB*, Red::CString&)>();
 }

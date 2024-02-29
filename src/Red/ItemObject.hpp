@@ -1,8 +1,5 @@
 #pragma once
 
-#include "Core/Raw.hpp"
-#include "Red/Addresses.hpp"
-
 namespace Raw::ItemObject
 {
 using ItemID = Core::OffsetPtr<0x288, Red::ItemID>;

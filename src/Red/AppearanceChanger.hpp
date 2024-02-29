@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Red/Addresses.hpp"
 #include "Red/Common.hpp"
 #include "Red/EntityTemplate.hpp"
 
@@ -50,7 +49,7 @@ RED4EXT_ASSERT_OFFSET(AppearanceDescriptor, appearance, 0x8);
 namespace Raw::AppearanceChanger
 {
 constexpr auto GetSuffixValue = Core::RawFunc<
-    /* addr = */ Red::Addresses::AppearanceChanger_GetSuffixValue,
+    /* addr = */ Red::AddressLib::AppearanceChanger_GetSuffixValue,
     /* type = */ bool (*)(Red::ItemID aItemID,
                           uint64_t a2, // Must be non-zero
                           Red::Handle<Red::GameObject>& aOwner,
@@ -59,19 +58,19 @@ constexpr auto GetSuffixValue = Core::RawFunc<
 using GetSuffixValuePtr = decltype(GetSuffixValue)::Callable;
 
 constexpr auto RegisterPart = Core::RawFunc<
-    /* addr = */ Red::Addresses::AppearanceChanger_RegisterPart,
+    /* addr = */ Red::AddressLib::AppearanceChanger_RegisterPart,
     /* type = */ void (*)(uintptr_t,
                           Red::Handle<Red::EntityTemplate>& aPart,
                           Red::Handle<Red::ComponentsStorage>& aComponents,
                           Red::Handle<Red::AppearanceDefinition>& aAppearance)>();
 
 constexpr auto GetBaseMeshOffset = Core::RawFunc<
-    /* addr = */ Red::Addresses::AppearanceChanger_GetBaseMeshOffset,
+    /* addr = */ Red::AddressLib::AppearanceChanger_GetBaseMeshOffset,
     /* type = */ int32_t (*)(Red::Handle<Red::IComponent>& aComponent,
                              Red::Handle<Red::EntityTemplate>& aTemplate)>();
 
 constexpr auto ComputePlayerGarment = Core::RawFunc<
-    /* addr = */ Red::Addresses::AppearanceChanger_ComputePlayerGarment,
+    /* addr = */ Red::AddressLib::AppearanceChanger_ComputePlayerGarment,
     /* type = */ void (*)(uintptr_t a1,
                           Red::Handle<Red::ent::Entity>& aEntity,
                           Red::DynArray<int32_t>& aOffsets,
@@ -82,7 +81,7 @@ constexpr auto ComputePlayerGarment = Core::RawFunc<
                           bool a8)>();
 
 constexpr auto SelectAppearanceName = Core::RawFunc<
-    /* addr = */ Red::Addresses::AppearanceChanger_SelectAppearanceName,
+    /* addr = */ Red::AddressLib::AppearanceChanger_SelectAppearanceName,
     /* type = */ void* (*)(Red::CName* aOut,
                            const Red::Handle<Red::TweakDBRecord>& aItemRecord,
                            const Red::ItemID& aItemID,
@@ -100,11 +99,11 @@ using AppearanceName = Core::OffsetPtr<0x158, Red::CName>;
 using ItemRecord = Core::OffsetPtr<0x160, Red::gamedataTweakDBRecord*>;
 
 constexpr auto LoadAppearance = Core::RawFunc<
-    /* addr = */ Red::Addresses::ItemFactoryRequest_LoadAppearance,
+    /* addr = */ Red::AddressLib::ItemFactoryRequest_LoadAppearance,
     /* type = */ bool (*)(Red::ItemFactoryRequest* aRequest)>();
 
 // constexpr auto ApplyAppearance = Core::RawFunc<
-//     /* addr = */ Red::Addresses::ItemFactoryRequest_ApplyAppearance,
+//     /* addr = */ Red::AddressLib::ItemFactoryRequest_ApplyAppearance,
 //     /* type = */ bool (*)(Red::ItemFactoryRequest* aRequest)>();
 };
 
@@ -117,22 +116,22 @@ using AppearanceName = Core::OffsetPtr<0x48, Red::CName>;
 using ItemRecord = Core::OffsetPtr<0x100, Red::gamedataTweakDBRecord*>;
 
 constexpr auto LoadTemplate = Core::RawFunc<
-    /* addr = */ Red::Addresses::ItemFactoryAppearanceChangeRequest_LoadTemplate,
+    /* addr = */ Red::AddressLib::ItemFactoryAppearanceChangeRequest_LoadTemplate,
     /* type = */ bool (*)(Red::ItemFactoryAppearanceChangeRequest* aRequest)>();
 
 constexpr auto LoadAppearance = Core::RawFunc<
-    /* addr = */ Red::Addresses::ItemFactoryAppearanceChangeRequest_LoadAppearance,
+    /* addr = */ Red::AddressLib::ItemFactoryAppearanceChangeRequest_LoadAppearance,
     /* type = */ bool (*)(Red::ItemFactoryAppearanceChangeRequest* aRequest)>();
 
 // constexpr auto ApplyAppearance = Core::RawFunc<
-//     /* addr = */ Red::Addresses::ItemFactoryAppearanceChangeRequest_ApplyAppearance,
+//     /* addr = */ Red::AddressLib::ItemFactoryAppearanceChangeRequest_ApplyAppearance,
 //     /* type = */ bool (*)(Red::ItemFactoryAppearanceChangeRequest* aRequest)>();
 }
 
 namespace Raw::RuntimeSystemEntityAppearanceChanger
 {
 constexpr auto ChangeAppearance = Core::RawFunc<
-    /* addr = */ Red::Addresses::AppearanceChangeSystem_ChangeAppearance,
+    /* addr = */ Red::AddressLib::AppearanceChangeSystem_ChangeAppearance,
     /* type = */ void (*)(Red::world::RuntimeSystemEntityAppearanceChanger& aSystem,
                           Red::Handle<Red::game::Puppet>& aTarget,
                           Red::Range<Red::AppearanceDescriptor>& aOldApp,

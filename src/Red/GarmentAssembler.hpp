@@ -1,8 +1,5 @@
 #pragma once
 
-#include "Core/Raw.hpp"
-#include "Red/Addresses.hpp"
-
 namespace Red
 {
 using EntityTemplate = ent::EntityTemplate;
@@ -80,20 +77,20 @@ RED4EXT_ASSERT_SIZE(GarmentAssemblerState, 0x18);
 namespace Raw::GarmentAssembler
 {
 constexpr auto FindState = Core::RawFunc<
-    /* addr = */ Red::Addresses::GarmentAssembler_FindState,
+    /* addr = */ Red::AddressLib::GarmentAssembler_FindState,
     /* type = */ uintptr_t (*)(uintptr_t, Red::GarmentAssemblerState* aOut, Red::WeakHandle<Red::ent::Entity>&)>();
 
 constexpr auto RemoveItem = Core::RawFunc<
-    /* addr = */ Red::Addresses::GarmentAssembler_RemoveItem,
+    /* addr = */ Red::AddressLib::GarmentAssembler_RemoveItem,
     /* type = */ bool (*)(uintptr_t, Red::WeakHandle<Red::ent::Entity>&, Red::GarmentItemRemoveRequest&)>();
 
 constexpr auto ProcessGarment = Core::RawFunc<
-    /* addr = */ Red::Addresses::GarmentAssembler_ProcessGarment,
+    /* addr = */ Red::AddressLib::GarmentAssembler_ProcessGarment,
     /* type = */ uintptr_t (*)(Red::SharedPtr<Red::GarmentProcessor>& aProcessor, uintptr_t a2, uintptr_t a3,
                                Red::GarmentProcessorParams* aParams)>();
 
 constexpr auto ProcessSkinnedMesh = Core::RawFunc<
-    /* addr = */ Red::Addresses::GarmentAssembler_ProcessSkinnedMesh,
+    /* addr = */ Red::AddressLib::GarmentAssembler_ProcessSkinnedMesh,
     /* type = */ void (*)(Red::GarmentProcessor* aProcessor,
                           uint32_t aIndex,
                           Red::Handle<Red::EntityTemplate>& aPartTemplate,
@@ -102,7 +99,7 @@ constexpr auto ProcessSkinnedMesh = Core::RawFunc<
                           Red::JobGroup& aJobGroup)>();
 
 constexpr auto ProcessMorphedMesh = Core::RawFunc<
-    /* addr = */ Red::Addresses::GarmentAssembler_ProcessMorphedMesh,
+    /* addr = */ Red::AddressLib::GarmentAssembler_ProcessMorphedMesh,
     /* type = */ void (*)(Red::GarmentProcessor* aProcessor,
                           uint32_t aIndex,
                           Red::Handle<Red::EntityTemplate>& aPartTemplate,
@@ -111,25 +108,25 @@ constexpr auto ProcessMorphedMesh = Core::RawFunc<
                           Red::JobGroup& aJobGroup)>();
 
 constexpr auto OnGameDetach = Core::RawFunc<
-    /* addr = */ Red::Addresses::GarmentAssembler_OnGameDetach,
+    /* addr = */ Red::AddressLib::GarmentAssembler_OnGameDetach,
     /* type = */ void (*)(uintptr_t)>();
 }
 
 namespace Raw::GarmentAssemblerState
 {
 constexpr auto AddItem = Core::RawFunc<
-    /* addr = */ Red::Addresses::GarmentAssemblerState_AddItem,
+    /* addr = */ Red::AddressLib::GarmentAssemblerState_AddItem,
     /* type = */ bool (*)(Red::GarmentAssemblerState* aState, Red::GarmentItemAddRequest&)>();
 
 constexpr auto AddCustomItem = Core::RawFunc<
-    /* addr = */ Red::Addresses::GarmentAssemblerState_AddCustomItem,
+    /* addr = */ Red::AddressLib::GarmentAssemblerState_AddCustomItem,
     /* type = */ bool (*)(Red::GarmentAssemblerState* aState, Red::GarmentItemAddCustomRequest&)>();
 
 constexpr auto ChangeItem = Core::RawFunc<
-    /* addr = */ Red::Addresses::GarmentAssemblerState_ChangeItem,
+    /* addr = */ Red::AddressLib::GarmentAssemblerState_ChangeItem,
     /* type = */ bool (*)(Red::GarmentAssemblerState* aState, Red::GarmentItemChangeRequest&)>();
 
 constexpr auto ChangeCustomItem = Core::RawFunc<
-    /* addr = */ Red::Addresses::GarmentAssemblerState_ChangeCustomItem,
+    /* addr = */ Red::AddressLib::GarmentAssemblerState_ChangeCustomItem,
     /* type = */ bool (*)(Red::GarmentAssemblerState* aState, Red::GarmentItemChangeCustomRequest&)>();
 }

@@ -5,7 +5,7 @@
 
 #include <cstdint>
 
-namespace Red::Addresses
+namespace Red::Address
 {
 constexpr uintptr_t ImageBase = 0x140000000;
 

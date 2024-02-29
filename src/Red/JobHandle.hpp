@@ -1,11 +1,8 @@
 #pragma once
 
-#include "Core/Raw.hpp"
-#include "Red/Addresses.hpp"
-
 namespace Raw::JobHandle
 {
 constexpr auto Wait = Core::RawFunc<
-    /* addr = */ Red::Addresses::JobHandle_Wait,
+    /* addr = */ Red::AddressLib::JobHandle_Wait,
     /* type = */ bool (*)(Red::JobHandle& aJob)>();
 }

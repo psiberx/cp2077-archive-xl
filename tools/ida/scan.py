@@ -5,7 +5,7 @@ from pathlib import Path
 # Defines patterns and output files
 def patterns():
     return [
-        Output(filename="src/Red/Addresses.hpp", namespace="Red::Addresses", groups=[
+        Output(filename="src/Red/Addresses/Direct.hpp", namespace="Red::Address", groups=[
             Group(functions=[
                 Item(name="Main",
                      pattern="40 55 53 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? FF 15 ? ? ? ? E8"),

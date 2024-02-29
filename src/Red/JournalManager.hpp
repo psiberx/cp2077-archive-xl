@@ -1,8 +1,5 @@
 #pragma once
 
-#include "Core/Raw.hpp"
-#include "Red/Addresses.hpp"
-
 namespace Red
 {
 using JournalEntryHash = uint32_t;
@@ -11,7 +8,7 @@ using JournalEntryHash = uint32_t;
 namespace Raw::JournalManager
 {
 constexpr auto LoadJournal = Core::RawFunc<
-    /* addr = */ Red::Addresses::JournalManager_LoadJournal,
+    /* addr = */ Red::AddressLib::JournalManager_LoadJournal,
     /* type = */ void (*)(Red::IScriptable* aManager, Red::JobHandle& aJobHandle)>();
 
 constexpr auto GetTrackedQuest = Core::RawVFunc<
@@ -39,7 +36,7 @@ constexpr auto GetEntryHash = Core::RawVFunc<
 //                                                     uint32_t a4)>();
 
 constexpr auto TrackQuest = Core::RawFunc<
-    /* addr = */ Red::Addresses::JournalManager_TrackQuest,
+    /* addr = */ Red::AddressLib::JournalManager_TrackQuest,
     /* type = */ void (Red::gameIJournalManager::*)(Red::Handle<Red::game::JournalEntry>& aEntry)>();
 
 constexpr auto TrackQuestByPath = Core::RawVFunc<

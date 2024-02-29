@@ -1,8 +1,5 @@
 #pragma once
 
-#include "Core/Raw.hpp"
-#include "Red/Addresses.hpp"
-
 namespace Red
 {
 struct InkSpawningRequest
@@ -48,7 +45,7 @@ RED4EXT_ASSERT_OFFSET(InkSpawningInfo, context, 0x38);
 namespace Raw::InkWidgetLibrary
 {
 constexpr auto AsyncSpawnFromExternal = Core::RawFunc<
-    /* addr = */ Red::Addresses::InkWidgetLibrary_AsyncSpawnFromExternal,
+    /* addr = */ Red::AddressLib::InkWidgetLibrary_AsyncSpawnFromExternal,
     /* type = */ bool (*)(
         Red::ink::WidgetLibraryResource& aLibrary,
         Red::InkSpawningInfo& aSpawningInfo,
@@ -56,14 +53,14 @@ constexpr auto AsyncSpawnFromExternal = Core::RawFunc<
         Red::CName aItemName)>();
 
 constexpr auto AsyncSpawnFromLocal = Core::RawFunc<
-    /* addr = */ Red::Addresses::InkWidgetLibrary_AsyncSpawnFromLocal,
+    /* addr = */ Red::AddressLib::InkWidgetLibrary_AsyncSpawnFromLocal,
     /* type = */ bool (*)(
         Red::ink::WidgetLibraryResource& aLibrary,
         Red::InkSpawningInfo& aSpawningInfo,
         Red::CName aItemName)>();
 
 constexpr auto SpawnFromExternal = Core::RawFunc<
-    /* addr = */ Red::Addresses::InkWidgetLibrary_SpawnFromExternal,
+    /* addr = */ Red::AddressLib::InkWidgetLibrary_SpawnFromExternal,
     /* type = */ uintptr_t (*)(
         Red::ink::WidgetLibraryResource& aLibrary,
         Red::Handle<Red::ink::WidgetLibraryItemInstance>& aInstance,
@@ -71,7 +68,7 @@ constexpr auto SpawnFromExternal = Core::RawFunc<
         Red::CName aItemName)>();
 
 constexpr auto SpawnFromLocal = Core::RawFunc<
-    /* addr = */ Red::Addresses::InkWidgetLibrary_SpawnFromLocal,
+    /* addr = */ Red::AddressLib::InkWidgetLibrary_SpawnFromLocal,
     /* type = */ uintptr_t (*)(
         Red::ink::WidgetLibraryResource& aLibrary,
         Red::Handle<Red::ink::WidgetLibraryItemInstance>& aInstance,
@@ -81,7 +78,7 @@ constexpr auto SpawnFromLocal = Core::RawFunc<
 namespace Raw::InkSpawner
 {
 constexpr auto FinishAsyncSpawn = Core::RawFunc<
-    /* addr = */ Red::Addresses::InkSpawner_FinishAsyncSpawn,
+    /* addr = */ Red::AddressLib::InkSpawner_FinishAsyncSpawn,
     /* type = */ bool (*)(
         Red::InkSpawningContext& aContext,
         Red::Handle<Red::ink::WidgetLibraryItemInstance>& aInstance)>();

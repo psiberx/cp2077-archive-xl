@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Red/Addresses.hpp"
-
 namespace Raw::Entity
 {
 using EntityID = Core::OffsetPtr<0x48, Red::EntityID>;
@@ -12,7 +10,7 @@ using VisualTags = Core::OffsetPtr<0x138, Red::TagList>;
 using EntityTags = Core::OffsetPtr<0x230, Red::TagList>;
 
 constexpr auto ReassembleAppearance = Core::RawFunc<
-    /* addr = */ Red::Addresses::Entity_ReassembleAppearance,
+    /* addr = */ Red::AddressLib::Entity_ReassembleAppearance,
     /* type = */ void (*)(Red::Entity*, uintptr_t, uintptr_t, uintptr_t, uintptr_t, uintptr_t)>();
 }
 
