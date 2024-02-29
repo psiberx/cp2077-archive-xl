@@ -60,7 +60,7 @@ inline TweakDBID CreateRecord(TweakDBID aRecordID, const char* aType)
     const auto hash = Red::Murmur3_32(reinterpret_cast<const uint8_t*>(aType), strlen(aType));
 
     using CreateTDBRecord_t = void (*)(TweakDB*, uint32_t, TweakDBID);
-    RelocFunc<CreateTDBRecord_t> CreateTDBRecord(RED4ext::Addresses::TweakDB_CreateRecord);
+    static UniversalRelocFunc<CreateTDBRecord_t> CreateTDBRecord(RED4ext::Detail::AddressHashes::TweakDB_CreateRecord);
     CreateTDBRecord(tweakDB, hash, aRecordID);
 
     return aRecordID;

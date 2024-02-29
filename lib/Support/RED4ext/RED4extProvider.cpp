@@ -3,21 +3,27 @@
 Support::RED4extProvider::RED4extProvider(RED4ext::PluginHandle aPlugin, const RED4ext::Sdk* aSdk) noexcept
     : m_plugin(aPlugin)
     , m_sdk(aSdk)
-    , m_logging(false)
-    , m_hooking(false)
+    , m_enableLogging(false)
+    , m_enableHooking(false)
+    , m_enableAddressLibrary(false)
 {
 }
 
 void Support::RED4extProvider::OnInitialize()
 {
-    if (m_logging)
+    if (m_enableLogging)
     {
         LoggingDriver::SetDefault(*this);
     }
 
-    if (m_hooking)
+    if (m_enableHooking)
     {
         HookingDriver::SetDefault(*this);
+    }
+
+    if (m_enableAddressLibrary)
+    {
+        AddressResolver::SetDefault(*this);
     }
 }
 
@@ -58,4 +64,9 @@ bool Support::RED4extProvider::HookAttach(uintptr_t aAddress, void* aCallback, v
 bool Support::RED4extProvider::HookDetach(uintptr_t aAddress)
 {
     return m_sdk->hooking->Detach(m_plugin, reinterpret_cast<void*>(aAddress));
+}
+
+uintptr_t Support::RED4extProvider::ResolveAddress(Core::AddressSegment aSegment, uint32_t aAddressHash)
+{
+    return RED4ext::UniversalRelocBase::Resolve(static_cast<RED4ext::UniversalRelocSegment>(aSegment), aAddressHash);
 }

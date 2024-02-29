@@ -51,17 +51,17 @@ using ResultWrapperFunc = R(*)(R&);
 template<typename TRaw, typename TCallback>
 struct HookTraits : HookTraits<TRaw, decltype(&TCallback::operator())> {};
 
-template<template<uintptr_t, typename> class TRaw, uintptr_t TOffset, typename TRawRet, typename... TRawArgs,
+template<template<auto, typename> class TRaw, auto TOffset, typename TRawRet, typename... TRawArgs,
          typename TContext, typename TCallbackRet, typename... TCallbackArgs>
 struct HookTraits<TRaw<TOffset, TRawRet(*)(TRawArgs...)>, TCallbackRet (TContext::*)(TCallbackArgs...)>
     : HookTraits<TRaw<TOffset, TRawRet(*)(TRawArgs...)>, TCallbackRet(*)(TCallbackArgs...)> {};
 
-template<template<uintptr_t, typename> class TRaw, uintptr_t TOffset, typename TRawRet, typename... TRawArgs,
+template<template<auto, typename> class TRaw, auto TOffset, typename TRawRet, typename... TRawArgs,
          typename TContext, typename TCallbackRet, typename... TCallbackArgs>
 struct HookTraits<TRaw<TOffset, TRawRet(*)(TRawArgs...)>, TCallbackRet(TContext::*)(TCallbackArgs...) const>
     : HookTraits<TRaw<TOffset, TRawRet(*)(TRawArgs...)>, TCallbackRet(*)(TCallbackArgs...)> {};
 
-template<template<uintptr_t, typename> class TRaw, uintptr_t TOffset, typename TRawRet, typename... TRawArgs,
+template<template<auto, typename> class TRaw, auto TOffset, typename TRawRet, typename... TRawArgs,
          typename TCallbackRet, typename... TCallbackArgs>
 requires std::is_void_v<TRawRet>
 struct HookTraits<TRaw<TOffset, TRawRet(*)(TRawArgs...)>, TCallbackRet(*)(TCallbackArgs...)>
@@ -80,7 +80,7 @@ struct HookTraits<TRaw<TOffset, TRawRet(*)(TRawArgs...)>, TCallbackRet(*)(TCallb
     static constexpr bool IsResultWrapper = false;
 };
 
-template<template<uintptr_t, typename> class TRaw, uintptr_t TOffset, typename TRawRet, typename... TRawArgs,
+template<template<auto, typename> class TRaw, auto TOffset, typename TRawRet, typename... TRawArgs,
          typename TCallbackRet, typename... TCallbackArgs>
 requires (!std::is_void_v<TRawRet>)
 struct HookTraits<TRaw<TOffset, TRawRet(*)(TRawArgs...)>, TCallbackRet(*)(TCallbackArgs...)>
@@ -313,8 +313,8 @@ template<typename TRaw,
          HookRun TRun = HookRun::Default>
 class HookHandler;
 
-template<template<uintptr_t, typename> class TRaw,
-         uintptr_t TOffset,
+template<template<auto, typename> class TRaw,
+         auto TOffset,
          typename TRet,
          typename... TArgs,
          typename TWrapper,

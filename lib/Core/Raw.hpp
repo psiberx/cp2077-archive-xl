@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core/Memory/AddressResolver.hpp"
+
 namespace Core
 {
 class RawBase
@@ -14,17 +16,17 @@ public:
     }
 };
 
-template<uintptr_t A, typename T>
+template<auto A, typename T>
 class RawFunc {};
 
-template<uintptr_t A, typename R, typename... Args>
+template<auto A, typename R, typename... Args>
 class RawFunc<A, R (*)(Args...)> : public RawBase
 {
 public:
     using Type = R (*)(Args...);
     using Callable = Type;
 
-    static constexpr uintptr_t offset = A;
+    static constexpr auto target = A;
 
     constexpr RawFunc() = default;
 
@@ -55,7 +57,16 @@ public:
 
     inline static void ResetAddress() noexcept
     {
-        address = offset ? offset + GetImageBase() : 0;
+        static_assert(std::is_integral_v<decltype(target)>, "Unsupported address type");
+
+        if constexpr (sizeof(target) == sizeof(uintptr_t))
+        {
+            address = target ? target + GetImageBase() : 0;
+        }
+        else
+        {
+            address = AddressResolver::GetDefault().ResolveAddress(AddressSegment::Text, target);
+        }
     }
 
     inline static void SetAddress(uintptr_t aAddress) noexcept
@@ -72,7 +83,7 @@ private:
     inline static uintptr_t address = 0;
 };
 
-template<uintptr_t A, typename C, typename R, typename... Args>
+template<auto A, typename C, typename R, typename... Args>
 class RawFunc<A, R (C::*)(Args...)> : public RawFunc<A, R (*)(C*, Args...)>
 {
 public:
@@ -102,13 +113,13 @@ public:
     }
 };
 
-template<uintptr_t A, typename T>
+template<auto A, typename T>
 class RawPtr : public RawBase
 {
 public:
     using Type = std::remove_pointer_t<T>;
 
-    static constexpr uintptr_t offset = A;
+    static constexpr auto target = A;
     static constexpr bool indirect = std::is_pointer_v<T>;
 
     constexpr RawPtr() = default;
@@ -167,8 +178,18 @@ public:
 
     inline static uintptr_t GetAddress() noexcept
     {
-        static uintptr_t addr = offset ? offset + GetImageBase() : 0;
-        return addr;
+        static_assert(std::is_integral_v<decltype(target)>, "Unsupported address type");
+
+        if constexpr (sizeof(target) == sizeof(uintptr_t))
+        {
+            static uintptr_t addr = target ? target + GetImageBase() : 0;
+            return addr;
+        }
+        else
+        {
+            static uintptr_t addr = AddressResolver::GetDefault().ResolveAddress(AddressSegment::Data, target);
+            return addr;
+        }
     }
 
     inline static T* Get()
