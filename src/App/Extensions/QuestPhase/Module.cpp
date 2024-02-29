@@ -101,14 +101,7 @@ void App::QuestPhaseModule::PatchPhase(Red::Handle<Red::questQuestPhaseResource>
 
     for (const auto& phaseMod : phaseMods.value())
     {
-        if (PatchPhase(aPhaseResource, phaseMod))
-        {
-            LogInfo(R"(|{}| Merged phase "{}" from "{}".)", ModuleName, phaseMod.phasePath, phaseMod.mod);
-        }
-        else
-        {
-            LogWarning(R"(|{}| Can't merge phase "{}" from "{}".)", ModuleName, phaseMod.phasePath, phaseMod.mod);
-        }
+        PatchPhase(aPhaseResource, phaseMod);
     }
 }
 
@@ -117,17 +110,31 @@ bool App::QuestPhaseModule::PatchPhase(Red::Handle<Red::questQuestPhaseResource>
 {
     auto& rootPhaseGraph = Red::Cast<Red::questGraphDefinition>(aPhaseResource->graph);
     if (!rootPhaseGraph)
+    {
+        LogWarning(R"(|{}| Can't merge phase "{}" from "{}", parent phase is not loaded.)",
+                   ModuleName, aPhaseMod.phasePath, aPhaseMod.mod);
         return false;
+    }
 
     auto [targetPhaseGraph, targetNode] = FindConnectionPoint(rootPhaseGraph, aPhaseMod.connection);
     if (!targetPhaseGraph || !targetNode)
+    {
+        LogWarning(R"(|{}| Can't merge phase "{}" from "{}", connection node doesn't exist.)",
+                   ModuleName, aPhaseMod.phasePath, aPhaseMod.mod);
         return false;
+    }
 
-    auto modPhaseNode = CreatePhaseNode(targetPhaseGraph, aPhaseMod);
+    auto modPhaseNode = CreatePhaseNode(targetPhaseGraph, aPhaseMod, targetNode->id);
     if (!modPhaseNode)
+    {
+        LogWarning(R"(|{}| Can't merge phase "{}" from "{}", node with the same id already exists.)",
+                   ModuleName, aPhaseMod.phasePath, aPhaseMod.mod);
         return false;
+    }
 
     AddConnection(targetNode, modPhaseNode);
+
+    LogInfo(R"(|{}| Merged phase "{}" from "{}".)", ModuleName, aPhaseMod.phasePath, aPhaseMod.mod);
 
     return true;
 }
@@ -204,9 +211,10 @@ void App::QuestPhaseModule::AddConnection(Red::Handle<Red::questNodeDefinition>&
 }
 
 Red::Handle<Red::questPhaseNodeDefinition> App::QuestPhaseModule::CreatePhaseNode(
-    const Red::Handle<Red::questGraphDefinition>& aPhaseGraph, const QuestPhaseMod& aPhaseMod)
+    const Red::Handle<Red::questGraphDefinition>& aPhaseGraph, const QuestPhaseMod& aPhaseMod, uint16_t aParentId)
 {
-    auto phaseNodeId = GeneratePhaseNodeID(aPhaseMod.phasePath.data(), aPhaseMod.phasePath.size());
+    auto phaseNodeKey = aPhaseMod.phasePath + ":" + std::to_string(aParentId);
+    auto phaseNodeId = GeneratePhaseNodeID(phaseNodeKey.data(), phaseNodeKey.size());
 
     for (const auto& node : aPhaseGraph->nodes)
     {
