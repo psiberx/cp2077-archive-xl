@@ -65,7 +65,7 @@ public:
         }
         else
         {
-            address = AddressResolver::GetDefault().ResolveAddress(AddressSegment::Text, target);
+            address = AddressResolver::GetDefault().ResolveAddress(target);
         }
     }
 
@@ -187,7 +187,7 @@ public:
         }
         else
         {
-            static uintptr_t addr = AddressResolver::GetDefault().ResolveAddress(AddressSegment::Data, target);
+            static uintptr_t addr = AddressResolver::GetDefault().ResolveAddress(target);
             return addr;
         }
     }

@@ -40,7 +40,7 @@ RED4EXT_C_EXPORT void RED4EXT_CALL Query(RED4ext::PluginInfo* aInfo)
                                     App::Project::Version.minor,
                                     App::Project::Version.patch);
 
-    aInfo->runtime = RED4EXT_RUNTIME_LATEST;
+    aInfo->runtime = RED4EXT_RUNTIME_INDEPENDENT;
     aInfo->sdk = RED4EXT_SDK_LATEST;
 }
 

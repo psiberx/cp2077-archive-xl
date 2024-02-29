@@ -12,11 +12,11 @@ constexpr uint32_t AppearanceChanger_GetSuffixValue = 1003499294;
 constexpr uint32_t AppearanceChanger_RegisterPart = 3169139695;
 constexpr uint32_t AppearanceChanger_SelectAppearanceName = 2770550105;
 
-constexpr uint32_t AppearanceChangeSystem_ChangeAppearance = 633157431;
+constexpr uint32_t AppearanceChangeSystem_ChangeAppearance = 386815609;
 
 constexpr uint32_t AppearanceNameVisualTagsPreset_GetVisualTags = 1186798404;
 
-constexpr uint32_t AppearanceResource_FindAppearanceDefinition = 985997606;
+constexpr uint32_t AppearanceResource_FindAppearanceDefinition = 549398675;
 
 constexpr uint32_t AttachmentSlots_InitializeSlots = 3224838039;
 constexpr uint32_t AttachmentSlots_IsSlotEmpty = 4231927464;

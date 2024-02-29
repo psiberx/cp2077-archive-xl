@@ -66,7 +66,7 @@ bool Support::RED4extProvider::HookDetach(uintptr_t aAddress)
     return m_sdk->hooking->Detach(m_plugin, reinterpret_cast<void*>(aAddress));
 }
 
-uintptr_t Support::RED4extProvider::ResolveAddress(Core::AddressSegment aSegment, uint32_t aAddressHash)
+uintptr_t Support::RED4extProvider::ResolveAddress(uint32_t aAddressID)
 {
-    return RED4ext::UniversalRelocBase::Resolve(static_cast<RED4ext::UniversalRelocSegment>(aSegment), aAddressHash);
+    return RED4ext::UniversalRelocBase::Resolve(aAddressID);
 }

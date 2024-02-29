@@ -26,7 +26,7 @@ public:
     bool HookAttach(uintptr_t aAddress, void* aCallback, void** aOriginal) override;
     bool HookDetach(uintptr_t aAddress) override;
 
-    uintptr_t ResolveAddress(Core::AddressSegment aSegment, uint32_t aAddressHash) override;
+    uintptr_t ResolveAddress(uint32_t aAddressID) override;
 
     auto EnableLogging() noexcept
     {
