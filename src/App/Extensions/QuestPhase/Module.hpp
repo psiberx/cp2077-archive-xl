@@ -33,8 +33,10 @@ private:
                                                                  Red::CName aSocketName);
     static void AddConnection(Red::Handle<Red::questNodeDefinition>& aOutNode, Red::CName aOutSocket,
                               Red::Handle<Red::questNodeDefinition>& aInNode, Red::CName aInSocket);
+    static void RemoveConnection(Red::Handle<Red::questNodeDefinition>& aOutNode,
+                                 Red::Handle<Red::questNodeDefinition>& aInNode);
     static Red::Handle<Red::questPhaseNodeDefinition> CreatePhaseNode(
-        const Red::Handle<Red::questGraphDefinition>& aPhaseGraph, const QuestPhaseMod& aPhaseMod, uint16_t aParentId);
+        const Red::Handle<Red::questGraphDefinition>& aPhaseGraph, const QuestPhaseMod& aPhaseMod, uint16_t aParentID);
     static uint16_t GeneratePhaseNodeID(const char* aData, uint32_t aLength);
 
     inline static Core::Map<Red::ResourcePath, Core::Vector<QuestPhaseMod>> s_phases;

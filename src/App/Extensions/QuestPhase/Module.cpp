@@ -147,6 +147,8 @@ bool App::QuestPhaseModule::PatchPhase(Red::Handle<Red::questQuestPhaseResource>
                 ? aPhaseMod.output.socketName
                 : (outputNode->GetType()->IsA(Red::GetClass<Red::questPhaseNodeDefinition>()) ? "In1" : "In");
         AddConnection(modPhaseNode, "Out", outputNode, inSocketName);
+
+        RemoveConnection(outputNode, inputNode);
     }
 
     AddConnection(inputNode, aPhaseMod.input.socketName ? aPhaseMod.input.socketName : "Out", modPhaseNode, "In1");
@@ -225,10 +227,48 @@ void App::QuestPhaseModule::AddConnection(Red::Handle<Red::questNodeDefinition>&
     inSocket->connections.PushBack(connection);
 }
 
-Red::Handle<Red::questPhaseNodeDefinition> App::QuestPhaseModule::CreatePhaseNode(
-    const Red::Handle<Red::questGraphDefinition>& aPhaseGraph, const QuestPhaseMod& aPhaseMod, uint16_t aParentId)
+void App::QuestPhaseModule::RemoveConnection(Red::Handle<Red::questNodeDefinition>& aOutNode,
+                                             Red::Handle<Red::questNodeDefinition>& aInNode)
 {
-    auto phaseNodeKey = aPhaseMod.phasePath + ":" + std::to_string(aParentId);
+    for (auto& rawSocket : aOutNode->sockets)
+    {
+        auto& questSocket = Red::Cast<Red::questSocketDefinition>(rawSocket);
+        if (questSocket->type == Red::questSocketType::Output)
+        {
+            for (auto i = static_cast<int32_t>(questSocket->connections.size) - 1; i >= 0; --i)
+            {
+                auto& destinationNode =
+                    Raw::QuestSocketDefinition::OwnerNode::Ref(questSocket->connections[i]->destination.instance);
+                if (destinationNode.instance == aInNode.instance)
+                {
+                    questSocket->connections.RemoveAt(i);
+                }
+            }
+        }
+    }
+
+    for (auto& rawSocket : aInNode->sockets)
+    {
+        auto& questSocket = Red::Cast<Red::questSocketDefinition>(rawSocket);
+        if (questSocket->type == Red::questSocketType::Input)
+        {
+            for (auto i = static_cast<int32_t>(questSocket->connections.size) - 1; i >= 0; --i)
+            {
+                auto& sourceNode =
+                    Raw::QuestSocketDefinition::OwnerNode::Ref(questSocket->connections[i]->source.instance);
+                if (sourceNode.instance == aOutNode.instance)
+                {
+                    questSocket->connections.RemoveAt(i);
+                }
+            }
+        }
+    }
+}
+
+Red::Handle<Red::questPhaseNodeDefinition> App::QuestPhaseModule::CreatePhaseNode(
+    const Red::Handle<Red::questGraphDefinition>& aPhaseGraph, const QuestPhaseMod& aPhaseMod, uint16_t aParentID)
+{
+    auto phaseNodeKey = aPhaseMod.phasePath + ":" + std::to_string(aParentID);
     auto phaseNodeId = GeneratePhaseNodeID(phaseNodeKey.data(), phaseNodeKey.size());
 
     for (const auto& node : aPhaseGraph->nodes)
