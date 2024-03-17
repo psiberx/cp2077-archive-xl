@@ -24,11 +24,8 @@ void App::QuestPhaseUnit::LoadYAML(const YAML::Node& aNode)
 
             const auto& pathNode = phaseNode["path"];
             const auto& parentNode = phaseNode["parent"];
-            const auto& connectionNode = phaseNode["connection"];
 
-            if (!pathNode.IsDefined() || !pathNode.IsScalar()
-                || !parentNode.IsDefined() || !parentNode.IsScalar()
-                || !connectionNode.IsDefined() || !connectionNode.IsSequence())
+            if (!pathNode.IsDefined() || !pathNode.IsScalar() || !parentNode.IsDefined() || !parentNode.IsScalar())
             {
                 continue;
             }
@@ -37,9 +34,12 @@ void App::QuestPhaseUnit::LoadYAML(const YAML::Node& aNode)
             phaseData.mod = name;
             phaseData.phasePath = pathNode.Scalar();
             phaseData.parentPath = parentNode.Scalar();
-            phaseData.connection = connectionNode.as<Core::Vector<uint16_t>>();
 
-            if (phaseData.connection.empty())
+            FillConnection(phaseNode["connection"], phaseData.input);
+            FillConnection(phaseNode["input"], phaseData.input);
+            FillConnection(phaseNode["output"], phaseData.output);
+
+            if (phaseData.input.nodePath.empty())
                 continue;
 
             phases.emplace_back(std::move(phaseData));
@@ -47,3 +47,22 @@ void App::QuestPhaseUnit::LoadYAML(const YAML::Node& aNode)
     }
 }
 
+bool App::QuestPhaseUnit::FillConnection(const YAML::Node& aNode, App::QuestPhaseConnection& aConnection)
+{
+    if (aNode.IsDefined())
+    {
+        if (aNode.IsMap())
+        {
+            aConnection.nodePath = aNode["node"].as<Core::Vector<uint16_t>>();
+            aConnection.socketName = aNode["socket"].Scalar().data();
+            return true;
+        }
+        if (aNode.IsSequence())
+        {
+            aConnection.nodePath = aNode.as<Core::Vector<uint16_t>>();
+            return true;
+        }
+    }
+
+    return false;
+}

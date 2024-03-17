@@ -116,15 +116,15 @@ bool App::QuestPhaseModule::PatchPhase(Red::Handle<Red::questQuestPhaseResource>
         return false;
     }
 
-    auto [targetPhaseGraph, targetNode] = FindConnectionPoint(rootPhaseGraph, aPhaseMod.connection);
-    if (!targetPhaseGraph || !targetNode)
+    auto [inputPhaseGraph, inputNode] = FindConnectionPoint(rootPhaseGraph, aPhaseMod.input.nodePath);
+    if (!inputPhaseGraph || !inputNode)
     {
-        LogWarning(R"(|{}| Can't merge phase "{}" from "{}", connection node doesn't exist.)",
+        LogWarning(R"(|{}| Can't merge phase "{}" from "{}", input node doesn't exist.)",
                    ModuleName, aPhaseMod.phasePath, aPhaseMod.mod);
         return false;
     }
 
-    auto modPhaseNode = CreatePhaseNode(targetPhaseGraph, aPhaseMod, targetNode->id);
+    auto modPhaseNode = CreatePhaseNode(inputPhaseGraph, aPhaseMod, inputNode->id);
     if (!modPhaseNode)
     {
         LogWarning(R"(|{}| Can't merge phase "{}" from "{}", node with the same id already exists.)",
@@ -132,7 +132,24 @@ bool App::QuestPhaseModule::PatchPhase(Red::Handle<Red::questQuestPhaseResource>
         return false;
     }
 
-    AddConnection(targetNode, modPhaseNode);
+    if (!aPhaseMod.output.nodePath.empty())
+    {
+        auto [outputPhaseGraph, outputNode] = FindConnectionPoint(rootPhaseGraph, aPhaseMod.output.nodePath);
+        if (!outputPhaseGraph || !outputNode)
+        {
+            LogWarning(R"(|{}| Can't merge phase "{}" from "{}", output node doesn't exist.)",
+                       ModuleName, aPhaseMod.phasePath, aPhaseMod.mod);
+            return false;
+        }
+
+        auto inSocketName =
+            aPhaseMod.output.socketName
+                ? aPhaseMod.output.socketName
+                : (outputNode->GetType()->IsA(Red::GetClass<Red::questPhaseNodeDefinition>()) ? "In1" : "In");
+        AddConnection(modPhaseNode, "Out", outputNode, inSocketName);
+    }
+
+    AddConnection(inputNode, aPhaseMod.input.socketName ? aPhaseMod.input.socketName : "Out", modPhaseNode, "In1");
 
     LogInfo(R"(|{}| Merged phase "{}" from "{}".)", ModuleName, aPhaseMod.phasePath, aPhaseMod.mod);
 
@@ -194,13 +211,11 @@ Red::Handle<Red::questSocketDefinition> App::QuestPhaseModule::ResolveSocket(
     return questSocket;
 }
 
-void App::QuestPhaseModule::AddConnection(Red::Handle<Red::questNodeDefinition>& aOut,
-                                          Red::Handle<Red::questNodeDefinition>& aIn)
+void App::QuestPhaseModule::AddConnection(Red::Handle<Red::questNodeDefinition>& aOutNode, Red::CName aOutSocket,
+                                          Red::Handle<Red::questNodeDefinition>& aInNode, Red::CName aInSocket)
 {
-    auto inSocketName = aIn->GetType()->IsA(Red::GetClass<Red::questPhaseNodeDefinition>()) ? "In1" : "In";
-
-    auto outSocket = ResolveSocket(aOut, Red::questSocketType::Output, "Out");
-    auto inSocket = ResolveSocket(aIn, Red::questSocketType::Input, inSocketName);
+    auto outSocket = ResolveSocket(aOutNode, Red::questSocketType::Output, aOutSocket);
+    auto inSocket = ResolveSocket(aInNode, Red::questSocketType::Input, aInSocket);
 
     auto connection = Red::MakeHandle<Red::graphGraphConnectionDefinition>();
     connection->source = outSocket;
