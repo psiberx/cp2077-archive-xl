@@ -105,6 +105,9 @@ private:
 
     static bool IsUniqueAppearanceName(Red::CName aName);
 
+    static void PatchHeadGarmentOverrides(Core::SharedPtr<EntityState>& aEntityState,
+                                          Red::Handle<Red::AppearanceDefinition>& aDefinition);
+
     static inline Core::UniquePtr<Red::TemplateAppearance> s_emptyAppearance;
     static inline Core::SharedPtr<DynamicAppearanceController> s_dynamicAppearance;
     static inline Core::UniquePtr<OverrideStateManager> s_stateManager;

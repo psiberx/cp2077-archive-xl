@@ -9,6 +9,7 @@ constexpr auto DefaultAppearanceName = Red::CName("default");
 Core::SharedPtr<App::EntityState> s_nullEntityState;
 Core::SharedPtr<App::ComponentState> s_nullComponentState;
 Core::SharedPtr<App::ResourceState> s_nullResourceState;
+Core::Set<Red::CName> s_nullComponentSet;
 }
 
 App::ComponentState::ComponentState(Red::CName aName) noexcept
@@ -302,6 +303,19 @@ const Core::SharedPtr<App::ResourceState>& App::EntityState::FindResourceState(R
     return it.value();
 }
 
+const Core::Set<Red::CName>& App::EntityState::GetPartComponentNames(Red::ResourcePath aResourcePath) const
+{
+    if (!aResourcePath)
+        return s_nullComponentSet;
+
+    const auto& it = m_partComponents.find(aResourcePath);
+
+    if (it == m_partComponents.end())
+        return s_nullComponentSet;
+
+    return it.value();
+}
+
 void App::EntityState::AddChunkMaskOverride(uint64_t aHash, Red::CName aComponentName, uint64_t aChunkMask, bool aShow)
 {
     if (auto& componentState = GetComponentState(aComponentName))
@@ -369,6 +383,8 @@ void App::EntityState::LinkComponentToPart(Red::Handle<Red::IComponent>& aCompon
     if (auto& componentState = GetComponentState(componentRef.name))
     {
         componentState->LinkToPart(aResource);
+
+        m_partComponents[aResource].insert(aComponent->name);
     }
 }
 

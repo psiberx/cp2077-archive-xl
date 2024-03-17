@@ -20,7 +20,8 @@ constexpr auto EmptyAppearanceTags = {
     std::pair(Red::CName("EmptyAppearance:Female"), "&Female"),
 };
 
-const Red::ClassLocator<Red::CMesh> s_meshResourceType;
+constexpr auto AggregatedHeadAppearanceName = Red::CName("AppearanceName1");
+constexpr auto DummyAppearancePartPath = Red::ResourcePath(R"(#non_existing_part.ent)");
 }
 
 std::string_view App::GarmentOverrideModule::GetName()
@@ -569,11 +570,13 @@ void App::GarmentOverrideModule::OnComputeGarment(uintptr_t, Red::Handle<Red::En
         ApplyDynamicAppearance(entityState, aData->components);
         ApplyComponentOverrides(entityState, aData->components, false);
         ApplyOffsetOverrides(entityState, aOffsets, aData->resources);
+
+        PatchHeadGarmentOverrides(entityState, aData->definition);
     }
 }
 
 void App::GarmentOverrideModule::OnReassembleAppearance(Red::Entity* aEntity, uintptr_t, uintptr_t, uintptr_t,
-                                                       uintptr_t, uintptr_t)
+                                                        uintptr_t, uintptr_t)
 {
     std::unique_lock _(s_mutex);
     if (auto& entityState = s_stateManager->FindEntityState(aEntity))
@@ -832,4 +835,56 @@ void App::GarmentOverrideModule::UpdateDynamicAttributes()
 bool App::GarmentOverrideModule::IsUniqueAppearanceName(Red::CName aName)
 {
     return aName && aName != DefaultAppearanceName && aName != RandomAppearanceName && aName != EmptyAppearanceName;
+}
+
+void App::GarmentOverrideModule::PatchHeadGarmentOverrides(Core::SharedPtr<EntityState>& aEntityState,
+                                                           Red::Handle<Red::AppearanceDefinition>& aDefinition)
+{
+    if (aDefinition->name != AggregatedHeadAppearanceName)
+        return;
+
+    for (const auto& part : aDefinition->partsValues)
+    {
+        for (const auto& componentName : aEntityState->GetPartComponentNames(part.resource.path))
+        {
+            bool hasComponentOverride = false;
+
+            for (auto& partOverride : aDefinition->partsOverrides)
+            {
+                if (partOverride.partResource.path
+                    && partOverride.partResource.path != part.resource.path
+                    && partOverride.partResource.path != DummyAppearancePartPath)
+                    continue;
+
+                for (auto& componentOverride : partOverride.componentsOverrides)
+                {
+                    if (componentOverride.componentName == componentName)
+                    {
+                        hasComponentOverride = true;
+                        break;
+                    }
+                }
+
+                if (hasComponentOverride)
+                {
+                    break;
+                }
+            }
+
+            if (!hasComponentOverride)
+            {
+                Red::appearancePartComponentOverrides componentOverride;
+                componentOverride.componentName = componentName;
+                componentOverride.meshAppearance = DefaultAppearanceName;
+                componentOverride.chunkMask = std::numeric_limits<uint64_t>::max();
+                componentOverride.acceptDismemberment = true;
+
+                Red::appearanceAppearancePartOverrides partOverride;
+                partOverride.partResource = DummyAppearancePartPath;
+                partOverride.componentsOverrides.PushBack(std::move(componentOverride));
+
+                aDefinition->partsOverrides.PushBack(std::move(partOverride));
+            }
+        }
+    }
 }

@@ -93,6 +93,8 @@ public:
     [[nodiscard]] const Core::SharedPtr<ResourceState>& GetResourceState(Red::ResourcePath aResourcePath);
     [[nodiscard]] const Core::SharedPtr<ResourceState>& FindResourceState(Red::ResourcePath aResourcePath) const;
 
+    [[nodiscard]] const Core::Set<Red::CName>& GetPartComponentNames(Red::ResourcePath aResourcePath) const;
+
     bool ApplyChunkMaskOverride(Red::Handle<Red::IComponent>& aComponent);
     void AddChunkMaskOverride(uint64_t aHash, Red::CName aComponentName, uint64_t aChunkMask, bool aShow = false);
     void RemoveChunkMaskOverrides(uint64_t aHash);
@@ -151,6 +153,7 @@ private:
     Red::WeakHandle<Red::Entity> m_entityWeak;
     Core::Map<Red::CName, Core::SharedPtr<ComponentState>> m_componentStates;
     Core::Map<Red::ResourcePath, Core::SharedPtr<ResourceState>> m_resourceStates;
+    Core::Map<Red::ResourcePath, Core::Set<Red::CName>> m_partComponents;
     Core::Map<uint64_t, Red::ResourcePath> m_originalResources;
     Core::Map<uint64_t, Red::CName> m_originalAppearances;
     Core::Map<uint64_t, uint64_t> m_originalChunkMasks;

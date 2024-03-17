@@ -19,15 +19,18 @@ struct ItemFactoryAppearanceChangeRequest {};
 
 struct GarmentComputeData
 {
-    uint64_t unk00;                                  // 00
-    uint64_t unk08;                                  // 08
-    DynArray<Handle<ent::IComponent>> components;    // 10
-    DynArray<Handle<CMesh>> meshes;                  // 20
-    DynArray<Handle<ent::EntityTemplate>> templates; // 30
-    DynArray<ResourcePath> resources;                // 40
+    uint64_t unk00;                                      // 00
+    uint64_t unk08;                                      // 08
+    DynArray<Handle<ent::IComponent>> components;        // 10
+    DynArray<Handle<CMesh>> meshes;                      // 20
+    DynArray<Handle<ent::EntityTemplate>> templates;     // 30
+    DynArray<ResourcePath> resources;                    // 40
+    uint64_t unk50;                                      // 50
+    Handle<appearance::AppearanceDefinition> definition; // 58
 };
 RED4EXT_ASSERT_OFFSET(GarmentComputeData, components, 0x10);
 RED4EXT_ASSERT_OFFSET(GarmentComputeData, resources, 0x40);
+RED4EXT_ASSERT_OFFSET(GarmentComputeData, definition, 0x58);
 
 struct AppearanceDescriptor
 {
