@@ -13,6 +13,16 @@ void Core::Runtime::Initialize(const Core::HostImage& aHost, const Core::ModuleI
     s_module = Core::MakeUnique<Core::ModuleImage>(aModule);
 }
 
+Core::HostImage* Core::Runtime::GetHost()
+{
+    return s_host.get();
+}
+
+Core::ModuleImage* Core::Runtime::GetModule()
+{
+    return s_module.get();
+}
+
 uintptr_t Core::Runtime::GetImageBase()
 {
     assert(s_host);

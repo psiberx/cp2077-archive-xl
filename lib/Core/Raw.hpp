@@ -165,6 +165,11 @@ public:
         }
     }
 
+    [[nodiscard]] inline T& operator[](size_t aIndex) const
+    {
+        return GetPtr()[aIndex];
+    }
+
     RawPtr& operator=(T&& aRhs) const noexcept
     {
         *GetPtr() = aRhs;

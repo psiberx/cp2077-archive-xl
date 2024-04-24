@@ -13,13 +13,11 @@ struct WaitingContext
 }
 
 template<typename W>
-inline void WaitForJob(JobHandle& aJob, const W& aTimeout)
+inline void WaitForQueue(JobQueue& aQueue, const W& aTimeout)
 {
     auto context = std::make_shared<Detail::WaitingContext>();
 
-    JobQueue queue;
-    queue.Wait(aJob);
-    queue.Dispatch([context]() {
+    aQueue.Dispatch([context]() {
         context->finished = true;
         context->cv.notify_all();
     });
@@ -29,8 +27,10 @@ inline void WaitForJob(JobHandle& aJob, const W& aTimeout)
 }
 
 template<typename W>
-inline void WaitForQueue(JobQueue& aQueue, const W& aTimeout)
+inline void WaitForJob(JobHandle& aJob, const W& aTimeout)
 {
-    WaitForJob(aQueue.unk10, aTimeout);
+    JobQueue queue;
+    queue.Wait(aJob);
+    WaitForQueue(queue, aTimeout);
 }
 }

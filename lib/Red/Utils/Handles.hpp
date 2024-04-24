@@ -56,7 +56,13 @@ inline Handle<T> ToHandle(U* aInstance)
     }
 }
 
-template<typename T = IScriptable>
+template<typename T = ISerializable>
+inline Handle<T> MakeScriptedHandle(CClass* aType)
+{
+    return Handle<T>(reinterpret_cast<T*>(aType->CreateInstance(true)));
+}
+
+template<typename T = ISerializable>
 inline Handle<T> MakeScriptedHandle(CName aTypeName)
 {
     return Handle<T>(reinterpret_cast<T*>(GetClass(aTypeName)->CreateInstance(true)));

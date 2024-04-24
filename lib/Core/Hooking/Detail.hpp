@@ -228,7 +228,8 @@ public:
     using HandleFunc = OriginalFunc;
     using DisposeFunc = void(*)();
 
-    inline static bool Attach(HookingDriver& aDriver, HandleFunc aHandler, DisposeFunc aDisposer)
+    inline static bool Attach(HookingDriver& aDriver, HandleFunc aHandler, DisposeFunc aDisposer,
+                              OriginalFunc* aOriginal)
     {
         if (s_attached)
             return false;
@@ -240,7 +241,8 @@ public:
 
         s_attached = s_driver->HookAttach(s_address,
             reinterpret_cast<void*>(s_handler),
-            reinterpret_cast<void**>(&s_original));
+            reinterpret_cast<void**>(aOriginal));
+        s_original = *aOriginal;
 
         if (!s_attached)
         {
@@ -468,11 +470,10 @@ public:
     {
         using Instance = HookInstance<Raw>;
 
-        if (!Instance::Attach(aDriver, &Handle, &Dispose))
-            return false;
-
         s_callback = std::move(aCallback);
-        s_original = Instance::GetOriginal();
+
+        if (!Instance::Attach(aDriver, &Handle, &Dispose, &s_original))
+            return false;
 
         if (aOriginal)
             *aOriginal = s_original;

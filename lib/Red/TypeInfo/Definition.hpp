@@ -154,11 +154,11 @@ inline void ExtractArg(C* aContext, CStackFrame* aFrame, T* aArg)
 {
     using U = std::remove_cvref_t<T>;
 
-    if constexpr (I == 0 && !std::is_void_v<C> && std::is_base_of_v<IScriptable, C> && std::is_same_v<T, C*>)
+    if constexpr (I == 0 && !std::is_void_v<C> && std::is_base_of_v<ISerializable, C> && std::is_same_v<T, C*>)
     {
         *aArg = aContext;
     }
-    else if constexpr (I == 0 && !std::is_void_v<C> && !std::is_base_of_v<IScriptable, C> && std::is_same_v<T, C*>)
+    else if constexpr (I == 0 && !std::is_void_v<C> && !std::is_base_of_v<ISerializable, C> && std::is_same_v<T, C*>)
     {
         ScriptRef<C> ctx;
         ExtractArg(aFrame, &ctx);
@@ -466,7 +466,7 @@ public:
     ClassDescriptor() : CClass({}, sizeof(TClass), {})
     {
         static_assert(std::is_class_v<TClass>, "TClass must be a struct or class");
-        static_assert(std::is_default_constructible_v<TClass>, "TClass must be default-constructible");
+        static_assert(std::is_abstract_v<TClass> || std::is_default_constructible_v<TClass>, "TClass must be default-constructible");
         static_assert(std::is_destructible_v<TClass>, "TClass must be destructible");
     }
 
@@ -515,6 +515,13 @@ public:
                 rtti->nativeToScript.Insert(name, aAlias);
             }
         }
+    }
+
+    void SetNamespace(const char* aNamespace)
+    {
+        constexpr auto NamespaceDelimiter = ".";
+
+        SetAlias(std::string(aNamespace).append(NamespaceDelimiter).append(name.ToString()).data());
     }
 
     template<class TContext, typename TRet, typename TRetType>
@@ -711,7 +718,7 @@ class ClassDescriptorDefaultImpl : public ClassDescriptor<TClass>
                 CClass::parent->ConstructCls(aMemory);
             }
         }
-        else
+        else if constexpr (!std::is_abstract_v<TClass>)
         {
             new (aMemory) TClass();
         }

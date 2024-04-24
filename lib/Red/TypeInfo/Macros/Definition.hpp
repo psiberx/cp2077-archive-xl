@@ -103,6 +103,7 @@ public: \
 #define RTTI_SCRIPTED() type->MarkScripted()
 #define RTTI_PARENT(_parent) type->SetParent<_parent>()
 #define RTTI_ALIAS(_alias) type->SetAlias(_alias)
+#define RTTI_NAMESPACE(_namespace) type->SetNamespace(_namespace)
 
 #define RTTI_METHOD(...) X_RTTI_OVERLOAD(X_RTTI_METHOD, __VA_ARGS__)
 #define X_RTTI_METHOD_1(_method) X_RTTI_METHOD_2(_method, #_method)
