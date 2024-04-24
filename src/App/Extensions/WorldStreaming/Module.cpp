@@ -265,7 +265,7 @@ bool App::WorldStreamingModule::PatchSector(Red::world::StreamingSector* aSector
                 for (const auto& subNodeIndex : nodeDeletion.subNodeDeletions)
                 {
                     constexpr auto DelZ = static_cast<int32_t>(-2000 * (2 << 16));
-                    actors.ptr[subNodeIndex].transform.Position.z.Bits = DelZ;
+                    actors.beginPtr[subNodeIndex].transform.Position.z.Bits = DelZ;
                 }
                 continue;
             }
