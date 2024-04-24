@@ -1,8 +1,9 @@
 #include "Application.hpp"
-#include "App/Environment.hpp"
-#include "App/Project.hpp"
 #include "App/Archives/ArchiveService.hpp"
+#include "App/Environment.hpp"
 #include "App/Extensions/ExtensionService.hpp"
+#include "App/Patches/WorldWidgetLimitPatch.hpp"
+#include "App/Project.hpp"
 #include "Core/Foundation/RuntimeProvider.hpp"
 #include "Support/MinHook/MinHookProvider.hpp"
 #include "Support/RED4ext/RED4extProvider.hpp"
@@ -18,6 +19,7 @@ App::Application::Application(HMODULE aHandle, const RED4ext::Sdk* aSdk)
     Register<Support::RED4extProvider>(aHandle, aSdk)->EnableAddressLibrary();
     Register<Support::RedLibProvider>();
 
+    Register<App::WorldWidgetLimitPatch>();
     Register<App::ArchiveService>(Env::GameDir());
     Register<App::ExtensionService>();
 }

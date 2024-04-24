@@ -181,6 +181,11 @@ public:
         return reinterpret_cast<T*>(GetAddress());
     }
 
+    [[nodiscard]] inline T& GetRef() const noexcept
+    {
+        return *reinterpret_cast<T*>(GetAddress());
+    }
+
     inline static uintptr_t GetAddress() noexcept
     {
         static_assert(std::is_integral_v<decltype(target)>, "Unsupported address type");
@@ -200,6 +205,11 @@ public:
     inline static T* Get()
     {
         return reinterpret_cast<T*>(GetAddress());
+    }
+
+    inline static T& Ref()
+    {
+        return *reinterpret_cast<T*>(GetAddress());
     }
 };
 
