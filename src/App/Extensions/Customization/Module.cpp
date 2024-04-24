@@ -37,6 +37,9 @@ bool App::CustomizationModule::Load()
     if (!HookBefore<Raw::RuntimeSystemEntityAppearanceChanger::ChangeAppearance>(&CustomizationModule::OnChangeAppearance))
         throw std::runtime_error("Failed to hook [RuntimeSystemEntityAppearanceChanger::ChangeAppearance].");
 
+    if (!HookBefore<Raw::RuntimeSystemEntityAppearanceChanger::ChangeAppearances>(&CustomizationModule::OnChangeAppearances))
+        throw std::runtime_error("Failed to hook [RuntimeSystemEntityAppearanceChanger::ChangeAppearance].");
+
     return true;
 }
 
@@ -54,6 +57,7 @@ bool App::CustomizationModule::Unload()
     Unhook<Raw::CharacterCustomizationSystem::InitializeMorphOption>();
     Unhook<Raw::CharacterCustomizationSystem::InitializeSwitcherOption>();
     Unhook<Raw::RuntimeSystemEntityAppearanceChanger::ChangeAppearance>();
+    Unhook<Raw::RuntimeSystemEntityAppearanceChanger::ChangeAppearances>();
 
     return true;
 }
@@ -492,22 +496,45 @@ void App::CustomizationModule::OnInitSwitcherOption(App::CustomizationSystem* aS
 }
 
 void App::CustomizationModule::OnChangeAppearance(App::AppearanceChangerSystem& aSystem,
+                                                  Red::AppearanceChangeRequest* aRequest,
+                                                  uintptr_t a3)
+{
+    if (/*m_customizationActive &&*/ !m_customAppOverrides.empty())
+    {
+        if (aRequest->oldAppearance)
+        {
+            ApplyAppOverride(aRequest->oldAppearance);
+        }
+        if (aRequest->newAppearance)
+        {
+            ApplyAppOverride(aRequest->newAppearance);
+        }
+    }
+}
+
+void App::CustomizationModule::OnChangeAppearances(App::AppearanceChangerSystem& aSystem,
                                                   App::CustomizationPuppet& aPuppet,
                                                   Red::Range<Red::AppearanceDescriptor>& aOldApp,
                                                   Red::Range<Red::AppearanceDescriptor>& aNewApp,
                                                   uintptr_t a5,
                                                   uint8_t a6)
 {
-    if (m_customizationActive && !m_customAppOverrides.empty())
+    if (/*m_customizationActive &&*/ !m_customAppOverrides.empty())
     {
         if (aOldApp)
         {
-            ApplyAppOverride(aOldApp);
+            for (auto& app : aOldApp)
+            {
+                ApplyAppOverride(app);
+            }
         }
 
         if (aNewApp)
         {
-            ApplyAppOverride(aNewApp);
+            for (auto& app : aNewApp)
+            {
+                ApplyAppOverride(app);
+            }
         }
     }
 }

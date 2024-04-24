@@ -12,7 +12,8 @@ constexpr uint32_t AppearanceChanger_GetSuffixValue = 1317875529;
 constexpr uint32_t AppearanceChanger_RegisterPart = 3169139695;
 constexpr uint32_t AppearanceChanger_SelectAppearanceName = 2770550105;
 
-constexpr uint32_t AppearanceChangeSystem_ChangeAppearance = 386815609;
+constexpr uint32_t AppearanceChangeSystem_ChangeAppearance1 = 735526026;
+constexpr uint32_t AppearanceChangeSystem_ChangeAppearance2 = 386815609;
 
 constexpr uint32_t AppearanceNameVisualTagsPreset_GetVisualTags = 1186798404;
 

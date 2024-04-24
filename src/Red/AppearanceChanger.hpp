@@ -36,7 +36,12 @@ struct AppearanceDescriptor
 {
     using Hash = uint64_t;
 
-    operator Hash() const noexcept
+    inline operator bool() const noexcept
+    {
+        return resource && appearance;
+    }
+
+    inline operator Hash() const noexcept
     {
         return Red::FNV1a64(reinterpret_cast<const uint8_t*>(&appearance.hash), sizeof(appearance.hash), resource.hash);
     }
@@ -47,6 +52,16 @@ struct AppearanceDescriptor
 RED4EXT_ASSERT_SIZE(AppearanceDescriptor, 0x10);
 RED4EXT_ASSERT_OFFSET(AppearanceDescriptor, resource, 0x0);
 RED4EXT_ASSERT_OFFSET(AppearanceDescriptor, appearance, 0x8);
+
+struct AppearanceChangeRequest
+{
+    WeakHandle<gamePuppet> puppet;      // 00
+    AppearanceDescriptor oldAppearance; // 10
+    AppearanceDescriptor newAppearance; // 20
+    uint64_t unk30;                     // 30
+};
+RED4EXT_ASSERT_OFFSET(AppearanceChangeRequest, oldAppearance, 0x10);
+RED4EXT_ASSERT_OFFSET(AppearanceChangeRequest, newAppearance, 0x20);
 }
 
 namespace Raw::AppearanceChanger
@@ -134,7 +149,13 @@ constexpr auto LoadAppearance = Core::RawFunc<
 namespace Raw::RuntimeSystemEntityAppearanceChanger
 {
 constexpr auto ChangeAppearance = Core::RawFunc<
-    /* addr = */ Red::AddressLib::AppearanceChangeSystem_ChangeAppearance,
+    /* addr = */ Red::AddressLib::AppearanceChangeSystem_ChangeAppearance1,
+    /* type = */ void (*)(Red::world::RuntimeSystemEntityAppearanceChanger& aSystem,
+                          Red::AppearanceChangeRequest* aRequest,
+                          uintptr_t a3)>();
+
+constexpr auto ChangeAppearances = Core::RawFunc<
+    /* addr = */ Red::AddressLib::AppearanceChangeSystem_ChangeAppearance2,
     /* type = */ void (*)(Red::world::RuntimeSystemEntityAppearanceChanger& aSystem,
                           Red::Handle<Red::game::Puppet>& aTarget,
                           Red::Range<Red::AppearanceDescriptor>& aOldApp,

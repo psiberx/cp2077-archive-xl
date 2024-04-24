@@ -7,28 +7,28 @@ struct Range
 {
     constexpr operator bool() const noexcept
     {
-        return ptr != end;
+        return beginPtr != endPtr;
     }
 
-    constexpr operator T*() const noexcept
+    [[nodiscard]] inline T* begin() const
     {
-        return ptr;
+        return beginPtr;
     }
 
-    constexpr operator T&() const noexcept
+    [[nodiscard]] inline T* end() const
     {
-        return *ptr;
+        return endPtr;
     }
 
     [[nodiscard]] auto GetSize() const
     {
-        return end - ptr;
+        return endPtr - beginPtr;
     }
 
-    T* ptr; // 00
-    T* end; // 08
+    T* beginPtr; // 00
+    T* endPtr; // 08
 };
 RED4EXT_ASSERT_SIZE(Range<int32_t>, 0x10);
-RED4EXT_ASSERT_OFFSET(Range<int32_t>, ptr, 0x0);
-RED4EXT_ASSERT_OFFSET(Range<int32_t>, end, 0x8);
+RED4EXT_ASSERT_OFFSET(Range<int32_t>, beginPtr, 0x0);
+RED4EXT_ASSERT_OFFSET(Range<int32_t>, endPtr, 0x8);
 }

@@ -78,6 +78,9 @@ private:
                               uint64_t a5,
                               Red::Map<Red::CName, CustomizationStateOption>& aUiSlots);
     void OnChangeAppearance(AppearanceChangerSystem& aSystem,
+                            Red::AppearanceChangeRequest* aRequest,
+                            uintptr_t a3);
+    void OnChangeAppearances(AppearanceChangerSystem& aSystem,
                             CustomizationPuppet& aPuppet,
                             Red::Range<Red::AppearanceDescriptor>& aOldApp,
                             Red::Range<Red::AppearanceDescriptor>& aNewApp,
