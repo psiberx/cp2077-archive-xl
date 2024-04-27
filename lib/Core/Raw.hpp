@@ -40,19 +40,39 @@ public:
         return GetPtr();
     }
 
+    [[nodiscard]] inline Callable operator~() const
+    {
+        return GetOriginalPtr();
+    }
+
     [[nodiscard]] inline Callable GetPtr() const noexcept
     {
         return reinterpret_cast<Callable>(GetAddress());
     }
 
+    [[nodiscard]] inline Callable GetOriginalPtr() const noexcept
+    {
+        return reinterpret_cast<Callable>(GetOriginalAddress());
+    }
+
     inline static uintptr_t GetAddress() noexcept
     {
-        if (!address)
+        if (!original)
         {
             ResetAddress();
         }
 
         return address;
+    }
+
+    inline static uintptr_t GetOriginalAddress() noexcept
+    {
+        if (!original)
+        {
+            ResetAddress();
+        }
+
+        return original;
     }
 
     inline static void ResetAddress() noexcept
@@ -61,26 +81,39 @@ public:
 
         if constexpr (sizeof(target) == sizeof(uintptr_t))
         {
-            address = target ? target + GetImageBase() : 0;
+            original = target ? target + GetImageBase() : 0;
         }
         else
         {
-            address = AddressResolver::GetDefault().ResolveAddress(target);
+            original = AddressResolver::GetDefault().ResolveAddress(target);
         }
+
+        address = original;
     }
 
     inline static void SetAddress(uintptr_t aAddress) noexcept
     {
+        if (!original)
+        {
+            ResetAddress();
+        }
+
         address = aAddress;
     }
 
-    inline static R Invoke(Args... aArgs)
+    inline static auto Invoke(Args... aArgs)
     {
         return reinterpret_cast<Callable>(GetAddress())(std::forward<Args>(aArgs)...);
     }
 
+    inline static auto InvokeOriginal(Args... aArgs)
+    {
+        return reinterpret_cast<Callable>(GetOriginalAddress())(std::forward<Args>(aArgs)...);
+    }
+
 private:
     inline static uintptr_t address = 0;
+    inline static uintptr_t original = 0;
 };
 
 template<auto A, typename C, typename R, typename... Args>
@@ -105,7 +138,7 @@ public:
 
     constexpr RawVFunc() = default;
 
-    R operator()(C* aContext, Args... aArgs) const
+    auto operator()(C* aContext, Args... aArgs) const
     {
         auto vft = *reinterpret_cast<uintptr_t*>(aContext);
         auto callable = *reinterpret_cast<Callable*>(vft + offset);
@@ -217,17 +250,17 @@ template<uintptr_t A, typename T>
 class OffsetPtr
 {
 public:
-    using Type = std::remove_pointer_t<T>;
+    using Type = std::conditional_t<std::is_void_v<std::remove_pointer_t<T>>, void*, std::remove_pointer_t<T>>;
 
     static constexpr uintptr_t offset = A;
-    static constexpr bool indirect = std::is_pointer_v<T>;
+    static constexpr bool indirect = std::is_pointer_v<T> && !std::is_void_v<std::remove_pointer_t<T>>;
 
     constexpr OffsetPtr(uintptr_t aBase)
         : address(aBase + offset)
     {
     }
 
-    constexpr OffsetPtr(void* aBase)
+    constexpr OffsetPtr(const void* aBase)
         : address(reinterpret_cast<uintptr_t>(aBase) + offset)
     {
     }
@@ -293,22 +326,22 @@ public:
         return address;
     }
 
-    inline static Type* Ptr(void* aBase)
+    inline static Type* Ptr(const void* aBase)
     {
         return OffsetPtr(aBase).GetValuePtr();
     }
 
-    inline static Type& Ref(void* aBase)
+    inline static Type& Ref(const void* aBase)
     {
         return *OffsetPtr(aBase).GetValuePtr();
     }
 
-    inline static uintptr_t Addr(void* aBase)
+    inline static uintptr_t Addr(const void* aBase)
     {
         return reinterpret_cast<uintptr_t>(OffsetPtr(aBase).GetValuePtr());
     }
 
-    inline static void Set(void* aBase, const Type& aValue)
+    inline static void Set(const void* aBase, const Type& aValue)
     {
         *OffsetPtr(aBase).GetValuePtr() = aValue;
     }

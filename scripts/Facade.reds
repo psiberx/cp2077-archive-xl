@@ -1,4 +1,3 @@
-
 public abstract native class ArchiveXL {
     public static native func EnableGarmentOffsets()
     public static native func DisableGarmentOffsets()

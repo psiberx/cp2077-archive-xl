@@ -46,6 +46,12 @@ public:
         return Defer(this);
     }
 
+    auto RegisterScripts(const std::filesystem::path& aPath) noexcept
+    {
+        m_sdk->scripts->Add(m_plugin, aPath.c_str());
+        return Defer(this);
+    }
+
 protected:
     void OnInitialize() override;
 
