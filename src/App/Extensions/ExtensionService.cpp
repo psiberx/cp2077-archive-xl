@@ -7,6 +7,7 @@
 #include "App/Extensions/InkSpawner/Module.hpp"
 #include "App/Extensions/Journal/Module.hpp"
 #include "App/Extensions/Localization/Module.hpp"
+#include "App/Extensions/MeshTemplate/Module.hpp"
 #include "App/Extensions/GarmentOverride/Module.hpp"
 #include "App/Extensions/PuppetState/Module.hpp"
 #include "App/Extensions/QuestPhase/Module.hpp"
@@ -27,6 +28,7 @@ void App::ExtensionService::OnBootstrap()
     m_loader->Add<InkSpawnerModule>();
     m_loader->Add<JournalModule>();
     m_loader->Add<LocalizationModule>();
+    m_loader->Add<MeshTemplateModule>();
     m_loader->Add<GarmentOverrideModule>();
     m_loader->Add<PuppetStateModule>();
     m_loader->Add<QuestPhaseModule>();

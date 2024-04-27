@@ -42,45 +42,13 @@ struct DynamicAppearanceRef
 class DynamicAppearanceController
 {
 public:
-    [[nodiscard]] DynamicAppearanceName ParseAppearance(Red::CName aAppearance) const;
-    [[nodiscard]] DynamicAppearanceRef ParseReference(Red::CName aReference) const;
-    [[nodiscard]] bool MatchReference(const DynamicAppearanceRef& aReference, Red::Entity* aEntity,
-                                      Red::CName aVariant) const;
-
-    [[nodiscard]] Red::CName ResolveName(Red::Entity* aEntity, const DynamicPartList& aVariant,
-                                         Red::CName aName) const;
-    [[nodiscard]] Red::ResourcePath ResolvePath(Red::Entity* aEntity, const DynamicPartList& aVariant,
-                                                Red::ResourcePath aPath) const;
-
-    void UpdateState(Red::Entity* aEntity);
-    void RemoveState(Red::Entity* aEntity);
-
-    [[nodiscard]] bool IsDynamicValue(const char* aValue) const;
-    [[nodiscard]] bool IsDynamicValue(const std::string& aValue) const;
-    [[nodiscard]] bool IsDynamicValue(const std::string_view& aValue) const;
-    [[nodiscard]] bool IsDynamicValue(const Red::StringView& aValue) const;
-    [[nodiscard]] bool IsDynamicValue(Red::CName aValue) const;
-
-    void RegisterPath(Red::ResourcePath aPath, const char* aPathStr);
-    void RegisterPath(Red::ResourcePath aPath, const std::string& aPathStr);
-    void RegisterPath(Red::ResourcePath aPath, const std::string_view& aPathStr);
-    void RegisterPath(Red::ResourcePath aPath, const Red::StringView& aPathStr);
-
-    bool SupportsDynamicAppearance(const Red::EntityTemplate* aTemplate);
-    void MarkDynamicAppearanceName(Red::CName& aAppearanceName, Red::Entity* aEntity);
-    void MarkDynamicAppearanceName(Red::CName& aAppearanceName, DynamicAppearanceName& aSelector);
-    std::string_view GetBaseAppearanceName(Red::CName aAppearanceName);
-
-    static bool IsMale(Red::Entity* aEntity);
-
-private:
     struct AttributeData
     {
         AttributeData() = default;
 
-        AttributeData(const std::string& aValue, const std::string& aSuffix)
-            : value(aValue)
-            , suffix(aSuffix)
+        AttributeData(std::string aValue, std::string aSuffix)
+            : value(std::move(aValue))
+            , suffix(std::move(aSuffix))
         {
         }
 
@@ -99,18 +67,55 @@ private:
 
     using DynamicAttrList = Core::Map<Red::CName, AttributeData>;
 
-    struct EntityState
-    {
-        DynamicAttrList values;
-        DynamicAttrList fallback;
-        DynamicTagList conditions;
-    };
-
     struct DynamicString
     {
         bool valid;
         std::string value;
         DynamicTagList attributes;
+    };
+
+    [[nodiscard]] DynamicAppearanceName ParseAppearance(Red::CName aAppearance) const;
+    [[nodiscard]] DynamicAppearanceRef ParseReference(Red::CName aReference) const;
+    [[nodiscard]] bool MatchReference(const DynamicAppearanceRef& aReference, Red::Entity* aEntity,
+                                      Red::CName aVariant) const;
+
+    [[nodiscard]] Red::CName ResolveName(Red::Entity* aEntity, const DynamicPartList& aVariant,
+                                         Red::CName aName) const;
+    [[nodiscard]] Red::ResourcePath ResolvePath(Red::Entity* aEntity, const DynamicPartList& aVariant,
+                                                Red::ResourcePath aPath) const;
+
+    void UpdateState(Red::Entity* aEntity);
+    void RemoveState(Red::Entity* aEntity);
+
+    void RegisterPath(Red::ResourcePath aPath, const char* aPathStr);
+    void RegisterPath(Red::ResourcePath aPath, const std::string& aPathStr);
+    void RegisterPath(Red::ResourcePath aPath, const std::string_view& aPathStr);
+    void RegisterPath(Red::ResourcePath aPath, const Red::StringView& aPathStr);
+
+    bool SupportsDynamicAppearance(const Red::EntityTemplate* aTemplate);
+    void MarkDynamicAppearanceName(Red::CName& aAppearanceName, Red::Entity* aEntity);
+    void MarkDynamicAppearanceName(Red::CName& aAppearanceName, DynamicAppearanceName& aSelector);
+    std::string_view GetBaseAppearanceName(Red::CName aAppearanceName);
+
+    [[nodiscard]] const std::string& GetPathStr(Red::ResourcePath aPath) const;
+
+    static bool IsMale(Red::Entity* aEntity);
+
+    [[nodiscard]] bool IsDynamicValue(const char* aValue) const;
+    [[nodiscard]] bool IsDynamicValue(const std::string& aValue) const;
+    [[nodiscard]] bool IsDynamicValue(const std::string_view& aValue) const;
+    [[nodiscard]] bool IsDynamicValue(const Red::StringView& aValue) const;
+    [[nodiscard]] bool IsDynamicValue(Red::CName aValue) const;
+
+    DynamicString ProcessString(const DynamicAttrList& aAttrs, const DynamicPartList& aVariant,
+                                const char* aInput) const;
+
+private:
+    struct EntityState
+    {
+        DynamicAttrList values;
+        DynamicAttrList fallback;
+        DynamicTagList conditions;
     };
 
     struct CustomizationData
@@ -121,13 +126,8 @@ private:
         Red::CName hairColor;
     };
 
-    DynamicString ProcessString(const DynamicAttrList& aAttrs, const DynamicPartList& aVariant,
-                                const char* aInput) const;
-
     AttributeData GetSuffixData(Red::Entity* aEntity, Red::TweakDBID aSuffixID) const;
     CustomizationData GetCustomizationData(Red::Entity* aEntity) const;
-
-    [[nodiscard]] const std::string& GetPathStr(Red::ResourcePath aPath) const;
 
     Core::Map<Red::Entity*, EntityState> m_states;
     Core::Map<Red::ResourcePath, std::string> m_paths;

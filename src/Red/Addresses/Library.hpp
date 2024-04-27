@@ -43,6 +43,9 @@ constexpr uint32_t CharacterCustomizationSystem_InitializeMorphOption = 37767340
 constexpr uint32_t CharacterCustomizationSystem_InitializeSwitcherOption = 2229107513;
 
 constexpr uint32_t CMesh_GetAppearance = 773462733;
+constexpr uint32_t CMesh_LoadMaterialsAsync = 701648326;
+
+constexpr uint32_t MeshMaterialBuffer_LoadMaterialAsync = 1609519068;
 
 constexpr uint32_t Entity_ReassembleAppearance = 1560690857;
 

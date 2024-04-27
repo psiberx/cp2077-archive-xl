@@ -888,3 +888,13 @@ void App::GarmentOverrideModule::PatchHeadGarmentOverrides(Core::SharedPtr<Entit
         }
     }
 }
+
+Core::SharedPtr<App::DynamicAppearanceController>& App::GarmentOverrideModule::GetDynamicAppearanceController()
+{
+    return s_dynamicAppearance;
+}
+
+Core::SharedPtr<App::OverrideTagManager>& App::GarmentOverrideModule::GetTagManager()
+{
+    return s_tagManager;
+}

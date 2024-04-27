@@ -25,6 +25,9 @@ public:
     static void EnableGarmentOffsets();
     static void DisableGarmentOffsets();
 
+    static Core::SharedPtr<DynamicAppearanceController>& GetDynamicAppearanceController();
+    static Core::SharedPtr<OverrideTagManager>& GetTagManager();
+
 private:
     void ConfigureTags();
 

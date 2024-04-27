@@ -33,4 +33,15 @@ inline void WaitForJob(JobHandle& aJob, const W& aTimeout)
     queue.Wait(aJob);
     WaitForQueue(queue, aTimeout);
 }
+
+template<template<typename, typename...> typename V, typename R, typename W, typename... A>
+inline void WaitForJobs(const V<R, A...>& aJobs, const W& aTimeout)
+{
+    JobQueue queue;
+    for (const auto& job : aJobs)
+    {
+        queue.Wait(job);
+    }
+    WaitForQueue(queue, aTimeout);
+}
 }
