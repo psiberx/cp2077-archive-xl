@@ -68,12 +68,16 @@ protected cb func OnInitialize() -> Bool {
     scrollController.VerticalScrollBarRef = inkWidgetRef.Create(sliderArea);
     scrollController.autoHideVertical = true;
 
-    scrollWrapper.Reparent(gridWidget.parentWidget as inkCompoundWidget);
+    scrollWrapper.Reparent(containerWidget);
     gridWidget.Reparent(scrollArea);
 
+    // Binding properties after adding widget to a tree,
+    // so style resource can be inherited from parent
     sliderFill.BindProperty(n"tintColor", n"MainColors.Red");
     sliderHandle.BindProperty(n"tintColor", n"MainColors.Red");
 
+    // Attaching controllers after adding widget to a tree,
+    // so they can be properly initialized
     sliderArea.AttachController(sliderController);
     scrollWrapper.AttachController(scrollController);
 }
