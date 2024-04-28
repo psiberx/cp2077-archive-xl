@@ -83,6 +83,7 @@
 #include <RED4ext/Scripting/Natives/Generated/game/ui/CharacterCustomizationInfoResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/CharacterCustomizationOption.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/CharacterCustomizationState.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/ui/CustomizationGroup.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/ICharacterCustomizationSystem.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/MorphInfo.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/OptionsGroup.hpp>

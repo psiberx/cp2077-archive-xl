@@ -35,12 +35,22 @@ constexpr uint32_t CharacterCustomizationHairstyleController_CheckState = 265284
 
 constexpr uint32_t CharacterCustomizationHelper_GetHairColor = 3414699684;
 
+constexpr uint32_t CharacterCustomizationState_FinalizePart = 716262863;
+constexpr uint32_t CharacterCustomizationState_GetHeadAppearances1 = 4051123539;
+constexpr uint32_t CharacterCustomizationState_GetHeadAppearances2 = 3766105236;
+constexpr uint32_t CharacterCustomizationState_GetBodyAppearances1 = 4014159024;
+constexpr uint32_t CharacterCustomizationState_GetBodyAppearances2 = 56573295;
+constexpr uint32_t CharacterCustomizationState_GetArmsAppearances1 = 110771572;
+constexpr uint32_t CharacterCustomizationState_GetArmsAppearances2 = 4059182261;
+
 constexpr uint32_t CharacterCustomizationSystem_Initialize = 2341291776;
 constexpr uint32_t CharacterCustomizationSystem_Uninitialize = 402202441;
+constexpr uint32_t CharacterCustomizationSystem_GetResource = 4275058446;
 constexpr uint32_t CharacterCustomizationSystem_EnsureState = 787099588;
 constexpr uint32_t CharacterCustomizationSystem_InitializeAppOption = 1092645213;
 constexpr uint32_t CharacterCustomizationSystem_InitializeMorphOption = 3776734053;
 constexpr uint32_t CharacterCustomizationSystem_InitializeSwitcherOption = 2229107513;
+constexpr uint32_t CharacterCustomizationSystem_InitializeOptionsFromState = 1168449474;
 
 constexpr uint32_t CMesh_GetAppearance = 773462733;
 constexpr uint32_t CMesh_LoadMaterialsAsync = 701648326;

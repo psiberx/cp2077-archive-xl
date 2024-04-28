@@ -32,12 +32,44 @@ public:
     bool Unload() override;
 
 private:
+    void OnActivateSystem(CustomizationSystem* aSystem, CustomizationPuppet& aPuppet, bool aIsMale, uintptr_t a4);
+    void OnDeactivateSystem(CustomizationSystem* aSystem);
+    void OnPrepareResource(CustomizationSystem* aSystem,
+                           Red::SharedPtr<Red::ResourceToken<Red::gameuiCharacterCustomizationInfoResource>>& aOut,
+                           bool aIsMale);
+    void OnInitAppOption(CustomizationSystem* aSystem,
+                         CustomizationPart aPartType,
+                         CustomizationStateOption& aOption,
+                         Red::SortedUniqueArray<Red::CName>& aStateOptions,
+                         Red::Map<Red::CName, CustomizationStateOption>& aUiSlots);
+    void OnInitMorphOption(CustomizationSystem* aSystem,
+                           CustomizationStateOption& aOption,
+                           Red::SortedUniqueArray<Red::CName>& aStateOptions,
+                           Red::Map<Red::CName, CustomizationStateOption>& aUiSlots);
+    void OnInitSwitcherOption(CustomizationSystem* aSystem,
+                              CustomizationPart aPartType,
+                              CustomizationStateOption& aOption,
+                              int32_t aCurrentIndex,
+                              uint64_t a5,
+                              Red::Map<Red::CName, CustomizationStateOption>& aUiSlots);
+    void OnGetAppearances(Red::gameuiICharacterCustomizationState* aState, Red::CName aGroupName, bool aIsFPP,
+                          Red::DynArray<Red::AppearanceDescriptor>& aAppearances);
+    void OnChangeAppearance(AppearanceChangerSystem& aSystem,
+                            Red::AppearanceChangeRequest* aRequest,
+                            uintptr_t a3);
+    void OnChangeAppearances(AppearanceChangerSystem& aSystem,
+                            CustomizationPuppet& aPuppet,
+                            Red::Range<Red::AppearanceDescriptor>& aOldApp,
+                            Red::Range<Red::AppearanceDescriptor>& aNewApp,
+                            uintptr_t a5,
+                            uint8_t a6);
+
     void RegisterCustomEntryName(Red::CName aName);
     void RegisterCustomEntryName(Red::CName aName, const Red::CString& aSubName);
     bool IsCustomEntryName(Red::CName aName);
     bool IsCustomEntryName(Red::CName aName, const Red::CString& aSubName);
 
-    void RegisterAppOverride(Red::ResourcePath aOriginal, Red::ResourcePath aOverride, Red::CName aName);
+    void RegisterAppOverride(Red::ResourcePath aResource, Red::ResourcePath aOverride, Red::CName aAppearance);
     void ApplyAppOverride(Red::AppearanceDescriptor& aAppearance);
 
     void PrefetchCustomResources();
@@ -58,34 +90,6 @@ private:
     void RemoveCustomOptions(Red::DynArray<CustomizationOption>& aTargetOptions);
 
     void ResetCustomResources();
-
-    void OnActivateSystem(CustomizationSystem* aSystem, CustomizationPuppet& aPuppet, bool aIsMale, uintptr_t a4);
-    void OnDeactivateSystem(CustomizationSystem* aSystem);
-    void OnEnsureState(CustomizationSystem* aSystem, CustomizationState& aState);
-    void OnInitAppOption(CustomizationSystem* aSystem,
-                         CustomizationPart aPartType,
-                         CustomizationStateOption& aOption,
-                         Red::SortedUniqueArray<Red::CName>& aStateOptions,
-                         Red::Map<Red::CName, CustomizationStateOption>& aUiSlots);
-    void OnInitMorphOption(CustomizationSystem* aSystem,
-                           CustomizationStateOption& aOption,
-                           Red::SortedUniqueArray<Red::CName>& aStateOptions,
-                           Red::Map<Red::CName, CustomizationStateOption>& aUiSlots);
-    void OnInitSwitcherOption(CustomizationSystem* aSystem,
-                              CustomizationPart aPartType,
-                              CustomizationStateOption& aOption,
-                              int32_t aCurrentIndex,
-                              uint64_t a5,
-                              Red::Map<Red::CName, CustomizationStateOption>& aUiSlots);
-    void OnChangeAppearance(AppearanceChangerSystem& aSystem,
-                            Red::AppearanceChangeRequest* aRequest,
-                            uintptr_t a3);
-    void OnChangeAppearances(AppearanceChangerSystem& aSystem,
-                            CustomizationPuppet& aPuppet,
-                            Red::Range<Red::AppearanceDescriptor>& aOldApp,
-                            Red::Range<Red::AppearanceDescriptor>& aNewApp,
-                            uintptr_t a5,
-                            uint8_t a6);
 
     CustomizationResourceToken m_baseMaleResource;
     CustomizationResourceToken m_baseFemaleResource;

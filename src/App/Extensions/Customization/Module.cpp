@@ -22,8 +22,8 @@ bool App::CustomizationModule::Load()
     if (!HookBefore<Raw::CharacterCustomizationSystem::Uninitialize>(&CustomizationModule::OnDeactivateSystem))
         throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::Uninitialize].");
 
-    if (!HookBefore<Raw::CharacterCustomizationSystem::EnsureState>(&CustomizationModule::OnEnsureState))
-        throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::EnsureState].");
+    if (!HookBefore<Raw::CharacterCustomizationSystem::GetResource>(&CustomizationModule::OnPrepareResource))
+        throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::GetResource].");
 
     if (!HookBefore<Raw::CharacterCustomizationSystem::InitializeAppOption>(&CustomizationModule::OnInitAppOption))
         throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::InitializeAppOption].");
@@ -33,6 +33,13 @@ bool App::CustomizationModule::Load()
 
     if (!HookAfter<Raw::CharacterCustomizationSystem::InitializeSwitcherOption>(&CustomizationModule::OnInitSwitcherOption))
         throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::InitializeSwitcherOption].");
+
+    HookAfter<Raw::CharacterCustomizationState::GetHeadAppearances1>(&CustomizationModule::OnGetAppearances);
+    HookAfter<Raw::CharacterCustomizationState::GetHeadAppearances2>(&CustomizationModule::OnGetAppearances);
+    HookAfter<Raw::CharacterCustomizationState::GetBodyAppearances1>(&CustomizationModule::OnGetAppearances);
+    HookAfter<Raw::CharacterCustomizationState::GetBodyAppearances2>(&CustomizationModule::OnGetAppearances);
+    HookAfter<Raw::CharacterCustomizationState::GetArmsAppearances1>(&CustomizationModule::OnGetAppearances);
+    HookAfter<Raw::CharacterCustomizationState::GetArmsAppearances2>(&CustomizationModule::OnGetAppearances);
 
     if (!HookBefore<Raw::RuntimeSystemEntityAppearanceChanger::ChangeAppearance>(&CustomizationModule::OnChangeAppearance))
         throw std::runtime_error("Failed to hook [RuntimeSystemEntityAppearanceChanger::ChangeAppearance].");
@@ -52,10 +59,15 @@ bool App::CustomizationModule::Unload()
 {
     Unhook<Raw::CharacterCustomizationSystem::Initialize>();
     Unhook<Raw::CharacterCustomizationSystem::Uninitialize>();
-    Unhook<Raw::CharacterCustomizationSystem::EnsureState>();
     Unhook<Raw::CharacterCustomizationSystem::InitializeAppOption>();
     Unhook<Raw::CharacterCustomizationSystem::InitializeMorphOption>();
     Unhook<Raw::CharacterCustomizationSystem::InitializeSwitcherOption>();
+    Unhook<Raw::CharacterCustomizationState::GetHeadAppearances1>();
+    Unhook<Raw::CharacterCustomizationState::GetHeadAppearances2>();
+    Unhook<Raw::CharacterCustomizationState::GetBodyAppearances1>();
+    Unhook<Raw::CharacterCustomizationState::GetBodyAppearances2>();
+    Unhook<Raw::CharacterCustomizationState::GetArmsAppearances1>();
+    Unhook<Raw::CharacterCustomizationState::GetArmsAppearances2>();
     Unhook<Raw::RuntimeSystemEntityAppearanceChanger::ChangeAppearance>();
     Unhook<Raw::RuntimeSystemEntityAppearanceChanger::ChangeAppearances>();
 
@@ -73,14 +85,129 @@ void App::CustomizationModule::Reload()
     PrefetchCustomResources();
 }
 
+void App::CustomizationModule::OnActivateSystem(App::CustomizationSystem* aSystem, App::CustomizationPuppet& aPuppet,
+                                                bool aIsMale, uintptr_t a4)
+{
+    m_customizationActive = true;
+}
+
+void App::CustomizationModule::OnDeactivateSystem(App::CustomizationSystem* aSystem)
+{
+    m_customizationActive = false;
+}
+
+void App::CustomizationModule::OnPrepareResource(App::CustomizationSystem* aSystem,
+    Red::SharedPtr<Red::ResourceToken<Red::gameuiCharacterCustomizationInfoResource>>& aOut, bool aIsMale)
+{
+    MergeCustomEntries(aSystem);
+}
+
+void App::CustomizationModule::OnInitAppOption(App::CustomizationSystem* aSystem,
+                                               App::CustomizationPart aPartType,
+                                               App::CustomizationStateOption& aOption,
+                                               Red::SortedUniqueArray<Red::CName>& aStateOptions,
+                                               Red::Map<Red::CName, App::CustomizationStateOption>& aUiSlots)
+{
+    bool found = aStateOptions.Find(aOption->info->name) != aStateOptions.end();
+
+    if (!found && !aOption->info->hidden && aOption->info->enabled)
+    {
+        if (IsCustomEntryName(aOption->info->name))
+        {
+            aStateOptions.Emplace(aOption->info->name);
+        }
+    }
+}
+
+void App::CustomizationModule::OnInitMorphOption(App::CustomizationSystem* aSystem,
+                                                 App::CustomizationStateOption& aOption,
+                                                 Red::SortedUniqueArray<Red::CName>& aStateOptions,
+                                                 Red::Map<Red::CName, App::CustomizationStateOption>& aUiSlots)
+{
+    bool found = aStateOptions.Find(aOption->info->name) != aStateOptions.end();
+
+    if (!found && !aOption->info->hidden && aOption->info->enabled)
+    {
+        if (IsCustomEntryName(aOption->info->name))
+        {
+            aStateOptions.Emplace(aOption->info->name);
+        }
+    }
+}
+
+void App::CustomizationModule::OnInitSwitcherOption(App::CustomizationSystem* aSystem,
+                                                    App::CustomizationPart aPartType,
+                                                    App::CustomizationStateOption& aOption,
+                                                    int32_t aCurrentIndex,
+                                                    uint64_t a5,
+                                                    Red::Map<Red::CName, App::CustomizationStateOption>& aUiSlots)
+{
+    if (!aOption->isActive && !aOption->info->hidden && aOption->info->enabled)
+    {
+        if (IsCustomEntryName(aOption->info->name))
+        {
+            aOption->isActive = true;
+        }
+    }
+}
+
+void App::CustomizationModule::OnGetAppearances(Red::gameuiICharacterCustomizationState* aState,
+                                                       Red::CName aGroupName, bool aIsFPP,
+                                                       Red::DynArray<Red::AppearanceDescriptor>& aAppearances)
+{
+    for (auto& app : aAppearances)
+    {
+        ApplyAppOverride(app);
+    }
+}
+
+void App::CustomizationModule::OnChangeAppearance(App::AppearanceChangerSystem& aSystem,
+                                                  Red::AppearanceChangeRequest* aRequest,
+                                                  uintptr_t a3)
+{
+    if (/*m_customizationActive &&*/ !m_customAppOverrides.empty())
+    {
+        if (aRequest->oldAppearance)
+        {
+            ApplyAppOverride(aRequest->oldAppearance);
+        }
+        if (aRequest->newAppearance)
+        {
+            ApplyAppOverride(aRequest->newAppearance);
+        }
+    }
+}
+
+void App::CustomizationModule::OnChangeAppearances(App::AppearanceChangerSystem& aSystem,
+                                                  App::CustomizationPuppet& aPuppet,
+                                                  Red::Range<Red::AppearanceDescriptor>& aOldApp,
+                                                  Red::Range<Red::AppearanceDescriptor>& aNewApp,
+                                                  uintptr_t a5,
+                                                  uint8_t a6)
+{
+    if (/*m_customizationActive &&*/ !m_customAppOverrides.empty())
+    {
+        if (aOldApp)
+        {
+            for (auto& app : aOldApp)
+            {
+                ApplyAppOverride(app);
+            }
+        }
+
+        if (aNewApp)
+        {
+            for (auto& app : aNewApp)
+            {
+                ApplyAppOverride(app);
+            }
+        }
+    }
+}
+
 void App::CustomizationModule::RegisterCustomEntryName(Red::CName aName)
 {
     m_customEntryNames.insert(aName);
-}
-
-bool App::CustomizationModule::IsCustomEntryName(Red::CName aName)
-{
-    return m_customEntryNames.contains(aName);
 }
 
 void App::CustomizationModule::RegisterCustomEntryName(Red::CName aName, const Red::CString& aSubName)
@@ -88,16 +215,21 @@ void App::CustomizationModule::RegisterCustomEntryName(Red::CName aName, const R
     RegisterCustomEntryName(Red::FNV1a64(reinterpret_cast<const uint8_t*>(aSubName.c_str()), aSubName.Length(), aName));
 }
 
+bool App::CustomizationModule::IsCustomEntryName(Red::CName aName)
+{
+    return m_customEntryNames.contains(aName);
+}
+
 bool App::CustomizationModule::IsCustomEntryName(Red::CName aName, const Red::CString& aSubName)
 {
     return IsCustomEntryName(Red::FNV1a64(reinterpret_cast<const uint8_t*>(aSubName.c_str()), aSubName.Length(), aName));
 }
 
-void App::CustomizationModule::RegisterAppOverride(Red::ResourcePath aOriginal, Red::ResourcePath aOverride,
-                                                   Red::CName aName)
+void App::CustomizationModule::RegisterAppOverride(Red::ResourcePath aResource, Red::ResourcePath aOverride,
+                                                   Red::CName aAppearance)
 {
-    m_customAppOverrides.insert({Red::AppearanceDescriptor{aOriginal, aName},
-                                 Red::AppearanceDescriptor{aOverride, aName}});
+    m_customAppOverrides.insert({Red::AppearanceDescriptor{aResource, aAppearance},
+                                 Red::AppearanceDescriptor{aOverride, aAppearance}});
 }
 
 void App::CustomizationModule::ApplyAppOverride(Red::AppearanceDescriptor& aAppearance)
@@ -158,7 +290,7 @@ void App::CustomizationModule::MergeCustomEntries(CustomizationResourceToken& aT
         Red::WaitForResource(aTargetResource, std::chrono::milliseconds(250));
         if (!aTargetResource.instance->finished)
         {
-            LogWarning("Game customization resource is not ready.");
+            LogWarning("|{}| Game customization resource is not ready.", ModuleName);
             return;
         }
     }
@@ -169,7 +301,7 @@ void App::CustomizationModule::MergeCustomEntries(CustomizationResourceToken& aT
     {
         if (!customResource->finished)
         {
-            LogWarning("Mod customization resource is not ready.");
+            LogWarning("|{}| Mod customization resource is not ready.", ModuleName);
             continue;
         }
 
@@ -426,115 +558,4 @@ void App::CustomizationModule::ResetCustomResources()
 {
     m_customMaleResources.clear();
     m_customFemaleResources.clear();
-}
-
-void App::CustomizationModule::OnActivateSystem(App::CustomizationSystem* aSystem, App::CustomizationPuppet& aPuppet,
-                                                bool aIsMale, uintptr_t a4)
-{
-    MergeCustomEntries(aSystem);
-
-    m_customizationActive = true;
-}
-
-void App::CustomizationModule::OnDeactivateSystem(App::CustomizationSystem* aSystem)
-{
-    m_customizationActive = false;
-}
-
-void App::CustomizationModule::OnEnsureState(App::CustomizationSystem* aSystem, App::CustomizationState& aState)
-{
-    MergeCustomEntries(aSystem);
-}
-
-void App::CustomizationModule::OnInitAppOption(App::CustomizationSystem* aSystem,
-                                               App::CustomizationPart aPartType,
-                                               App::CustomizationStateOption& aOption,
-                                               Red::SortedUniqueArray<Red::CName>& aStateOptions,
-                                               Red::Map<Red::CName, App::CustomizationStateOption>& aUiSlots)
-{
-    bool found = aStateOptions.Find(aOption->info->name) != aStateOptions.end();
-
-    if (!found && !aOption->info->hidden && aOption->info->enabled)
-    {
-        if (IsCustomEntryName(aOption->info->name))
-        {
-            aStateOptions.Emplace(aOption->info->name);
-        }
-    }
-}
-
-void App::CustomizationModule::OnInitMorphOption(App::CustomizationSystem* aSystem,
-                                                 App::CustomizationStateOption& aOption,
-                                                 Red::SortedUniqueArray<Red::CName>& aStateOptions,
-                                                 Red::Map<Red::CName, App::CustomizationStateOption>& aUiSlots)
-{
-    bool found = aStateOptions.Find(aOption->info->name) != aStateOptions.end();
-
-    if (!found && !aOption->info->hidden && aOption->info->enabled)
-    {
-        if (IsCustomEntryName(aOption->info->name))
-        {
-            aStateOptions.Emplace(aOption->info->name);
-        }
-    }
-}
-
-void App::CustomizationModule::OnInitSwitcherOption(App::CustomizationSystem* aSystem,
-                                                    App::CustomizationPart aPartType,
-                                                    App::CustomizationStateOption& aOption,
-                                                    int32_t aCurrentIndex,
-                                                    uint64_t a5,
-                                                    Red::Map<Red::CName, App::CustomizationStateOption>& aUiSlots)
-{
-    if (!aOption->isActive && !aOption->info->hidden && aOption->info->enabled)
-    {
-        if (IsCustomEntryName(aOption->info->name))
-        {
-            aOption->isActive = true;
-        }
-    }
-}
-
-void App::CustomizationModule::OnChangeAppearance(App::AppearanceChangerSystem& aSystem,
-                                                  Red::AppearanceChangeRequest* aRequest,
-                                                  uintptr_t a3)
-{
-    if (/*m_customizationActive &&*/ !m_customAppOverrides.empty())
-    {
-        if (aRequest->oldAppearance)
-        {
-            ApplyAppOverride(aRequest->oldAppearance);
-        }
-        if (aRequest->newAppearance)
-        {
-            ApplyAppOverride(aRequest->newAppearance);
-        }
-    }
-}
-
-void App::CustomizationModule::OnChangeAppearances(App::AppearanceChangerSystem& aSystem,
-                                                  App::CustomizationPuppet& aPuppet,
-                                                  Red::Range<Red::AppearanceDescriptor>& aOldApp,
-                                                  Red::Range<Red::AppearanceDescriptor>& aNewApp,
-                                                  uintptr_t a5,
-                                                  uint8_t a6)
-{
-    if (/*m_customizationActive &&*/ !m_customAppOverrides.empty())
-    {
-        if (aOldApp)
-        {
-            for (auto& app : aOldApp)
-            {
-                ApplyAppOverride(app);
-            }
-        }
-
-        if (aNewApp)
-        {
-            for (auto& app : aNewApp)
-            {
-                ApplyAppOverride(app);
-            }
-        }
-    }
 }

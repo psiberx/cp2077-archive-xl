@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Red/AppearanceChanger.hpp"
+
 namespace Red
 {
 enum class CharacterBodyPartState : uint32_t
@@ -49,10 +51,55 @@ constexpr auto CheckState = Core::RawFunc<
                           Red::CharacterBodyPartState& aFlatState)>();
 }
 
+namespace Raw::CharacterCustomizationState
+{
+using HeadGroups = Core::OffsetPtr<0x70, Red::DynArray<Red::gameuiCustomizationGroup>>;
+using BodyGroups = Core::OffsetPtr<0x80, Red::DynArray<Red::gameuiCustomizationGroup>>;
+using ArmsGroups = Core::OffsetPtr<0x90, Red::DynArray<Red::gameuiCustomizationGroup>>;
+
+constexpr auto GetHeadAppearances1 = Core::RawFunc<
+    /* addr = */ Red::AddressLib::CharacterCustomizationState_GetHeadAppearances1,
+    /* type = */ void (*)(Red::gameuiICharacterCustomizationState* aState,
+                          Red::CName aGroupName, bool aIsFPP,
+                          Red::DynArray<Red::AppearanceDescriptor>& aAppearances)>();
+
+constexpr auto GetHeadAppearances2 = Core::RawFunc<
+    /* addr = */ Red::AddressLib::CharacterCustomizationState_GetHeadAppearances2,
+    /* type = */ void (*)(Red::gameuiICharacterCustomizationState* aState,
+                          Red::CName aGroupName, bool aIsFPP,
+                          Red::DynArray<Red::AppearanceDescriptor>& aAppearances)>();
+
+constexpr auto GetBodyAppearances1 = Core::RawFunc<
+    /* addr = */ Red::AddressLib::CharacterCustomizationState_GetBodyAppearances1,
+    /* type = */ void (*)(Red::gameuiICharacterCustomizationState* aState,
+                          Red::CName aGroupName, bool aIsFPP,
+                          Red::DynArray<Red::AppearanceDescriptor>& aAppearances)>();
+
+constexpr auto GetBodyAppearances2 = Core::RawFunc<
+    /* addr = */ Red::AddressLib::CharacterCustomizationState_GetBodyAppearances2,
+    /* type = */ void (*)(Red::gameuiICharacterCustomizationState* aState,
+                          Red::CName aGroupName, bool aIsFPP,
+                          Red::DynArray<Red::AppearanceDescriptor>& aAppearances)>();
+
+constexpr auto GetArmsAppearances1 = Core::RawFunc<
+    /* addr = */ Red::AddressLib::CharacterCustomizationState_GetArmsAppearances1,
+    /* type = */ void (*)(Red::gameuiICharacterCustomizationState* aState,
+                          Red::CName aGroupName, bool aIsFPP,
+                          Red::DynArray<Red::AppearanceDescriptor>& aAppearances)>();
+
+constexpr auto GetArmsAppearances2 = Core::RawFunc<
+    /* addr = */ Red::AddressLib::CharacterCustomizationState_GetArmsAppearances2,
+    /* type = */ void (*)(Red::gameuiICharacterCustomizationState* aState,
+                          Red::CName aGroupName, bool aIsFPP,
+                          Red::DynArray<Red::AppearanceDescriptor>& aAppearances)>();
+}
+
 namespace Raw::CharacterCustomizationSystem
 {
-using FemaleResource = Core::OffsetPtr<0x58, Red::SharedPtr<Red::ResourceToken<Red::gameuiCharacterCustomizationInfoResource>>>;
 using MaleResource = Core::OffsetPtr<0x48, Red::SharedPtr<Red::ResourceToken<Red::gameuiCharacterCustomizationInfoResource>>>;
+using FemaleResource = Core::OffsetPtr<0x58, Red::SharedPtr<Red::ResourceToken<Red::gameuiCharacterCustomizationInfoResource>>>;
+using StateLock = Core::OffsetPtr<0x70, Red::SharedMutex>;
+using State = Core::OffsetPtr<0x78, Red::Handle<Red::gameuiCharacterCustomizationState>>;
 
 constexpr auto Initialize = Core::RawFunc<
     /* addr = */ Red::AddressLib::CharacterCustomizationSystem_Initialize,
@@ -63,10 +110,11 @@ constexpr auto Uninitialize = Core::RawFunc<
     /* addr = */ Red::AddressLib::CharacterCustomizationSystem_Uninitialize,
     /* type = */ void (*)(Red::gameuiICharacterCustomizationSystem* aSystem)>();
 
-constexpr auto EnsureState = Core::RawFunc<
-    /* addr = */ Red::AddressLib::CharacterCustomizationSystem_EnsureState,
+constexpr auto GetResource = Core::RawFunc<
+    /* addr = */ Red::AddressLib::CharacterCustomizationSystem_GetResource,
     /* type = */ void (*)(Red::gameuiICharacterCustomizationSystem* aSystem,
-                          Red::Handle<Red::game::ui::CharacterCustomizationState>& aState)>();
+                          Red::SharedPtr<Red::ResourceToken<Red::gameuiCharacterCustomizationInfoResource>>& aOut,
+                          bool aIsMale)>();
 
 constexpr auto InitializeAppOption = Core::RawFunc<
     /* addr = */ Red::AddressLib::CharacterCustomizationSystem_InitializeAppOption,
