@@ -19,12 +19,11 @@ inline TweakDBID CreateFlat(TweakDBID aRecordID, const char* aProp, T&& aValue)
 }
 
 template<typename T>
-inline void AppendToFlat(TweakDBID aRecordID, const char* aProp, const Core::Vector<T>& aValues)
+inline void AppendToFlat(TweakDBID aFlatID, const Core::Vector<T>& aValues)
 {
     auto tweakDB = TweakDB::Get();
-    auto flatID = TweakDBID(aRecordID, aProp);
 
-    auto flat = tweakDB->GetFlatValue(flatID);
+    auto flat = tweakDB->GetFlatValue(aFlatID);
     if (!flat)
         return;
 
@@ -43,12 +42,50 @@ inline void AppendToFlat(TweakDBID aRecordID, const char* aProp, const Core::Vec
     }
 
     const auto offset = tweakDB->CreateFlatValue({data.type, &copy});
-    flatID.SetTDBOffset(offset);
+    aFlatID.SetTDBOffset(offset);
 
     {
         std::unique_lock _(tweakDB->mutex00);
-        tweakDB->flats.InsertOrAssign(flatID);
+        tweakDB->flats.InsertOrAssign(aFlatID);
     }
+}
+
+template<typename T>
+inline void AppendToFlat(TweakDBID aFlatID, const Core::Set<T>& aValues)
+{
+    auto tweakDB = TweakDB::Get();
+
+    auto flat = tweakDB->GetFlatValue(aFlatID);
+    if (!flat)
+        return;
+
+    auto data = flat->GetValue();
+
+    if (data.type->GetType() != ERTTIType::Array)
+        return;
+
+    auto copy = *reinterpret_cast<DynArray<T>*>(data.value);
+    for (const auto& value : aValues)
+    {
+        if (!copy.Contains(value))
+        {
+            copy.PushBack(value);
+        }
+    }
+
+    const auto offset = tweakDB->CreateFlatValue({data.type, &copy});
+    aFlatID.SetTDBOffset(offset);
+
+    {
+        std::unique_lock _(tweakDB->mutex00);
+        tweakDB->flats.InsertOrAssign(aFlatID);
+    }
+}
+
+template<typename T>
+inline void AppendToFlat(TweakDBID aRecordID, const char* aProp, const Core::Vector<T>& aValues)
+{
+    AppendToFlat({aRecordID, aProp}, aValues);
 }
 
 inline TweakDBID CreateRecord(TweakDBID aRecordID, const char* aType)

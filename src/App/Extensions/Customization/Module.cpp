@@ -1,8 +1,11 @@
 #include "Module.hpp"
+#include "Red/TweakDB.hpp"
 
 namespace
 {
 constexpr auto ModuleName = "Customization";
+
+constexpr auto HairColorSlotName = Red::CName("hair_color");
 
 Red::ClassLocator<Red::game::ui::AppearanceInfo> s_AppInfoType;
 Red::ClassLocator<Red::game::ui::MorphInfo> s_MorphInfoType;
@@ -315,6 +318,11 @@ void App::CustomizationModule::MergeCustomEntries(CustomizationResourceToken& aT
         MergeCustomOptions(gameData->bodyCustomizationOptions, customData->bodyCustomizationOptions);
         MergeCustomOptions(gameData->headCustomizationOptions, customData->headCustomizationOptions);
     }
+
+    if (!m_hairColorNames.empty())
+    {
+        Red::AppendToFlat("ItemFactory.HairColors.hairColors", m_hairColorNames);
+    }
 }
 
 void App::CustomizationModule::MergeCustomGroups(Red::DynArray<CustomizationGroup>& aTargetGroups,
@@ -388,6 +396,14 @@ void App::CustomizationModule::MergeCustomOptions(Red::DynArray<CustomizationOpt
                         }
 
                         RegisterCustomEntryName(sourceChoice.name);
+                    }
+
+                    if (targetOption->uiSlot == HairColorSlotName)
+                    {
+                        for (const auto& tag : sourceChoice.tags.tags)
+                        {
+                            m_hairColorNames.insert(tag);
+                        }
                     }
                 }
             }

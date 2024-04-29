@@ -98,6 +98,7 @@ private:
     Core::Map<Red::AppearanceDescriptor::Hash, Red::AppearanceDescriptor> m_customAppOverrides;
     Core::Set<Red::CName> m_customEntryNames;
     std::mutex m_customEntriesMergeLock;
+    Core::Set<Red::CName> m_hairColorNames;
     bool m_customEntriesMerged;
     bool m_customizationActive;
 };
