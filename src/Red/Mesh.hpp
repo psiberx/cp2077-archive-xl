@@ -13,6 +13,10 @@ namespace Raw::CMesh
 {
 using MaterialLock = Core::OffsetPtr<0x218, Red::SharedMutex>;
 
+constexpr auto OnLoad = Core::RawFunc<
+    /* addr = */ Red::AddressLib::CMesh_OnLoad,
+    /* type = */ void (*)(Red::CMesh* aResource, void* a2)>();
+
 constexpr auto GetAppearance = Core::RawFunc<
     /* addr = */ Red::AddressLib::CMesh_GetAppearance,
     /* type = */ Red::Handle<Red::mesh::MeshAppearance>& (*)(Red::CMesh* aMesh, Red::CName aAppearance)>();

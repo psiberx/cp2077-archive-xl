@@ -10,6 +10,10 @@ namespace Raw::AppearanceResource
 {
 using Mutex = Core::OffsetPtr<0xF0, Red::SharedMutex>;
 
+constexpr auto OnLoad = Core::RawFunc<
+    /* addr = */ Red::AddressLib::AppearanceResource_OnLoad,
+    /* type = */ void (*)(Red::AppearanceResource* aResource)>();
+
 constexpr auto FindAppearance = Core::RawFunc<
     /* addr = */ Red::AddressLib::AppearanceResource_FindAppearanceDefinition,
     /* type = */ uintptr_t (*)(Red::AppearanceResource* aResource,

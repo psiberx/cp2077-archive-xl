@@ -17,6 +17,7 @@ constexpr uint32_t AppearanceChangeSystem_ChangeAppearance2 = 386815609;
 
 constexpr uint32_t AppearanceNameVisualTagsPreset_GetVisualTags = 1186798404;
 
+constexpr uint32_t AppearanceResource_OnLoad = 3141736993;
 constexpr uint32_t AppearanceResource_FindAppearanceDefinition = 549398675;
 
 constexpr uint32_t AttachmentSlots_InitializeSlots = 3224838039;
@@ -52,6 +53,7 @@ constexpr uint32_t CharacterCustomizationSystem_InitializeMorphOption = 37767340
 constexpr uint32_t CharacterCustomizationSystem_InitializeSwitcherOption = 2229107513;
 constexpr uint32_t CharacterCustomizationSystem_InitializeOptionsFromState = 1168449474;
 
+constexpr uint32_t CMesh_OnLoad = 2272530537;
 constexpr uint32_t CMesh_GetAppearance = 773462733;
 constexpr uint32_t CMesh_LoadMaterialsAsync = 701648326;
 
@@ -59,7 +61,11 @@ constexpr uint32_t MeshMaterialBuffer_LoadMaterialAsync = 1609519068;
 
 constexpr uint32_t Entity_ReassembleAppearance = 1560690857;
 
+constexpr uint32_t EntityBuilder_ExtractComponentsJob = 525669984;
+
+constexpr uint32_t EntityTemplate_OnLoad = 2741376473;
 constexpr uint32_t EntityTemplate_FindAppearance = 36838056;
+constexpr uint32_t EntityTemplate_ExtractComponents = 39206067;
 
 constexpr uint32_t FactoryIndex_LoadFactoryAsync = 1886854234;
 constexpr uint32_t FactoryIndex_ResolveResource = 3040549301;
@@ -116,6 +122,7 @@ constexpr uint32_t QuestLoader_ProcessPhaseResource = 790570700;
 
 constexpr uint32_t ResourceDepot_InitializeArchives = 2885423437;
 constexpr uint32_t ResourceDepot_LoadArchives = 2517385486;
+constexpr uint32_t ResourceDepot_RequestResource = 2450934495;
 
 constexpr uint32_t ResourceLoader_OnUpdate = 1303056161;
 

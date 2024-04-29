@@ -378,10 +378,13 @@ void App::CustomizationModule::MergeCustomOptions(Red::DynArray<CustomizationOpt
                     {
                         targetAppOption->definitions.EmplaceBack(sourceChoice);
 
-                        if (targetAppOption->resource.path != sourceAppOption->resource.path)
+                        if (sourceAppOption->resource.path)
                         {
-                            RegisterAppOverride(targetAppOption->resource.path, sourceAppOption->resource.path,
-                                                sourceChoice.name);
+                            if (targetAppOption->resource.path != sourceAppOption->resource.path)
+                            {
+                                RegisterAppOverride(targetAppOption->resource.path, sourceAppOption->resource.path,
+                                                    sourceChoice.name);
+                            }
                         }
 
                         RegisterCustomEntryName(sourceChoice.name);
