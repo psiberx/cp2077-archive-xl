@@ -15,7 +15,7 @@ std::string_view App::EntityOverrideModule::GetName()
 
 bool App::EntityOverrideModule::Load()
 {
-    if (!HookAfter<Raw::ResourceDepot::RequestResource>(&OnRequestResource))
+    if (!HookAfter<Raw::ResourceDepot::RequestResource>(&OnResourceRequest))
         throw std::runtime_error("Failed to hook [ResourceDepot::RequestResource].");
 
     if (!HookAfter<Raw::EntityTemplate::OnLoad>(&OnEntityTemplateLoad))
@@ -81,7 +81,7 @@ void App::EntityOverrideModule::PrepareOverrides()
     }
 }
 
-void App::EntityOverrideModule::OnRequestResource(Red::ResourceDepot*, const uintptr_t* aOut, Red::ResourcePath aPath,
+void App::EntityOverrideModule::OnResourceRequest(Red::ResourceDepot*, const uintptr_t* aOut, Red::ResourcePath aPath,
                                                   const int32_t*)
 {
     if (*aOut)
@@ -114,9 +114,24 @@ void App::EntityOverrideModule::OnEntityTemplateLoad(Red::EntityTemplate* aTempl
         if (!override)
             continue;
 
-        for (const auto& appearance : override->appearances)
+        for (const auto& overrideAppearance : override->appearances)
         {
-            aTemplate->appearances.EmplaceBack(appearance);
+            auto isNewAppearance = true;
+
+            for (auto& existingAppearance : aTemplate->appearances)
+            {
+                if (existingAppearance.name == overrideAppearance.name)
+                {
+                    existingAppearance = overrideAppearance;
+                    isNewAppearance = false;
+                    break;
+                }
+            }
+
+            if (isNewAppearance)
+            {
+                aTemplate->appearances.EmplaceBack(overrideAppearance);
+            }
         }
 
         if (override->visualTagsSchema)
@@ -200,9 +215,24 @@ void App::EntityOverrideModule::OnAppearanceResourceLoad(Red::AppearanceResource
         if (!override)
             continue;
 
-        for (const auto& appearance : override->appearances)
+        for (const auto& overrideAppearance : override->appearances)
         {
-            aResource->appearances.EmplaceBack(appearance);
+            auto isNewAppearance = true;
+
+            for (auto& existingAppearance : aResource->appearances)
+            {
+                if (existingAppearance->name == overrideAppearance->name)
+                {
+                    existingAppearance = overrideAppearance;
+                    isNewAppearance = false;
+                    break;
+                }
+            }
+
+            if (isNewAppearance)
+            {
+                aResource->appearances.EmplaceBack(overrideAppearance);
+            }
         }
     }
 }
@@ -220,9 +250,24 @@ void App::EntityOverrideModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
         if (!override)
             continue;
 
-        for (const auto& appearance : override->appearances)
+        for (const auto& overrideAppearance : override->appearances)
         {
-            aMesh->appearances.EmplaceBack(appearance);
+            auto isNewAppearance = true;
+
+            for (auto& existingAppearance : aMesh->appearances)
+            {
+                if (existingAppearance->name == overrideAppearance->name)
+                {
+                    existingAppearance = overrideAppearance;
+                    isNewAppearance = false;
+                    break;
+                }
+            }
+
+            if (isNewAppearance)
+            {
+                aMesh->appearances.EmplaceBack(overrideAppearance);
+            }
         }
     }
 }
@@ -230,17 +275,12 @@ void App::EntityOverrideModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
 template<typename T>
 Red::Handle<T> App::EntityOverrideModule::GetOverride(Red::ResourcePath aPath)
 {
-    auto& token = s_tokens[aPath];
+    auto token = GetOverrideToken<T>(aPath);
 
-    if (!token->IsFinished())
-    {
-        Red::WaitForResource(token, std::chrono::milliseconds(5000));
-    }
-
-    if (token->IsFailed())
+    if (!token)
         return {};
 
-    return Red::Cast<T>(token->resource);
+    return token->resource;
 }
 
 template<typename T>
@@ -250,7 +290,7 @@ Red::SharedPtr<Red::ResourceToken<T>> App::EntityOverrideModule::GetOverrideToke
 
     if (!token->IsFinished())
     {
-        Red::WaitForResource(token, std::chrono::milliseconds(5000));
+        Red::WaitForResource(token, std::chrono::milliseconds(2000));
     }
 
     if (token->IsFailed())

@@ -18,7 +18,7 @@ public:
 private:
     void PrepareOverrides();
 
-    static void OnRequestResource(Red::ResourceDepot*, const uintptr_t* aOut, Red::ResourcePath aPath, const int32_t*);
+    static void OnResourceRequest(Red::ResourceDepot*, const uintptr_t* aOut, Red::ResourcePath aPath, const int32_t*);
     static void OnEntityTemplateLoad(Red::EntityTemplate* aTemplate, void*);
     static void OnEntityTemplateExtract(void** aEntityBuilder, void*);
     static void OnAppearanceResourceLoad(Red::AppearanceResource* aResource);
