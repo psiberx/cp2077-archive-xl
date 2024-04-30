@@ -1,6 +1,7 @@
 #include "Module.hpp"
 #include "Red/EntityBuilder.hpp"
 #include "Red/Mesh.hpp"
+#include "Red/Package.hpp"
 #include "Red/ResourceDepot.hpp"
 
 namespace
@@ -105,10 +106,10 @@ void App::ResourcePatchModule::OnEntityTemplateLoad(Red::EntityTemplate* aTempla
     if (patchIt == s_patches.end())
         return;
 
-    std::shared_lock _(s_tokenLock);
     for (const auto& patchPath : patchIt.value())
     {
         auto patchTemplate = GetPatchResource<Red::EntityTemplate>(patchPath);
+
         if (!patchTemplate)
             continue;
 
@@ -162,27 +163,29 @@ void App::ResourcePatchModule::OnEntityTemplateExtract(void** aEntityBuilder, vo
     if (patchIt == s_patches.end())
         return;
 
-    std::shared_lock _(s_tokenLock);
-    for (const auto& pathPath : patchIt.value())
+    for (const auto& patchPath : patchIt.value())
     {
-        auto patchToken = GetPatchToken<Red::EntityTemplate>(pathPath);
+        auto patchTemplate = GetPatchResource<Red::EntityTemplate>(patchPath);
 
-        if (!patchToken)
+        if (!patchTemplate)
             continue;
 
-        Red::DynArray<Red::Handle<Red::ISerializable>> bufferObjects;
+        auto& packageData = Raw::EntityTemplate::PackageData::Ref(patchTemplate);
 
-        Raw::EntityTemplate::BufferMask::Ref(patchToken->resource) = -1;
-        Raw::EntityTemplate::ExtractBufferObjects(bufferObjects, patchToken);
+        if (packageData.IsEmpty())
+            continue;
 
-        if (bufferObjects.size > 0)
+        auto packageExtractor = Red::PackageExtractor(packageData);
+        packageExtractor.ExtractSync();
+
+        if (packageExtractor.results.size > 0)
         {
             auto& entity = Raw::EntityBuilder::Entity::Ref(*aEntityBuilder);
             auto& entityComponents = Raw::EntityBuilder::Components::Ref(*aEntityBuilder);
 
-            for (auto& bufferObject : bufferObjects)
+            for (auto& packageObject : packageExtractor.results)
             {
-                if (auto patchComponent = Red::Cast<Red::IComponent>(bufferObject))
+                if (auto patchComponent = Red::Cast<Red::IComponent>(packageObject))
                 {
                     auto isNewComponent = true;
 
@@ -202,9 +205,12 @@ void App::ResourcePatchModule::OnEntityTemplateExtract(void** aEntityBuilder, vo
                         entityComponents.EmplaceBack(patchComponent);
                     }
                 }
-                else if (auto patchEntity = Red::Cast<Red::Entity>(bufferObject))
+                else if (auto patchEntity = Red::Cast<Red::Entity>(packageObject))
                 {
-                    entity = patchEntity;
+                    if (patchEntity->GetNativeType() != Red::GetClass<Red::Entity>())
+                    {
+                        entity = patchEntity;
+                    }
                 }
             }
         }
@@ -217,10 +223,10 @@ void App::ResourcePatchModule::OnAppearanceResourceLoad(Red::AppearanceResource*
     if (patchIt == s_patches.end())
         return;
 
-    std::shared_lock _(s_tokenLock);
     for (const auto& patchPath : patchIt.value())
     {
         auto patchResource = GetPatchResource<Red::AppearanceResource>(patchPath);
+
         if (!patchResource)
             continue;
 
@@ -252,10 +258,10 @@ void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
     if (patchIt == s_patches.end())
         return;
 
-    std::shared_lock _(s_tokenLock);
     for (const auto& patchPath : patchIt.value())
     {
         auto patchMesh = GetPatchResource<Red::CMesh>(patchPath);
+
         if (!patchMesh)
             continue;
 
@@ -295,6 +301,7 @@ Red::Handle<T> App::ResourcePatchModule::GetPatchResource(Red::ResourcePath aPat
 template<typename T>
 Red::SharedPtr<Red::ResourceToken<T>> App::ResourcePatchModule::GetPatchToken(Red::ResourcePath aPath)
 {
+    std::shared_lock _(s_tokenLock);
     auto& token = s_tokens[aPath];
 
     if (!token->IsFinished())

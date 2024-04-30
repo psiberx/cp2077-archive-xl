@@ -118,6 +118,13 @@ constexpr uint32_t MappinSystem_OnStreamingWorldLoaded = 140387944;
 
 constexpr uint32_t MeshAppearance_LoadMaterialSetupAsync = 1419388740;
 
+constexpr uint32_t PackageExtractor_Initialize = 2318998714;
+constexpr uint32_t PackageExtractor_ExtractSync = 2038372664;
+constexpr uint32_t PackageExtractor_ExtractAsync = 3819248393;
+
+constexpr uint32_t PackageLoader_ctor = 3628731410;
+constexpr uint32_t PackageLoader_LoadData = 1285757088;
+
 constexpr uint32_t QuestLoader_ProcessPhaseResource = 790570700;
 
 constexpr uint32_t ResourceDepot_InitializeArchives = 2885423437;

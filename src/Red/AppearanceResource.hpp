@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Red/Package.hpp"
+
 namespace Red
 {
 using AppearanceResource = appearance::AppearanceResource;
@@ -9,6 +11,7 @@ using AppearanceDefinition = appearance::AppearanceDefinition;
 namespace Raw::AppearanceResource
 {
 using Mutex = Core::OffsetPtr<0xF0, Red::SharedMutex>;
+using PackageData = Core::OffsetPtr<0x110, Red::PackageData>;
 
 constexpr auto OnLoad = Core::RawFunc<
     /* addr = */ Red::AddressLib::AppearanceResource_OnLoad,

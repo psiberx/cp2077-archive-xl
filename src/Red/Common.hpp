@@ -25,8 +25,13 @@ struct Range
         return endPtr - beginPtr;
     }
 
-    T* beginPtr; // 00
-    T* endPtr; // 08
+    [[nodiscard]] bool IsEmpty() const
+    {
+        return beginPtr == endPtr;
+    }
+
+    T* beginPtr{}; // 00
+    T* endPtr{};   // 08
 };
 RED4EXT_ASSERT_SIZE(Range<int32_t>, 0x10);
 RED4EXT_ASSERT_OFFSET(Range<int32_t>, beginPtr, 0x0);
