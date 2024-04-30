@@ -65,7 +65,7 @@ constexpr uint32_t EntityBuilder_ExtractComponentsJob = 525669984;
 
 constexpr uint32_t EntityTemplate_OnLoad = 2741376473;
 constexpr uint32_t EntityTemplate_FindAppearance = 36838056;
-constexpr uint32_t EntityTemplate_ExtractComponents = 39206067;
+constexpr uint32_t EntityTemplate_ExtractBufferObjects = 39206067;
 
 constexpr uint32_t FactoryIndex_LoadFactoryAsync = 1886854234;
 constexpr uint32_t FactoryIndex_ResolveResource = 3040549301;

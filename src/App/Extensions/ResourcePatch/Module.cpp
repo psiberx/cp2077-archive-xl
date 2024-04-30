@@ -30,14 +30,14 @@ bool App::ResourcePatchModule::Load()
     if (!HookAfter<Raw::CMesh::OnLoad>(&OnMeshResourceLoad))
         throw std::runtime_error("Failed to hook [EntityBuilder::ExtractComponentsJob].");
 
-    PrepareOverrides();
+    PreparePatches();
 
     return true;
 }
 
 void App::ResourcePatchModule::Reload()
 {
-    PrepareOverrides();
+    PreparePatches();
 }
 
 bool App::ResourcePatchModule::Unload()
@@ -50,9 +50,9 @@ bool App::ResourcePatchModule::Unload()
     return true;
 }
 
-void App::ResourcePatchModule::PrepareOverrides()
+void App::ResourcePatchModule::PreparePatches()
 {
-    s_overrides.clear();
+    s_patches.clear();
 
     auto depot = Red::ResourceDepot::Get();
     Core::Set<Red::ResourcePath> invalidPaths;
@@ -73,7 +73,7 @@ void App::ResourcePatchModule::PrepareOverrides()
                     continue;
                 }
 
-                s_overrides[targetPath].insert(patchPath);
+                s_patches[targetPath].insert(patchPath);
             }
         }
     }
@@ -84,15 +84,15 @@ void App::ResourcePatchModule::OnResourceRequest(Red::ResourceDepot*, const uint
 {
     if (*aOut)
     {
-        const auto& overrideIt = s_overrides.find(aPath);
-        if (overrideIt != s_overrides.end())
+        const auto& patchIt = s_patches.find(aPath);
+        if (patchIt != s_patches.end())
         {
             std::unique_lock _(s_tokenLock);
-            for (const auto& override : overrideIt.value())
+            for (const auto& patchPath : patchIt.value())
             {
-                if (!s_tokens.contains(override))
+                if (!s_tokens.contains(patchPath))
                 {
-                    s_tokens[override] = Red::ResourceLoader::Get()->LoadAsync(override);
+                    s_tokens[patchPath] = Red::ResourceLoader::Get()->LoadAsync(patchPath);
                 }
             }
         }
@@ -101,26 +101,26 @@ void App::ResourcePatchModule::OnResourceRequest(Red::ResourceDepot*, const uint
 
 void App::ResourcePatchModule::OnEntityTemplateLoad(Red::EntityTemplate* aTemplate, void*)
 {
-    const auto& overrideIt = s_overrides.find(aTemplate->path);
-    if (overrideIt == s_overrides.end())
+    const auto& patchIt = s_patches.find(aTemplate->path);
+    if (patchIt == s_patches.end())
         return;
 
     std::shared_lock _(s_tokenLock);
-    for (const auto& path : overrideIt.value())
+    for (const auto& patchPath : patchIt.value())
     {
-        auto override = GetOverride<Red::EntityTemplate>(path);
-        if (!override)
+        auto patchTemplate = GetPatchResource<Red::EntityTemplate>(patchPath);
+        if (!patchTemplate)
             continue;
 
-        for (const auto& overrideAppearance : override->appearances)
+        for (const auto& patchAppearance : patchTemplate->appearances)
         {
             auto isNewAppearance = true;
 
             for (auto& existingAppearance : aTemplate->appearances)
             {
-                if (existingAppearance.name == overrideAppearance.name)
+                if (existingAppearance.name == patchAppearance.name)
                 {
-                    existingAppearance = overrideAppearance;
+                    existingAppearance = patchAppearance;
                     isNewAppearance = false;
                     break;
                 }
@@ -128,18 +128,18 @@ void App::ResourcePatchModule::OnEntityTemplateLoad(Red::EntityTemplate* aTempla
 
             if (isNewAppearance)
             {
-                aTemplate->appearances.EmplaceBack(overrideAppearance);
+                aTemplate->appearances.EmplaceBack(patchAppearance);
             }
         }
 
-        if (override->visualTagsSchema)
+        if (patchTemplate->visualTagsSchema)
         {
             if (!aTemplate->visualTagsSchema)
             {
                 aTemplate->visualTagsSchema = {};
             }
 
-            aTemplate->visualTagsSchema->visualTags.Add(override->visualTagsSchema->visualTags);
+            aTemplate->visualTagsSchema->visualTags.Add(patchTemplate->visualTagsSchema->visualTags);
         }
     }
 }
@@ -158,42 +158,53 @@ void App::ResourcePatchModule::OnEntityTemplateExtract(void** aEntityBuilder, vo
 
     const auto& entityTemplatePath = entityTemplate->path;
 
-    const auto& overrideIt = s_overrides.find(entityTemplatePath);
-    if (overrideIt == s_overrides.end())
+    const auto& patchIt = s_patches.find(entityTemplatePath);
+    if (patchIt == s_patches.end())
         return;
 
     std::shared_lock _(s_tokenLock);
-    for (const auto& path : overrideIt.value())
+    for (const auto& pathPath : patchIt.value())
     {
-        auto token = GetOverrideToken<Red::EntityTemplate>(path);
+        auto patchToken = GetPatchToken<Red::EntityTemplate>(pathPath);
 
-        if (!token)
+        if (!patchToken)
             continue;
 
-        Red::DynArray<Red::Handle<Red::IComponent>> overrideComponents;
-        Raw::EntityTemplate::ExtractComponents(overrideComponents, token);
+        Red::DynArray<Red::Handle<Red::ISerializable>> bufferObjects;
 
-        if (overrideComponents.size > 0)
+        Raw::EntityTemplate::BufferMask::Ref(patchToken->resource) = -1;
+        Raw::EntityTemplate::ExtractBufferObjects(bufferObjects, patchToken);
+
+        if (bufferObjects.size > 0)
         {
-            auto& entityComponents = Raw::EntityBuilder::Components ::Ref(*aEntityBuilder);
-            for (auto& overrideComponent : overrideComponents)
-            {
-                auto isNewComponent = true;
+            auto& entity = Raw::EntityBuilder::Entity::Ref(*aEntityBuilder);
+            auto& entityComponents = Raw::EntityBuilder::Components::Ref(*aEntityBuilder);
 
-                for (auto& entityComponent : entityComponents)
+            for (auto& bufferObject : bufferObjects)
+            {
+                if (auto patchComponent = Red::Cast<Red::IComponent>(bufferObject))
                 {
-                    if (entityComponent->name == overrideComponent->name &&
-                        entityComponent->id.unk00 == overrideComponent->id.unk00)
+                    auto isNewComponent = true;
+
+                    for (auto& entityComponent : entityComponents)
                     {
-                        entityComponent = overrideComponent;
-                        isNewComponent = false;
-                        break;
+                        if (entityComponent->name == patchComponent->name &&
+                            entityComponent->id.unk00 == patchComponent->id.unk00)
+                        {
+                            entityComponent = patchComponent;
+                            isNewComponent = false;
+                            break;
+                        }
+                    }
+
+                    if (isNewComponent)
+                    {
+                        entityComponents.EmplaceBack(patchComponent);
                     }
                 }
-
-                if (isNewComponent)
+                else if (auto patchEntity = Red::Cast<Red::Entity>(bufferObject))
                 {
-                    entityComponents.EmplaceBack(std::move(overrideComponent));
+                    entity = patchEntity;
                 }
             }
         }
@@ -202,26 +213,26 @@ void App::ResourcePatchModule::OnEntityTemplateExtract(void** aEntityBuilder, vo
 
 void App::ResourcePatchModule::OnAppearanceResourceLoad(Red::AppearanceResource* aResource)
 {
-    const auto& overrideIt = s_overrides.find(aResource->path);
-    if (overrideIt == s_overrides.end())
+    const auto& patchIt = s_patches.find(aResource->path);
+    if (patchIt == s_patches.end())
         return;
 
     std::shared_lock _(s_tokenLock);
-    for (const auto& path : overrideIt.value())
+    for (const auto& patchPath : patchIt.value())
     {
-        auto override = GetOverride<Red::AppearanceResource>(path);
-        if (!override)
+        auto patchResource = GetPatchResource<Red::AppearanceResource>(patchPath);
+        if (!patchResource)
             continue;
 
-        for (const auto& overrideAppearance : override->appearances)
+        for (const auto& patchAppearance : patchResource->appearances)
         {
             auto isNewAppearance = true;
 
             for (auto& existingAppearance : aResource->appearances)
             {
-                if (existingAppearance->name == overrideAppearance->name)
+                if (existingAppearance->name == patchAppearance->name)
                 {
-                    existingAppearance = overrideAppearance;
+                    existingAppearance = patchAppearance;
                     isNewAppearance = false;
                     break;
                 }
@@ -229,7 +240,7 @@ void App::ResourcePatchModule::OnAppearanceResourceLoad(Red::AppearanceResource*
 
             if (isNewAppearance)
             {
-                aResource->appearances.EmplaceBack(overrideAppearance);
+                aResource->appearances.EmplaceBack(patchAppearance);
             }
         }
     }
@@ -237,26 +248,26 @@ void App::ResourcePatchModule::OnAppearanceResourceLoad(Red::AppearanceResource*
 
 void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
 {
-    const auto& overrideIt = s_overrides.find(aMesh->path);
-    if (overrideIt == s_overrides.end())
+    const auto& patchIt = s_patches.find(aMesh->path);
+    if (patchIt == s_patches.end())
         return;
 
     std::shared_lock _(s_tokenLock);
-    for (const auto& path : overrideIt.value())
+    for (const auto& patchPath : patchIt.value())
     {
-        auto override = GetOverride<Red::CMesh>(path);
-        if (!override)
+        auto patchMesh = GetPatchResource<Red::CMesh>(patchPath);
+        if (!patchMesh)
             continue;
 
-        for (const auto& overrideAppearance : override->appearances)
+        for (const auto& patchAppearance : patchMesh->appearances)
         {
             auto isNewAppearance = true;
 
             for (auto& existingAppearance : aMesh->appearances)
             {
-                if (existingAppearance->name == overrideAppearance->name)
+                if (existingAppearance->name == patchAppearance->name)
                 {
-                    existingAppearance = overrideAppearance;
+                    existingAppearance = patchAppearance;
                     isNewAppearance = false;
                     break;
                 }
@@ -264,16 +275,16 @@ void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
 
             if (isNewAppearance)
             {
-                aMesh->appearances.EmplaceBack(overrideAppearance);
+                aMesh->appearances.EmplaceBack(patchAppearance);
             }
         }
     }
 }
 
 template<typename T>
-Red::Handle<T> App::ResourcePatchModule::GetOverride(Red::ResourcePath aPath)
+Red::Handle<T> App::ResourcePatchModule::GetPatchResource(Red::ResourcePath aPath)
 {
-    auto token = GetOverrideToken<T>(aPath);
+    auto token = GetPatchToken<T>(aPath);
 
     if (!token)
         return {};
@@ -282,7 +293,7 @@ Red::Handle<T> App::ResourcePatchModule::GetOverride(Red::ResourcePath aPath)
 }
 
 template<typename T>
-Red::SharedPtr<Red::ResourceToken<T>> App::ResourcePatchModule::GetOverrideToken(Red::ResourcePath aPath)
+Red::SharedPtr<Red::ResourceToken<T>> App::ResourcePatchModule::GetPatchToken(Red::ResourcePath aPath)
 {
     auto& token = s_tokens[aPath];
 

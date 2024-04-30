@@ -16,7 +16,7 @@ public:
     bool Unload() override;
 
 private:
-    void PrepareOverrides();
+    void PreparePatches();
 
     static void OnResourceRequest(Red::ResourceDepot*, const uintptr_t* aOut, Red::ResourcePath aPath, const int32_t*);
     static void OnEntityTemplateLoad(Red::EntityTemplate* aTemplate, void*);
@@ -25,12 +25,12 @@ private:
     static void OnMeshResourceLoad(Red::CMesh* aMesh, void*);
 
     template<typename T>
-    static Red::Handle<T> GetOverride(Red::ResourcePath aPath);
+    static Red::Handle<T> GetPatchResource(Red::ResourcePath aPath);
 
     template<typename T>
-    static Red::SharedPtr<Red::ResourceToken<T>> GetOverrideToken(Red::ResourcePath aPath);
+    static Red::SharedPtr<Red::ResourceToken<T>> GetPatchToken(Red::ResourcePath aPath);
 
-    inline static Core::Map<Red::ResourcePath, Core::Set<Red::ResourcePath>> s_overrides;
+    inline static Core::Map<Red::ResourcePath, Core::Set<Red::ResourcePath>> s_patches;
     inline static Core::Map<Red::ResourcePath, Red::SharedPtr<Red::ResourceToken<>>> s_tokens;
     inline static std::shared_mutex s_tokenLock;
 };
