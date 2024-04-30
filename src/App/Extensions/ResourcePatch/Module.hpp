@@ -1,13 +1,13 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
-#include "App/Extensions/EntityOverride/Unit.hpp"
+#include "App/Extensions/ResourcePatch/Unit.hpp"
 #include "Red/AppearanceResource.hpp"
 #include "Red/EntityTemplate.hpp"
 
 namespace App
 {
-class EntityOverrideModule : public ConfigurableUnitModule<EntityOverrideUnit>
+class ResourcePatchModule : public ConfigurableUnitModule<ResourcePatchUnit>
 {
 public:
     std::string_view GetName() override;

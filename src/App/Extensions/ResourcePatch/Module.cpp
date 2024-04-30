@@ -5,15 +5,15 @@
 
 namespace
 {
-constexpr auto ModuleName = "EntityOverride";
+constexpr auto ModuleName = "ResourcePatch";
 }
 
-std::string_view App::EntityOverrideModule::GetName()
+std::string_view App::ResourcePatchModule::GetName()
 {
     return ModuleName;
 }
 
-bool App::EntityOverrideModule::Load()
+bool App::ResourcePatchModule::Load()
 {
     if (!HookAfter<Raw::ResourceDepot::RequestResource>(&OnResourceRequest))
         throw std::runtime_error("Failed to hook [ResourceDepot::RequestResource].");
@@ -35,12 +35,12 @@ bool App::EntityOverrideModule::Load()
     return true;
 }
 
-void App::EntityOverrideModule::Reload()
+void App::ResourcePatchModule::Reload()
 {
     PrepareOverrides();
 }
 
-bool App::EntityOverrideModule::Unload()
+bool App::ResourcePatchModule::Unload()
 {
     Unhook<Raw::EntityTemplate::OnLoad>();
     Unhook<Raw::EntityBuilder::ExtractComponentsJob>();
@@ -50,39 +50,37 @@ bool App::EntityOverrideModule::Unload()
     return true;
 }
 
-void App::EntityOverrideModule::PrepareOverrides()
+void App::ResourcePatchModule::PrepareOverrides()
 {
     s_overrides.clear();
 
     auto depot = Red::ResourceDepot::Get();
     Core::Set<Red::ResourcePath> invalidPaths;
 
-    for (const auto& unit : m_units)
+    for (auto& unit : m_units)
     {
-        for (const auto& [target, overrides] : unit.overrides)
+        for (const auto& [targetPath, patchList] : unit.patches)
         {
-            for (const auto& override : overrides)
+            for (const auto& patchPath : patchList)
             {
-                auto overridePath = Red::ResourcePath(override.c_str());
-
-                if (!depot->ResourceExists(overridePath))
+                if (!depot->ResourceExists(patchPath))
                 {
-                    if (!invalidPaths.contains(overridePath))
+                    if (!invalidPaths.contains(patchPath))
                     {
-                        LogWarning("|{}| Resource \"{}\" doesn't exist. Skipped.", ModuleName, override);
-                        invalidPaths.insert(overridePath);
+                        LogWarning("|{}| Resource \"{}\" doesn't exist. Skipped.", ModuleName, unit.paths[patchPath]);
+                        invalidPaths.insert(patchPath);
                     }
                     continue;
                 }
 
-                s_overrides[target].insert(overridePath);
+                s_overrides[targetPath].insert(patchPath);
             }
         }
     }
 }
 
-void App::EntityOverrideModule::OnResourceRequest(Red::ResourceDepot*, const uintptr_t* aOut, Red::ResourcePath aPath,
-                                                  const int32_t*)
+void App::ResourcePatchModule::OnResourceRequest(Red::ResourceDepot*, const uintptr_t* aOut, Red::ResourcePath aPath,
+                                                 const int32_t*)
 {
     if (*aOut)
     {
@@ -101,7 +99,7 @@ void App::EntityOverrideModule::OnResourceRequest(Red::ResourceDepot*, const uin
     }
 }
 
-void App::EntityOverrideModule::OnEntityTemplateLoad(Red::EntityTemplate* aTemplate, void*)
+void App::ResourcePatchModule::OnEntityTemplateLoad(Red::EntityTemplate* aTemplate, void*)
 {
     const auto& overrideIt = s_overrides.find(aTemplate->path);
     if (overrideIt == s_overrides.end())
@@ -146,7 +144,7 @@ void App::EntityOverrideModule::OnEntityTemplateLoad(Red::EntityTemplate* aTempl
     }
 }
 
-void App::EntityOverrideModule::OnEntityTemplateExtract(void** aEntityBuilder, void* a2)
+void App::ResourcePatchModule::OnEntityTemplateExtract(void** aEntityBuilder, void* a2)
 {
     bool isNewEntity = Raw::EntityBuilder::Flags::Ref(*aEntityBuilder) & 1;
 
@@ -202,7 +200,7 @@ void App::EntityOverrideModule::OnEntityTemplateExtract(void** aEntityBuilder, v
     }
 }
 
-void App::EntityOverrideModule::OnAppearanceResourceLoad(Red::AppearanceResource* aResource)
+void App::ResourcePatchModule::OnAppearanceResourceLoad(Red::AppearanceResource* aResource)
 {
     const auto& overrideIt = s_overrides.find(aResource->path);
     if (overrideIt == s_overrides.end())
@@ -237,7 +235,7 @@ void App::EntityOverrideModule::OnAppearanceResourceLoad(Red::AppearanceResource
     }
 }
 
-void App::EntityOverrideModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
+void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
 {
     const auto& overrideIt = s_overrides.find(aMesh->path);
     if (overrideIt == s_overrides.end())
@@ -273,7 +271,7 @@ void App::EntityOverrideModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
 }
 
 template<typename T>
-Red::Handle<T> App::EntityOverrideModule::GetOverride(Red::ResourcePath aPath)
+Red::Handle<T> App::ResourcePatchModule::GetOverride(Red::ResourcePath aPath)
 {
     auto token = GetOverrideToken<T>(aPath);
 
@@ -284,7 +282,7 @@ Red::Handle<T> App::EntityOverrideModule::GetOverride(Red::ResourcePath aPath)
 }
 
 template<typename T>
-Red::SharedPtr<Red::ResourceToken<T>> App::EntityOverrideModule::GetOverrideToken(Red::ResourcePath aPath)
+Red::SharedPtr<Red::ResourceToken<T>> App::ResourcePatchModule::GetOverrideToken(Red::ResourcePath aPath)
 {
     auto& token = s_tokens[aPath];
 
