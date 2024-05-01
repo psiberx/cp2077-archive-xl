@@ -14,6 +14,11 @@ struct GarmentProcessorParams
     Handle<Entity> entity;
 };
 
+struct GarmentComponentParams
+{
+    Handle<EntityTemplate> entityTemplate;
+};
+
 struct GarmentItemAddRequest
 {
     Handle<AppearanceDefinition> apperance; // 00
@@ -88,6 +93,10 @@ constexpr auto ProcessGarment = Core::RawFunc<
     /* addr = */ Red::AddressLib::GarmentAssembler_ProcessGarment,
     /* type = */ uintptr_t (*)(Red::SharedPtr<Red::GarmentProcessor>& aProcessor, uintptr_t a2, uintptr_t a3,
                                Red::GarmentProcessorParams* aParams)>();
+
+constexpr auto ExtractComponentsJob = Core::RawFunc<
+    /* addr = */ Red::AddressLib::GarmentAssembler_ExtractComponentsJob,
+    /* type = */ void (*)(Red::GarmentComponentParams* aParams, const Red::JobGroup& aJobGroup)>();
 
 constexpr auto ProcessSkinnedMesh = Core::RawFunc<
     /* addr = */ Red::AddressLib::GarmentAssembler_ProcessSkinnedMesh,

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Red/EntityTemplate.hpp"
 #include "Red/Package.hpp"
 
 namespace Red
@@ -8,10 +9,19 @@ using AppearanceResource = appearance::AppearanceResource;
 using AppearanceDefinition = appearance::AppearanceDefinition;
 }
 
+namespace Raw::AppearanceDefinition
+{
+using PackageData = Core::OffsetPtr<0x148, Red::PackageData>;
+
+constexpr auto ExtractPartComponents = Core::RawFunc<
+    /* addr = */ Red::AddressLib::AppearanceDefinition_ExtractPartComponents,
+    /* type = */ void* (*)(Red::DynArray<Red::Handle<Red::ISerializable>>& aOut,
+                           const Red::SharedPtr<Red::ResourceToken<Red::EntityTemplate>>& aPartToken)>();
+}
+
 namespace Raw::AppearanceResource
 {
 using Mutex = Core::OffsetPtr<0xF0, Red::SharedMutex>;
-using PackageData = Core::OffsetPtr<0x110, Red::PackageData>;
 
 constexpr auto OnLoad = Core::RawFunc<
     /* addr = */ Red::AddressLib::AppearanceResource_OnLoad,

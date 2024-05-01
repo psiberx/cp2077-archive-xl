@@ -15,6 +15,8 @@ constexpr uint32_t AppearanceChanger_SelectAppearanceName = 2770550105;
 constexpr uint32_t AppearanceChangeSystem_ChangeAppearance1 = 735526026;
 constexpr uint32_t AppearanceChangeSystem_ChangeAppearance2 = 386815609;
 
+constexpr uint32_t AppearanceDefinition_ExtractPartComponents = 39206067;
+
 constexpr uint32_t AppearanceNameVisualTagsPreset_GetVisualTags = 1186798404;
 
 constexpr uint32_t AppearanceResource_OnLoad = 3141736993;
@@ -65,7 +67,6 @@ constexpr uint32_t EntityBuilder_ExtractComponentsJob = 525669984;
 
 constexpr uint32_t EntityTemplate_OnLoad = 2741376473;
 constexpr uint32_t EntityTemplate_FindAppearance = 36838056;
-constexpr uint32_t EntityTemplate_ExtractBufferObjects = 39206067;
 
 constexpr uint32_t FactoryIndex_LoadFactoryAsync = 1886854234;
 constexpr uint32_t FactoryIndex_ResolveResource = 3040549301;
@@ -75,6 +76,7 @@ constexpr uint32_t GameApplication_InitResourceDepot = 2923109755;
 constexpr uint32_t GarmentAssembler_FindState = 2594581880;
 constexpr uint32_t GarmentAssembler_RemoveItem = 1863723270;
 constexpr uint32_t GarmentAssembler_ProcessGarment = 29053464;
+constexpr uint32_t GarmentAssembler_ExtractComponentsJob = 1164187413;
 constexpr uint32_t GarmentAssembler_ProcessSkinnedMesh = 1663588463;
 constexpr uint32_t GarmentAssembler_ProcessMorphedMesh = 1567972572;
 constexpr uint32_t GarmentAssembler_OnGameDetach = 709304039;
@@ -134,6 +136,8 @@ constexpr uint32_t ResourceDepot_RequestResource = 2450934495;
 constexpr uint32_t ResourceLoader_OnUpdate = 1303056161;
 
 constexpr uint32_t ResourcePath_Create = 3998356057;
+
+constexpr uint32_t ResourceSerializer_Deserialize = 2901686778;
 
 constexpr uint32_t StreamingSector_OnReady = 3972601611;
 

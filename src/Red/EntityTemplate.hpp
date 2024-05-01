@@ -19,9 +19,4 @@ constexpr auto OnLoad = Core::RawFunc<
 constexpr auto FindAppearance = Core::RawFunc<
     /* addr = */ Red::AddressLib::EntityTemplate_FindAppearance,
     /* type = */ Red::TemplateAppearance* (*)(Red::EntityTemplate* aResource, Red::CName aName)>();
-
-constexpr auto ExtractBufferObjects = Core::RawFunc<
-    /* addr = */ Red::AddressLib::EntityTemplate_ExtractBufferObjects,
-    /* type = */ void* (*)(Red::DynArray<Red::Handle<Red::ISerializable>>& aOut,
-                           const Red::SharedPtr<Red::ResourceToken<Red::EntityTemplate>>& aToken)>();
 }

@@ -27,7 +27,7 @@ struct Range
 
     [[nodiscard]] bool IsEmpty() const
     {
-        return beginPtr == endPtr;
+        return !beginPtr;
     }
 
     T* beginPtr{}; // 00

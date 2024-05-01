@@ -16,20 +16,29 @@ std::string_view App::ResourcePatchModule::GetName()
 
 bool App::ResourcePatchModule::Load()
 {
-    if (!HookAfter<Raw::ResourceDepot::RequestResource>(&OnResourceRequest))
+    if (!HookBefore<Raw::ResourceDepot::RequestResource>(&OnResourceRequest))
         throw std::runtime_error("Failed to hook [ResourceDepot::RequestResource].");
+
+    if (!HookBefore<Raw::ResourceSerializer::Deserialize>(&OnResourceDeserialize))
+        throw std::runtime_error("Failed to hook [ResourceSerializer::Deserialize].");
 
     if (!HookAfter<Raw::EntityTemplate::OnLoad>(&OnEntityTemplateLoad))
         throw std::runtime_error("Failed to hook [EntityTemplate::OnLoad].");
-
-    if (!HookAfter<Raw::EntityBuilder::ExtractComponentsJob>(&OnEntityTemplateExtract))
-        throw std::runtime_error("Failed to hook [EntityBuilder::ExtractComponentsJob].");
 
     if (!HookBefore<Raw::AppearanceResource::OnLoad>(&OnAppearanceResourceLoad))
         throw std::runtime_error("Failed to hook [AppearanceResource::OnLoad].");
 
     if (!HookAfter<Raw::CMesh::OnLoad>(&OnMeshResourceLoad))
         throw std::runtime_error("Failed to hook [EntityBuilder::ExtractComponentsJob].");
+
+    if (!HookBefore<Raw::EntityBuilder::ExtractComponentsJob>(&OnEntityPackageExtract))
+        throw std::runtime_error("Failed to hook [EntityBuilder::ExtractComponentsJob].");
+
+    if (!HookAfter<Raw::AppearanceDefinition::ExtractPartComponents>(&OnPartPackageExtract))
+        throw std::runtime_error("Failed to hook [AppearanceDefinition::ExtractPartComponents].");
+
+    if (!HookAfter<Raw::GarmentAssembler::ExtractComponentsJob>(&OnGarmentPackageExtract))
+        throw std::runtime_error("Failed to hook [GarmentAssembler::ProcessComponentsJob].");
 
     PreparePatches();
 
@@ -43,10 +52,14 @@ void App::ResourcePatchModule::Reload()
 
 bool App::ResourcePatchModule::Unload()
 {
+    Unhook<Raw::ResourceDepot::RequestResource>();
+    Unhook<Raw::ResourceSerializer::Deserialize>();
     Unhook<Raw::EntityTemplate::OnLoad>();
-    Unhook<Raw::EntityBuilder::ExtractComponentsJob>();
     Unhook<Raw::AppearanceResource::OnLoad>();
     Unhook<Raw::CMesh::OnLoad>();
+    Unhook<Raw::EntityBuilder::ExtractComponentsJob>();
+    Unhook<Raw::AppearanceDefinition::ExtractPartComponents>();
+    Unhook<Raw::GarmentAssembler::ExtractComponentsJob>();
 
     return true;
 }
@@ -62,8 +75,13 @@ void App::ResourcePatchModule::PreparePatches()
     {
         for (const auto& [targetPath, patchList] : unit.patches)
         {
+            s_paths[targetPath] = unit.paths[targetPath];
+
             for (const auto& patchPath : patchList)
             {
+                if (patchPath == targetPath)
+                    continue;
+
                 if (!depot->ResourceExists(patchPath))
                 {
                     if (!invalidPaths.contains(patchPath))
@@ -75,6 +93,7 @@ void App::ResourcePatchModule::PreparePatches()
                 }
 
                 s_patches[targetPath].insert(patchPath);
+                s_paths[patchPath] = unit.paths[patchPath];
             }
         }
     }
@@ -83,18 +102,36 @@ void App::ResourcePatchModule::PreparePatches()
 void App::ResourcePatchModule::OnResourceRequest(Red::ResourceDepot*, const uintptr_t* aOut, Red::ResourcePath aPath,
                                                  const int32_t*)
 {
-    if (*aOut)
+    const auto& patchList = GetPatchList(aPath);
+
+    if (!patchList.empty())
     {
-        const auto& patchIt = s_patches.find(aPath);
-        if (patchIt != s_patches.end())
+        std::unique_lock _(s_tokenLock);
+        for (const auto& patchPath : patchList)
         {
-            std::unique_lock _(s_tokenLock);
-            for (const auto& patchPath : patchIt.value())
+            if (!s_tokens.contains(patchPath))
             {
-                if (!s_tokens.contains(patchPath))
-                {
-                    s_tokens[patchPath] = Red::ResourceLoader::Get()->LoadAsync(patchPath);
-                }
+                s_tokens[patchPath] = Red::ResourceLoader::Get()->LoadAsync(patchPath);
+            }
+        }
+    }
+}
+
+void App::ResourcePatchModule::OnResourceDeserialize(void* aSerializer, uint64_t, uint64_t, Red::JobHandle& aJob,
+                                                     Red::ResourceSerializerRequest& aRequest, uint64_t,
+                                                     Red::DynArray<Red::Handle<Red::ISerializable>>&, uint64_t)
+{
+    const auto& patchList = GetPatchList(aRequest.path);
+
+    if (!patchList.empty())
+    {
+        std::shared_lock _(s_tokenLock);
+        for (const auto& patchPath : patchList)
+        {
+            auto patchToken = GetPatchToken(patchPath);
+            if (patchToken)
+            {
+                aJob.Join(patchToken->job);
             }
         }
     }
@@ -102,11 +139,12 @@ void App::ResourcePatchModule::OnResourceRequest(Red::ResourceDepot*, const uint
 
 void App::ResourcePatchModule::OnEntityTemplateLoad(Red::EntityTemplate* aTemplate, void*)
 {
-    const auto& patchIt = s_patches.find(aTemplate->path);
-    if (patchIt == s_patches.end())
+    const auto& patchList = GetPatchList(aTemplate->path);
+
+    if (patchList.empty())
         return;
 
-    for (const auto& patchPath : patchIt.value())
+    for (const auto& patchPath : patchList)
     {
         auto patchTemplate = GetPatchResource<Red::EntityTemplate>(patchPath);
 
@@ -145,100 +183,45 @@ void App::ResourcePatchModule::OnEntityTemplateLoad(Red::EntityTemplate* aTempla
     }
 }
 
-void App::ResourcePatchModule::OnEntityTemplateExtract(void** aEntityBuilder, void* a2)
-{
-    bool isNewEntity = Raw::EntityBuilder::Flags::Ref(*aEntityBuilder) & 1;
-
-    if (!isNewEntity)
-        return;
-
-    const auto& entityTemplate = Raw::EntityBuilder::Template::Ref(*aEntityBuilder);
-
-    if (!entityTemplate)
-        return;
-
-    const auto& entityTemplatePath = entityTemplate->path;
-
-    const auto& patchIt = s_patches.find(entityTemplatePath);
-    if (patchIt == s_patches.end())
-        return;
-
-    for (const auto& patchPath : patchIt.value())
-    {
-        auto patchTemplate = GetPatchResource<Red::EntityTemplate>(patchPath);
-
-        if (!patchTemplate)
-            continue;
-
-        auto& packageData = Raw::EntityTemplate::PackageData::Ref(patchTemplate);
-
-        if (packageData.IsEmpty())
-            continue;
-
-        auto packageExtractor = Red::PackageExtractor(packageData);
-        packageExtractor.ExtractSync();
-
-        if (packageExtractor.results.size > 0)
-        {
-            auto& entity = Raw::EntityBuilder::Entity::Ref(*aEntityBuilder);
-            auto& entityComponents = Raw::EntityBuilder::Components::Ref(*aEntityBuilder);
-
-            for (auto& packageObject : packageExtractor.results)
-            {
-                if (auto patchComponent = Red::Cast<Red::IComponent>(packageObject))
-                {
-                    auto isNewComponent = true;
-
-                    for (auto& entityComponent : entityComponents)
-                    {
-                        if (entityComponent->name == patchComponent->name &&
-                            entityComponent->id.unk00 == patchComponent->id.unk00)
-                        {
-                            entityComponent = patchComponent;
-                            isNewComponent = false;
-                            break;
-                        }
-                    }
-
-                    if (isNewComponent)
-                    {
-                        entityComponents.EmplaceBack(patchComponent);
-                    }
-                }
-                else if (auto patchEntity = Red::Cast<Red::Entity>(packageObject))
-                {
-                    if (patchEntity->GetNativeType() != Red::GetClass<Red::Entity>())
-                    {
-                        entity = patchEntity;
-                    }
-                }
-            }
-        }
-    }
-}
-
 void App::ResourcePatchModule::OnAppearanceResourceLoad(Red::AppearanceResource* aResource)
 {
-    const auto& patchIt = s_patches.find(aResource->path);
-    if (patchIt == s_patches.end())
+    const auto& patchList = GetPatchList(aResource->path);
+
+    if (patchList.empty())
         return;
 
-    for (const auto& patchPath : patchIt.value())
+    for (const auto& patchPath : patchList)
     {
         auto patchResource = GetPatchResource<Red::AppearanceResource>(patchPath);
 
         if (!patchResource)
             continue;
 
-        for (const auto& patchAppearance : patchResource->appearances)
+        for (const auto& patchDefinition : patchResource->appearances)
         {
             auto isNewAppearance = true;
 
-            for (auto& existingAppearance : aResource->appearances)
+            for (auto& existingDefinition : aResource->appearances)
             {
-                if (existingAppearance->name == patchAppearance->name)
+                if (existingDefinition->name == patchDefinition->name)
                 {
-                    existingAppearance = patchAppearance;
+                    {
+                        std::unique_lock _(s_definitionLock);
+                        s_definitions[patchPath][patchDefinition->name] = patchDefinition;
+                    }
+
+                    for (const auto& partValue : patchDefinition->partsValues)
+                    {
+                        existingDefinition->partsValues.PushBack(partValue);
+                    }
+
+                    for (const auto& partOverride : patchDefinition->partsOverrides)
+                    {
+                        existingDefinition->partsOverrides.PushBack(partOverride);
+                    }
+
+                    existingDefinition->visualTags.Add(patchDefinition->visualTags);
+
                     isNewAppearance = false;
                     break;
                 }
@@ -246,7 +229,7 @@ void App::ResourcePatchModule::OnAppearanceResourceLoad(Red::AppearanceResource*
 
             if (isNewAppearance)
             {
-                aResource->appearances.EmplaceBack(patchAppearance);
+                aResource->appearances.EmplaceBack(patchDefinition);
             }
         }
     }
@@ -254,11 +237,12 @@ void App::ResourcePatchModule::OnAppearanceResourceLoad(Red::AppearanceResource*
 
 void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
 {
-    const auto& patchIt = s_patches.find(aMesh->path);
-    if (patchIt == s_patches.end())
+    const auto& patchList = GetPatchList(aMesh->path);
+
+    if (patchList.empty())
         return;
 
-    for (const auto& patchPath : patchIt.value())
+    for (const auto& patchPath : patchList)
     {
         auto patchMesh = GetPatchResource<Red::CMesh>(patchPath);
 
@@ -287,10 +271,241 @@ void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
     }
 }
 
-template<typename T>
-Red::Handle<T> App::ResourcePatchModule::GetPatchResource(Red::ResourcePath aPath)
+void App::ResourcePatchModule::OnEntityPackageExtract(Red::EntityBuilderJobParams* aParams, void* a2)
 {
-    auto token = GetPatchToken<T>(aPath);
+    if (aParams->entityBuilderWeak.Expired())
+        return;
+
+    auto& entityBuilder = aParams->entityBuilder;
+
+    if (entityBuilder->flags.ExtractEntity)
+    {
+        PatchPackageExtractorResults(entityBuilder->entityTemplate,
+                                     entityBuilder->entityExtractor->results);
+    }
+
+    if (entityBuilder->flags.ExtractAppearance)
+    {
+        PatchPackageExtractorResults(entityBuilder->appearance.resource,
+                                     entityBuilder->appearance.definition,
+                                     entityBuilder->appearance.extractor->results);
+    }
+
+    if (entityBuilder->flags.ExtractAppearances)
+    {
+        for (auto& appearance : entityBuilder->appearances)
+        {
+            PatchPackageExtractorResults(appearance.resource,
+                                         appearance.definition,
+                                         appearance.extractor->results);
+        }
+    }
+}
+
+void App::ResourcePatchModule::OnPartPackageExtract(
+    Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
+    const Red::SharedPtr<Red::ResourceToken<Red::EntityTemplate>>& aPartToken)
+{
+    PatchPackageExtractorResults(aPartToken->resource, aResultObjects);
+}
+
+void App::ResourcePatchModule::OnGarmentPackageExtract(Red::GarmentComponentParams* aParams,
+                                                       const Red::JobGroup& aJobGroup)
+{
+    const auto& patchList = GetPatchList(aParams->entityTemplate->path);
+
+    if (patchList.empty())
+        return;
+
+    auto originalEntityTemplate = aParams->entityTemplate;
+
+    for (const auto& patchPath : patchList)
+    {
+        auto patchTemplate = GetPatchResource<Red::EntityTemplate>(patchPath);
+        if (patchTemplate)
+        {
+            aParams->entityTemplate = patchTemplate;
+            Raw::GarmentAssembler::ExtractComponentsJob(aParams, aJobGroup);
+        }
+    }
+
+    aParams->entityTemplate = originalEntityTemplate;
+}
+
+void App::ResourcePatchModule::PatchPackageExtractorResults(
+    const Red::Handle<Red::EntityTemplate>& aTemplate,
+    Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects)
+{
+    if (!aTemplate)
+        return;
+
+    const auto& patchList = GetPatchList(aTemplate->path);
+
+    if (patchList.empty())
+        return;
+
+    for (const auto& patchPath : patchList)
+    {
+        auto patchTemplate = GetPatchResource<Red::EntityTemplate>(patchPath);
+
+        if (!patchTemplate)
+            continue;
+
+        auto& patchPackage = Raw::EntityTemplate::PackageData::Ref(patchTemplate);
+
+        if (patchPackage.IsEmpty())
+            continue;
+
+        auto patchExtractor = Red::PackageExtractor(patchPackage);
+        patchExtractor.ExtractSync();
+
+        if (patchExtractor.results.size > 0)
+        {
+            PatchResultEntity(aResultObjects, patchExtractor.results, patchPackage.unk00);
+            PatchResultComponents(aResultObjects, patchExtractor.results);
+        }
+    }
+}
+
+void App::ResourcePatchModule::PatchPackageExtractorResults(
+    const Red::Handle<Red::AppearanceResource>& aResource,
+    const Red::Handle<Red::AppearanceDefinition>& aDefinition,
+    Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects)
+{
+    if (!aResource)
+        return;
+
+    const auto& patchList = GetPatchList(aResource->path);
+
+    if (patchList.empty())
+        return;
+
+    for (const auto& patchPath : patchList)
+    {
+        auto patchDefinition = GetPatchDefinition(patchPath, aDefinition->name);
+
+        if (!patchDefinition)
+            continue;
+
+        auto& patchPackage = Raw::AppearanceDefinition::PackageData::Ref(patchDefinition);
+
+        if (patchPackage.IsEmpty())
+        {
+            auto& patchBuffer = patchDefinition->compiledData;
+
+            if (patchBuffer.state != Red::DeferredDataBufferState::Loaded)
+            {
+                auto bufferToken = patchDefinition->compiledData.LoadAsync();
+                Red::WaitForJob(bufferToken->job, std::chrono::milliseconds(500));
+            }
+
+            auto packageLoader = Red::PackageLoader(patchBuffer);
+            packageLoader.Load(patchPackage);
+        }
+
+        auto patchExtractor = Red::PackageExtractor(patchPackage);
+        patchExtractor.ExtractSync();
+
+        if (patchExtractor.results.size > 0)
+        {
+            PatchResultComponents(aResultObjects, patchExtractor.results);
+        }
+    }
+}
+
+void App::ResourcePatchModule::PatchResultEntity(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
+                                                 Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects,
+                                                 uint16_t aEntityIndex)
+{
+    if (aResultObjects.size > aEntityIndex && aPatchObjects.size > aEntityIndex)
+    {
+        if (auto patchEntity = Red::Cast<Red::Entity>(aPatchObjects[aEntityIndex]))
+        {
+            if (patchEntity->GetNativeType() != Red::GetClass<Red::Entity>())
+            {
+                aResultObjects[aEntityIndex] = std::move(patchEntity);
+            }
+        }
+    }
+}
+
+void App::ResourcePatchModule::PatchResultComponents(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
+                                                     Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects)
+{
+    for (auto& patchObject : aPatchObjects)
+    {
+        if (auto patchComponent = Red::Cast<Red::IComponent>(patchObject))
+        {
+            auto isNewComponent = true;
+
+            for (auto& resultObject : aResultObjects)
+            {
+                if (auto resultComponent = Red::Cast<Red::IComponent>(resultObject))
+                {
+                    if (resultComponent->name == patchComponent->name &&
+                        resultComponent->id.unk00 == patchComponent->id.unk00)
+                    {
+                        resultComponent = patchComponent;
+                        isNewComponent = false;
+                        break;
+                    }
+                }
+            }
+
+            if (isNewComponent)
+            {
+                aResultObjects.PushBack(std::move(patchComponent));
+            }
+        }
+    }
+}
+
+const Core::Set<Red::ResourcePath>& App::ResourcePatchModule::GetPatchList(Red::ResourcePath aTargetPath)
+{
+    static const Core::Set<Red::ResourcePath> s_null;
+
+    const auto& patchIt = s_patches.find(aTargetPath);
+
+    if (patchIt == s_patches.end())
+        return s_null;
+
+    return patchIt.value();
+}
+
+template<typename T>
+Red::SharedPtr<Red::ResourceToken<T>> App::ResourcePatchModule::GetPatchToken(Red::ResourcePath aPatchPath)
+{
+    std::shared_lock _(s_tokenLock);
+    auto& token = s_tokens[aPatchPath];
+
+    if constexpr (!std::is_same_v<T, Red::CResource>)
+    {
+        if (!token->IsFinished())
+        {
+            LogWarning("|{}| Patch resource \"{}\" is not ready.", ModuleName, s_paths[token->path]);
+
+            Red::WaitForResource(token, std::chrono::milliseconds(250));
+
+            if (!token->IsFinished())
+            {
+                Red::WaitForResource(token, std::chrono::milliseconds(250));
+            }
+        }
+
+        if (token->IsFailed())
+        {
+            LogError("|{}| Patch resource \"{}\" is failed to load.", ModuleName, s_paths[token->path]);
+            return {};
+        }
+    }
+
+    return *reinterpret_cast<Red::SharedPtr<Red::ResourceToken<T>>*>(&token);
+}
+
+template<typename T>
+Red::Handle<T> App::ResourcePatchModule::GetPatchResource(Red::ResourcePath aPatchPath)
+{
+    auto token = GetPatchToken<T>(aPatchPath);
 
     if (!token)
         return {};
@@ -298,19 +513,18 @@ Red::Handle<T> App::ResourcePatchModule::GetPatchResource(Red::ResourcePath aPat
     return token->resource;
 }
 
-template<typename T>
-Red::SharedPtr<Red::ResourceToken<T>> App::ResourcePatchModule::GetPatchToken(Red::ResourcePath aPath)
+Red::Handle<Red::AppearanceDefinition> App::ResourcePatchModule::GetPatchDefinition(Red::ResourcePath aResourcePath,
+                                                                                    Red::CName aDefinitionName)
 {
-    std::shared_lock _(s_tokenLock);
-    auto& token = s_tokens[aPath];
+    std::shared_lock _(s_definitionLock);
 
-    if (!token->IsFinished())
-    {
-        Red::WaitForResource(token, std::chrono::milliseconds(2000));
-    }
-
-    if (token->IsFailed())
+    const auto& resourceIt = s_definitions.find(aResourcePath);
+    if (resourceIt == s_definitions.end())
         return {};
 
-    return *reinterpret_cast<Red::SharedPtr<Red::ResourceToken<T>>*>(&token);
+    const auto& definitionIt = resourceIt.value().find(aDefinitionName);
+    if (definitionIt == resourceIt.value().end())
+        return {};
+
+    return definitionIt.value().Lock();
 }
