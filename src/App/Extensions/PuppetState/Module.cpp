@@ -90,14 +90,12 @@ void App::PuppetStateModule::OnLoadTweakDB()
 void App::PuppetStateModule::OnAttachPuppet(Red::gameuiCharacterCustomizationGenitalsController* aComponent)
 {
 #ifndef NDEBUG
-    const auto entity = Raw::IComponent::Owner::Ptr(aComponent);
-    const auto entityID = Raw::Entity::EntityID::Ptr(entity);
-    LogDebug("|{}| [event=AttachPuppet ent={}]", ModuleName, entityID->hash);
+    LogDebug("|{}| [event=AttachPuppet ent={}]", ModuleName, aComponent->owner->entityID.hash);
 #endif
 
     std::unique_lock _(s_mutex);
 
-    auto owner = Raw::IComponent::Owner::Ptr(aComponent);
+    auto owner = aComponent->owner;
 
     auto it = s_handlers.find(owner);
     if (it != s_handlers.end())
@@ -113,14 +111,12 @@ void App::PuppetStateModule::OnAttachPuppet(Red::gameuiCharacterCustomizationGen
 void App::PuppetStateModule::OnDetachPuppet(Red::gameuiCharacterCustomizationHairstyleController* aComponent, uintptr_t)
 {
 #ifndef NDEBUG
-    const auto entity = Raw::IComponent::Owner::Ptr(aComponent);
-    const auto entityID = Raw::Entity::EntityID::Ptr(entity);
-    LogDebug("|{}| [event=DetachPuppet ent={}]", ModuleName, entityID->hash);
+    LogDebug("|{}| [event=DetachPuppet ent={}]", ModuleName, aComponent->owner->entityID.hash);
 #endif
 
     std::unique_lock _(s_mutex);
 
-    auto owner = Raw::IComponent::Owner::Ptr(aComponent);
+    auto owner = aComponent->owner;
 
     auto it = s_handlers.find(owner);
     if (it == s_handlers.end())

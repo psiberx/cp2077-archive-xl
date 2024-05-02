@@ -523,8 +523,7 @@ App::DynamicAppearanceController::CustomizationData App::DynamicAppearanceContro
 
     CustomizationData data{};
 
-    const auto& components = Raw::Entity::ComponentsStorage::Ref(aEntity).components;
-    for (const auto& component : components | std::views::reverse)
+    for (const auto& component : aEntity->components | std::views::reverse)
     {
         switch (component->name)
         {
@@ -551,7 +550,7 @@ App::DynamicAppearanceController::CustomizationData App::DynamicAppearanceContro
 
 bool App::DynamicAppearanceController::IsMale(Red::Entity* aEntity)
 {
-    for (const auto& component : Raw::Entity::ComponentsStorage(aEntity)->components | std::views::reverse)
+    for (const auto& component : aEntity->components | std::views::reverse)
     {
         switch (component->name)
         {

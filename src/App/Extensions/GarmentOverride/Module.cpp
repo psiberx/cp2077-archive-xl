@@ -730,13 +730,12 @@ void App::GarmentOverrideModule::ApplyDynamicAppearance(Core::SharedPtr<EntitySt
 
 void App::GarmentOverrideModule::ApplyDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState)
 {
-    ApplyDynamicAppearance(aEntityState, Raw::Entity::ComponentsStorage(aEntityState->GetEntity())->components);
+    ApplyDynamicAppearance(aEntityState, aEntityState->GetEntity()->components);
 }
 
 void App::GarmentOverrideModule::ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, bool aForceUpdate)
 {
-    ApplyComponentOverrides(aEntityState, Raw::Entity::ComponentsStorage(aEntityState->GetEntity())->components,
-                            aForceUpdate);
+    ApplyComponentOverrides(aEntityState, aEntityState->GetEntity()->components, aForceUpdate);
 }
 
 void App::GarmentOverrideModule::ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState,

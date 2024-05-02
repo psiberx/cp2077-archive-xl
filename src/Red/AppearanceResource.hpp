@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Red/EntityTemplate.hpp"
-#include "Red/Package.hpp"
 
 namespace Red
 {
@@ -11,8 +10,6 @@ using AppearanceDefinition = appearance::AppearanceDefinition;
 
 namespace Raw::AppearanceDefinition
 {
-using PackageData = Core::OffsetPtr<0x148, Red::ObjectPackageHeader>;
-
 constexpr auto ExtractPartComponents = Core::RawFunc<
     /* addr = */ Red::AddressLib::AppearanceDefinition_ExtractPartComponents,
     /* type = */ void* (*)(Red::DynArray<Red::Handle<Red::ISerializable>>& aOut,

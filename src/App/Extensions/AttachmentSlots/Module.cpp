@@ -160,7 +160,6 @@ void App::AttachmentSlotsModule::OnAttachTPP(Red::game::TPPRepresentationCompone
 #endif
 
     auto transactionSystem = Red::GetGameSystem<Red::ITransactionSystem>();
-    auto owner = Raw::IComponent::Owner::Ptr(aComponent);
 
     std::shared_lock _(s_slotsMutex);
 
@@ -176,13 +175,13 @@ void App::AttachmentSlotsModule::OnAttachTPP(Red::game::TPPRepresentationCompone
                     aComponent->affectedAppearanceSlots.PushBack(subSlotID);
                 }
 
-                if (owner)
+                if (aComponent->owner)
                 {
 #ifndef NDEBUG
                     auto debugSlotName = Red::ToStringDebug(subSlotID);
 #endif
 
-                    auto slotData = transactionSystem->FindSlotData(owner,
+                    auto slotData = transactionSystem->FindSlotData(aComponent->owner,
                                                                    [subSlotID](const Red::AttachmentSlotData& aSlotData)
                                                                    {
                                                                        return aSlotData.slotID == subSlotID;
@@ -223,7 +222,7 @@ void App::AttachmentSlotsModule::OnCheckHairState(Red::game::ui::CharacterCustom
 {
     if (aHairState == Red::CharacterBodyPartState::Hidden)
     {
-        auto owner = Red::ToHandle(Raw::IComponent::Owner::Ptr(aComponent));
+        auto owner = Red::ToHandle(aComponent->owner);
         if (IsVisualTagActive(owner, HeadSlot, GarmentOverrideModule::ForceHairTag))
         {
             aHairState = Red::CharacterBodyPartState::Visible;
@@ -244,9 +243,7 @@ void App::AttachmentSlotsModule::OnCheckFeetState(Red::game::ui::CharacterCustom
     if (aLiftedState != Red::CharacterBodyPartState::Visible)
     {
         auto transactionSystem = Red::GetGameSystem<Red::ITransactionSystem>();
-        auto owner = Raw::IComponent::Owner(aComponent);
-
-        if (transactionSystem->IsSlotSpawning(owner, FeetSlot))
+        if (transactionSystem->IsSlotSpawning(aComponent->owner, FeetSlot))
         {
             aLiftedState = Red::CharacterBodyPartState::Visible;
             aFlatState = Red::CharacterBodyPartState::Hidden;
@@ -255,7 +252,7 @@ void App::AttachmentSlotsModule::OnCheckFeetState(Red::game::ui::CharacterCustom
 
     if (aLiftedState == Red::CharacterBodyPartState::Visible)
     {
-        auto owner = Red::ToHandle(Raw::IComponent::Owner::Ptr(aComponent));
+        auto owner = Red::ToHandle(aComponent->owner);
         if (IsVisualTagActive(owner, FeetSlot, GarmentOverrideModule::ForceFlatFeetTag))
         {
             aLiftedState = Red::CharacterBodyPartState::Hidden;

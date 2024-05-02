@@ -1,7 +1,6 @@
 #include "Module.hpp"
 #include "Red/EntityBuilder.hpp"
 #include "Red/Mesh.hpp"
-#include "Red/Package.hpp"
 #include "Red/ResourceDepot.hpp"
 
 namespace
@@ -351,12 +350,12 @@ void App::ResourcePatchModule::PatchPackageExtractorResults(
         if (!patchTemplate)
             continue;
 
-        auto& patchHeader = Raw::EntityTemplate::PackageData::Ref(patchTemplate);
+        auto& patchHeader = patchTemplate->compiledDataHeader;
 
         if (patchHeader.IsEmpty())
             continue;
 
-        auto patchExtractor = Red::PackageExtractor(patchHeader);
+        auto patchExtractor = Red::ObjectPackageExtractor(patchHeader);
         patchExtractor.ExtractSync();
 
         if (patchExtractor.results.size > 0)
@@ -387,7 +386,7 @@ void App::ResourcePatchModule::PatchPackageExtractorResults(
         if (!patchDefinition)
             continue;
 
-        auto& patchHeader = Raw::AppearanceDefinition::PackageData::Ref(patchDefinition);
+        auto& patchHeader = patchDefinition->compiledDataHeader;
 
         if (patchHeader.IsEmpty())
         {
@@ -403,7 +402,7 @@ void App::ResourcePatchModule::PatchPackageExtractorResults(
             packageLoader.ReadHeader(patchHeader);
         }
 
-        auto patchExtractor = Red::PackageExtractor(patchHeader);
+        auto patchExtractor = Red::ObjectPackageExtractor(patchHeader);
         patchExtractor.ExtractSync();
 
         if (patchExtractor.results.size > 0)

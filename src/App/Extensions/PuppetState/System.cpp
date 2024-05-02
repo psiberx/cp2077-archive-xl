@@ -37,9 +37,7 @@ Red::CString App::PuppetStateSystem::GetBodyTypeSuffix(Red::ItemID& aItemID,
         }
     }
 
-    const auto& components = Raw::Entity::ComponentsStorage::Ref(aOwner.instance).components;
-
-    for (const auto& component : components | std::views::reverse)
+    for (const auto& component : aOwner.instance->components | std::views::reverse)
     {
         const auto& morphTarget = Red::Cast<Red::entMorphTargetSkinnedMeshComponent>(component);
 

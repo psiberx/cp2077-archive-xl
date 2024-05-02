@@ -218,7 +218,7 @@ App::EntityState::EntityState(Red::Entity* aEntity,
 {
     m_name.append(aEntity->GetType()->GetName().ToString());
     m_name.append("/");
-    m_name.append(std::to_string(Raw::Entity::EntityID(aEntity)->hash));
+    m_name.append(std::to_string(aEntity->entityID.hash));
 }
 
 App::EntityState::~EntityState()
@@ -793,7 +793,7 @@ Core::SharedPtr<App::EntityState>& App::OverrideStateManager::GetEntityState(Red
     {
         it = m_entityStates.emplace(aEntity, Core::MakeShared<EntityState>(aEntity, m_dynamicAppearance)).first;
 
-        auto dynamicPath = std::to_string(*reinterpret_cast<uint64_t*>(aEntity->unk40 + 32)) + "_0.app";
+        auto dynamicPath = std::to_string(aEntity->templatePath.hash) + "_0.app";
         for (char i = '0'; i < '3'; ++i)
         {
             *(dynamicPath.end() - 5) = i;

@@ -127,8 +127,8 @@ uint64_t App::ComponentWrapper::GetUniqueId()
     {
         // Component Name + Appearance Name + Appearance Resource Path
         m_uniqueId = m_component->name;
-        m_uniqueId = Red::FNV1a64(m_component->unk48, sizeof(uint64_t), m_uniqueId);
-        m_uniqueId = Red::FNV1a64(m_component->unk68, sizeof(uint64_t), m_uniqueId);
+        m_uniqueId = Red::FNV1a64(reinterpret_cast<const uint8_t*>(&m_component->appearanceName), sizeof(uint64_t), m_uniqueId);
+        m_uniqueId = Red::FNV1a64(reinterpret_cast<const uint8_t*>(&m_component->appearancePath), sizeof(uint64_t), m_uniqueId);
     }
 
     return m_uniqueId;
