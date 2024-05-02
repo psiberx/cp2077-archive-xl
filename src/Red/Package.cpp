@@ -1,20 +1,20 @@
 #include "Package.hpp"
 
-Red::PackageData::PackageData()
-    : unk00(-1)
+Red::ObjectPackageHeader::ObjectPackageHeader()
+    : rootIndex(-1)
 {
 }
 
-bool Red::PackageData::IsEmpty() const
+bool Red::ObjectPackageHeader::IsEmpty() const
 {
-    return unk08.IsEmpty();
+    return cruids.IsEmpty();
 }
 
-Red::PackageLoader::PackageLoader(void* aBuffer, uint32_t aSize)
+Red::ObjectPackageReader::ObjectPackageReader(void* aBuffer, uint32_t aSize)
 {
     constexpr auto Construct = Core::RawFunc<
         /* addr = */ AddressLib::PackageLoader_ctor,
-        /* func = */ void (*)(PackageLoader*)>();
+        /* func = */ void (*)(ObjectPackageReader*)>();
 
     Construct(this);
 
@@ -22,11 +22,11 @@ Red::PackageLoader::PackageLoader(void* aBuffer, uint32_t aSize)
     size = aSize;
 }
 
-Red::PackageLoader::PackageLoader(const DeferredDataBuffer& aBuffer)
+Red::ObjectPackageReader::ObjectPackageReader(const DeferredDataBuffer& aBuffer)
 {
     constexpr auto Construct = Core::RawFunc<
         /* addr = */ AddressLib::PackageLoader_ctor,
-        /* func = */ void (*)(PackageLoader*)>();
+        /* func = */ void (*)(ObjectPackageReader*)>();
 
     Construct(this);
 
@@ -34,11 +34,11 @@ Red::PackageLoader::PackageLoader(const DeferredDataBuffer& aBuffer)
     size = aBuffer.raw->size;
 }
 
-Red::PackageLoader::PackageLoader(const DataBuffer& aBuffer)
+Red::ObjectPackageReader::ObjectPackageReader(const DataBuffer& aBuffer)
 {
     constexpr auto Construct = Core::RawFunc<
         /* addr = */ AddressLib::PackageLoader_ctor,
-        /* func = */ void (*)(PackageLoader*)>();
+        /* func = */ void (*)(ObjectPackageReader*)>();
 
     Construct(this);
 
@@ -46,11 +46,11 @@ Red::PackageLoader::PackageLoader(const DataBuffer& aBuffer)
     size = aBuffer.buffer.size;
 }
 
-Red::PackageLoader::PackageLoader(const RawBuffer& aBuffer)
+Red::ObjectPackageReader::ObjectPackageReader(const RawBuffer& aBuffer)
 {
     constexpr auto Construct = Core::RawFunc<
         /* addr = */ AddressLib::PackageLoader_ctor,
-        /* func = */ void (*)(PackageLoader*)>();
+        /* func = */ void (*)(ObjectPackageReader*)>();
 
     Construct(this);
 
@@ -58,52 +58,59 @@ Red::PackageLoader::PackageLoader(const RawBuffer& aBuffer)
     size = aBuffer.size;
 }
 
-void Red::PackageLoader::Load()
+void Red::ObjectPackageReader::ReadHeader()
 {
     constexpr auto LoadData = Core::RawFunc<
         /* addr = */ AddressLib::PackageLoader_LoadData,
-        /* func = */ void* (*)(PackageLoader*, PackageData&)>();
+        /* func = */ void* (*)(ObjectPackageReader*, ObjectPackageHeader&)>();
 
-    LoadData(this, data);
+    LoadData(this, header);
 }
 
-void Red::PackageLoader::Load(Red::PackageData& aData)
+void Red::ObjectPackageReader::ReadHeader(Red::ObjectPackageHeader& aData)
 {
     constexpr auto LoadData = Core::RawFunc<
         /* addr = */ AddressLib::PackageLoader_LoadData,
-        /* func = */ void* (*)(PackageLoader*, PackageData&)>();
+        /* func = */ void* (*)(ObjectPackageReader*, ObjectPackageHeader&)>();
 
     LoadData(this, aData);
 }
 
-bool Red::PackageLoader::IsEmpty() const
+bool Red::ObjectPackageReader::IsEmpty() const
 {
     return !buffer;
 }
 
-Red::PackageExtractorParams::PackageExtractorParams(const Red::PackageContent& aContent)
-    : content(aContent)
+void Red::ObjectPackageReader::sub_08(uint64_t a1, uint64_t a2)
+{
+    using func_t = void (*)(ObjectPackageReader*, uint64_t, uint64_t);
+    static UniversalRelocFunc<func_t> func(AddressLib::ObjectPackageLoader_sub_08);
+    func(this, a1, a2);
+}
+
+Red::PackageExtractorParams::PackageExtractorParams(const Red::PackageHeader& aHeader)
+    : header(aHeader)
     , loader(ResourceLoader::Get())
-    , unk60(0)
-    , unk61(0)
-    , unk62(0)
+    , disablePostLoad(false)
+    , disableImports(false)
+    , disablePreInitialization(false)
     , unk63(0)
     , unk64(0)
     , unk78(0)
 {
 }
 
-Red::PackageExtractorParams::PackageExtractorParams(const Red::PackageData& aData)
-    : PackageExtractorParams(aData.content)
+Red::PackageExtractorParams::PackageExtractorParams(const Red::ObjectPackageHeader& aHeader)
+    : PackageExtractorParams(aHeader.package)
 {
 }
 
 Red::PackageExtractor::PackageExtractor(const Red::PackageExtractorParams& aParams)
     : unk78(0)
     , loader(nullptr)
-    , unkB8(0)
+    , disablePostLoad(false)
     , disableImports(false)
-    , unkBA(0)
+    , disablePreInitialization(false)
     , unkBB(0)
     , unkBC(0)
     , unkF0(nullptr)

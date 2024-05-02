@@ -4,69 +4,105 @@
 
 namespace Red
 {
-struct PackageContent
+struct PackageHeader
 {
-    uint8_t unk00[0x58]{}; // 00
-};
-RED4EXT_ASSERT_SIZE(PackageContent, 0x58);
+    struct Chunk
+    {
+        uint32_t typeID;
+        uint32_t offset;
+    };
+    RED4EXT_ASSERT_SIZE(Chunk, 0x8);
 
-struct PackageData
+    struct Name
+    {
+        uint32_t offset : 24;
+        uint32_t size : 8;
+    };
+    RED4EXT_ASSERT_SIZE(Name, 0x4);
+
+    struct Import
+    {
+        uint32_t offset : 23;
+        uint32_t size : 8;
+        uint32_t sync : 1;
+    };
+    RED4EXT_ASSERT_SIZE(Import, 0x4);
+
+    uint8_t version;       // 00
+    uint8_t unk01;         // 01
+    uint16_t unk02;        // 02
+    Range<Chunk> root;     // 08
+    Range<Chunk> chunks;   // 18
+    Range<Name> names;     // 28
+    Range<Import> imports; // 38
+    void* buffer;          // 48
+    uint32_t size;         // 50
+};
+RED4EXT_ASSERT_SIZE(PackageHeader, 0x58);
+RED4EXT_ASSERT_OFFSET(PackageHeader, unk02, 0x02);
+RED4EXT_ASSERT_OFFSET(PackageHeader, root, 0x08);
+RED4EXT_ASSERT_OFFSET(PackageHeader, buffer, 0x48);
+
+struct ObjectPackageHeader
 {
-    PackageData();
+    ObjectPackageHeader();
 
     [[nodiscard]] bool IsEmpty() const;
 
-    uint16_t unk00;         // 00
-    Range<uint64_t> unk08;  // 08
-    PackageContent content; // 18
+    int16_t rootIndex;     // 00 - Set to 0 if package contains root Entity, otherwise -1
+    Range<CRUID> cruids;   // 08
+    PackageHeader package; // 18
 };
-RED4EXT_ASSERT_SIZE(PackageData, 0x70);
-RED4EXT_ASSERT_OFFSET(PackageData, unk08, 0x08);
-RED4EXT_ASSERT_OFFSET(PackageData, content, 0x18);
+RED4EXT_ASSERT_SIZE(ObjectPackageHeader, 0x70);
+RED4EXT_ASSERT_OFFSET(ObjectPackageHeader, rootIndex, 0x0);
+RED4EXT_ASSERT_OFFSET(ObjectPackageHeader, cruids, 0x08);
+RED4EXT_ASSERT_OFFSET(ObjectPackageHeader, package, 0x18);
 
-struct PackageLoader
+struct ObjectPackageReader
 {
-    PackageLoader(void* aBuffer, uint32_t aSize);
-    PackageLoader(const DeferredDataBuffer& aBuffer);
-    PackageLoader(const DataBuffer& aBuffer);
-    PackageLoader(const RawBuffer& aBuffer);
+    ObjectPackageReader(void* aBuffer, uint32_t aSize);
+    ObjectPackageReader(const DeferredDataBuffer& aBuffer);
+    ObjectPackageReader(const DataBuffer& aBuffer);
+    ObjectPackageReader(const RawBuffer& aBuffer);
 
-    virtual ~PackageLoader() = default; // 00
-    // virtual void sub_08(uint64_t a1, void* a2); // 08
+    virtual ~ObjectPackageReader() = default;      // 00
+    virtual void sub_08(uint64_t a1, uint64_t a2); // 08
 
-    void Load();
-    void Load(PackageData& aData);
+    void ReadHeader();
+    void ReadHeader(ObjectPackageHeader& aData);
 
     [[nodiscard]] bool IsEmpty() const;
 
-    void* buffer;
-    uint32_t size;
-    PackageData data;
+    void* buffer;               // 08
+    uint32_t size;              // 10
+    ObjectPackageHeader header; // 18
 };
-RED4EXT_ASSERT_SIZE(PackageLoader, 0x88);
-RED4EXT_ASSERT_OFFSET(PackageLoader, buffer, 0x08);
-RED4EXT_ASSERT_OFFSET(PackageLoader, size, 0x10);
-RED4EXT_ASSERT_OFFSET(PackageLoader, data, 0x18);
+RED4EXT_ASSERT_SIZE(ObjectPackageReader, 0x88);
+RED4EXT_ASSERT_OFFSET(ObjectPackageReader, buffer, 0x08);
+RED4EXT_ASSERT_OFFSET(ObjectPackageReader, size, 0x10);
+RED4EXT_ASSERT_OFFSET(ObjectPackageReader, header, 0x18);
 
 struct PackageExtractorParams
 {
-    PackageExtractorParams(const PackageData& aData);
-    PackageExtractorParams(const PackageContent& aContent);
+    PackageExtractorParams(const ObjectPackageHeader& aHeader);
+    PackageExtractorParams(const PackageHeader& aHeader);
 
-    PackageContent content;   // 00
-    ResourceLoader* loader;   // 58
-    uint8_t unk60;            // 60
-    uint8_t unk61;            // 61
-    uint8_t unk62;            // 62
-    uint8_t unk63;            // 63
-    uint8_t unk64;            // 64
-    DynArray<uint32_t> unk68; // 68
-    uint32_t unk78;           // 78
-    RawBuffer unk80;          // 80
+    PackageHeader header;          // 00
+    ResourceLoader* loader;        // 58
+    bool disablePostLoad;          // 60 - See PackageExtractor
+    bool disableImports;           // 61 - See PackageExtractor
+    bool disablePreInitialization; // 62 - See PackageExtractor
+    uint8_t unk63;                 // 63
+    uint8_t unk64;                 // 64
+    DynArray<uint32_t> unk68;      // 68
+    uint32_t unk78;                // 78
+    RawBuffer unk80;               // 80 - Moved to PackageExtractor in ctor
 };
 RED4EXT_ASSERT_SIZE(PackageExtractorParams, 0xA0);
 RED4EXT_ASSERT_OFFSET(PackageExtractorParams, loader, 0x58);
-RED4EXT_ASSERT_OFFSET(PackageExtractorParams, unk68, 0x68);
+RED4EXT_ASSERT_OFFSET(PackageExtractorParams, disablePostLoad, 0x60);
+RED4EXT_ASSERT_OFFSET(PackageExtractorParams, disableImports, 0x61);
+RED4EXT_ASSERT_OFFSET(PackageExtractorParams, disablePreInitialization, 0x62);
 RED4EXT_ASSERT_OFFSET(PackageExtractorParams, unk80, 0x80);
 
 struct PackageExtractor
@@ -77,15 +113,15 @@ struct PackageExtractor
     JobHandle ExtractAsync();
 
     WeakPtr<PackageExtractor> self;                 // 00
-    PackageContent content;                         // 10
+    PackageHeader header;                           // 10
     DynArray<uint32_t> unk68;                       // 68
     uint32_t unk78;                                 // 78
     RawBuffer unk80;                                // 80
     ResourceLoader* loader;                         // A0
     DynArray<Handle<ISerializable>> results;        // A8
-    uint8_t unkB8;                                  // B8
-    bool disableImports;                            // B9
-    uint8_t unkBA;                                  // BA
+    bool disablePostLoad;                           // B8 - Don't call serializable->PostLoad()
+    bool disableImports;                            // B9 - Don't load resource dependencies
+    bool disablePreInitialization;                  // BA - Don't call pre-initilization during PostLoad()
     uint8_t unkBB;                                  // BB
     uint8_t unkBC;                                  // BC
     DynArray<Handle<ISerializable>> objects;        // C0
@@ -99,4 +135,11 @@ struct PackageExtractor
     void* unk118;                                   // 118
 };
 RED4EXT_ASSERT_SIZE(PackageExtractor, 0x120);
+RED4EXT_ASSERT_OFFSET(PackageExtractor, header, 0x10);
+RED4EXT_ASSERT_OFFSET(PackageExtractor, results, 0xA8);
+RED4EXT_ASSERT_OFFSET(PackageExtractor, disablePostLoad, 0xB8);
+RED4EXT_ASSERT_OFFSET(PackageExtractor, disableImports, 0xB9);
+RED4EXT_ASSERT_OFFSET(PackageExtractor, disablePreInitialization, 0xBA);
+RED4EXT_ASSERT_OFFSET(PackageExtractor, objects, 0xC0);
+RED4EXT_ASSERT_OFFSET(PackageExtractor, resources, 0xD0);
 }

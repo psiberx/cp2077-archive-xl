@@ -41,7 +41,7 @@ private:
                                       const Red::Handle<Red::AppearanceDefinition>& aDefinition,
                                       Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects);
     static void PatchResultEntity(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
-                                  Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects, uint16_t aEntityIndex);
+                                  Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects, int16_t aEntityIndex);
     static void PatchResultComponents(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
                                       Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects);
 

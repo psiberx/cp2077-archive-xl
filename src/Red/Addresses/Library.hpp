@@ -126,6 +126,7 @@ constexpr uint32_t PackageExtractor_ExtractAsync = 3819248393;
 
 constexpr uint32_t PackageLoader_ctor = 3628731410;
 constexpr uint32_t PackageLoader_LoadData = 1285757088;
+constexpr uint32_t ObjectPackageLoader_sub_08 = 1632836642;
 
 constexpr uint32_t QuestLoader_ProcessPhaseResource = 790570700;
 

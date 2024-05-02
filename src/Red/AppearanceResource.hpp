@@ -11,7 +11,7 @@ using AppearanceDefinition = appearance::AppearanceDefinition;
 
 namespace Raw::AppearanceDefinition
 {
-using PackageData = Core::OffsetPtr<0x148, Red::PackageData>;
+using PackageData = Core::OffsetPtr<0x148, Red::ObjectPackageHeader>;
 
 constexpr auto ExtractPartComponents = Core::RawFunc<
     /* addr = */ Red::AddressLib::AppearanceDefinition_ExtractPartComponents,

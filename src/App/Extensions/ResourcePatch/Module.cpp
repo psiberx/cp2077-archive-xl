@@ -351,17 +351,17 @@ void App::ResourcePatchModule::PatchPackageExtractorResults(
         if (!patchTemplate)
             continue;
 
-        auto& patchPackage = Raw::EntityTemplate::PackageData::Ref(patchTemplate);
+        auto& patchHeader = Raw::EntityTemplate::PackageData::Ref(patchTemplate);
 
-        if (patchPackage.IsEmpty())
+        if (patchHeader.IsEmpty())
             continue;
 
-        auto patchExtractor = Red::PackageExtractor(patchPackage);
+        auto patchExtractor = Red::PackageExtractor(patchHeader);
         patchExtractor.ExtractSync();
 
         if (patchExtractor.results.size > 0)
         {
-            PatchResultEntity(aResultObjects, patchExtractor.results, patchPackage.unk00);
+            PatchResultEntity(aResultObjects, patchExtractor.results, patchHeader.rootIndex);
             PatchResultComponents(aResultObjects, patchExtractor.results);
         }
     }
@@ -387,9 +387,9 @@ void App::ResourcePatchModule::PatchPackageExtractorResults(
         if (!patchDefinition)
             continue;
 
-        auto& patchPackage = Raw::AppearanceDefinition::PackageData::Ref(patchDefinition);
+        auto& patchHeader = Raw::AppearanceDefinition::PackageData::Ref(patchDefinition);
 
-        if (patchPackage.IsEmpty())
+        if (patchHeader.IsEmpty())
         {
             auto& patchBuffer = patchDefinition->compiledData;
 
@@ -399,11 +399,11 @@ void App::ResourcePatchModule::PatchPackageExtractorResults(
                 Red::WaitForJob(bufferToken->job, std::chrono::milliseconds(500));
             }
 
-            auto packageLoader = Red::PackageLoader(patchBuffer);
-            packageLoader.Load(patchPackage);
+            auto packageLoader = Red::ObjectPackageReader(patchBuffer);
+            packageLoader.ReadHeader(patchHeader);
         }
 
-        auto patchExtractor = Red::PackageExtractor(patchPackage);
+        auto patchExtractor = Red::PackageExtractor(patchHeader);
         patchExtractor.ExtractSync();
 
         if (patchExtractor.results.size > 0)
@@ -415,8 +415,11 @@ void App::ResourcePatchModule::PatchPackageExtractorResults(
 
 void App::ResourcePatchModule::PatchResultEntity(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
                                                  Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects,
-                                                 uint16_t aEntityIndex)
+                                                 int16_t aEntityIndex)
 {
+    if (aEntityIndex == -1)
+        return;
+
     if (aResultObjects.size > aEntityIndex && aPatchObjects.size > aEntityIndex)
     {
         if (auto patchEntity = Red::Cast<Red::Entity>(aPatchObjects[aEntityIndex]))
