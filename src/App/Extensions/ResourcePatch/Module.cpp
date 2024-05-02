@@ -1,4 +1,5 @@
 #include "Module.hpp"
+#include "App/Extensions/ResourceAlias/Module.hpp"
 #include "Red/EntityBuilder.hpp"
 #include "Red/Mesh.hpp"
 #include "Red/ResourceDepot.hpp"
@@ -72,27 +73,36 @@ void App::ResourcePatchModule::PreparePatches()
 
     for (auto& unit : m_units)
     {
-        for (const auto& [targetPath, patchList] : unit.patches)
+        for (const auto& [targetPathOrAlias, patchList] : unit.patches)
         {
-            s_paths[targetPath] = unit.paths[targetPath];
-
-            for (const auto& patchPath : patchList)
+            auto targetList = ResourceAliasModule::ResolveAlias(targetPathOrAlias);
+            if (targetList.empty())
             {
-                if (patchPath == targetPath)
-                    continue;
+                targetList.insert(targetPathOrAlias);
+            }
 
-                if (!depot->ResourceExists(patchPath))
+            for (const auto& targetPath : targetList)
+            {
+                s_paths[targetPath] = unit.paths[targetPath];
+
+                for (const auto& patchPath : patchList)
                 {
-                    if (!invalidPaths.contains(patchPath))
-                    {
-                        LogWarning("|{}| Resource \"{}\" doesn't exist. Skipped.", ModuleName, unit.paths[patchPath]);
-                        invalidPaths.insert(patchPath);
-                    }
-                    continue;
-                }
+                    if (patchPath == targetPath)
+                        continue;
 
-                s_patches[targetPath].insert(patchPath);
-                s_paths[patchPath] = unit.paths[patchPath];
+                    if (!depot->ResourceExists(patchPath))
+                    {
+                        if (!invalidPaths.contains(patchPath))
+                        {
+                            LogWarning("|{}| Resource \"{}\" doesn't exist. Skipped.", ModuleName, unit.paths[patchPath]);
+                            invalidPaths.insert(patchPath);
+                        }
+                        continue;
+                    }
+
+                    s_patches[targetPath].insert(patchPath);
+                    s_paths[patchPath] = unit.paths[patchPath];
+                }
             }
         }
     }

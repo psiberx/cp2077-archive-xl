@@ -15,7 +15,7 @@ bool App::ModuleLoader::ExtraConfigDirExists()
     return !m_extraConfigDir.empty() && std::filesystem::exists(m_extraConfigDir, error);
 }
 
-void App::ModuleLoader::Configure()
+void App::ModuleLoader::Configure(const std::filesystem::path& aBundlePath)
 {
     if (m_configurables.empty())
         return;
@@ -26,6 +26,11 @@ void App::ModuleLoader::Configure()
 
         for (const auto& module : m_configurables)
             module->Reset();
+
+        if (!aBundlePath.empty())
+        {
+            ReadConfig(aBundlePath, aBundlePath.parent_path(), true);
+        }
 
         Core::Vector<std::filesystem::path> configDirs;
         Core::Vector<std::filesystem::path> configFiles;
@@ -110,7 +115,7 @@ void App::ModuleLoader::Configure()
     }
 }
 
-bool App::ModuleLoader::ReadConfig(const std::filesystem::path& aPath, const std::filesystem::path& aDir)
+bool App::ModuleLoader::ReadConfig(const std::filesystem::path& aPath, const std::filesystem::path& aDir, bool aSilent)
 {
     bool success = true;
 
@@ -124,7 +129,10 @@ bool App::ModuleLoader::ReadConfig(const std::filesystem::path& aPath, const std
             path = std::filesystem::relative(path, aDir, error);
         }
 
-        LogInfo("Reading \"{}\"...", path.string());
+        if (!aSilent)
+        {
+            LogInfo("Reading \"{}\"...", path.string());
+        }
 
         std::ifstream file(aPath);
 
@@ -139,12 +147,12 @@ bool App::ModuleLoader::ReadConfig(const std::filesystem::path& aPath, const std
     }
     catch (const std::exception& ex)
     {
-        LogError(ex.what());
+        LogError("{}: {}", aPath.filename().string(), ex.what());
         success = false;
     }
     catch (...)
     {
-        LogError("An unknown error occurred.");
+        LogError("{}: An unknown error occurred.", aPath.filename().string());
         success = false;
     }
 

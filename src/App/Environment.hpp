@@ -9,6 +9,11 @@ inline std::filesystem::path GameDir()
     return Core::Runtime::GetRootDir();
 }
 
+inline std::filesystem::path ExtensionBundlePath()
+{
+    return Core::Runtime::GetModuleDir() / L"Data" / L"Bundle.xl";
+}
+
 inline std::filesystem::path ScriptsDir()
 {
     return Core::Runtime::GetModuleDir() / L"Scripts";

@@ -13,6 +13,8 @@ class ExtensionService
     , public Core::LoggingAgent
 {
 public:
+    explicit ExtensionService(std::filesystem::path aBundlePath);
+
     void Configure();
 
 protected:
@@ -20,6 +22,7 @@ protected:
     void OnShutdown() override;
 
     Core::UniquePtr<ModuleLoader> m_loader;
+    std::filesystem::path m_bundlePath;
     std::mutex m_reloadMutex;
 };
 }

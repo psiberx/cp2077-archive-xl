@@ -27,7 +27,7 @@ App::Application::Application(HMODULE aHandle, const RED4ext::Sdk* aSdk)
 
     Register<App::WorldWidgetLimitPatch>();
     Register<App::ArchiveService>(Env::GameDir());
-    Register<App::ExtensionService>();
+    Register<App::ExtensionService>(Env::ExtensionBundlePath());
 }
 
 void App::Application::OnStarting()

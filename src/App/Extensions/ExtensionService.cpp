@@ -3,7 +3,6 @@
 #include "App/Extensions/AppearanceSwap/Module.hpp"
 #include "App/Extensions/AttachmentSlots/Module.hpp"
 #include "App/Extensions/Customization/Module.hpp"
-#include "App/Extensions/ResourcePatch/Module.hpp"
 #include "App/Extensions/FactoryIndex/Module.hpp"
 #include "App/Extensions/GarmentOverride/Module.hpp"
 #include "App/Extensions/InkSpawner/Module.hpp"
@@ -12,10 +11,17 @@
 #include "App/Extensions/MeshTemplate/Module.hpp"
 #include "App/Extensions/PuppetState/Module.hpp"
 #include "App/Extensions/QuestPhase/Module.hpp"
+#include "App/Extensions/ResourceAlias/Module.hpp"
+#include "App/Extensions/ResourcePatch/Module.hpp"
 #include "App/Extensions/WorldStreaming/Module.hpp"
 #include "Red/GameApplication.hpp"
 #include "Red/GameEngine.hpp"
 #include "Red/ResourceLoader.hpp"
+
+App::ExtensionService::ExtensionService(std::filesystem::path aBundlePath)
+    : m_bundlePath(std::move(aBundlePath))
+{
+}
 
 void App::ExtensionService::OnBootstrap()
 {
@@ -25,6 +31,7 @@ void App::ExtensionService::OnBootstrap()
     m_loader->Add<AppearanceSwapModule>();
     m_loader->Add<AttachmentSlotsModule>();
     m_loader->Add<CustomizationModule>();
+    m_loader->Add<ResourceAliasModule>();
     m_loader->Add<ResourcePatchModule>();
     m_loader->Add<FactoryIndexModule>();
     m_loader->Add<InkSpawnerModule>();
@@ -37,7 +44,7 @@ void App::ExtensionService::OnBootstrap()
     m_loader->Add<WorldStreamingModule>();
 
     HookOnceAfter<Raw::GameApplication::InitResourceDepot>([&]() {
-        m_loader->Configure();
+        m_loader->Configure(m_bundlePath);
         m_loader->Load();
     });
 
@@ -61,7 +68,7 @@ void App::ExtensionService::Configure()
         HookAfter<Raw::ResourceLoader::OnUpdate>([&]() {
             std::unique_lock _(m_reloadMutex);
 
-            m_loader->Configure();
+            m_loader->Configure(m_bundlePath);
             m_loader->Reload();
 
             Unhook<Raw::ResourceLoader::OnUpdate>();
