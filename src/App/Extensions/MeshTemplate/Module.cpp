@@ -25,6 +25,11 @@ bool App::MeshTemplateModule::Load()
 
 bool App::MeshTemplateModule::Unload()
 {
+    {
+        std::unique_lock _(s_stateLock);
+        s_states.clear();
+    }
+
     Unhook<Raw::CMesh::LoadMaterialsAsync>();
 
     return true;
@@ -33,14 +38,14 @@ bool App::MeshTemplateModule::Unload()
 void* App::MeshTemplateModule::OnLoadMaterials(Red::CMesh* aMesh, Red::MeshMaterialsToken& aToken,
                                                const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4)
 {
-    Core::Vector<Red::JobHandle> loadingJobs;
+    Core::Vector<Red::JobHandle> loadingJobs(0);
     ProcessMeshResource(aMesh, aMaterialNames, loadingJobs);
 
     auto ret = Raw::CMesh::LoadMaterialsAsync(aMesh, aToken, aMaterialNames, a4);
 
     if (!loadingJobs.empty())
     {
-        for (auto& loadingJob : loadingJobs)
+        for (const auto& loadingJob : loadingJobs)
         {
             aToken.job.Join(loadingJob);
         }
@@ -49,46 +54,63 @@ void* App::MeshTemplateModule::OnLoadMaterials(Red::CMesh* aMesh, Red::MeshMater
     return ret;
 }
 
+App::MeshTemplateModule::MeshState* App::MeshTemplateModule::AcquireMeshState(Red::CMesh* aMesh)
+{
+    std::unique_lock _(s_stateLock);
+
+    auto it = s_states.find(aMesh->path);
+    if (it == s_states.end())
+    {
+        it = s_states.emplace(aMesh->path, Core::MakeUnique<MeshState>(aMesh)).first;
+    }
+
+    return it.value().get();
+}
+
 bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::DynArray<Red::CName>& aMaterialNames,
                                                   Core::Vector<Red::JobHandle>& aLoadingJobs)
 {
-    Core::Map<Red::CName, const Red::CMeshMaterialEntry*> templates;
-    Core::Set<std::size_t> existingMaterialIndexes;
+    auto meshState = AcquireMeshState(aMesh);
 
-    auto& controller = GarmentOverrideModule::GetDynamicAppearanceController();
-    auto& pathStr = controller->GetPathStr(aMesh->path);
+    if (!meshState->IsDynamic())
+        return false;
 
+    std::unique_lock _(meshState->mutex);
+
+    Core::Map<Red::CName, std::size_t> templateIndexes;
+    Core::Set<Red::CName> existingMaterialNames;
+
+    for (const auto& materialEntry : aMesh->materialEntries)
     {
-        std::shared_lock _(Raw::CMesh::MaterialLock::Ref(aMesh));
-        // std::shared_lock _(s_materiaLock);
-
-        for (const auto& materialEntry : aMesh->materialEntries)
+        if (materialEntry.name.ToString()[0] == TemplateMarker)
         {
-            if (materialEntry.name.ToString()[0] == TemplateMarker)
-            {
-                templates.insert_or_assign(materialEntry.name, &materialEntry);
-            }
+            templateIndexes.insert_or_assign(materialEntry.name, &materialEntry - aMesh->materialEntries.begin());
+        }
 
-            for (auto i = 0; i < aMaterialNames.size; ++i)
+        for (const auto& chunkMaterialName : aMaterialNames)
+        {
+            if (materialEntry.name == chunkMaterialName)
             {
-                if (aMaterialNames[i] == materialEntry.name)
-                {
-                    existingMaterialIndexes.insert(i);
-                    break;
-                }
+                existingMaterialNames.insert(chunkMaterialName);
+                break;
             }
         }
     }
 
-    if (templates.empty() || aMaterialNames.size == existingMaterialIndexes.size())
+    if (existingMaterialNames.size() == aMaterialNames.size)
         return false;
 
-    for (auto i = 0; i < aMaterialNames.size; ++i)
+    if (templateIndexes.empty())
     {
-        if (existingMaterialIndexes.contains(i))
+        meshState->MarkStatic();
+        return false;
+    }
+
+    for (const auto& chunkMaterialName : aMaterialNames)
+    {
+        if (existingMaterialNames.contains(chunkMaterialName))
             continue;
 
-        const auto chunkMaterialName = aMaterialNames[i];
         auto chunkMaterialNameStr = std::string_view(chunkMaterialName.ToString());
         auto materialName = chunkMaterialName;
 
@@ -104,21 +126,28 @@ bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::
             materialName = Red::CNamePool::Add(materialNameStr.data());
         }
 
-        auto templateIt = templates.find(templateName);
-        if (templateIt == templates.end())
+
+        auto templateIt = templateIndexes.find(templateName);
+        if (templateIt == templateIndexes.end())
         {
             LogError("|{}| Material template \"{}\" entry not found.", ModuleName, templateName.ToString());
             continue;
         }
 
-        auto& sourceEntry = templateIt.value();
-        auto sourceInstance = Red::Cast<Red::CMaterialInstance>(templateIt.value()->materialWeak).Lock();
+        Red::Handle<Red::CMaterialInstance> sourceInstance;
+        uint16_t sourceIndex;
+
+        {
+            auto& sourceEntry = aMesh->materialEntries[templateIt.value()];
+            sourceInstance = Red::Cast<Red::CMaterialInstance>(sourceEntry.materialWeak).Lock();
+            sourceIndex = sourceEntry.index;
+        }
 
         if (!sourceInstance)
         {
             Red::SharedPtr<Red::ResourceToken<Red::IMaterial>> token;
             Raw::MeshMaterialBuffer::LoadMaterialAsync(&aMesh->localMaterialBuffer, token, Red::AsHandle(aMesh),
-                                                       sourceEntry->index, 0, 0);
+                                                       sourceIndex, 0, 0);
 
             if (!token)
             {
@@ -126,7 +155,7 @@ bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::
                 continue;
             }
 
-            Red::WaitForResource(token, std::chrono::milliseconds(5000));
+            Red::WaitForResource(token, std::chrono::milliseconds(1000));
 
             if (token->IsFailed())
             {
@@ -172,18 +201,13 @@ bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::
             }
         }
 
-        {
-            std::unique_lock _(Raw::CMesh::MaterialLock::Ref(aMesh));
-            // std::unique_lock _(s_materiaLock);
+        aMesh->materialEntries.EmplaceBack();
 
-            aMesh->materialEntries.EmplaceBack();
-
-            auto& materialEntry = aMesh->materialEntries.Back();
-            materialEntry.name = chunkMaterialName;
-            materialEntry.material = materialInstance;
-            materialEntry.materialWeak = materialInstance;
-            materialEntry.isLocalInstance = true;
-        }
+        auto& materialEntry = aMesh->materialEntries.Back();
+        materialEntry.name = chunkMaterialName;
+        materialEntry.material = materialInstance;
+        materialEntry.materialWeak = materialInstance;
+        materialEntry.isLocalInstance = true;
     }
 
     return true;
@@ -198,7 +222,7 @@ bool App::MeshTemplateModule::ProcessResourceReference(Red::ResourceReference<T>
     auto& controller = GarmentOverrideModule::GetDynamicAppearanceController();
     auto& pathStr = controller->GetPathStr(aInstance.path);
 
-    if (pathStr.empty()) // !controller->IsDynamicValue(pathStr)
+    if (pathStr.empty())
     {
         return false;
     }
