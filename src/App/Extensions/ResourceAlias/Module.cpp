@@ -31,9 +31,6 @@ void App::ResourceAliasModule::InitializeAliases()
 {
     s_aliases.clear();
 
-    auto depot = Red::ResourceDepot::Get();
-    Core::Set<Red::ResourcePath> invalidPaths;
-
     for (auto& unit : m_units)
     {
         for (const auto& [aliasPath, targetList] : unit.aliases)
@@ -45,20 +42,31 @@ void App::ResourceAliasModule::InitializeAliases()
                 if (targetPath == aliasPath)
                     continue;
 
-                if (!depot->ResourceExists(targetPath))
-                {
-                    if (!invalidPaths.contains(targetPath))
-                    {
-                        LogWarning("|{}| Resource \"{}\" doesn't exist. Skipped.", ModuleName, unit.paths[targetPath]);
-                        invalidPaths.insert(targetPath);
-                    }
-                    continue;
-                }
-
                 s_aliases[aliasPath].insert(targetPath);
                 s_paths[targetPath] = unit.paths[targetPath];
             }
         }
+    }
+
+    for (auto& [aliasPath, targetList] : s_aliases)
+    {
+        bool updated;
+        do
+        {
+            updated = false;
+            for (const auto& targetPath : targetList)
+            {
+                const auto& includePaths = s_aliases.find(targetPath);
+                if (includePaths != s_aliases.end())
+                {
+                    s_aliases[aliasPath].erase(targetPath);
+                    s_aliases[aliasPath].insert(includePaths.value().begin(), includePaths.value().end());
+                    updated = true;
+                    break;
+                }
+            }
+        }
+        while (updated);
     }
 }
 
@@ -72,4 +80,14 @@ const Core::Set<Red::ResourcePath>& App::ResourceAliasModule::ResolveAlias(Red::
         return s_null;
 
     return aliasIt.value();
+}
+
+bool App::ResourceAliasModule::IsAliased(Red::ResourcePath aAliasPath, Red::ResourcePath aTargetPath)
+{
+    const auto& aliasIt = s_aliases.find(aAliasPath);
+
+    if (aliasIt == s_aliases.end())
+        return false;
+
+    return aliasIt.value().contains(aTargetPath);
 }

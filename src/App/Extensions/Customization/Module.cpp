@@ -348,14 +348,22 @@ void App::CustomizationModule::MergeCustomGroups(Red::DynArray<CustomizationGrou
 void App::CustomizationModule::MergeCustomOptions(Red::DynArray<CustomizationOption>& aTargetOptions,
                                                   Red::DynArray<CustomizationOption>& aSourceOptions)
 {
-    for (auto& sourceOption : aSourceOptions)
+    for (const auto& sourceOption : aSourceOptions)
     {
         bool isExistingOption = false;
 
         for (auto& targetOption : aTargetOptions)
         {
-            if (targetOption->name != sourceOption->name)
-                continue;
+            if (sourceOption->name)
+            {
+                if (targetOption->name != sourceOption->name)
+                    continue;
+            }
+            else
+            {
+                if (targetOption->uiSlot != sourceOption->uiSlot)
+                    continue;
+            }
 
             isExistingOption = true;
 
@@ -366,7 +374,7 @@ void App::CustomizationModule::MergeCustomOptions(Red::DynArray<CustomizationOpt
             if (targetOption->GetNativeType()->IsA(s_AppInfoType))
             {
                 auto& targetAppOption = reinterpret_cast<CustomizationAppearance&>(targetOption);
-                auto& sourceAppOption = reinterpret_cast<CustomizationAppearance&>(sourceOption);
+                auto& sourceAppOption = reinterpret_cast<const CustomizationAppearance&>(sourceOption);
 
                 for (const auto& sourceChoice : sourceAppOption->definitions)
                 {
@@ -384,7 +392,7 @@ void App::CustomizationModule::MergeCustomOptions(Red::DynArray<CustomizationOpt
 
                     if (!isExistingChoice)
                     {
-                        targetAppOption->definitions.EmplaceBack(sourceChoice);
+                        targetAppOption->definitions.PushBack(sourceChoice);
 
                         if (sourceAppOption->resource.path)
                         {
@@ -410,7 +418,7 @@ void App::CustomizationModule::MergeCustomOptions(Red::DynArray<CustomizationOpt
             else if (targetOption->GetNativeType()->IsA(s_MorphInfoType))
             {
                 auto& targetMorphOption = reinterpret_cast<CustomizationMorph&>(targetOption);
-                auto& sourceMorphOption = reinterpret_cast<CustomizationMorph&>(sourceOption);
+                auto& sourceMorphOption = reinterpret_cast<const CustomizationMorph&>(sourceOption);
 
                 for (const auto& sourceChoice : sourceMorphOption->morphNames)
                 {
@@ -428,7 +436,7 @@ void App::CustomizationModule::MergeCustomOptions(Red::DynArray<CustomizationOpt
 
                     if (!isExistingChoice)
                     {
-                        targetMorphOption->morphNames.EmplaceBack(sourceChoice);
+                        targetMorphOption->morphNames.PushBack(sourceChoice);
 
                         RegisterCustomEntryName(sourceOption->name, sourceChoice.localizedName);
                     }
@@ -437,7 +445,7 @@ void App::CustomizationModule::MergeCustomOptions(Red::DynArray<CustomizationOpt
             else if (targetOption->GetNativeType()->IsA(s_SwitcherInfoType))
             {
                 auto& targetSwitcherOption = reinterpret_cast<CustomizationSwitcher&>(targetOption);
-                auto& sourceSwitcherOption = reinterpret_cast<CustomizationSwitcher&>(sourceOption);
+                auto& sourceSwitcherOption = reinterpret_cast<const CustomizationSwitcher&>(sourceOption);
 
                 for (const auto& sourceChoice : sourceSwitcherOption->options)
                 {
@@ -455,14 +463,12 @@ void App::CustomizationModule::MergeCustomOptions(Red::DynArray<CustomizationOpt
 
                     if (!isExistingChoice)
                     {
-                        targetSwitcherOption->options.EmplaceBack(sourceChoice);
+                        targetSwitcherOption->options.PushBack(sourceChoice);
 
                         RegisterCustomEntryName(sourceOption->name, sourceChoice.localizedName);
                     }
                 }
             }
-
-            break;
         }
 
         if (!isExistingOption)

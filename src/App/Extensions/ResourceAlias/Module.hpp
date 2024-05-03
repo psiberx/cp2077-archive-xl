@@ -8,12 +8,15 @@ namespace App
 class ResourceAliasModule : public ConfigurableUnitModule<ResourceAliasUnit>
 {
 public:
+    static constexpr auto CustomizationAlias = Red::ResourcePath("player_customization.app");
+
     std::string_view GetName() override;
     bool Load() override;
     void Reload() override;
     bool Unload() override;
 
     static const Core::Set<Red::ResourcePath>& ResolveAlias(Red::ResourcePath aAliasPath);
+    static bool IsAliased(Red::ResourcePath aAliasPath, Red::ResourcePath aTargetPath);
 
 private:
     void InitializeAliases();

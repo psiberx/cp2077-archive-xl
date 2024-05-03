@@ -384,6 +384,22 @@ void App::ResourcePatchModule::PatchPackageExtractorResults(
     if (!aResource)
         return;
 
+    if (ResourceAliasModule::IsAliased(ResourceAliasModule::CustomizationAlias, aResource->path) &&
+        aDefinition->partsOverrides.size == 1  && aDefinition->partsOverrides[0].componentsOverrides.size == 1 &&
+        !aDefinition->partsOverrides[0].componentsOverrides[0].componentName)
+    {
+        for (auto& resultObject : aResultObjects)
+        {
+            if (auto meshComponent = Red::Cast<Red::entSkinnedMeshComponent>(resultObject))
+            {
+                if (meshComponent->meshAppearance && meshComponent->meshAppearance != "default")
+                {
+                    meshComponent->meshAppearance = aDefinition->partsOverrides[0].componentsOverrides[0].meshAppearance;
+                }
+            }
+        }
+    }
+
     const auto& patchList = GetPatchList(aResource->path);
 
     if (patchList.empty())
@@ -404,7 +420,7 @@ void App::ResourcePatchModule::PatchPackageExtractorResults(
 
             if (patchBuffer.state != Red::DeferredDataBufferState::Loaded)
             {
-                auto bufferToken = patchDefinition->compiledData.LoadAsync();
+                auto bufferToken = patchBuffer.LoadAsync();
                 Red::WaitForJob(bufferToken->job, std::chrono::milliseconds(500));
             }
 
