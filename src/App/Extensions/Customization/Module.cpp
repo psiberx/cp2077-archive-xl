@@ -348,7 +348,7 @@ void App::CustomizationModule::MergeCustomGroups(Red::DynArray<CustomizationGrou
 void App::CustomizationModule::MergeCustomOptions(Red::DynArray<CustomizationOption>& aTargetOptions,
                                                   Red::DynArray<CustomizationOption>& aSourceOptions)
 {
-    for (const auto& sourceOption : aSourceOptions)
+    for (auto sourceOption : aSourceOptions)
     {
         bool isExistingOption = false;
 
@@ -358,6 +358,24 @@ void App::CustomizationModule::MergeCustomOptions(Red::DynArray<CustomizationOpt
             {
                 if (targetOption->name != sourceOption->name)
                     continue;
+
+                if (sourceOption->link)
+                {
+                    auto isLinkFound = false;
+
+                    for (const auto& linkedOption : aSourceOptions)
+                    {
+                        if (linkedOption->name == sourceOption->link)
+                        {
+                            sourceOption = linkedOption;
+                            isLinkFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!isLinkFound)
+                        continue;
+                }
             }
             else
             {
