@@ -352,7 +352,7 @@ Red::ResourcePath App::DynamicAppearanceController::ResolvePath(Red::Entity* aEn
 }
 
 App::DynamicAppearanceController::DynamicString App::DynamicAppearanceController::ProcessString(
-    const DynamicAttrList& aAttrs, const DynamicPartList& aVariant, const char* aInput) const
+    const DynamicAttributeList& aGlobalAttrs, const DynamicPartList& aLocalAttrs, const char* aInput) const
 {
     constexpr auto MaxLength = 512;
 
@@ -410,22 +410,20 @@ App::DynamicAppearanceController::DynamicString App::DynamicAppearanceController
         const auto attr = Red::FNV1a64(reinterpret_cast<const uint8_t*>(attrOpen + 1), attrClose - attrOpen - 1);
         const char* value = nullptr;
 
-        // Simple check based on the fact that there's no attribute starting with 'v'
-        if (*(attrOpen + 1) == 'v')
         {
-            const auto it = aVariant.find(attr);
-            if (it != aVariant.end())
+            const auto localIt = aLocalAttrs.find(attr);
+            if (localIt != aLocalAttrs.end())
             {
-                value = it.value().ToString();
+                value = localIt.value().ToString();
             }
-        }
-        else
-        {
-            const auto it = aAttrs.find(attr);
-            if (it != aAttrs.end())
+            else
             {
-                value = it.value().value.data();
-                result.attributes.insert(attr);
+                const auto globalIt = aGlobalAttrs.find(attr);
+                if (globalIt != aGlobalAttrs.end())
+                {
+                    value = globalIt.value().value.data();
+                    result.attributes.insert(attr);
+                }
             }
         }
 
@@ -489,10 +487,10 @@ void App::DynamicAppearanceController::RemoveState(Red::Entity* aEntity)
     m_states.erase(aEntity);
 }
 
-App::DynamicAppearanceController::AttributeData App::DynamicAppearanceController::GetSuffixData(
-    Red::Entity* aEntity, Red::TweakDBID aSuffixID) const
+App::DynamicAttributeData App::DynamicAppearanceController::GetSuffixData(Red::Entity* aEntity,
+                                                                          Red::TweakDBID aSuffixID) const
 {
-    AttributeData data{};
+    DynamicAttributeData data{};
 
     if (Red::RecordExists(aSuffixID))
     {

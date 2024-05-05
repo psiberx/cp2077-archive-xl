@@ -39,34 +39,34 @@ struct DynamicAppearanceRef
     int8_t weight;
 };
 
+struct DynamicAttributeData
+{
+    DynamicAttributeData() = default;
+
+    DynamicAttributeData(std::string aValue, std::string aSuffix)
+        : value(std::move(aValue))
+        , suffix(std::move(aSuffix))
+    {
+    }
+
+    DynamicAttributeData(Red::CName aName)
+    {
+        if (aName)
+        {
+            value = aName.ToString();
+            suffix = value;
+        }
+    }
+
+    std::string value;
+    std::string suffix;
+};
+
+using DynamicAttributeList = Core::Map<Red::CName, DynamicAttributeData>;
+
 class DynamicAppearanceController
 {
 public:
-    struct AttributeData
-    {
-        AttributeData() = default;
-
-        AttributeData(std::string aValue, std::string aSuffix)
-            : value(std::move(aValue))
-            , suffix(std::move(aSuffix))
-        {
-        }
-
-        AttributeData(Red::CName aName)
-        {
-            if (aName)
-            {
-                value = aName.ToString();
-                suffix = value;
-            }
-        }
-
-        std::string value;
-        std::string suffix;
-    };
-
-    using DynamicAttrList = Core::Map<Red::CName, AttributeData>;
-
     struct DynamicString
     {
         bool valid;
@@ -107,14 +107,14 @@ public:
     [[nodiscard]] bool IsDynamicValue(const Red::StringView& aValue) const;
     [[nodiscard]] bool IsDynamicValue(Red::CName aValue) const;
 
-    DynamicString ProcessString(const DynamicAttrList& aAttrs, const DynamicPartList& aVariant,
+    DynamicString ProcessString(const DynamicAttributeList& aGlobalAttrs, const DynamicPartList& aLocalAttrs,
                                 const char* aInput) const;
 
 private:
     struct EntityState
     {
-        DynamicAttrList values;
-        DynamicAttrList fallback;
+        DynamicAttributeList values;
+        DynamicAttributeList fallback;
         DynamicTagList conditions;
     };
 
@@ -126,7 +126,7 @@ private:
         Red::CName hairColor;
     };
 
-    AttributeData GetSuffixData(Red::Entity* aEntity, Red::TweakDBID aSuffixID) const;
+    DynamicAttributeData GetSuffixData(Red::Entity* aEntity, Red::TweakDBID aSuffixID) const;
     CustomizationData GetCustomizationData(Red::Entity* aEntity) const;
 
     Core::Map<Red::Entity*, EntityState> m_states;
