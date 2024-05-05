@@ -21,6 +21,9 @@ resource:
       - ep1\characters\entities\player\player_wa_fpp_ep1.ent
       - ep1\characters\entities\player\player_wa_tpp_ep1.ent
     player_ma_hair.app:
+      - player_ma_hair_cyberware_00.app
+      - player_ma_hair_cyberware_01.app
+    player_ma_hair_cyberware_00.app:
       - base\characters\head\player_base_heads\appearances\hairs\hh_000_pma__hairs_045.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_001_pma__hairs_53.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_002_pma__hairs_035.app
@@ -254,6 +257,9 @@ resource:
       - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_01\h1_084_ma_hat__bucket_hat_hh_03.mesh
       - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_01\h1_084_ma_hat__bucket_hat_hh_04.mesh
     player_wa_hair.app:
+      - player_wa_hair_cyberware_00.app
+      - player_wa_hair_cyberware_01.app
+    player_wa_hair_cyberware_00.app:
       - base\characters\head\player_base_heads\appearances\hairs\hh_000_pwa__hairs_059.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_001_pwa__hairs_033.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_002_pwa__hairs_034.app
@@ -486,7 +492,7 @@ resource:
       - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_03\h1_084_wa_hat__bucket_hat_hh_03.mesh
       - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_04\h1_084_wa_hat__bucket_hat_hh_04.mesh
     player_customization.app:
-      - player_ma_hair.app
+      - player_ma_hair_cyberware_00.app
       - player_ma_hair_cyberware_01.app
-      - player_wa_hair.app
+      - player_wa_hair_cyberware_00.app
       - player_wa_hair_cyberware_01.app
