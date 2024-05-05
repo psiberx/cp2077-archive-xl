@@ -21,6 +21,10 @@ constexpr auto GetAppearance = Core::RawFunc<
     /* addr = */ Red::AddressLib::CMesh_GetAppearance,
     /* type = */ Red::Handle<Red::mesh::MeshAppearance>& (*)(Red::CMesh* aMesh, Red::CName aAppearance)>();
 
+constexpr auto FindAppearance = Core::RawFunc<
+    /* addr = */ Red::AddressLib::CMesh_FindAppearance,
+    /* type = */ Red::Handle<Red::mesh::MeshAppearance>& (*)(Red::CMesh* aMesh, Red::CName aAppearance)>();
+
 constexpr auto LoadMaterialsAsync = Core::RawFunc<
     /* addr = */ Red::AddressLib::CMesh_LoadMaterialsAsync,
     /* type = */ void* (*)(Red::CMesh* aMesh,
