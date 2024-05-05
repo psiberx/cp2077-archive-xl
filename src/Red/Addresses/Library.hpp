@@ -57,6 +57,7 @@ constexpr uint32_t CharacterCustomizationSystem_InitializeOptionsFromState = 116
 
 constexpr uint32_t CMesh_OnLoad = 2272530537;
 constexpr uint32_t CMesh_GetAppearance = 773462733;
+constexpr uint32_t CMesh_FindAppearance = 3007126651;
 constexpr uint32_t CMesh_LoadMaterialsAsync = 701648326;
 
 constexpr uint32_t MeshMaterialBuffer_LoadMaterialAsync = 1609519068;
