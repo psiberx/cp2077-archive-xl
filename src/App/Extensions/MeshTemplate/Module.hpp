@@ -1,6 +1,7 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
+#include "App/Extensions/GarmentOverride/Dynamic.hpp"
 #include "Red/Mesh.hpp"
 
 namespace App
@@ -12,28 +13,20 @@ public:
     bool Unload() override;
     std::string_view GetName() override;
 
+    static bool IsSpecialMaterial(Red::CName aMaterialName);
+
 private:
     struct MeshState
     {
-        MeshState(Red::CMesh* aMesh)
-            : dynamic(true)
-            , mesh(Red::ToHandle(aMesh))
-        {
-        }
+        MeshState(Red::CMesh* aMesh);
 
-        void MarkStatic()
-        {
-            dynamic = false;
-            mesh.Reset();
-        }
-
-        [[nodiscard]] bool IsDynamic() const
-        {
-            return dynamic;
-        }
+        void MarkStatic();
+        [[nodiscard]] bool IsDynamic() const;
+        void FillAttributes(Red::CMesh* aMesh);
 
         std::shared_mutex mutex;
         volatile bool dynamic;
+        DynamicAttributeList attrs;
         Red::WeakHandle<Red::CMesh> mesh;
     };
 
@@ -43,13 +36,18 @@ private:
     static bool ProcessMeshResource(Red::CMesh* aMesh, const Red::DynArray<Red::CName>& aMaterialNames,
                                     Core::Vector<Red::JobHandle>& aLoadingJobs);
     static Red::Handle<Red::CMaterialInstance> CloneMaterialInstance(
-        const Red::Handle<Red::CMaterialInstance>& aSourceInstance, Red::CName aMaterialName,
+        const Red::Handle<Red::CMaterialInstance>& aSourceInstance, MeshState* aState, Red::CName aMaterialName,
         Core::Vector<Red::JobHandle>& aLoadingJobs);
-    static void ProcessMaterialInstanceParams(Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
+    static void ExpandMaterialInstanceParams(Red::Handle<Red::CMaterialInstance>& aMaterialInstance, MeshState* aState,
                                               Red::CName aMaterialName, Core::Vector<Red::JobHandle>& aLoadingJobs);
     template<typename T>
-    static bool ProcessResourceReference(Red::ResourceReference<T>& aReference, Red::CName aMaterialName);
-    static Red::ResourcePath ProcessResourcePath(Red::ResourcePath aPath, Red::CName aMaterialName);
+    static bool ExpandResourceReference(Red::ResourceReference<T>& aRef, MeshState* aState, Red::CName aMaterialName);
+    static Red::ResourcePath ExpandResourcePath(Red::ResourcePath aPath, MeshState* aState, Red::CName aMaterialName);
+
+    template<typename T>
+    static void EnsureResourceLoaded(Red::ResourceReference<T>& aRef);
+    template<typename T>
+    static void EnsureResourceLoaded(Red::SharedPtr<Red::ResourceToken<T>>& aToken);
 
     static MeshState* AcquireMeshState(Red::CMesh* aMesh);
 

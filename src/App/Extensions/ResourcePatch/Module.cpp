@@ -1,4 +1,5 @@
 #include "Module.hpp"
+#include "App/Extensions/MeshTemplate/Module.hpp"
 #include "App/Extensions/ResourceAlias/Module.hpp"
 #include "Red/EntityBuilder.hpp"
 #include "Red/Mesh.hpp"
@@ -260,13 +261,20 @@ void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
 
         for (const auto& patchAppearance : patchMesh->appearances)
         {
+            auto cloneAppearance = Red::MakeHandle<Red::meshMeshAppearance>();
+            cloneAppearance->name = patchAppearance->name;
+            cloneAppearance->chunkMaterials = patchAppearance->chunkMaterials;
+            cloneAppearance->tags = patchAppearance->tags;
+
+            Raw::MeshAppearance::Owner::Set(cloneAppearance, aMesh);
+
             auto isNewAppearance = true;
 
             for (auto& existingAppearance : aMesh->appearances)
             {
-                if (existingAppearance->name == patchAppearance->name)
+                if (existingAppearance->name == cloneAppearance->name)
                 {
-                    existingAppearance = patchAppearance;
+                    existingAppearance = cloneAppearance;
                     isNewAppearance = false;
                     break;
                 }
@@ -274,7 +282,38 @@ void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
 
             if (isNewAppearance)
             {
-                aMesh->appearances.EmplaceBack(patchAppearance);
+                aMesh->appearances.EmplaceBack(cloneAppearance);
+            }
+        }
+
+        for (const auto& patchEntry : patchMesh->materialEntries)
+        {
+            auto isMaterialTemplate = MeshTemplateModule::IsSpecialMaterial(patchEntry.name);
+
+            if (patchEntry.isLocalInstance && !isMaterialTemplate)
+                continue;
+
+            auto targetEntry =
+                std::ranges::find_if(aMesh->materialEntries, [&patchEntry](const auto& aExistingEntry) -> bool {
+                    return aExistingEntry.name == patchEntry.name;
+                });
+
+            if (targetEntry == aMesh->materialEntries.End())
+            {
+                aMesh->materialEntries.EmplaceBack();
+                targetEntry = &aMesh->materialEntries.Back();
+            }
+
+            *targetEntry = patchEntry;
+
+            if (isMaterialTemplate)
+            {
+                targetEntry->materialWeak.instance = reinterpret_cast<Red::IMaterial*>(patchMesh.instance);
+            }
+            else // if (!patchEntry.isLocalInstance) -- is alwasy true for now
+            {
+                aMesh->externalMaterials.PushBack(patchMesh->externalMaterials[patchEntry.index]);
+                targetEntry->index = aMesh->externalMaterials.size - 1;
             }
         }
     }

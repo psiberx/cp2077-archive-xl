@@ -346,6 +346,11 @@ public:
         *OffsetPtr(aBase).GetValuePtr() = aValue;
     }
 
+    inline static void Set(const void* aBase, T& aValue)
+    {
+        *OffsetPtr(aBase).GetPtr() = aValue;
+    }
+
     uintptr_t address;
 };
 }
