@@ -7,7 +7,7 @@ namespace
 constexpr auto ModuleName = "MeshTemplate";
 
 constexpr auto SpecialMaterialMarker = '@';
-constexpr auto MetaMaterialName = Red::CName("@\"@meta\"");
+constexpr auto MetaMaterialName = Red::CName("@meta");
 constexpr auto DefaultTemplateName = Red::CName("@material");
 constexpr auto MaterialAttr = Red::CName("material");
 }
@@ -19,6 +19,9 @@ std::string_view App::MeshTemplateModule::GetName()
 
 bool App::MeshTemplateModule::Load()
 {
+    if (!HookAfter<Raw::CMesh::FindAppearance>(&OnFindAppearance))
+        throw std::runtime_error("Failed to hook [CMesh::FindAppearance].");
+
     if (!Hook<Raw::CMesh::LoadMaterialsAsync>(&OnLoadMaterials))
         throw std::runtime_error("Failed to hook [CMesh::LoadMaterialsAsync].");
 
@@ -35,6 +38,41 @@ bool App::MeshTemplateModule::Unload()
     Unhook<Raw::CMesh::LoadMaterialsAsync>();
 
     return true;
+}
+
+void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::mesh::MeshAppearance>& aOut, Red::CMesh* aMesh,
+                                               Red::CName aName)
+{
+    if (aOut && aOut->chunkMaterials.size == 0 && aMesh->appearances.size > 0)
+    {
+        const auto ownerMesh = Raw::MeshAppearance::Owner::Ptr(aOut);
+        const auto ownerSuffixStr = (ownerMesh != aMesh) ? std::to_string(reinterpret_cast<uintptr_t>(ownerMesh)) : "";
+        const auto appearanceNameStr = std::string{aOut->name.ToString()};
+
+        for (auto chunkMaterialName : aMesh->appearances[0]->chunkMaterials)
+        {
+            auto chunkMaterialNameStr = std::string_view{chunkMaterialName.ToString()};
+            auto templateNamePos = chunkMaterialNameStr.find(SpecialMaterialMarker);
+
+            if (templateNamePos != std::string_view::npos)
+            {
+                chunkMaterialNameStr.remove_prefix(templateNamePos);
+
+                auto generatedMaterialNameStr = appearanceNameStr;
+                generatedMaterialNameStr.append(chunkMaterialNameStr);
+                generatedMaterialNameStr.append(ownerSuffixStr);
+
+                chunkMaterialName = Red::CNamePool::Add(generatedMaterialNameStr.data());
+            }
+
+            aOut->chunkMaterials.PushBack(chunkMaterialName);
+        }
+
+        if (ownerMesh != aMesh)
+        {
+            Raw::MeshAppearance::Owner::Set(aOut, aMesh);
+        }
+    }
 }
 
 void* App::MeshTemplateModule::OnLoadMaterials(Red::CMesh* aMesh, Red::MeshMaterialsToken& aToken,
@@ -361,7 +399,6 @@ void App::MeshTemplateModule::MeshState::FillAttributes(Red::CMesh* aMesh)
 
     if (!metaInstance)
         return;
-
 
     auto& controller = GarmentOverrideModule::GetDynamicAppearanceController();
 

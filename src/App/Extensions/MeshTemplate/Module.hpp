@@ -30,6 +30,7 @@ private:
         Red::WeakHandle<Red::CMesh> mesh;
     };
 
+    static void OnFindAppearance(Red::Handle<Red::mesh::MeshAppearance>& aOut, Red::CMesh* aMesh, Red::CName aName);
     static void* OnLoadMaterials(Red::CMesh* aMesh, Red::MeshMaterialsToken& aToken,
                                  const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4);
 
