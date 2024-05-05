@@ -40,10 +40,16 @@ private:
     static void* OnLoadMaterials(Red::CMesh* aMesh, Red::MeshMaterialsToken& aToken,
                                  const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4);
 
-    template<typename T>
-    static bool ProcessResourceReference(Red::ResourceReference<T>& aInstance, Red::CName aMaterialName);
     static bool ProcessMeshResource(Red::CMesh* aMesh, const Red::DynArray<Red::CName>& aMaterialNames,
                                     Core::Vector<Red::JobHandle>& aLoadingJobs);
+    static Red::Handle<Red::CMaterialInstance> CloneMaterialInstance(
+        const Red::Handle<Red::CMaterialInstance>& aSourceInstance, Red::CName aMaterialName,
+        Core::Vector<Red::JobHandle>& aLoadingJobs);
+    static void ProcessMaterialInstanceParams(Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
+                                              Red::CName aMaterialName, Core::Vector<Red::JobHandle>& aLoadingJobs);
+    template<typename T>
+    static bool ProcessResourceReference(Red::ResourceReference<T>& aReference, Red::CName aMaterialName);
+    static Red::ResourcePath ProcessResourcePath(Red::ResourcePath aPath, Red::CName aMaterialName);
 
     static MeshState* AcquireMeshState(Red::CMesh* aMesh);
 

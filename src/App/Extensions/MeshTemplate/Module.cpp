@@ -130,29 +130,32 @@ bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::
         auto templateIt = templateIndexes.find(templateName);
         if (templateIt == templateIndexes.end())
         {
-            LogError("|{}| Material template \"{}\" entry not found.", ModuleName, templateName.ToString());
+            LogError(R"(|{}| Material template "{}" for "{}" entry not found.)",
+                     ModuleName, templateName.ToString(), chunkMaterialName.ToString());
             continue;
         }
 
-        Red::Handle<Red::CMaterialInstance> sourceInstance;
-        uint16_t sourceIndex;
-
-        {
-            auto& sourceEntry = aMesh->materialEntries[templateIt.value()];
-            sourceInstance = Red::Cast<Red::CMaterialInstance>(sourceEntry.materialWeak).Lock();
-            sourceIndex = sourceEntry.index;
-        }
+        auto& sourceEntry = aMesh->materialEntries[templateIt.value()];
+        auto sourceInstance = Red::Cast<Red::CMaterialInstance>(sourceEntry.materialWeak).Lock();
 
         if (!sourceInstance)
         {
             Red::SharedPtr<Red::ResourceToken<Red::IMaterial>> token;
-            Raw::MeshMaterialBuffer::LoadMaterialAsync(&aMesh->localMaterialBuffer, token, Red::AsHandle(aMesh),
-                                                       sourceIndex, 0, 0);
 
-            if (!token)
+            if (sourceEntry.isLocalInstance)
             {
-                LogError("|{}| Material template \"{}\" instance not found.", ModuleName, templateName.ToString());
-                continue;
+                Raw::MeshMaterialBuffer::LoadMaterialAsync(&aMesh->localMaterialBuffer, token, Red::AsHandle(aMesh),
+                                                           sourceEntry.index, 0, 0);
+                if (!token)
+                {
+                    LogError("|{}| Material template \"{}\" instance not found.", ModuleName, templateName.ToString());
+                    continue;
+                }
+            }
+            else
+            {
+                auto materialPath = ProcessResourcePath(aMesh->externalMaterials[sourceEntry.index].path, materialName);
+                token = Red::ResourceLoader::Get()->LoadAsync<Red::IMaterial>(materialPath);
             }
 
             Red::WaitForResource(token, std::chrono::milliseconds(1000));
@@ -173,33 +176,7 @@ bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::
             }
         }
 
-        auto materialInstance = Red::MakeHandle<Red::CMaterialInstance>();
-        materialInstance->baseMaterial = sourceInstance->baseMaterial;
-        materialInstance->enableMask = sourceInstance->enableMask;
-        materialInstance->resourceVersion = sourceInstance->resourceVersion;
-        materialInstance->audioTag = sourceInstance->audioTag;
-
-        if (ProcessResourceReference(materialInstance->baseMaterial, materialName))
-        {
-            aLoadingJobs.push_back(materialInstance->baseMaterial.token->job);
-        }
-
-        for (const auto& sourceParam : sourceInstance->params)
-        {
-            materialInstance->params.PushBack(sourceParam);
-
-            if (sourceParam.data.GetType()->GetType() == Red::ERTTIType::ResourceReference)
-            {
-                auto& materialParam = materialInstance->params.Back();
-                auto materialParamData = materialParam.data.GetDataPtr();
-                auto& materialReference = *reinterpret_cast<Red::ResourceReference<>*>(materialParamData);
-
-                if (ProcessResourceReference(materialReference, materialName))
-                {
-                    aLoadingJobs.push_back(materialReference.token->job);
-                }
-            }
-        }
+        auto materialInstance = CloneMaterialInstance(sourceInstance, materialName, aLoadingJobs);
 
         aMesh->materialEntries.EmplaceBack();
 
@@ -213,18 +190,98 @@ bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::
     return true;
 }
 
-template<typename T>
-bool App::MeshTemplateModule::ProcessResourceReference(Red::ResourceReference<T>& aInstance, Red::CName aMaterialName)
+Red::Handle<Red::CMaterialInstance> App::MeshTemplateModule::CloneMaterialInstance(
+    const Red::Handle<Red::CMaterialInstance>& aSourceInstance, Red::CName aMaterialName,
+    Core::Vector<Red::JobHandle>& aLoadingJobs)
 {
-    if (aInstance.token)
+    auto materialInstance = Red::MakeHandle<Red::CMaterialInstance>();
+    materialInstance->baseMaterial = aSourceInstance->baseMaterial;
+    materialInstance->enableMask = aSourceInstance->enableMask;
+    materialInstance->resourceVersion = aSourceInstance->resourceVersion;
+    materialInstance->audioTag = aSourceInstance->audioTag;
+
+    for (const auto& sourceParam : aSourceInstance->params)
+    {
+        materialInstance->params.PushBack(sourceParam);
+    }
+
+    if (ProcessResourceReference(materialInstance->baseMaterial, aMaterialName))
+    {
+        Red::WaitForResource(materialInstance->baseMaterial.token, std::chrono::milliseconds(1000));
+    }
+    else if (!materialInstance->baseMaterial.token)
+    {
+        auto& aReference = materialInstance->baseMaterial;
+
+        aReference.LoadAsync();
+        Red::WaitForResource(aReference.token, std::chrono::milliseconds(1000));
+
+        if (auto baseInstance = Red::Cast<Red::CMaterialInstance>(aReference.token->resource))
+        {
+            auto cloneToken = Red::MakeShared<Red::ResourceToken<Red::IMaterial>>();
+            cloneToken->self = cloneToken;
+            cloneToken->resource = CloneMaterialInstance(baseInstance, aMaterialName, aLoadingJobs);
+            cloneToken->path = baseInstance->path;
+            cloneToken->finished = 1;
+
+            aReference.token = std::move(cloneToken);
+        }
+    }
+
+    ProcessMaterialInstanceParams(materialInstance, aMaterialName, aLoadingJobs);
+
+    if (auto baseInstance = Red::Cast<Red::CMaterialInstance>(materialInstance->baseMaterial.token->resource))
+    {
+        ProcessMaterialInstanceParams(baseInstance, aMaterialName, aLoadingJobs);
+    }
+
+    return materialInstance;
+}
+
+void App::MeshTemplateModule::ProcessMaterialInstanceParams(Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
+                                                            Red::CName aMaterialName,
+                                                            Core::Vector<Red::JobHandle>& aLoadingJobs)
+{
+    for (const auto& materialParam : aMaterialInstance->params)
+    {
+        if (materialParam.data.GetType()->GetType() == Red::ERTTIType::ResourceReference)
+        {
+            auto materialParamData = materialParam.data.GetDataPtr();
+            auto& materialReference = *reinterpret_cast<Red::ResourceReference<>*>(materialParamData);
+
+            if (ProcessResourceReference(materialReference, aMaterialName))
+            {
+                aLoadingJobs.push_back(materialReference.token->job);
+            }
+        }
+    }
+}
+
+template<typename T>
+bool App::MeshTemplateModule::ProcessResourceReference(Red::ResourceReference<T>& aReference, Red::CName aMaterialName)
+{
+    if (aReference.token)
         return false;
 
+    auto path = ProcessResourcePath(aReference.path, aMaterialName);
+
+    if (path == aReference.path)
+        return false;
+
+    aReference.path = path;
+    aReference.LoadAsync();
+
+    return true;
+}
+
+Red::ResourcePath App::MeshTemplateModule::ProcessResourcePath(Red::ResourcePath aPath, Red::CName aMaterialName)
+{
     auto& controller = GarmentOverrideModule::GetDynamicAppearanceController();
-    auto& pathStr = controller->GetPathStr(aInstance.path);
+    auto& pathStr = controller->GetPathStr(aPath);
 
     if (pathStr.empty())
     {
-        return false;
+        return aPath;
     }
 
     auto result = controller->ProcessString({{MaterialAttr, aMaterialName}}, {}, pathStr.data());
@@ -232,17 +289,12 @@ bool App::MeshTemplateModule::ProcessResourceReference(Red::ResourceReference<T>
     {
 
         LogError("|{}| Dynamic path \"{}\" is invalid and cannot be processed.", ModuleName, pathStr);
-        return false;
+        return aPath;
     }
 
-    aInstance.path = result.value.data();
+#ifndef NDEBUG
+    LogDebug("|{}| Dynamic path resolved to \"{}\".", ModuleName, result.value);
+#endif
 
-    // if (!Red::ResourceDepot::Get()->ResourceExists(aInstance.path))
-    // {
-    //     LogError("|{}| Dynamic path was resolved to \"{}\", but resource doesn't exist.", ModuleName, result.value);
-    //     return false;
-    // }
-
-    aInstance.LoadAsync();
-    return true;
+    return result.value.data();
 }
