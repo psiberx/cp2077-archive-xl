@@ -266,7 +266,7 @@ void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
             cloneAppearance->chunkMaterials = patchAppearance->chunkMaterials;
             cloneAppearance->tags = patchAppearance->tags;
 
-            Raw::MeshAppearance::Owner::Set(cloneAppearance, aMesh);
+            Raw::MeshAppearance::Owner::Set(cloneAppearance, patchMesh.instance);
 
             auto isNewAppearance = true;
 
@@ -286,6 +286,8 @@ void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
             }
         }
 
+        std::string ownerSuffixStr;
+
         for (const auto& patchEntry : patchMesh->materialEntries)
         {
             auto isMaterialTemplate = MeshTemplateModule::IsSpecialMaterial(patchEntry.name);
@@ -293,27 +295,54 @@ void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
             if (patchEntry.isLocalInstance && !isMaterialTemplate)
                 continue;
 
-            auto targetEntry =
-                std::ranges::find_if(aMesh->materialEntries, [&patchEntry](const auto& aExistingEntry) -> bool {
-                    return aExistingEntry.name == patchEntry.name;
-                });
-
-            if (targetEntry == aMesh->materialEntries.End())
-            {
-                aMesh->materialEntries.EmplaceBack();
-                targetEntry = &aMesh->materialEntries.Back();
-            }
-
-            *targetEntry = patchEntry;
+            auto targetEntryName = patchEntry.name;
 
             if (isMaterialTemplate)
             {
+                if (ownerSuffixStr.empty())
+                {
+                    ownerSuffixStr = std::to_string(reinterpret_cast<uintptr_t>(patchMesh.instance));
+                }
+
+                auto generatedMaterialNameStr = std::string{patchEntry.name.ToString()};
+                generatedMaterialNameStr.append(ownerSuffixStr);
+
+                targetEntryName = Red::CNamePool::Add(generatedMaterialNameStr.data());
+            }
+
+            auto targetEntry =
+                std::ranges::find_if(aMesh->materialEntries, [&targetEntryName](const auto& aExistingEntry) -> bool {
+                    return aExistingEntry.name == targetEntryName;
+                });
+
+            if (isMaterialTemplate)
+            {
+                if (targetEntry == aMesh->materialEntries.End())
+                {
+                    aMesh->materialEntries.PushBack(patchEntry);
+                    targetEntry = &aMesh->materialEntries.Back();
+                }
+
+                targetEntry->name = targetEntryName;
                 targetEntry->materialWeak.instance = reinterpret_cast<Red::IMaterial*>(patchMesh.instance);
             }
-            else // if (!patchEntry.isLocalInstance) -- is alwasy true for now
+            else
             {
-                aMesh->externalMaterials.PushBack(patchMesh->externalMaterials[patchEntry.index]);
-                targetEntry->index = aMesh->externalMaterials.size - 1;
+                if (targetEntry == aMesh->materialEntries.End())
+                {
+                    aMesh->materialEntries.EmplaceBack();
+                    aMesh->externalMaterials.EmplaceBack(patchMesh->externalMaterials[patchEntry.index]);
+
+                    targetEntry = &aMesh->materialEntries.Back();
+                    targetEntry->name = targetEntryName;
+                    targetEntry->index = aMesh->externalMaterials.size - 1;
+                }
+                else
+                {
+                    aMesh->externalMaterials[targetEntry->index] = patchMesh->externalMaterials[patchEntry.index];
+                }
+
+                targetEntry->isLocalInstance = false;
             }
         }
     }
