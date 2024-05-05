@@ -421,6 +421,12 @@ inline CClass* GetScriptClass(CName aTypeName)
     return type ? type : CRTTISystem::Get()->GetClassByScriptName(aTypeName);
 }
 
+inline CName GetScriptAlias(CName aTypeName)
+{
+    auto alias = CRTTISystem::Get()->nativeToScript.Get(aTypeName);
+    return alias ? *alias : CName{};
+}
+
 template<CName AType>
 inline CEnum* GetEnum() noexcept
 {

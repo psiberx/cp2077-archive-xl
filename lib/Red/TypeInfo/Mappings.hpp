@@ -20,6 +20,7 @@ RTTI_MAP_TYPE_NAME(CName, "CName");
 RTTI_MAP_TYPE_NAME(TweakDBID, "TweakDBID");
 RTTI_MAP_TYPE_NAME(ItemID, "gameItemID");
 RTTI_MAP_TYPE_NAME(NodeRef, "NodeRef");
+RTTI_MAP_TYPE_NAME(GlobalNodeRef, "worldGlobalNodeRef");
 RTTI_MAP_TYPE_NAME(Variant, "Variant");
 
 RTTI_MAP_TYPE_PREFIX(DynArray, "array:");
