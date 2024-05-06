@@ -47,9 +47,10 @@ void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::mesh::MeshAppear
     {
         if (aOut->chunkMaterials.size == 0 && aMesh->appearances.size > 0)
         {
+            const auto& sourceAppearance = aMesh->appearances.Front();
             const auto appearanceNameStr = std::string{aOut->name.ToString()};
 
-            for (auto chunkMaterialName : aMesh->appearances[0]->chunkMaterials)
+            for (auto chunkMaterialName : sourceAppearance->chunkMaterials)
             {
                 auto chunkMaterialNameStr = std::string_view{chunkMaterialName.ToString()};
                 auto templateNamePos = chunkMaterialNameStr.find(SpecialMaterialMarker);
@@ -62,6 +63,10 @@ void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::mesh::MeshAppear
                     generatedMaterialNameStr.append(chunkMaterialNameStr);
 
                     chunkMaterialName = Red::CNamePool::Add(generatedMaterialNameStr.data());
+                }
+                else if (chunkMaterialName == sourceAppearance->name)
+                {
+                    chunkMaterialName = aOut->name;
                 }
 
                 aOut->chunkMaterials.PushBack(chunkMaterialName);
