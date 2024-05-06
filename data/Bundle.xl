@@ -21,9 +21,9 @@ resource:
       - ep1\characters\entities\player\player_wa_fpp_ep1.ent
       - ep1\characters\entities\player\player_wa_tpp_ep1.ent
     player_ma_hair.app:
-      - player_ma_hair_cyberware_00.app
-      - player_ma_hair_cyberware_01.app
-    player_ma_hair_cyberware_00.app:
+      - player_ma_hair_cw_00.app
+      - player_ma_hair_cw_01.app
+    player_ma_hair_cw_00.app:
       - base\characters\head\player_base_heads\appearances\hairs\hh_000_pma__hairs_045.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_001_pma__hairs_53.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_002_pma__hairs_035.app
@@ -74,7 +74,7 @@ resource:
       - base\characters\head\player_base_heads\appearances\hairs\hh_048_pma__hairs_144.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_049_pma__hairs_146.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_050_pma__hairs_999.app
-    player_ma_hair_cyberware_01.app:
+    player_ma_hair_cw_01.app:
       - base\characters\head\player_base_heads\appearances\hairs\hh_000_pma__hairs_045_cyberware_01.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_001_pma__hairs_53_cyberware_01.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_002_pma__hairs_035_cyberware_01.app
@@ -238,28 +238,28 @@ resource:
       - base\characters\common\hair\h1_065_ma_hat__guard_hh_03\h1_065_ma_hat__guard_hh_03.mesh
       - base\characters\common\hair\h1_065_ma_hat__guard_hh_04\h1_065_ma_hat__guard_hh_04.mesh
       - base\characters\common\hair\h1_082_ma_hat__bandage_hh_01\h1_082_ma_hat__bandage_hh_01.mesh
-      - base\characters\common\hair\h1_082_ma_hat__bandage_hh_01\h1_082_ma_hat__bandage_hh_02.mesh
-      - base\characters\common\hair\h1_082_ma_hat__bandage_hh_01\h1_082_ma_hat__bandage_hh_03.mesh
-      - base\characters\common\hair\h1_082_ma_hat__bandage_hh_01\h1_082_ma_hat__bandage_hh_04.mesh
+      - base\characters\common\hair\h1_082_ma_hat__bandage_hh_02\h1_082_ma_hat__bandage_hh_02.mesh
+      - base\characters\common\hair\h1_082_ma_hat__bandage_hh_03\h1_082_ma_hat__bandage_hh_03.mesh
+      - base\characters\common\hair\h1_082_ma_hat__bandage_hh_04\h1_082_ma_hat__bandage_hh_04.mesh
       - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_ma__ponytail_base_01.mesh
       - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_ma__ponytail_braid_01.mesh
       - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_ma__ponytail_bulb_01.mesh
       - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_ma__ponytail_straight_01.mesh
       - ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_01\h1_002_mask_ma__ikeuchi_hh_01.mesh
-      - ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_01\h1_002_mask_ma__ikeuchi_hh_04.mesh
+      - ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_04\h1_002_mask_ma__ikeuchi_hh_04.mesh
       - ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_03\h1_002_mask_ma__ikeuchi_hh_03.mesh
       - ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_01\h1_083_ma_hat__ushanka_hh_01.mesh
-      - ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_01\h1_083_ma_hat__ushanka_hh_02.mesh
-      - ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_01\h1_083_ma_hat__ushanka_hh_03.mesh
-      - ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_01\h1_083_ma_hat__ushanka_hh_04.mesh
+      - ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_02\h1_083_ma_hat__ushanka_hh_02.mesh
+      - ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_03\h1_083_ma_hat__ushanka_hh_03.mesh
+      - ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_04\h1_083_ma_hat__ushanka_hh_04.mesh
       - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_01\h1_084_ma_hat__bucket_hat_hh_01.mesh
-      - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_01\h1_084_ma_hat__bucket_hat_hh_02.mesh
-      - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_01\h1_084_ma_hat__bucket_hat_hh_03.mesh
-      - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_01\h1_084_ma_hat__bucket_hat_hh_04.mesh
+      - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_02\h1_084_ma_hat__bucket_hat_hh_02.mesh
+      - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_03\h1_084_ma_hat__bucket_hat_hh_03.mesh
+      - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_04\h1_084_ma_hat__bucket_hat_hh_04.mesh
     player_wa_hair.app:
-      - player_wa_hair_cyberware_00.app
-      - player_wa_hair_cyberware_01.app
-    player_wa_hair_cyberware_00.app:
+      - player_wa_hair_cw_00.app
+      - player_wa_hair_cw_01.app
+    player_wa_hair_cw_00.app:
       - base\characters\head\player_base_heads\appearances\hairs\hh_000_pwa__hairs_059.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_001_pwa__hairs_033.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_002_pwa__hairs_034.app
@@ -310,7 +310,7 @@ resource:
       - base\characters\head\player_base_heads\appearances\hairs\hh_048_pwa__hairs_144.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_049_pwa__hairs_146.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_050_pwa__hairs_999.app
-    player_wa_hair_cyberware_01.app:
+    player_wa_hair_cw_01.app:
       - base\characters\head\player_base_heads\appearances\hairs\hh_000_pwa__hairs_059_cyberware_01.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_001_pwa__hairs_033_cyberware_01.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_003_pwa__hairs_89_cyberware_01.app
@@ -355,7 +355,6 @@ resource:
       - base\characters\common\hair\hh_041_wa__valentino\hh_041_wa__valentino.mesh
       - base\characters\common\hair\hh_042_wa__topknots\hh_042_pwa__topknots_cyberware_01.mesh
       - base\characters\common\hair\hh_042_wa__topknots\hh_042_wa__topknots.mesh
-      - base\characters\common\hair\hh_042_wa__topknots\hh_042_wa__topknots_band.mesh
       - base\characters\common\hair\hh_044_wa__classic\hh_044_wa__classic.mesh
       - base\characters\common\hair\hh_045_ma__short_spiked\hh_045_pwa__short_spiked_cyberware_01.mesh
       - base\characters\common\hair\hh_045_ma__short_spiked\hh_045_wa__short_spiked.mesh
@@ -411,6 +410,10 @@ resource:
       - base\characters\common\hair\hh_151_wa__judy_variation02\hh_151_wa__judy_variation02_common.mesh
       - base\characters\common\hair\hh_999_ma__buzz_cap\hh_999_pwa__buzz_cap_cyberware_01.mesh
       - base\characters\common\hair\hh_999_ma__buzz_cap\hh_999_wa__buzz_cap.mesh
+#      - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_wa__ponytail_base_01.mesh
+#      - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_wa__ponytail_braid_01.mesh
+#      - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_wa__ponytail_bulb_01.mesh
+#      - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_wa__ponytail_straight_01.mesh
     player_wa_hat_hair.mesh:
       - base\characters\common\hair\h1_003_wa_hat__beanie_hh_01\h1_003_wa_hat__beanie_hh_01.mesh
       - base\characters\common\hair\h1_003_wa_hat__beanie_hh_02\h1_003_wa_hat__beanie_hh_02.mesh
@@ -424,8 +427,6 @@ resource:
       - base\characters\common\hair\h1_011_ma_hat__baseball_hh_03\h1_011_wa_hat__baseball_hh_03.mesh
       - base\characters\common\hair\h1_011_ma_hat__baseball_hh_04\h1_011_wa_hat__baseball_hh_04.mesh
       - base\characters\common\hair\h1_011_wa_hat__baseball_hh_02\h1_011_wa_hat__baseball_hh_02.mesh
-      - base\characters\common\hair\h1_011_wa_hat__baseball_hh_02\h1_011_wa_hat__baseball_hh_02_us_carcks.mesh
-      - base\characters\common\hair\h1_011_wa_hat__baseball_hh_05\h1_011_wa_hat__baseball_hh_05.mesh
       - base\characters\common\hair\h1_012_wa_hat__googles_hh_01\h1_012_wa_hat__googles_hh_01.mesh
       - base\characters\common\hair\h1_012_wa_hat__googles_hh_02\h1_012_wa_hat__googles_hh_02.mesh
       - base\characters\common\hair\h1_012_wa_hat__googles_hh_03\h1_012_wa_hat__googles_hh_03.mesh
@@ -438,8 +439,6 @@ resource:
       - base\characters\common\hair\h1_024_ma_hat__scavenger_hh_03\h1_024_wa_hat__scavenger_hh_03.mesh
       - base\characters\common\hair\h1_024_ma_hat__scavenger_hh_04\h1_024_wa_hat__scavenger_hh_04.mesh
       - base\characters\common\hair\h1_024_wa_hat__scavenger_hh_02\h1_024_wa_hat__scavenger_hh_02.mesh
-      - base\characters\common\hair\h1_024_wa_hat__scavenger_hh_02\h1_024_wa_hat__scavenger_hh_02_us_cracks.mesh
-      - base\characters\common\hair\h1_027_wa_hat__stewardess_hh_01\h1_027_wa_hat__stewardess_hh_01.mesh
       - base\characters\common\hair\h1_032_ma_hat__asian_hh_01\h1_032_wa_hat__asian_hh_01.mesh
       - base\characters\common\hair\h1_032_ma_hat__asian_hh_02\h1_032_wa_hat__asian_hh_02.mesh
       - base\characters\common\hair\h1_032_ma_hat__asian_hh_02\h1_032_wa_hat__asian_hh_02_bun.mesh
@@ -449,7 +448,6 @@ resource:
       - base\characters\common\hair\h1_036_wa_hat__elegant_hh_02\h1_036_wa_hat__elegant_hh_02.mesh
       - base\characters\common\hair\h1_036_wa_hat__elegant_hh_03\h1_036_wa_hat__elegant_hh_03.mesh
       - base\characters\common\hair\h1_036_wa_hat__elegant_hh_04\h1_036_wa_hat__elegant_hh_04.mesh
-      - base\characters\common\hair\h1_041_wa_hat__bandana_hh_01\h1_041_wa_hat__bandana_hh_01.mesh
       - base\characters\common\hair\h1_045_ma_hat__farmer_hh_01\h1_045_wa_hat__farmer_hh_01.mesh
       - base\characters\common\hair\h1_045_ma_hat__farmer_hh_02\h1_045_wa_hat__farmer_hh_02.mesh
       - base\characters\common\hair\h1_045_ma_hat__farmer_hh_03\h1_045_wa_hat__farmer_hh_03.mesh
@@ -474,11 +472,6 @@ resource:
       - base\characters\common\hair\h1_082_ma_hat__bandage_hh_02\h1_082_wa_hat__bandage_hh_02.mesh
       - base\characters\common\hair\h1_082_ma_hat__bandage_hh_03\h1_082_wa_hat__bandage_hh_03.mesh
       - base\characters\common\hair\h1_082_ma_hat__bandage_hh_04\h1_082_wa_hat__bandage_hh_04.mesh
-      - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_wa__ponytail_base_01.mesh
-      - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_wa__ponytail_braid_01.mesh
-      - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_wa__ponytail_bulb_01.mesh
-      - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_wa__ponytail_straight_01.mesh
-      - ep1\characters\common\hair\h1_001_wa_hat__farida_hh_01\h1_001_wa_hat__farida_hh_01.mesh
       - ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_01\h1_002_mask_wa__ikeuchi_hh_01.mesh
       - ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_03\h1_002_mask_wa__ikeuchi_hh_03.mesh
       - ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_04\h1_002_mask_wa__ikeuchi_hh_04.mesh
@@ -492,7 +485,7 @@ resource:
       - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_03\h1_084_wa_hat__bucket_hat_hh_03.mesh
       - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_04\h1_084_wa_hat__bucket_hat_hh_04.mesh
     player_customization.app:
-      - player_ma_hair_cyberware_00.app
-      - player_ma_hair_cyberware_01.app
-      - player_wa_hair_cyberware_00.app
-      - player_wa_hair_cyberware_01.app
+      - player_ma_hair_cw_00.app
+      - player_ma_hair_cw_01.app
+      - player_wa_hair_cw_00.app
+      - player_wa_hair_cw_01.app
