@@ -7,7 +7,7 @@ namespace
 constexpr auto ModuleName = "MeshTemplate";
 
 constexpr auto SpecialMaterialMarker = '@';
-constexpr auto MetaMaterialName = Red::CName("@meta");
+constexpr auto ContextMaterialName = Red::CName("@context");
 constexpr auto DefaultTemplateName = Red::CName("@material");
 constexpr auto MaterialAttr = Red::CName("material");
 }
@@ -43,33 +43,43 @@ bool App::MeshTemplateModule::Unload()
 void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::mesh::MeshAppearance>& aOut, Red::CMesh* aMesh,
                                                Red::CName aName)
 {
-    if (aOut && aOut->chunkMaterials.size == 0 && aMesh->appearances.size > 0)
+    if (aOut)
     {
-        const auto ownerMesh = Raw::MeshAppearance::Owner::Ptr(aOut);
-        const auto ownerSuffixStr = (ownerMesh != aMesh) ? std::to_string(reinterpret_cast<uintptr_t>(ownerMesh)) : "";
-        const auto appearanceNameStr = std::string{aOut->name.ToString()};
-
-        for (auto chunkMaterialName : aMesh->appearances[0]->chunkMaterials)
+        if (aOut->chunkMaterials.size == 0 && aMesh->appearances.size > 0)
         {
-            auto chunkMaterialNameStr = std::string_view{chunkMaterialName.ToString()};
-            auto templateNamePos = chunkMaterialNameStr.find(SpecialMaterialMarker);
+            const auto appearanceNameStr = std::string{aOut->name.ToString()};
 
-            if (templateNamePos != std::string_view::npos)
+            for (auto chunkMaterialName : aMesh->appearances[0]->chunkMaterials)
             {
-                chunkMaterialNameStr.remove_prefix(templateNamePos);
+                auto chunkMaterialNameStr = std::string_view{chunkMaterialName.ToString()};
+                auto templateNamePos = chunkMaterialNameStr.find(SpecialMaterialMarker);
 
-                auto generatedMaterialNameStr = appearanceNameStr;
-                generatedMaterialNameStr.append(chunkMaterialNameStr);
-                generatedMaterialNameStr.append(ownerSuffixStr);
+                if (templateNamePos != std::string_view::npos)
+                {
+                    chunkMaterialNameStr.remove_prefix(templateNamePos);
 
-                chunkMaterialName = Red::CNamePool::Add(generatedMaterialNameStr.data());
+                    auto generatedMaterialNameStr = appearanceNameStr;
+                    generatedMaterialNameStr.append(chunkMaterialNameStr);
+
+                    chunkMaterialName = Red::CNamePool::Add(generatedMaterialNameStr.data());
+                }
+
+                aOut->chunkMaterials.PushBack(chunkMaterialName);
             }
-
-            aOut->chunkMaterials.PushBack(chunkMaterialName);
         }
 
+        const auto ownerMesh = Raw::MeshAppearance::Owner::Ptr(aOut);
         if (ownerMesh != aMesh)
         {
+            auto meshState = AcquireMeshState(aMesh);
+
+            {
+                std::unique_lock _(meshState->mutex);
+
+                auto patchName = meshState->RegisterSource(ownerMesh);
+                aOut->chunkMaterials.PushBack(patchName);
+            }
+
             Raw::MeshAppearance::Owner::Set(aOut, aMesh);
         }
     }
@@ -112,44 +122,47 @@ bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::
 {
     auto meshState = AcquireMeshState(aMesh);
 
-    if (!meshState->IsDynamic())
+    Red::CMesh* sourceMesh;
+    MeshState* sourceState;
+
+    {
+        std::shared_lock _(meshState->mutex);
+        sourceMesh = meshState->ResolveSource(aMaterialNames.Back());
+    }
+
+    if (sourceMesh)
+    {
+        sourceState = AcquireMeshState(sourceMesh);
+    }
+    else
+    {
+        sourceMesh = aMesh;
+        sourceState = meshState;
+    }
+
+    if (sourceState->IsStatic())
         return false;
 
     std::unique_lock _(meshState->mutex);
 
-    Core::Map<Red::CName, std::size_t> templateIndexes;
-    Core::Set<Red::CName> existingMaterialNames;
-
-    for (const auto& materialEntry : aMesh->materialEntries)
-    {
-        if (IsSpecialMaterial(materialEntry.name))
-        {
-            templateIndexes.insert_or_assign(materialEntry.name, &materialEntry - aMesh->materialEntries.begin());
-        }
-
-        for (const auto& chunkMaterialName : aMaterialNames)
-        {
-            if (materialEntry.name == chunkMaterialName)
-            {
-                existingMaterialNames.insert(chunkMaterialName);
-                break;
-            }
-        }
-    }
-
-    if (existingMaterialNames.size() == aMaterialNames.size)
-        return false;
-
-    if (templateIndexes.empty())
-    {
-        meshState->MarkStatic();
-        return false;
-    }
-
     for (const auto& chunkMaterialName : aMaterialNames)
     {
-        if (existingMaterialNames.contains(chunkMaterialName))
+        if (meshState->HasMaterialEntry(chunkMaterialName))
             continue;
+
+        if (chunkMaterialName.hash == sourceMesh->path.hash)
+        {
+            aMesh->materialEntries.EmplaceBack();
+
+            auto& materialEntry = aMesh->materialEntries.Back();
+            materialEntry.name = chunkMaterialName;
+            materialEntry.material = Red::MakeHandle<Red::CMaterialInstance>();
+            materialEntry.materialWeak = materialEntry.material;
+            materialEntry.isLocalInstance = true;
+
+            meshState->RegisterMaterialEntry(chunkMaterialName, aMesh->materialEntries.size - 1);
+            continue;
+        }
 
         auto chunkMaterialNameStr = std::string_view(chunkMaterialName.ToString());
         auto materialName = chunkMaterialName;
@@ -166,26 +179,19 @@ bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::
             materialName = Red::CNamePool::Add(materialNameStr.data());
         }
 
-
-        auto templateIt = templateIndexes.find(templateName);
-        if (templateIt == templateIndexes.end())
+        auto templateIndex = sourceState->GetTemplateEntryIndex(templateName);
+        if (templateIndex < 0)
         {
             LogError(R"(|{}| Material template "{}" for "{}" entry not found.)",
                      ModuleName, templateName.ToString(), chunkMaterialName.ToString());
             continue;
         }
 
-        auto& sourceEntry = aMesh->materialEntries[templateIt.value()];
+        auto& sourceEntry = sourceMesh->materialEntries[templateIndex];
         auto sourceInstance = Red::Cast<Red::CMaterialInstance>(sourceEntry.material);
 
         if (!sourceInstance)
         {
-            auto sourceMesh = aMesh;
-            if (sourceEntry.materialWeak.instance && !sourceEntry.materialWeak.refCount)
-            {
-                sourceMesh = reinterpret_cast<Red::CMesh*>(sourceEntry.materialWeak.instance);
-            }
-
             Red::SharedPtr<Red::ResourceToken<Red::IMaterial>> token;
 
             if (sourceEntry.isLocalInstance)
@@ -224,15 +230,16 @@ bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::
             }
         }
 
-        auto materialInstance = CloneMaterialInstance(sourceInstance, meshState, materialName, aLoadingJobs);
-
         aMesh->materialEntries.EmplaceBack();
 
+        auto materialInstance = CloneMaterialInstance(sourceInstance, meshState, materialName, aLoadingJobs);
         auto& materialEntry = aMesh->materialEntries.Back();
         materialEntry.name = chunkMaterialName;
         materialEntry.material = materialInstance;
         materialEntry.materialWeak = materialInstance;
         materialEntry.isLocalInstance = true;
+
+        meshState->RegisterMaterialEntry(chunkMaterialName, aMesh->materialEntries.size - 1);
     }
 
     return true;
@@ -333,7 +340,7 @@ Red::ResourcePath App::MeshTemplateModule::ExpandResourcePath(Red::ResourcePath 
         return aPath;
     }
 
-    auto result = controller->ProcessString(aState->attrs, {{MaterialAttr, aMaterialName}}, pathStr.data());
+    auto result = controller->ProcessString(aState->context, {{MaterialAttr, aMaterialName}}, pathStr.data());
 
     if (!result.valid)
     {
@@ -370,25 +377,49 @@ bool App::MeshTemplateModule::IsSpecialMaterial(Red::CName aMaterialName)
     return aMaterialName.ToString()[0] == SpecialMaterialMarker;
 }
 
+bool App::MeshTemplateModule::IsContextualMesh(Red::CMesh* aMesh)
+{
+    return aMesh->materialEntries.size > 0 &&
+           aMesh->materialEntries.Front().isLocalInstance &&
+           aMesh->materialEntries.Front().name == ContextMaterialName;
+}
+
 App::MeshTemplateModule::MeshState::MeshState(Red::CMesh* aMesh)
     : dynamic(true)
     , mesh(Red::ToHandle(aMesh))
 {
-    FillAttributes(aMesh);
+    FillContext(aMesh);
+    FillMaterials(aMesh);
+
+    if (templates.empty())
+    {
+        MarkStatic();
+    }
 }
 
-void App::MeshTemplateModule::MeshState::FillAttributes(Red::CMesh* aMesh)
+void App::MeshTemplateModule::MeshState::MarkStatic()
 {
-    if (aMesh->materialEntries.size == 0)
-        return;
+    dynamic = false;
+    context.clear();
+    templates.clear();
+    materials.clear();
+    sources.clear();
+    mesh.Reset();
+}
 
-    auto& firstEntry = aMesh->materialEntries.Front();
-    if (!firstEntry.isLocalInstance || firstEntry.name != MetaMaterialName)
+bool App::MeshTemplateModule::MeshState::IsStatic() const
+{
+    return !dynamic;
+}
+
+void App::MeshTemplateModule::MeshState::FillContext(Red::CMesh* aMesh)
+{
+    if (!IsContextualMesh(aMesh))
         return;
 
     Red::SharedPtr<Red::ResourceToken<Red::IMaterial>> token;
     Raw::MeshMaterialBuffer::LoadMaterialAsync(&aMesh->localMaterialBuffer, token, Red::AsHandle(aMesh),
-                                               firstEntry.index, 0, 0);
+                                               aMesh->materialEntries.Front().index, 0, 0);
 
     EnsureResourceLoaded(token);
 
@@ -409,18 +440,62 @@ void App::MeshTemplateModule::MeshState::FillAttributes(Red::CMesh* aMesh)
             auto attrName = Red::CNamePool::Add(Str::SnakeCase(metaParam.name.ToString()).data());
             auto attrValue = reinterpret_cast<Red::CName*>(metaParam.data.GetDataPtr())->ToString();
 
-            attrs.emplace(attrName, attrValue);
+            context.emplace(attrName, attrValue);
         }
     }
 }
 
-void App::MeshTemplateModule::MeshState::MarkStatic()
+void App::MeshTemplateModule::MeshState::FillMaterials(Red::CMesh* aMesh)
 {
-    dynamic = false;
-    mesh.Reset();
+    for (auto i = 0; i < aMesh->materialEntries.size; ++i)
+    {
+        const auto& materialName = aMesh->materialEntries[i].name;
+
+        if (IsSpecialMaterial(materialName))
+        {
+            templates[materialName] = i;
+        }
+        else
+        {
+            materials[materialName] = i;
+        }
+    }
 }
 
-bool App::MeshTemplateModule::MeshState::IsDynamic() const
+void App::MeshTemplateModule::MeshState::RegisterMaterialEntry(Red::CName aMaterialName, uint32_t aEntryIndex)
 {
-    return dynamic;
+    materials[aMaterialName] = aEntryIndex;
+}
+
+uint32_t App::MeshTemplateModule::MeshState::GetTemplateEntryIndex(Red::CName aMaterialName)
+{
+    auto templateEntry = templates.find(aMaterialName);
+
+    if (templateEntry == templates.end())
+        return -1;
+
+    return templateEntry.value();
+}
+
+bool App::MeshTemplateModule::MeshState::HasMaterialEntry(Red::CName aMaterialName) const
+{
+    return materials.contains(aMaterialName);
+}
+
+Red::CName App::MeshTemplateModule::MeshState::RegisterSource(Red::CMesh* aSourceMesh)
+{
+    Red::CName sourceName = aSourceMesh->path.hash;
+    sources[sourceName] = aSourceMesh;
+
+    return sourceName;
+}
+
+Red::CMesh* App::MeshTemplateModule::MeshState::ResolveSource(Red::CName aSourceName)
+{
+    auto sourceMesh = sources.find(aSourceName);
+
+    if (sourceMesh == sources.end())
+        return nullptr;
+
+    return sourceMesh.value();
 }

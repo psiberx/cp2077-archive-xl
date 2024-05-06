@@ -13,6 +13,7 @@ public:
     bool Unload() override;
     std::string_view GetName() override;
 
+    static bool IsContextualMesh(Red::CMesh* aMesh);
     static bool IsSpecialMaterial(Red::CName aMaterialName);
 
 private:
@@ -20,13 +21,23 @@ private:
     {
         MeshState(Red::CMesh* aMesh);
 
+        [[nodiscard]] bool IsStatic() const;
         void MarkStatic();
-        [[nodiscard]] bool IsDynamic() const;
-        void FillAttributes(Red::CMesh* aMesh);
+
+        void FillContext(Red::CMesh* aMesh);
+        void FillMaterials(Red::CMesh* aMesh);
+        void RegisterMaterialEntry(Red::CName aMaterialName, uint32_t aEntryIndex);
+        uint32_t GetTemplateEntryIndex(Red::CName aMaterialName);
+        bool HasMaterialEntry(Red::CName aMaterialName) const;
+        Red::CName RegisterSource(Red::CMesh* aSourceMesh);
+        Red::CMesh* ResolveSource(Red::CName aSourceName);
 
         std::shared_mutex mutex;
         volatile bool dynamic;
-        DynamicAttributeList attrs;
+        DynamicAttributeList context;
+        Core::Map<Red::CName, uint32_t> templates;
+        Core::Map<Red::CName, uint32_t> materials;
+        Core::Map<Red::CName, Red::CMesh*> sources;
         Red::WeakHandle<Red::CMesh> mesh;
     };
 

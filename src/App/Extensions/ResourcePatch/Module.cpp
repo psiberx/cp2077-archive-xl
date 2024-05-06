@@ -285,66 +285,6 @@ void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
                 aMesh->appearances.EmplaceBack(cloneAppearance);
             }
         }
-
-        std::string ownerSuffixStr;
-
-        for (const auto& patchEntry : patchMesh->materialEntries)
-        {
-            auto isMaterialTemplate = MeshTemplateModule::IsSpecialMaterial(patchEntry.name);
-
-            if (patchEntry.isLocalInstance && !isMaterialTemplate)
-                continue;
-
-            auto targetEntryName = patchEntry.name;
-
-            if (isMaterialTemplate)
-            {
-                if (ownerSuffixStr.empty())
-                {
-                    ownerSuffixStr = std::to_string(reinterpret_cast<uintptr_t>(patchMesh.instance));
-                }
-
-                auto generatedMaterialNameStr = std::string{patchEntry.name.ToString()};
-                generatedMaterialNameStr.append(ownerSuffixStr);
-
-                targetEntryName = Red::CNamePool::Add(generatedMaterialNameStr.data());
-            }
-
-            auto targetEntry =
-                std::ranges::find_if(aMesh->materialEntries, [&targetEntryName](const auto& aExistingEntry) -> bool {
-                    return aExistingEntry.name == targetEntryName;
-                });
-
-            if (isMaterialTemplate)
-            {
-                if (targetEntry == aMesh->materialEntries.End())
-                {
-                    aMesh->materialEntries.PushBack(patchEntry);
-                    targetEntry = &aMesh->materialEntries.Back();
-                }
-
-                targetEntry->name = targetEntryName;
-                targetEntry->materialWeak.instance = reinterpret_cast<Red::IMaterial*>(patchMesh.instance);
-            }
-            else
-            {
-                if (targetEntry == aMesh->materialEntries.End())
-                {
-                    aMesh->materialEntries.EmplaceBack();
-                    aMesh->externalMaterials.EmplaceBack(patchMesh->externalMaterials[patchEntry.index]);
-
-                    targetEntry = &aMesh->materialEntries.Back();
-                    targetEntry->name = targetEntryName;
-                    targetEntry->index = aMesh->externalMaterials.size - 1;
-                }
-                else
-                {
-                    aMesh->externalMaterials[targetEntry->index] = patchMesh->externalMaterials[patchEntry.index];
-                }
-
-                targetEntry->isLocalInstance = false;
-            }
-        }
     }
 }
 
