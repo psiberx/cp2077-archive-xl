@@ -300,6 +300,14 @@ void App::GarmentOverrideModule::OnResolveDefinition(Red::AppearanceResource* aR
 
                     if (sourceDefinition->partsOverrides.size > 0)
                     {
+                        if (sourceDefinition->partsOverrides.size == 1 &&
+                            sourceDefinition->partsOverrides[0].componentsOverrides.size == 1 &&
+                            !sourceDefinition->partsOverrides[0].componentsOverrides[0].componentName)
+                        {
+                            *aDefinition = sourceDefinition;
+                            return;
+                        }
+
                         auto newDefinition = Red::MakeHandle<Red::AppearanceDefinition>();
                         for (const auto prop : Red::GetClass<Red::AppearanceDefinition>()->props)
                         {
