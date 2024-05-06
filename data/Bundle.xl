@@ -410,10 +410,6 @@ resource:
       - base\characters\common\hair\hh_151_wa__judy_variation02\hh_151_wa__judy_variation02_common.mesh
       - base\characters\common\hair\hh_999_ma__buzz_cap\hh_999_pwa__buzz_cap_cyberware_01.mesh
       - base\characters\common\hair\hh_999_ma__buzz_cap\hh_999_wa__buzz_cap.mesh
-#      - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_wa__ponytail_base_01.mesh
-#      - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_wa__ponytail_braid_01.mesh
-#      - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_wa__ponytail_bulb_01.mesh
-#      - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_wa__ponytail_straight_01.mesh
     player_wa_hat_hair.mesh:
       - base\characters\common\hair\h1_003_wa_hat__beanie_hh_01\h1_003_wa_hat__beanie_hh_01.mesh
       - base\characters\common\hair\h1_003_wa_hat__beanie_hh_02\h1_003_wa_hat__beanie_hh_02.mesh
