@@ -15,30 +15,35 @@ public:
 
     static bool IsContextualMesh(Red::CMesh* aMesh);
     static bool IsSpecialMaterial(Red::CName aMaterialName);
+    static void PrefetchMeshState(Red::CMesh* aMesh);
 
 private:
     struct MeshState
     {
         MeshState(Red::CMesh* aMesh);
 
-        [[nodiscard]] bool IsStatic() const;
         void MarkStatic();
+        [[nodiscard]] bool IsStatic() const;
 
-        void FillContext(Red::CMesh* aMesh);
+        void PrefetchContext(Red::CMesh* aMesh);
+        const DynamicAttributeList& GetContext();
+
         void FillMaterials(Red::CMesh* aMesh);
         void RegisterMaterialEntry(Red::CName aMaterialName, uint32_t aEntryIndex);
-        uint32_t GetTemplateEntryIndex(Red::CName aMaterialName);
-        bool HasMaterialEntry(Red::CName aMaterialName) const;
-        Red::CName RegisterSource(Red::CMesh* aSourceMesh);
-        Red::CMesh* ResolveSource(Red::CName aSourceName);
+        [[nodiscard]] uint32_t GetTemplateEntryIndex(Red::CName aMaterialName);
+        [[nodiscard]] bool HasMaterialEntry(Red::CName aMaterialName) const;
 
-        std::shared_mutex mutex;
+        Red::CName RegisterSource(Red::CMesh* aSourceMesh);
+        [[nodiscard]] Red::CMesh* ResolveSource(Red::CName aSourceName);
+
         volatile bool dynamic;
+        std::shared_mutex meshMutex;
+        std::shared_mutex sourceMutex;
+        Red::SharedPtr<Red::ResourceToken<Red::IMaterial>> contextToken;
         DynamicAttributeList context;
         Core::Map<Red::CName, uint32_t> templates;
         Core::Map<Red::CName, uint32_t> materials;
         Core::Map<Red::CName, Red::CMesh*> sources;
-        Red::WeakHandle<Red::CMesh> mesh;
     };
 
     static void OnFindAppearance(Red::Handle<Red::mesh::MeshAppearance>& aOut, Red::CMesh* aMesh, Red::CName aName);

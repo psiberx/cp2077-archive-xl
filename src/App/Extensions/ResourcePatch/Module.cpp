@@ -286,6 +286,8 @@ void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
             }
         }
     }
+
+    MeshTemplateModule::PrefetchMeshState(aMesh);
 }
 
 void App::ResourcePatchModule::OnEntityPackageExtract(Red::EntityBuilderJobParams* aParams, void* a2)
