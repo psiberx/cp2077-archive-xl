@@ -74,37 +74,55 @@ void App::ResourcePatchModule::PreparePatches()
 
     for (auto& unit : m_units)
     {
-        for (const auto& [targetPathOrAlias, patchList] : unit.patches)
+        for (const auto& [patchPath, patchScope] : unit.patches)
         {
-            auto targetList = ResourceAliasModule::ResolveAlias(targetPathOrAlias);
-            if (targetList.empty())
+            if (!depot->ResourceExists(patchPath))
             {
-                targetList.insert(targetPathOrAlias);
+                if (!invalidPaths.contains(patchPath))
+                {
+                    LogWarning("|{}| Resource \"{}\" doesn't exist. Skipped.", ModuleName, unit.paths[patchPath]);
+                    invalidPaths.insert(patchPath);
+                }
+                continue;
             }
+
+            Core::Set<Red::ResourcePath> targetList;
+
+            for (const auto& includePath : patchScope.includes)
+            {
+                const auto& includeList = ResourceAliasModule::ResolveAlias(includePath);
+                if (!includeList.empty())
+                {
+                    targetList.insert(includeList.begin(), includeList.end());
+                }
+                else
+                {
+                    targetList.insert(includePath);
+                }
+            }
+
+            for (const auto& excludePath : patchScope.excludes)
+            {
+                const auto& excludeList = ResourceAliasModule::ResolveAlias(excludePath);
+                if (!excludeList.empty())
+                {
+                    targetList.erase(excludeList.begin(), excludeList.end());
+                }
+                else
+                {
+                    targetList.erase(excludePath);
+                }
+            }
+
+            targetList.erase(patchPath);
 
             for (const auto& targetPath : targetList)
             {
+                s_patches[targetPath].insert(patchPath);
                 s_paths[targetPath] = unit.paths[targetPath];
-
-                for (const auto& patchPath : patchList)
-                {
-                    if (patchPath == targetPath)
-                        continue;
-
-                    if (!depot->ResourceExists(patchPath))
-                    {
-                        if (!invalidPaths.contains(patchPath))
-                        {
-                            LogWarning("|{}| Resource \"{}\" doesn't exist. Skipped.", ModuleName, unit.paths[patchPath]);
-                            invalidPaths.insert(patchPath);
-                        }
-                        continue;
-                    }
-
-                    s_patches[targetPath].insert(patchPath);
-                    s_paths[patchPath] = unit.paths[patchPath];
-                }
             }
+
+            s_paths[patchPath] = unit.paths[patchPath];
         }
     }
 }

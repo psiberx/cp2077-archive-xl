@@ -23,7 +23,7 @@ void App::ResourcePatchUnit::LoadYAML(const YAML::Node& aNode)
         const auto& patchPath = Red::ResourcePath(patchPathStr.data());
         const auto& targetsNode = entryNode.second;
 
-        paths[patchPath] = patchPathStr;
+        ResourcePatchScope patchScope;
 
         if (targetsNode.IsScalar())
         {
@@ -32,7 +32,7 @@ void App::ResourcePatchUnit::LoadYAML(const YAML::Node& aNode)
 
             if (targetPath)
             {
-                patches[targetPath].emplace_back(patchPath);
+                patchScope.includes.insert(targetPath);
                 paths[targetPath] = targetPathStr;
             }
         }
@@ -45,10 +45,24 @@ void App::ResourcePatchUnit::LoadYAML(const YAML::Node& aNode)
 
                 if (targetPath)
                 {
-                    patches[targetPath].emplace_back(patchPath);
+                    if (targetsNode.Tag() != "!exclude")
+                    {
+                        patchScope.includes.insert(targetPath);
+                    }
+                    else
+                    {
+                        patchScope.excludes.insert(targetPath);
+                    }
+
                     paths[targetPath] = targetPathStr;
                 }
             }
+        }
+
+        if (!patchScope.includes.empty())
+        {
+            patches[patchPath] = std::move(patchScope);
+            paths[patchPath] = patchPathStr;
         }
     }
 }
