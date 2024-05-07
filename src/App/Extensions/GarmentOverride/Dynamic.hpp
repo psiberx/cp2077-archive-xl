@@ -49,6 +49,12 @@ struct DynamicAttributeData
     {
     }
 
+    DynamicAttributeData(const std::string& aValue)
+        : value(aValue)
+        , suffix(aValue)
+    {
+    }
+
     DynamicAttributeData(Red::CName aName)
     {
         if (aName)

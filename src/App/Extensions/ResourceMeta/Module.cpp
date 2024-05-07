@@ -2,34 +2,37 @@
 
 namespace
 {
-constexpr auto ModuleName = "ResourceAlias";
+constexpr auto ModuleName = "ResourceMeta";
 }
 
-std::string_view App::ResourceAliasModule::GetName()
+std::string_view App::ResourceMetaModule::GetName()
 {
     return ModuleName;
 }
 
-bool App::ResourceAliasModule::Load()
+bool App::ResourceMetaModule::Load()
 {
-    InitializeAliases();
+    PrepareData();
+    Reset();
 
     return true;
 }
 
-void App::ResourceAliasModule::Reload()
+void App::ResourceMetaModule::Reload()
 {
-    InitializeAliases();
+    PrepareData();
+    Reset();
 }
 
-bool App::ResourceAliasModule::Unload()
+bool App::ResourceMetaModule::Unload()
 {
     return true;
 }
 
-void App::ResourceAliasModule::InitializeAliases()
+void App::ResourceMetaModule::PrepareData()
 {
     s_aliases.clear();
+    s_fixes.clear();
 
     for (auto& unit : m_units)
     {
@@ -45,6 +48,12 @@ void App::ResourceAliasModule::InitializeAliases()
                 s_aliases[aliasPath].insert(targetPath);
                 s_paths[targetPath] = unit.paths[targetPath];
             }
+        }
+
+        for (auto [targetPath, targetFix] : unit.fixes)
+        {
+            s_fixes[targetPath] = std::move(targetFix);
+            s_paths[targetPath] = unit.paths[targetPath];
         }
     }
 
@@ -70,24 +79,34 @@ void App::ResourceAliasModule::InitializeAliases()
     }
 }
 
-const Core::Set<Red::ResourcePath>& App::ResourceAliasModule::ResolveAlias(Red::ResourcePath aAliasPath)
+const Core::Set<Red::ResourcePath>& App::ResourceMetaModule::GetResourceList(Red::ResourcePath aAliasPath)
 {
     static const Core::Set<Red::ResourcePath> s_null;
+    const auto& it = s_aliases.find(aAliasPath);
 
-    const auto& aliasIt = s_aliases.find(aAliasPath);
-
-    if (aliasIt == s_aliases.end())
+    if (it == s_aliases.end())
         return s_null;
 
-    return aliasIt.value();
+    return it.value();
 }
 
-bool App::ResourceAliasModule::IsAliased(Red::ResourcePath aAliasPath, Red::ResourcePath aTargetPath)
+bool App::ResourceMetaModule::IsInResourceList(Red::ResourcePath aAliasPath, Red::ResourcePath aTargetPath)
 {
-    const auto& aliasIt = s_aliases.find(aAliasPath);
+    const auto& it = s_aliases.find(aAliasPath);
 
-    if (aliasIt == s_aliases.end())
+    if (it == s_aliases.end())
         return false;
 
-    return aliasIt.value().contains(aTargetPath);
+    return it.value().contains(aTargetPath);
+}
+
+const App::ResourceFix& App::ResourceMetaModule::GetResourceFix(Red::ResourcePath aTargetPath)
+{
+    static const ResourceFix s_null;
+    const auto& it = s_fixes.find(aTargetPath);
+
+    if (it == s_fixes.end())
+        return s_null;
+
+    return it.value();
 }

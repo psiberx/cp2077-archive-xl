@@ -15,7 +15,7 @@ public:
 
     static bool IsContextualMesh(Red::CMesh* aMesh);
     static bool IsSpecialMaterial(Red::CName aMaterialName);
-    static void PrefetchMeshState(Red::CMesh* aMesh);
+    static void PrefetchMeshState(Red::CMesh* aMesh, const Core::Map<Red::CName, std::string>& aContext);
 
 private:
     struct MeshState
@@ -26,6 +26,7 @@ private:
         [[nodiscard]] bool IsStatic() const;
 
         void PrefetchContext(Red::CMesh* aMesh);
+        void FillContext(const Core::Map<Red::CName, std::string>& aContext);
         const DynamicAttributeList& GetContext();
 
         void FillMaterials(Red::CMesh* aMesh);

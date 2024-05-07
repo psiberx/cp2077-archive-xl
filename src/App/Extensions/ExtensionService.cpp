@@ -11,7 +11,7 @@
 #include "App/Extensions/MeshTemplate/Module.hpp"
 #include "App/Extensions/PuppetState/Module.hpp"
 #include "App/Extensions/QuestPhase/Module.hpp"
-#include "App/Extensions/ResourceAlias/Module.hpp"
+#include "App/Extensions/ResourceMeta/Module.hpp"
 #include "App/Extensions/ResourcePatch/Module.hpp"
 #include "App/Extensions/WorldStreaming/Module.hpp"
 #include "Red/GameApplication.hpp"
@@ -31,7 +31,7 @@ void App::ExtensionService::OnBootstrap()
     m_loader->Add<AppearanceSwapModule>();
     m_loader->Add<AttachmentSlotsModule>();
     m_loader->Add<CustomizationModule>();
-    m_loader->Add<ResourceAliasModule>();
+    m_loader->Add<ResourceMetaModule>();
     m_loader->Add<ResourcePatchModule>();
     m_loader->Add<FactoryIndexModule>();
     m_loader->Add<InkSpawnerModule>();

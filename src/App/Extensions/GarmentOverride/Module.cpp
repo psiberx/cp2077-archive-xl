@@ -1,5 +1,5 @@
 #include "Module.hpp"
-#include "App/Extensions/ResourceAlias/Module.hpp"
+#include "App/Extensions/ResourceMeta/Module.hpp"
 #include "Red/Entity.hpp"
 #include "Red/ResourcePath.hpp"
 #include "Red/TweakDB.hpp"
@@ -284,7 +284,7 @@ void App::GarmentOverrideModule::OnResolveDefinition(Red::AppearanceResource* aR
                 SelectDynamicAppearance(entityState, selector, aResource, *aDefinition);
             }
         }
-        else if (ResourceAliasModule::IsAliased(ResourceAliasModule::CustomizationAlias, aResource->path))
+        else if (ResourceMetaModule::IsInResourceList(ResourceMetaModule::CustomizationApp, aResource->path))
         {
             if (aResource->appearances.size > 0)
             {

@@ -395,9 +395,14 @@ bool App::MeshTemplateModule::IsContextualMesh(Red::CMesh* aMesh)
            aMesh->materialEntries.Front().name == ContextMaterialName;
 }
 
-void App::MeshTemplateModule::PrefetchMeshState(Red::CMesh* aMesh)
+void App::MeshTemplateModule::PrefetchMeshState(Red::CMesh* aMesh, const Core::Map<Red::CName, std::string>& aContext)
 {
-    if (IsContextualMesh(aMesh))
+    if (!aContext.empty())
+    {
+        auto meshState = AcquireMeshState(aMesh);
+        meshState->FillContext(aContext);
+    }
+    else if (IsContextualMesh(aMesh))
     {
         AcquireMeshState(aMesh);
     }
@@ -442,6 +447,16 @@ void App::MeshTemplateModule::MeshState::PrefetchContext(Red::CMesh* aMesh)
     }
 }
 
+void App::MeshTemplateModule::MeshState::FillContext(const Core::Map<Red::CName, std::string>& aContext)
+{
+    contextToken.Reset();
+
+    for (const auto& [attrName, attrValue] : aContext)
+    {
+        context.emplace(Red::CNamePool::Add(Str::SnakeCase(attrName.ToString()).data()), attrValue);
+    }
+}
+
 const App::DynamicAttributeList& App::MeshTemplateModule::MeshState::GetContext()
 {
     if (contextToken)
@@ -462,12 +477,12 @@ const App::DynamicAttributeList& App::MeshTemplateModule::MeshState::GetContext(
             return context;
         }
 
-        for (auto& metaParam : metaInstance->params)
+        for (auto& param : metaInstance->params)
         {
-            if (metaParam.data.GetType()->GetType() == Red::ERTTIType::Name)
+            if (param.data.GetType()->GetType() == Red::ERTTIType::Name)
             {
-                auto attrName = Red::CNamePool::Add(Str::SnakeCase(metaParam.name.ToString()).data());
-                auto attrValue = reinterpret_cast<Red::CName*>(metaParam.data.GetDataPtr())->ToString();
+                auto attrName = Red::CNamePool::Add(Str::SnakeCase(param.name.ToString()).data());
+                auto attrValue = *reinterpret_cast<Red::CName*>(param.data.GetDataPtr());
 
                 context.emplace(attrName, attrValue);
             }

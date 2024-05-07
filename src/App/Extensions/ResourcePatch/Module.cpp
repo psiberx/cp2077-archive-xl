@@ -1,6 +1,6 @@
 #include "Module.hpp"
 #include "App/Extensions/MeshTemplate/Module.hpp"
-#include "App/Extensions/ResourceAlias/Module.hpp"
+#include "App/Extensions/ResourceMeta/Module.hpp"
 #include "Red/EntityBuilder.hpp"
 #include "Red/Mesh.hpp"
 #include "Red/ResourceDepot.hpp"
@@ -90,7 +90,7 @@ void App::ResourcePatchModule::PreparePatches()
 
             for (const auto& includePath : patchScope.includes)
             {
-                const auto& includeList = ResourceAliasModule::ResolveAlias(includePath);
+                const auto& includeList = ResourceMetaModule::GetResourceList(includePath);
                 if (!includeList.empty())
                 {
                     targetList.insert(includeList.begin(), includeList.end());
@@ -103,7 +103,7 @@ void App::ResourcePatchModule::PreparePatches()
 
             for (const auto& excludePath : patchScope.excludes)
             {
-                const auto& excludeList = ResourceAliasModule::ResolveAlias(excludePath);
+                const auto& excludeList = ResourceMetaModule::GetResourceList(excludePath);
                 if (!excludeList.empty())
                 {
                     targetList.erase(excludeList.begin(), excludeList.end());
@@ -265,6 +265,23 @@ void App::ResourcePatchModule::OnAppearanceResourceLoad(Red::AppearanceResource*
 
 void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
 {
+    const auto& fix = ResourceMetaModule::GetResourceFix(aMesh->path);
+
+    if (fix.DefinesNameMappings())
+    {
+        for (auto& appearance : aMesh->appearances)
+        {
+            for (auto& chunkMaterial : appearance->chunkMaterials)
+            {
+                chunkMaterial = fix.GetMappedName(chunkMaterial);
+            }
+        }
+        for (auto& materialEntry : aMesh->materialEntries)
+        {
+            materialEntry.name = fix.GetMappedName(materialEntry.name);
+        }
+    }
+
     const auto& patchList = GetPatchList(aMesh->path);
 
     if (patchList.empty())
@@ -305,7 +322,7 @@ void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
         }
     }
 
-    MeshTemplateModule::PrefetchMeshState(aMesh);
+    MeshTemplateModule::PrefetchMeshState(aMesh, fix.GetContext());
 }
 
 void App::ResourcePatchModule::OnEntityPackageExtract(Red::EntityBuilderJobParams* aParams, void* a2)
@@ -412,7 +429,7 @@ void App::ResourcePatchModule::PatchPackageExtractorResults(
     if (!aResource)
         return;
 
-    if (ResourceAliasModule::IsAliased(ResourceAliasModule::CustomizationAlias, aResource->path) &&
+    if (ResourceMetaModule::IsInResourceList(ResourceMetaModule::CustomizationApp, aResource->path) &&
         aDefinition->partsOverrides.size == 1  && aDefinition->partsOverrides[0].componentsOverrides.size == 1 &&
         !aDefinition->partsOverrides[0].componentsOverrides[0].componentName)
     {
