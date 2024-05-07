@@ -1,0 +1,22 @@
+resource:
+  alias:
+    player_ma.ent:
+      - base\characters\entities\player\photo_mode\player_ma_photomode.ent
+      - base\characters\entities\player\player_ma_fpp.ent
+      - base\characters\entities\player\player_ma_tpp.ent
+      - base\characters\entities\player\player_ma_tpp_cutscene.ent
+      - base\characters\entities\player\player_ma_tpp_cutscene_no_impostor.ent
+      - base\characters\entities\player\player_ma_tpp_reflexion.ent
+      - ep1\characters\entities\player\photo_mode\player_ma_photomode_ep1.ent
+      - ep1\characters\entities\player\player_ma_fpp_ep1.ent
+      - ep1\characters\entities\player\player_ma_tpp_ep1.ent
+    player_wa.ent:
+      - base\characters\entities\player\photo_mode\player_wa_photomode.ent
+      - base\characters\entities\player\player_wa_fpp.ent
+      - base\characters\entities\player\player_wa_tpp.ent
+      - base\characters\entities\player\player_wa_tpp_cutscene.ent
+      - base\characters\entities\player\player_wa_tpp_cutscene_no_impostor.ent
+      - base\characters\entities\player\player_wa_tpp_reflexion.ent
+      - ep1\characters\entities\player\photo_mode\player_wa_photomode_ep1.ent
+      - ep1\characters\entities\player\player_wa_fpp_ep1.ent
+      - ep1\characters\entities\player\player_wa_tpp_ep1.ent

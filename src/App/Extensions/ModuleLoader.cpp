@@ -22,7 +22,7 @@ void App::ModuleLoader::Configure(const std::filesystem::path& aBundlePath)
 
     try
     {
-        LogInfo("Scanning for archive extensions...");
+        LogInfo("Configuring archive extensions...");
 
         for (const auto& module : m_configurables)
             module->Reset();
@@ -121,17 +121,9 @@ bool App::ModuleLoader::ReadConfig(const std::filesystem::path& aPath, const std
 
     try
     {
-        std::error_code error;
-        auto path = std::filesystem::relative(aPath, aDir, error);
-        if (path.empty())
-        {
-            path = std::filesystem::absolute(aPath, error);
-            path = std::filesystem::relative(path, aDir, error);
-        }
-
         if (!aSilent)
         {
-            LogInfo("Reading \"{}\"...", path.string());
+            LogInfo("Reading \"{}\"...", aPath.filename().string());
         }
 
         std::ifstream file(aPath);

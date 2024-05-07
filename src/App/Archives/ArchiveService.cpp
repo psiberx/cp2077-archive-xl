@@ -57,15 +57,12 @@ void App::ArchiveService::OnInitializeArchives(Red::ResourceDepot* aDepot)
             }
         }
 
-        if (archivePaths.size == 0)
-        {
-            LogWarning("Can't load archive directory \"{}\": No archives found.",
-                       std::filesystem::relative(archiveDir, m_gameDir).string());
-            continue;
-        }
-
         auto& group = ResolveArchiveGroup(aDepot, archiveDir.string());
-        Raw::ResourceDepot::LoadArchives(nullptr, group, archivePaths, loadedResources, false);
+
+        if (archivePaths.size > 0)
+        {
+            Raw::ResourceDepot::LoadArchives(nullptr, group, archivePaths, loadedResources, false);
+        }
     }
 
     if (!m_archives.empty())

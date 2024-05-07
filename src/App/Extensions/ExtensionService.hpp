@@ -13,7 +13,7 @@ class ExtensionService
     , public Core::LoggingAgent
 {
 public:
-    explicit ExtensionService(std::filesystem::path aBundlePath);
+    explicit ExtensionService(std::filesystem::path aBundlePath = {});
 
     void Configure();
 
