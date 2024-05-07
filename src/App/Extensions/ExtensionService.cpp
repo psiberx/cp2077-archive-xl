@@ -25,7 +25,7 @@ App::ExtensionService::ExtensionService(std::filesystem::path aBundlePath)
 
 void App::ExtensionService::OnBootstrap()
 {
-    m_loader = Core::MakeUnique<ModuleLoader>("", L".xl");
+    m_loader = Core::MakeUnique<ModuleLoader>(m_bundlePath, L".xl");
 
     m_loader->Add<AnimationsModule>();
     m_loader->Add<AppearanceSwapModule>();
@@ -44,7 +44,7 @@ void App::ExtensionService::OnBootstrap()
     m_loader->Add<WorldStreamingModule>();
 
     HookOnceAfter<Raw::GameApplication::InitResourceDepot>([&]() {
-        m_loader->Configure(m_bundlePath);
+        m_loader->Configure();
         m_loader->Load();
     });
 
@@ -68,7 +68,7 @@ void App::ExtensionService::Configure()
         HookAfter<Raw::ResourceLoader::OnUpdate>([&]() {
             std::unique_lock _(m_reloadMutex);
 
-            m_loader->Configure(m_bundlePath);
+            m_loader->Configure();
             m_loader->Reload();
 
             Unhook<Raw::ResourceLoader::OnUpdate>();

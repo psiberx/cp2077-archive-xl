@@ -2,20 +2,13 @@
 #include "App/Utils/Str.hpp"
 
 App::ModuleLoader::ModuleLoader(std::filesystem::path aConfigDir, std::wstring aConfigExt)
-    : m_extraConfigDir(std::move(aConfigDir))
+    : m_bundleConfigDir(std::move(aConfigDir))
     , m_customConfigExt(std::move(aConfigExt))
     , m_loaded(false)
 {
 }
 
-bool App::ModuleLoader::ExtraConfigDirExists()
-{
-    std::error_code error;
-
-    return !m_extraConfigDir.empty() && std::filesystem::exists(m_extraConfigDir, error);
-}
-
-void App::ModuleLoader::Configure(const std::filesystem::path& aBundlePath)
+void App::ModuleLoader::Configure()
 {
     if (m_configurables.empty())
         return;
@@ -26,11 +19,6 @@ void App::ModuleLoader::Configure(const std::filesystem::path& aBundlePath)
 
         for (const auto& module : m_configurables)
             module->Reset();
-
-        if (!aBundlePath.empty())
-        {
-            ReadConfig(aBundlePath, aBundlePath.parent_path(), true);
-        }
 
         Core::Vector<std::filesystem::path> configDirs;
         Core::Vector<std::filesystem::path> configFiles;
@@ -57,9 +45,9 @@ void App::ModuleLoader::Configure(const std::filesystem::path& aBundlePath)
             }
         }
 
-        if (!m_extraConfigDir.empty())
+        if (!m_bundleConfigDir.empty())
         {
-            configDirs.emplace_back(m_extraConfigDir);
+            configDirs.emplace_back(m_bundleConfigDir);
         }
 
         bool foundAny = false;
@@ -78,7 +66,7 @@ void App::ModuleLoader::Configure(const std::filesystem::path& aBundlePath)
             {
                 if (entry.is_regular_file() && entry.path().extension() == m_customConfigExt)
                 {
-                    successAll &= ReadConfig(entry.path(), configDir);
+                    successAll &= ReadConfig(entry.path(), configDir, configDir == m_bundleConfigDir);
                     foundAny = true;
                 }
             }

@@ -22,19 +22,18 @@ public:
         m_modules.emplace_back(module);
     }
 
-    void Configure(const std::filesystem::path& aBundlePath);
+    void Configure();
     void Load();
     void PostLoad();
     void Unload();
     void Reload();
 
 private:
-    bool ExtraConfigDirExists();
     bool ReadConfig(const std::filesystem::path& aPath, const std::filesystem::path& aDir, bool aSilent = false);
 
     Core::Vector<Core::SharedPtr<Module>> m_modules;
     Core::Vector<Core::SharedPtr<ConfigurableModule>> m_configurables;
-    std::filesystem::path m_extraConfigDir;
+    std::filesystem::path m_bundleConfigDir;
     std::wstring m_customConfigExt;
     bool m_loaded;
 };
