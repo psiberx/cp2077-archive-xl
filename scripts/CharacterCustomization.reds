@@ -80,4 +80,30 @@ protected cb func OnInitialize() -> Bool {
     // so they can be properly initialized
     sliderArea.AttachController(sliderController);
     scrollWrapper.AttachController(scrollController);
+
+    pickerController.m_scrollController = scrollController;
 }
+
+@if(ModuleExists("Codeware"))
+@wrapMethod(characterCreationBodyMorphMenu)
+protected cb func OnPanelIntroAnimFinished(proxy: ref<inkAnimProxy>) -> Bool {
+    let pickerController = inkWidgetRef.GetController(this.m_colorPicker) as characterCreationBodyMorphOptionColorPicker;
+
+    if pickerController.m_selectedIndex >= 0 {
+        let gridWidget = inkWidgetRef.Get(pickerController.m_grid) as inkCompoundWidget;
+        let itemWidget = gridWidget.GetWidgetByIndex(pickerController.m_selectedIndex);
+        let itemPosition = gridWidget.GetChildPosition(itemWidget);
+
+        let scrollController = pickerController.m_scrollController;
+        scrollController.SetScrollPosition(
+            (itemPosition.Y - scrollController.viewportSize.Y / 2.0) /
+            (scrollController.contentSize.Y - scrollController.viewportSize.Y)
+        );
+    }
+
+    wrappedMethod(proxy);
+}
+
+@if(ModuleExists("Codeware"))
+@addField(characterCreationBodyMorphOptionColorPicker)
+private let m_scrollController: wref<inkScrollController>;
