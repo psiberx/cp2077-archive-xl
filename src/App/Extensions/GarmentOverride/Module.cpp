@@ -286,7 +286,7 @@ void App::GarmentOverrideModule::OnResolveDefinition(Red::AppearanceResource* aR
         }
         else if (ResourceMetaModule::IsInResourceList(ResourceMetaModule::CustomizationApp, aResource->path))
         {
-            if (aResource->appearances.size > 0)
+            if (aResource->appearances.size >= 2)
             {
                 auto meshAppearanceStr = std::string_view(aSelector.ToString());
                 auto delimiterPos = meshAppearanceStr.find('_');
@@ -296,7 +296,7 @@ void App::GarmentOverrideModule::OnResolveDefinition(Red::AppearanceResource* aR
                     meshAppearanceStr.remove_prefix(delimiterPos + 1);
                     auto meshAppearance = Red::CNamePool::Add(meshAppearanceStr.data());
 
-                    auto& sourceDefinition = aResource->appearances[0];
+                    auto& sourceDefinition = aResource->appearances[1];
 
                     if (sourceDefinition->partsOverrides.size > 0)
                     {
