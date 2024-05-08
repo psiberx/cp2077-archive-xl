@@ -41,35 +41,35 @@ bool App::LocalizationModule::Unload()
 
 void App::LocalizationModule::Configure()
 {
-    for (auto unit = m_configs.begin(); unit != m_configs.end();)
+    for (auto config = m_configs.begin(); config != m_configs.end();)
     {
-        if (unit->extend.empty())
+        if (config->extend.empty())
         {
-            ++unit;
+            ++config;
             continue;
         }
 
-        const auto& target = std::ranges::find_if(m_configs, [&](auto& aConfig) { return aConfig.name == unit->extend; });
+        const auto& target = std::ranges::find_if(m_configs, [&](auto& aConfig) { return aConfig.name == config->extend; });
         if (target != m_configs.end())
         {
-            for (const auto& [language, resources] : unit->onscreens)
+            for (const auto& [language, resources] : config->onscreens)
                 for (const auto& resource : resources)
                     target->onscreens[language].push_back(resource);
 
-            for (const auto& [language, resources] : unit->subtitles)
+            for (const auto& [language, resources] : config->subtitles)
                 for (const auto& resource : resources)
                     target->subtitles[language].push_back(resource);
 
-            for (const auto& [language, resources] : unit->lipmaps)
+            for (const auto& [language, resources] : config->lipmaps)
                 for (const auto& resource : resources)
                     target->lipmaps[language].push_back(resource);
 
-            for (const auto& [language, resources] : unit->vomaps)
+            for (const auto& [language, resources] : config->vomaps)
                 for (const auto& resource : resources)
                     target->vomaps[language].push_back(resource);
         }
 
-        unit = m_configs.erase(unit);
+        config = m_configs.erase(config);
     }
 }
 
