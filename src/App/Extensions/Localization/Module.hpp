@@ -20,6 +20,7 @@ public:
     std::string_view GetName() override;
     bool Load() override;
     bool Unload() override;
+    void Configure() override;
 
 private:
     void OnLoadTexts(Red::Handle<TextResource>& aOnScreens, Red::ResourcePath aPath);

@@ -33,10 +33,33 @@ bool App::LocalizationModule::Unload()
 {
     Unhook<Raw::Localization::LoadTexts>();
     Unhook<Raw::Localization::LoadSubtitles>();
-    Unhook<Raw::Localization::LoadVoiceOvers>();
+    // Unhook<Raw::Localization::LoadVoiceOvers>();
     Unhook<Raw::Localization::LoadLipsyncs>();
 
     return true;
+}
+
+void App::LocalizationModule::Configure()
+{
+    for (auto unit = m_units.begin(); unit != m_units.end();)
+    {
+        if (unit->extend.empty())
+        {
+            ++unit;
+            continue;
+        }
+
+        const auto& target = std::ranges::find_if(m_units, [&](auto& aUnit) { return aUnit.name == unit->extend; });
+        if (target != m_units.end())
+        {
+            target->onscreens.insert(unit->onscreens.begin(), unit->onscreens.end());
+            target->subtitles.insert(unit->subtitles.begin(), unit->subtitles.end());
+            target->lipmaps.insert(unit->lipmaps.begin(), unit->lipmaps.end());
+            target->vomaps.insert(unit->vomaps.begin(), unit->vomaps.end());
+        }
+
+        unit = m_units.erase(unit);
+    }
 }
 
 void App::LocalizationModule::OnLoadTexts(Red::Handle<TextResource>& aOnScreens,
@@ -64,18 +87,18 @@ void App::LocalizationModule::OnLoadTexts(Red::Handle<TextResource>& aOnScreens,
             if (unit.onscreens.empty())
                 continue;
 
-            auto paths = unit.onscreens.find(language);
             auto fallback = false;
+            auto paths = unit.onscreens.find(language);
 
             if (paths != unit.onscreens.end())
             {
-                LogInfo("|{}| Processing \"{}\"...", ModuleName, unit.name);
+                LogInfo(R"(|{}| Processing "{}"...)", ModuleName, unit.name, language.ToString());
             }
             else
             {
                 fallback = true;
                 paths = unit.onscreens.find(unit.fallback);
-                LogInfo("|{}| Processing \"{}\" using fallback language \"{}\"...",
+                LogInfo(R"(|{}| Processing "{}" using fallback language "{}"...)",
                         ModuleName, unit.name, unit.fallback.ToString());
             }
 

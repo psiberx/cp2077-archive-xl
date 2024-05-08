@@ -6,8 +6,6 @@ namespace App
 {
 struct LocalizationUnit : ConfigurableUnit
 {
-    using ConfigurableUnit::ConfigurableUnit;
-
     bool IsDefined() override;
     void LoadYAML(const YAML::Node& aNode) override;
 
@@ -19,5 +17,6 @@ struct LocalizationUnit : ConfigurableUnit
     Core::Map<Red::CName, Core::Vector<std::string>> subtitles;
     Core::Map<Red::CName, Core::Vector<std::string>> lipmaps;
     Core::Map<Red::CName, Core::Vector<std::string>> vomaps;
+    std::string extend;
 };
 }

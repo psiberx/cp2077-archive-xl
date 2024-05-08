@@ -12,7 +12,7 @@ constexpr auto VoiceOverMapsNodeKey = "vomaps";
 
 bool App::LocalizationUnit::IsDefined()
 {
-    return !fallback.IsNone();
+    return !onscreens.empty() || !subtitles.empty() || !lipmaps.empty() || !vomaps.empty();
 }
 
 void App::LocalizationUnit::LoadYAML(const YAML::Node& aNode)
@@ -35,6 +35,12 @@ void App::LocalizationUnit::LoadYAML(const YAML::Node& aNode)
 
     if (!ReadOptions(rootNode[VoiceOverMapsNodeKey], vomaps, fallback, issues))
         malformed = true;
+
+    const auto& extendNode = rootNode["extend"];
+    if (extendNode.IsDefined() && extendNode.IsScalar())
+    {
+        extend = extendNode.Scalar();
+    }
 
     if (malformed)
         issues.emplace_back("Bad format. Expected resource path or list of paths.");

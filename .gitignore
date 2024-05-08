@@ -4,5 +4,6 @@
 /.xmake
 /build
 /dev
+/tools/wkit/layout.xml
 __pycache__
 CMakeLists.txt
