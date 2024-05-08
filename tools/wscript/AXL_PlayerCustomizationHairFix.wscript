@@ -5,8 +5,8 @@ import * as TypeHelper from 'TypeHelper.wscript'
 const logInfo = false
 const logWarnings = true
 
-const generateFixedResources = false
 const generateExtensionJson = true
+const generateFixedResources = false
 
 const hairMaMainMeshes = [
   'base\\characters\\common\\hair\\hh_006_ma__demo\\hh_006_ma__demo.mesh',
@@ -458,14 +458,14 @@ for (let meshPath of hairMeshes) {
   }
 
   if (generateExtensionJson) {
-    const names = {}
+    const nameMappings = {}
     for (const materialName in materialMappings) {
       if (materialMappings.hasOwnProperty(materialName)) {
-        names[materialName] = materialMappings[materialName].toString()
+        nameMappings[materialName] = materialMappings[materialName].toString()
       }
     }
     extensionData[meshPath] = {
-      names: names,
+      names: nameMappings,
       context: contextParams,
     }
   }
@@ -481,7 +481,7 @@ if (logInfo || logWarnings) {
 }
 
 if (generateExtensionJson) {
-  wkit.SaveToRaw('PlaeyrHairFix.json', JSON.stringify({resource: {fix: extensionData}}))
+  wkit.SaveToRaw('PlayerCustomizationHairFix.json', JSON.stringify({resource: {fix: extensionData}}))
 }
 
 function collectMaterialData(materialInstance, materialData, contextParams) {
