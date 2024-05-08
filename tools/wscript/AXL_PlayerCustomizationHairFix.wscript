@@ -481,7 +481,7 @@ if (logInfo || logWarnings) {
 }
 
 if (generateExtensionJson) {
-  wkit.SaveToRaw('PlayerCustomizationHairFix.json', JSON.stringify({resource: {fix: extensionData}}))
+  wkit.SaveToRaw('PlayerCustomizationHairFix.xl', JSON.stringify({resource: {fix: extensionData}}))
 }
 
 function collectMaterialData(materialInstance, materialData, contextParams) {
