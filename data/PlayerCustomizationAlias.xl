@@ -1,5 +1,8 @@
 resource:
   alias:
+    player_customization.app:
+      - player_ma_hair.app
+      - player_wa_hair.app
     player_ma_hair.app:
       - player_ma_hair_cw_00.app
       - player_ma_hair_cw_01.app
@@ -460,8 +463,3 @@ resource:
       - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_02\h1_084_wa_hat__bucket_hat_hh_02.mesh
       - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_03\h1_084_wa_hat__bucket_hat_hh_03.mesh
       - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_04\h1_084_wa_hat__bucket_hat_hh_04.mesh
-    player_customization.app:
-      - player_ma_hair_cw_00.app
-      - player_ma_hair_cw_01.app
-      - player_wa_hair_cw_00.app
-      - player_wa_hair_cw_01.app

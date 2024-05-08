@@ -1,5 +1,8 @@
 resource:
   alias:
+    player.ent:
+      - player_ma.ent
+      - player_wa.ent
     player_ma.ent:
       - base\characters\entities\player\photo_mode\player_ma_photomode.ent
       - base\characters\entities\player\player_ma_fpp.ent
