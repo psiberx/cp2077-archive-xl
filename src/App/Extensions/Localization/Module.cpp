@@ -52,10 +52,21 @@ void App::LocalizationModule::Configure()
         const auto& target = std::ranges::find_if(m_configs, [&](auto& aConfig) { return aConfig.name == unit->extend; });
         if (target != m_configs.end())
         {
-            target->onscreens.insert(unit->onscreens.begin(), unit->onscreens.end());
-            target->subtitles.insert(unit->subtitles.begin(), unit->subtitles.end());
-            target->lipmaps.insert(unit->lipmaps.begin(), unit->lipmaps.end());
-            target->vomaps.insert(unit->vomaps.begin(), unit->vomaps.end());
+            for (const auto& [language, resources] : unit->onscreens)
+                for (const auto& resource : resources)
+                    target->onscreens[language].push_back(resource);
+
+            for (const auto& [language, resources] : unit->subtitles)
+                for (const auto& resource : resources)
+                    target->subtitles[language].push_back(resource);
+
+            for (const auto& [language, resources] : unit->lipmaps)
+                for (const auto& resource : resources)
+                    target->lipmaps[language].push_back(resource);
+
+            for (const auto& [language, resources] : unit->vomaps)
+                for (const auto& resource : resources)
+                    target->vomaps[language].push_back(resource);
         }
 
         unit = m_configs.erase(unit);
