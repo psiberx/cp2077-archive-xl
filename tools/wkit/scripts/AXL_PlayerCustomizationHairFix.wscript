@@ -179,61 +179,65 @@ if (generateExtensionJson) {
 }
 
 function collectMaterialData(materialInstance, materialData, contextParams) {
-  let basePath = materialInstance['baseMaterial']['DepotPath'].toString()
-  if (!basePath.match(/\.(?:re)?mt$/)) {
-    let baseInstance = loadMaterialInstace(basePath)
+  if (materialInstance.hasOwnProperty('baseMaterial') && materialInstance['baseMaterial']) {
+    let basePath = materialInstance['baseMaterial']['DepotPath'].toString()
+    if (!basePath.match(/\.(?:re)?mt$/)) {
+      let baseInstance = loadMaterialInstace(basePath)
 
-    collectMaterialData(baseInstance, materialData, contextParams)
+      collectMaterialData(baseInstance, materialData, contextParams)
 
-    let masterPathMatch = basePath.match(/^base\\characters\\common\\hair\\textures\\hair_profiles\\_master__([a-z]+)(?:_bright)?_?\.mi$/)
-    if (masterPathMatch) {
-      materialData['template'] = '@' + masterPathMatch[1]
-      materialData['master'] = basePath
+      let masterPathMatch = basePath.match(/^base\\characters\\common\\hair\\textures\\hair_profiles\\_master__([a-z]+)(?:_bright)?_?\.mi$/)
+      if (masterPathMatch) {
+        materialData['template'] = '@' + masterPathMatch[1]
+        materialData['master'] = basePath
+      }
     }
   }
 
-  for (let materialParam of materialInstance['values']) {
-    if (materialParam.hasOwnProperty('HairProfile')) {
-      let profilePath = materialParam['HairProfile']['DepotPath'].toString()
-      let profileMatch = profilePath.match(/\\([^\\]+)\.hp$/)
-      if (profileMatch) {
-        materialData['name'] = profileMatch[1]
+  if (materialInstance.hasOwnProperty('values')) {
+    for (let materialParam of materialInstance['values']) {
+      if (materialParam.hasOwnProperty('HairProfile')) {
+        let profilePath = materialParam['HairProfile']['DepotPath'].toString()
+        let profileMatch = profilePath.match(/\\([^\\]+)\.hp$/)
+        if (profileMatch) {
+          materialData['name'] = profileMatch[1]
+        }
+        continue
       }
-      continue
-    }
 
-    if (materialParam.hasOwnProperty('DiffuseTexture')) {
-      let texturePath = materialParam['DiffuseTexture']['DepotPath'].toString()
-      if (texturePath && !texturePath.match(/^engine\\textures\\editor\\/)) {
-        contextParams['CapDiffuseTexture'] = texturePath
-        materialData['template'] = '@cap'
+      if (materialParam.hasOwnProperty('DiffuseTexture')) {
+        let texturePath = materialParam['DiffuseTexture']['DepotPath'].toString()
+        if (texturePath && !texturePath.match(/^engine\\textures\\editor\\/)) {
+          contextParams['CapDiffuseTexture'] = texturePath
+          materialData['template'] = '@cap'
+        }
+        continue
       }
-      continue
-    }
 
-    if (materialParam.hasOwnProperty('MaskTexture')) {
-      let texturePath = materialParam['MaskTexture']['DepotPath'].toString()
-      if (texturePath && !texturePath.match(/^engine\\textures\\editor\\/)) {
-        contextParams['CapMaskTexture'] = texturePath
-        materialData['template'] = '@cap'
+      if (materialParam.hasOwnProperty('MaskTexture')) {
+        let texturePath = materialParam['MaskTexture']['DepotPath'].toString()
+        if (texturePath && !texturePath.match(/^engine\\textures\\editor\\/)) {
+          contextParams['CapMaskTexture'] = texturePath
+          materialData['template'] = '@cap'
+        }
+        continue
       }
-      continue
-    }
 
-    if (materialParam.hasOwnProperty('SecondaryMask')) {
-      let texturePath = materialParam['SecondaryMask']['DepotPath'].toString()
-      if (texturePath && !texturePath.match(/^engine\\textures\\editor\\/)) {
-        contextParams['CapSecondaryMaskTexture'] = texturePath
-        materialData['template'] = '@cap01'
+      if (materialParam.hasOwnProperty('SecondaryMask')) {
+        let texturePath = materialParam['SecondaryMask']['DepotPath'].toString()
+        if (texturePath && !texturePath.match(/^engine\\textures\\editor\\/)) {
+          contextParams['CapSecondaryMaskTexture'] = texturePath
+          materialData['template'] = '@cap01'
+        }
+        continue
       }
-      continue
-    }
 
-    if (materialParam.hasOwnProperty('GradientMap')) {
-      let gradientPath = materialParam['GradientMap']['DepotPath'].toString()
-      let gradientMatch = gradientPath.match(/^base\\characters\\common\\hair\\textures\\cap_gradiants\\hh_cap_grad__([^.]+)\.xbm$/)
-      if (gradientMatch) {
-        materialData['name'] = gradientMatch[1]
+      if (materialParam.hasOwnProperty('GradientMap')) {
+        let gradientPath = materialParam['GradientMap']['DepotPath'].toString()
+        let gradientMatch = gradientPath.match(/^base\\characters\\common\\hair\\textures\\cap_gradiants\\hh_cap_grad__([^.]+)\.xbm$/)
+        if (gradientMatch) {
+          materialData['name'] = gradientMatch[1]
+        }
       }
     }
   }
