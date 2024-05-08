@@ -29,7 +29,7 @@ public:
     void Reload();
 
 private:
-    bool ReadConfig(const std::filesystem::path& aPath, const std::filesystem::path& aDir, bool aSilent = false);
+    bool AddConfig(const std::filesystem::path& aPath, const std::filesystem::path& aDir, bool aSilent = false);
 
     Core::Vector<Core::SharedPtr<Module>> m_modules;
     Core::Vector<Core::SharedPtr<ConfigurableModule>> m_configurables;

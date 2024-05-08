@@ -14,23 +14,22 @@ public:
     virtual ~Module() = default;
 
     virtual std::string_view GetName() = 0;
-    virtual bool Load() = 0;
-    virtual bool Unload() = 0;
+    virtual bool Load() { return true; }
+    virtual bool Unload() { return true; }
     virtual void PostLoad() {}
 };
 
 class ConfigurableModule : public Module
 {
 public:
-    virtual bool Configure(const std::string& aConfigName, const YAML::Node& aConfigNode) = 0;
-    virtual void Reset() = 0;
-    virtual void Reload() {};
+    virtual bool AddConfig(const std::string& aConfigName, const YAML::Node& aConfigNode) = 0;
+    virtual void ResetConfigs() {}
+    virtual void Configure() {}
+    virtual void Reload() {}
 };
 
 struct ConfigurableUnit
 {
-    explicit ConfigurableUnit(std::string aName) : name(std::move(aName)) {}
-
     virtual bool IsDefined() = 0;
     virtual void LoadYAML(const YAML::Node& aNode) = 0;
 
@@ -39,7 +38,7 @@ struct ConfigurableUnit
         return !issues.empty();
     }
 
-    const std::string name;
+    std::string name;
     Core::Vector<std::string> issues;
 };
 
@@ -48,9 +47,10 @@ requires std::is_base_of_v<ConfigurableUnit, U>
 class ConfigurableUnitModule : public ConfigurableModule
 {
 public:
-    bool Configure(const std::string& aName, const YAML::Node& aNode) override
+    bool AddConfig(const std::string& aName, const YAML::Node& aNode) override
     {
-        U unit(aName);
+        U unit;
+        unit.name = aName;
         unit.LoadYAML(aNode);
 
         if (unit.HasIssues())
@@ -67,7 +67,7 @@ public:
         return !unit.HasIssues();
     }
 
-    void Reset() override
+    void ResetConfigs() override
     {
         m_units.clear();
     }

@@ -125,6 +125,8 @@ void App::ResourcePatchModule::PreparePatches()
             s_paths[patchPath] = unit.paths[patchPath];
         }
     }
+
+    m_units.clear();
 }
 
 void App::ResourcePatchModule::OnResourceRequest(Red::ResourceDepot*, const uintptr_t* aOut, Red::ResourcePath aPath,

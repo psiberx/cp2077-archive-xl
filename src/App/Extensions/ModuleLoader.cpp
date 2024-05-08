@@ -18,7 +18,7 @@ void App::ModuleLoader::Configure()
         LogInfo("Configuring archive extensions...");
 
         for (const auto& module : m_configurables)
-            module->Reset();
+            module->ResetConfigs();
 
         Core::Vector<std::filesystem::path> configDirs;
         Core::Vector<std::filesystem::path> configFiles;
@@ -66,7 +66,7 @@ void App::ModuleLoader::Configure()
             {
                 if (entry.is_regular_file() && entry.path().extension() == m_customConfigExt)
                 {
-                    successAll &= ReadConfig(entry.path(), configDir, configDir == m_bundleConfigDir);
+                    successAll &= AddConfig(entry.path(), configDir, configDir == m_bundleConfigDir);
                     foundAny = true;
                 }
             }
@@ -77,9 +77,12 @@ void App::ModuleLoader::Configure()
             if (!std::filesystem::exists(configFile, error))
                 continue;
 
-            successAll &= ReadConfig(configFile, configFile.parent_path());
+            successAll &= AddConfig(configFile, configFile.parent_path());
             foundAny = true;
         }
+
+        for (const auto& module : m_configurables)
+            module->Configure();
 
         if (foundAny)
         {
@@ -103,7 +106,7 @@ void App::ModuleLoader::Configure()
     }
 }
 
-bool App::ModuleLoader::ReadConfig(const std::filesystem::path& aPath, const std::filesystem::path& aDir, bool aSilent)
+bool App::ModuleLoader::AddConfig(const std::filesystem::path& aPath, const std::filesystem::path& aDir, bool aSilent)
 {
     bool success = true;
 
@@ -123,7 +126,7 @@ bool App::ModuleLoader::ReadConfig(const std::filesystem::path& aPath, const std
         const auto config = YAML::Load(file);
 
         for (const auto& module : m_configurables)
-            success &= module->Configure(name, config);
+            success &= module->AddConfig(name, config);
     }
     catch (const std::exception& ex)
     {

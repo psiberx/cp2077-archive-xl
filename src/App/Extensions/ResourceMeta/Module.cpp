@@ -10,26 +10,7 @@ std::string_view App::ResourceMetaModule::GetName()
     return ModuleName;
 }
 
-bool App::ResourceMetaModule::Load()
-{
-    PrepareData();
-    Reset();
-
-    return true;
-}
-
-void App::ResourceMetaModule::Reload()
-{
-    PrepareData();
-    Reset();
-}
-
-bool App::ResourceMetaModule::Unload()
-{
-    return true;
-}
-
-void App::ResourceMetaModule::PrepareData()
+void App::ResourceMetaModule::Configure()
 {
     s_aliases.clear();
     s_fixes.clear();
@@ -77,6 +58,8 @@ void App::ResourceMetaModule::PrepareData()
         }
         while (updated);
     }
+
+    m_units.clear();
 }
 
 const Core::Set<Red::ResourcePath>& App::ResourceMetaModule::GetResourceList(Red::ResourcePath aAliasPath)
