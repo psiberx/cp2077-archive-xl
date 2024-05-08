@@ -246,7 +246,7 @@ void App::CustomizationModule::ApplyAppOverride(Red::AppearanceDescriptor& aAppe
 
 void App::CustomizationModule::PrefetchCustomResources()
 {
-    for (const auto& unit : m_units)
+    for (const auto& unit : m_configs)
     {
         PrefetchCustomResources(m_customMaleResources, unit.maleOptions);
         PrefetchCustomResources(m_customFemaleResources, unit.femaleOptions);

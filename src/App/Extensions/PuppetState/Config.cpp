@@ -1,4 +1,4 @@
-#include "Unit.hpp"
+#include "Config.hpp"
 
 namespace
 {
@@ -6,12 +6,12 @@ constexpr auto PlayerNodeKey = "player";
 constexpr auto BodyTypesNodeKey = "bodyTypes";
 }
 
-bool App::PuppetStateUnit::IsDefined()
+bool App::PuppetStateConfig::IsDefined()
 {
     return !bodyTypes.empty();
 }
 
-void App::PuppetStateUnit::LoadYAML(const YAML::Node& aNode)
+void App::PuppetStateConfig::LoadYAML(const YAML::Node& aNode)
 {
     const auto& playerNode = aNode[PlayerNodeKey];
 

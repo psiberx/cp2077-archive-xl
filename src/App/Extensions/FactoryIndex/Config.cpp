@@ -1,16 +1,16 @@
-#include "Unit.hpp"
+#include "Config.hpp"
 
 namespace
 {
 constexpr auto FactoryIndexNodeKey = "factories";
 }
 
-bool App::FactoryIndexUnit::IsDefined()
+bool App::FactoryIndexConfig::IsDefined()
 {
     return !factories.empty();
 }
 
-void App::FactoryIndexUnit::LoadYAML(const YAML::Node& aNode)
+void App::FactoryIndexConfig::LoadYAML(const YAML::Node& aNode)
 {
     const auto& factoriesNode = aNode[FactoryIndexNodeKey];
 

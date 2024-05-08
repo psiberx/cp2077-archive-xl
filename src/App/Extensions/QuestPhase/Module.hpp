@@ -1,13 +1,13 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
-#include "App/Extensions/QuestPhase/Unit.hpp"
+#include "App/Extensions/QuestPhase/Config.hpp"
 #include "Red/QuestLoader.hpp"
 #include "Red/QuestPhase.hpp"
 
 namespace App
 {
-class QuestPhaseModule : public ConfigurableUnitModule<QuestPhaseUnit>
+class QuestPhaseModule : public ConfigurableModuleImpl<QuestPhaseConfig>
 {
 public:
     std::string_view GetName() override;

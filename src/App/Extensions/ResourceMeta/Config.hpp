@@ -31,9 +31,9 @@ struct ResourceFix
     Core::Map<Red::CName, std::string> context;
 };
 
-struct ResourceMetaUnit : ConfigurableUnit
+struct ResourceMetaConfig : ModuleConfig
 {
-    using ConfigurableUnit::ConfigurableUnit;
+    using ModuleConfig::ModuleConfig;
 
     bool IsDefined() override;
     void LoadYAML(const YAML::Node& aNode) override;

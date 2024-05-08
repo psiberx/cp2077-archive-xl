@@ -1,11 +1,11 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
-#include "App/Extensions/Animations/Unit.hpp"
+#include "App/Extensions/Animations/Config.hpp"
 
 namespace App
 {
-class AnimationsModule : public ConfigurableUnitModule<AnimationsUnit>
+class AnimationsModule : public ConfigurableModuleImpl<AnimationsConfig>
 {
 public:
     std::string_view GetName() override;

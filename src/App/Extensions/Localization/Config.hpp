@@ -4,7 +4,7 @@
 
 namespace App
 {
-struct LocalizationUnit : ConfigurableUnit
+struct LocalizationConfig : ModuleConfig
 {
     bool IsDefined() override;
     void LoadYAML(const YAML::Node& aNode) override;

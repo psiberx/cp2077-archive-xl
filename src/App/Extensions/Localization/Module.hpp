@@ -1,7 +1,7 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
-#include "App/Extensions/Localization/Unit.hpp"
+#include "App/Extensions/Localization/Config.hpp"
 
 namespace App
 {
@@ -14,7 +14,7 @@ using SubtitleResource = Red::localization::PersistenceSubtitleMap;
 using SubtitleEntry = Red::localization::PersistenceSubtitleMapEntry;
 using SubtitleEntryList = Red::DynArray<SubtitleEntry>;
 
-class LocalizationModule : public ConfigurableUnitModule<LocalizationUnit>
+class LocalizationModule : public ConfigurableModuleImpl<LocalizationConfig>
 {
 public:
     std::string_view GetName() override;

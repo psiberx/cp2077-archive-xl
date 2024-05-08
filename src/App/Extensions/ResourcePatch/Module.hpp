@@ -1,7 +1,7 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
-#include "App/Extensions/ResourcePatch/Unit.hpp"
+#include "App/Extensions/ResourcePatch/Config.hpp"
 #include "Red/AppearanceResource.hpp"
 #include "Red/EntityBuilder.hpp"
 #include "Red/EntityTemplate.hpp"
@@ -10,7 +10,7 @@
 
 namespace App
 {
-class ResourcePatchModule : public ConfigurableUnitModule<ResourcePatchUnit>
+class ResourcePatchModule : public ConfigurableModuleImpl<ResourcePatchConfig>
 {
 public:
     std::string_view GetName() override;

@@ -3,12 +3,12 @@
 #include "App/Extensions/ModuleBase.hpp"
 #include "App/Extensions/PuppetState/Handler.hpp"
 #include "App/Extensions/PuppetState/System.hpp"
-#include "App/Extensions/PuppetState/Unit.hpp"
+#include "App/Extensions/PuppetState/Config.hpp"
 #include "Red/CharacterCustomization.hpp"
 
 namespace App
 {
-class PuppetStateModule : public ConfigurableUnitModule<PuppetStateUnit>
+class PuppetStateModule : public ConfigurableModuleImpl<PuppetStateConfig>
 {
 public:
     static constexpr auto BodyTypeSuffixID = Red::TweakDBID("itemsFactoryAppearanceSuffix.BodyType");

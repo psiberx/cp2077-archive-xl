@@ -50,7 +50,7 @@ void App::PuppetStateModule::FillBodyTypes()
     s_bodyTypes.clear();
     s_bodyTags.clear();
 
-    for (const auto& unit : m_units)
+    for (const auto& unit : m_configs)
     {
         for (const auto& bodyTypeName : unit.bodyTypes)
         {

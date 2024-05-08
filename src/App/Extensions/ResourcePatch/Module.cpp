@@ -72,7 +72,7 @@ void App::ResourcePatchModule::PreparePatches()
     auto depot = Red::ResourceDepot::Get();
     Core::Set<Red::ResourcePath> invalidPaths;
 
-    for (auto& unit : m_units)
+    for (auto& unit : m_configs)
     {
         for (const auto& [patchPath, patchScope] : unit.patches)
         {
@@ -126,7 +126,7 @@ void App::ResourcePatchModule::PreparePatches()
         }
     }
 
-    m_units.clear();
+    m_configs.clear();
 }
 
 void App::ResourcePatchModule::OnResourceRequest(Red::ResourceDepot*, const uintptr_t* aOut, Red::ResourcePath aPath,

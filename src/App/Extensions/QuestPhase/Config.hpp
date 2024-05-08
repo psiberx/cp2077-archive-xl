@@ -19,9 +19,9 @@ struct QuestPhaseMod
     QuestPhaseConnection output;
 };
 
-struct QuestPhaseUnit : ConfigurableUnit
+struct QuestPhaseConfig : ModuleConfig
 {
-    using ConfigurableUnit::ConfigurableUnit;
+    using ModuleConfig::ModuleConfig;
 
     bool IsDefined() override;
     void LoadYAML(const YAML::Node& aNode) override;

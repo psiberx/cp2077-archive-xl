@@ -1,12 +1,12 @@
-#include "Unit.hpp"
+#include "Config.hpp"
 #include "App/Utils/Num.hpp"
 
-bool App::GarmentOverrideUnit::IsDefined()
+bool App::GarmentOverrideConfig::IsDefined()
 {
     return !tags.empty();
 }
 
-void App::GarmentOverrideUnit::LoadYAML(const YAML::Node& aNode)
+void App::GarmentOverrideConfig::LoadYAML(const YAML::Node& aNode)
 {
     const auto& overridesNode = aNode["overrides"];
 

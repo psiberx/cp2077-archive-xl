@@ -1,12 +1,12 @@
-#include "Unit.hpp"
+#include "Config.hpp"
 #include "App/Utils/Num.hpp"
 
-bool App::WorldStreamingUnit::IsDefined()
+bool App::WorldStreamingConfig::IsDefined()
 {
     return !blocks.empty() || !sectors.empty();
 }
 
-void App::WorldStreamingUnit::LoadYAML(const YAML::Node& aNode)
+void App::WorldStreamingConfig::LoadYAML(const YAML::Node& aNode)
 {
     const auto& streamingNode = aNode["streaming"];
 
@@ -102,7 +102,7 @@ void App::WorldStreamingUnit::LoadYAML(const YAML::Node& aNode)
     }
 }
 
-bool App::WorldStreamingUnit::ParseSubDeletions(const YAML::Node& aNode, WorldNodeDeletion& aDeletionData)
+bool App::WorldStreamingConfig::ParseSubDeletions(const YAML::Node& aNode, WorldNodeDeletion& aDeletionData)
 {
     const auto& subDeletionsNode = aNode["actorDeletions"];
 

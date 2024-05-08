@@ -1,11 +1,11 @@
-#include "Unit.hpp"
+#include "Config.hpp"
 
-bool App::QuestPhaseUnit::IsDefined()
+bool App::QuestPhaseConfig::IsDefined()
 {
     return !phases.empty();
 }
 
-void App::QuestPhaseUnit::LoadYAML(const YAML::Node& aNode)
+void App::QuestPhaseConfig::LoadYAML(const YAML::Node& aNode)
 {
     const auto& questNode = aNode["quest"];
 
@@ -47,7 +47,7 @@ void App::QuestPhaseUnit::LoadYAML(const YAML::Node& aNode)
     }
 }
 
-bool App::QuestPhaseUnit::FillConnection(const YAML::Node& aNode, App::QuestPhaseConnection& aConnection)
+bool App::QuestPhaseConfig::FillConnection(const YAML::Node& aNode, App::QuestPhaseConnection& aConnection)
 {
     if (aNode.IsDefined())
     {

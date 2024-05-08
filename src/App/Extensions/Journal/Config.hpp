@@ -4,9 +4,9 @@
 
 namespace App
 {
-struct JournalUnit : ConfigurableUnit
+struct JournalConfig : ModuleConfig
 {
-    using ConfigurableUnit::ConfigurableUnit;
+    using ModuleConfig::ModuleConfig;
 
     bool IsDefined() override;
     void LoadYAML(const YAML::Node& aNode) override;

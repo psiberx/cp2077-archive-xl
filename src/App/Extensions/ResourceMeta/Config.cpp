@@ -1,11 +1,11 @@
-#include "Unit.hpp"
+#include "Config.hpp"
 
-bool App::ResourceMetaUnit::IsDefined()
+bool App::ResourceMetaConfig::IsDefined()
 {
     return !aliases.empty() || !fixes.empty();
 }
 
-void App::ResourceMetaUnit::LoadYAML(const YAML::Node& aNode)
+void App::ResourceMetaConfig::LoadYAML(const YAML::Node& aNode)
 {
     const auto& rootNode = aNode["resource"];
 
@@ -16,7 +16,7 @@ void App::ResourceMetaUnit::LoadYAML(const YAML::Node& aNode)
     LoadFixes(rootNode["fix"]);
 }
 
-void App::ResourceMetaUnit::LoadAliases(const YAML::Node& aNode)
+void App::ResourceMetaConfig::LoadAliases(const YAML::Node& aNode)
 {
     if (!aNode.IsDefined() || !aNode.IsMap())
         return;
@@ -57,7 +57,7 @@ void App::ResourceMetaUnit::LoadAliases(const YAML::Node& aNode)
     }
 }
 
-void App::ResourceMetaUnit::LoadFixes(const YAML::Node& aNode)
+void App::ResourceMetaConfig::LoadFixes(const YAML::Node& aNode)
 {
     if (!aNode.IsDefined() || !aNode.IsMap())
         return;

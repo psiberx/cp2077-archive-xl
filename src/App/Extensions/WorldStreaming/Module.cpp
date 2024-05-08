@@ -57,7 +57,7 @@ void App::WorldStreamingModule::PrepareSectors()
     Core::Set<Red::ResourcePath> invalidPaths;
     Core::Set<Red::CName> invalidNodeTypes;
 
-    for (auto& unit : m_units)
+    for (auto& unit : m_configs)
     {
         for (auto& sectorMod : unit.sectors)
         {
@@ -108,12 +108,12 @@ void App::WorldStreamingModule::OnWorldLoad(Red::world::StreamingWorld* aWorld, 
 
     LogInfo("|{}| World streaming is initializing...", ModuleName);
 
-    if (!m_units.empty())
+    if (!m_configs.empty())
     {
         Core::Vector<StreamingBlockRef> blockRefs;
         Core::Map<Red::ResourcePath, const char*> blockPaths;
 
-        for (const auto& unit : m_units)
+        for (const auto& unit : m_configs)
         {
             if (!unit.blocks.empty())
             {

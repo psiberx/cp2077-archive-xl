@@ -4,9 +4,9 @@
 
 namespace App
 {
-struct FactoryIndexUnit : ConfigurableUnit
+struct FactoryIndexConfig : ModuleConfig
 {
-    using ConfigurableUnit::ConfigurableUnit;
+    using ModuleConfig::ModuleConfig;
 
     bool IsDefined() override;
     void LoadYAML(const YAML::Node& aNode) override;

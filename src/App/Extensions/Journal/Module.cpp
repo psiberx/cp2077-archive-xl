@@ -55,7 +55,7 @@ bool App::JournalModule::Unload()
 
 void App::JournalModule::Reload()
 {
-    if (!m_units.empty())
+    if (!m_configs.empty())
     {
         ResetResourceData();
         ResetRuntimeData();
@@ -67,7 +67,7 @@ void App::JournalModule::OnLoadJournal(uintptr_t a1, Red::JobGroup& aJobGroup)
 {
     LogInfo("|{}| Journal tree is initializing...", ModuleName);
 
-    if (m_units.empty())
+    if (m_configs.empty())
     {
         LogInfo("|{}| No entries to merge.", ModuleName);
         return;
@@ -76,7 +76,7 @@ void App::JournalModule::OnLoadJournal(uintptr_t a1, Red::JobGroup& aJobGroup)
     auto queue = Red::JobQueue(aJobGroup);
     auto loader = Red::ResourceLoader::Get();
 
-    for (const auto& unit : m_units)
+    for (const auto& unit : m_configs)
     {
         LogInfo("|{}| Processing \"{}\"...", ModuleName, unit.name);
 
@@ -100,7 +100,7 @@ void App::JournalModule::OnInitializeRoot(Red::game::JournalRootFolderEntry* aJo
 {
     static const auto s_rootEntryType = Red::GetClass<Red::game::JournalRootFolderEntry>();
 
-    if (m_units.empty())
+    if (m_configs.empty())
         return;
 
     auto successAll = true;

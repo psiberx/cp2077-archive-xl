@@ -19,9 +19,9 @@ struct AnimationEntry
     Core::Vector<std::string> variables;
 };
 
-struct AnimationsUnit : ConfigurableUnit
+struct AnimationsConfig : ModuleConfig
 {
-    using ConfigurableUnit::ConfigurableUnit;
+    using ModuleConfig::ModuleConfig;
 
     bool IsDefined() override;
     void LoadYAML(const YAML::Node& aNode) override;

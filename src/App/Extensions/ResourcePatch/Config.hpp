@@ -10,9 +10,9 @@ struct ResourcePatchScope
     Core::Set<Red::ResourcePath> excludes;
 };
 
-struct ResourcePatchUnit : ConfigurableUnit
+struct ResourcePatchConfig : ModuleConfig
 {
-    using ConfigurableUnit::ConfigurableUnit;
+    using ModuleConfig::ModuleConfig;
 
     bool IsDefined() override;
     void LoadYAML(const YAML::Node& aNode) override;

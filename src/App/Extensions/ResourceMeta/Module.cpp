@@ -15,7 +15,7 @@ void App::ResourceMetaModule::Configure()
     s_aliases.clear();
     s_fixes.clear();
 
-    for (auto& unit : m_units)
+    for (auto& unit : m_configs)
     {
         for (const auto& [aliasPath, targetList] : unit.aliases)
         {
@@ -59,7 +59,7 @@ void App::ResourceMetaModule::Configure()
         while (updated);
     }
 
-    m_units.clear();
+    m_configs.clear();
 }
 
 const Core::Set<Red::ResourcePath>& App::ResourceMetaModule::GetResourceList(Red::ResourcePath aAliasPath)

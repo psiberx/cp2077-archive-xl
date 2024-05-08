@@ -1,4 +1,4 @@
-#include "Unit.hpp"
+#include "Config.hpp"
 #include "App/Utils/Num.hpp"
 
 namespace
@@ -11,12 +11,12 @@ constexpr auto PriorityNodeKey = "priority";
 constexpr auto ComponentNodeKey = "component";
 }
 
-bool App::AnimationsUnit::IsDefined()
+bool App::AnimationsConfig::IsDefined()
 {
     return !animations.empty();
 }
 
-void App::AnimationsUnit::LoadYAML(const YAML::Node& aNode)
+void App::AnimationsConfig::LoadYAML(const YAML::Node& aNode)
 {
     const auto& animationsNode = aNode[AnimationsNodeKey];
 

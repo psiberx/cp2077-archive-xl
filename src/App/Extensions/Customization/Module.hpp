@@ -1,7 +1,7 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
-#include "App/Extensions/Customization/Unit.hpp"
+#include "App/Extensions/Customization/Config.hpp"
 #include "Red/AppearanceChanger.hpp"
 #include "Red/CharacterCustomization.hpp"
 
@@ -22,7 +22,7 @@ using CustomizationPuppetWeak = Red::WeakHandle<Red::game::Puppet>;
 using CustomizationPart = Red::game::ui::CharacterCustomizationPart;
 using AppearanceChangerSystem = Red::world::RuntimeSystemEntityAppearanceChanger;
 
-class CustomizationModule : public ConfigurableUnitModule<CustomizationUnit>
+class CustomizationModule : public ConfigurableModuleImpl<CustomizationConfig>
 {
 public:
     std::string_view GetName() override;

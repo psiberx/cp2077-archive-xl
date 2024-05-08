@@ -1,11 +1,11 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
-#include "App/Extensions/ResourceMeta/Unit.hpp"
+#include "App/Extensions/ResourceMeta/Config.hpp"
 
 namespace App
 {
-class ResourceMetaModule : public ConfigurableUnitModule<ResourceMetaUnit>
+class ResourceMetaModule : public ConfigurableModuleImpl<ResourceMetaConfig>
 {
 public:
     static constexpr auto CustomizationApp = Red::ResourcePath("player_customization.app");

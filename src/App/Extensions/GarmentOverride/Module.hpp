@@ -3,7 +3,7 @@
 #include "App/Extensions/ModuleBase.hpp"
 #include "App/Extensions/GarmentOverride/Dynamic.hpp"
 #include "App/Extensions/GarmentOverride/States.hpp"
-#include "App/Extensions/GarmentOverride/Unit.hpp"
+#include "App/Extensions/GarmentOverride/Config.hpp"
 #include "Red/AppearanceChanger.hpp"
 #include "Red/EntityTemplate.hpp"
 #include "Red/GarmentAssembler.hpp"
@@ -11,7 +11,7 @@
 
 namespace App
 {
-class GarmentOverrideModule : public ConfigurableUnitModule<GarmentOverrideUnit>
+class GarmentOverrideModule : public ConfigurableModuleImpl<GarmentOverrideConfig>
 {
 public:
     static constexpr auto ForceHairTag = Red::CName("force_Hair");

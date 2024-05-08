@@ -1,11 +1,11 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
-#include "App/Extensions/FactoryIndex/Unit.hpp"
+#include "App/Extensions/FactoryIndex/Config.hpp"
 
 namespace App
 {
-class FactoryIndexModule : public ConfigurableUnitModule<FactoryIndexUnit>
+class FactoryIndexModule : public ConfigurableModuleImpl<FactoryIndexConfig>
 {
 public:
     std::string_view GetName() override;

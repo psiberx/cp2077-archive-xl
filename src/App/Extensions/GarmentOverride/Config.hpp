@@ -5,9 +5,9 @@
 
 namespace App
 {
-struct GarmentOverrideUnit : ConfigurableUnit
+struct GarmentOverrideConfig : ModuleConfig
 {
-    using ConfigurableUnit::ConfigurableUnit;
+    using ModuleConfig::ModuleConfig;
 
     bool IsDefined() override;
     void LoadYAML(const YAML::Node& aNode) override;

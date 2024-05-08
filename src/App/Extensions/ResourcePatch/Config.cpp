@@ -1,11 +1,11 @@
-#include "Unit.hpp"
+#include "Config.hpp"
 
-bool App::ResourcePatchUnit::IsDefined()
+bool App::ResourcePatchConfig::IsDefined()
 {
     return !patches.empty();
 }
 
-void App::ResourcePatchUnit::LoadYAML(const YAML::Node& aNode)
+void App::ResourcePatchConfig::LoadYAML(const YAML::Node& aNode)
 {
     const auto& rootNode = aNode["resource"];
 

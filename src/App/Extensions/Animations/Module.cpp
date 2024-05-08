@@ -41,7 +41,7 @@ void App::AnimationsModule::PrepareEntries()
     auto depot = Red::ResourceDepot::Get();
     Core::Set<Red::ResourcePath> invalidPaths;
 
-    for (const auto& unit : m_units)
+    for (const auto& unit : m_configs)
     {
         for (const auto& animation : unit.animations)
         {

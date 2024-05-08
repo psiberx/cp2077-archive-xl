@@ -1,4 +1,4 @@
-#include "Unit.hpp"
+#include "Config.hpp"
 #include "Language.hpp"
 
 namespace
@@ -10,12 +10,12 @@ constexpr auto LipMapsNodeKey = "lipmaps";
 constexpr auto VoiceOverMapsNodeKey = "vomaps";
 }
 
-bool App::LocalizationUnit::IsDefined()
+bool App::LocalizationConfig::IsDefined()
 {
     return !onscreens.empty() || !subtitles.empty() || !lipmaps.empty() || !vomaps.empty();
 }
 
-void App::LocalizationUnit::LoadYAML(const YAML::Node& aNode)
+void App::LocalizationConfig::LoadYAML(const YAML::Node& aNode)
 {
     const auto& rootNode = aNode[LocalizationNodeKey];
 
@@ -46,7 +46,7 @@ void App::LocalizationUnit::LoadYAML(const YAML::Node& aNode)
         issues.emplace_back("Bad format. Expected resource path or list of paths.");
 }
 
-bool App::LocalizationUnit::ReadOptions(const YAML::Node& aNode,
+bool App::LocalizationConfig::ReadOptions(const YAML::Node& aNode,
                                         Core::Map<Red::CName, Core::Vector<std::string>>& aOptions,
                                         Red::CName& aFallback, Core::Vector<std::string>& aIssues)
 {

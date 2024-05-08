@@ -41,7 +41,7 @@ bool App::LocalizationModule::Unload()
 
 void App::LocalizationModule::Configure()
 {
-    for (auto unit = m_units.begin(); unit != m_units.end();)
+    for (auto unit = m_configs.begin(); unit != m_configs.end();)
     {
         if (unit->extend.empty())
         {
@@ -49,8 +49,8 @@ void App::LocalizationModule::Configure()
             continue;
         }
 
-        const auto& target = std::ranges::find_if(m_units, [&](auto& aUnit) { return aUnit.name == unit->extend; });
-        if (target != m_units.end())
+        const auto& target = std::ranges::find_if(m_configs, [&](auto& aConfig) { return aConfig.name == unit->extend; });
+        if (target != m_configs.end())
         {
             target->onscreens.insert(unit->onscreens.begin(), unit->onscreens.end());
             target->subtitles.insert(unit->subtitles.begin(), unit->subtitles.end());
@@ -58,7 +58,7 @@ void App::LocalizationModule::Configure()
             target->vomaps.insert(unit->vomaps.begin(), unit->vomaps.end());
         }
 
-        unit = m_units.erase(unit);
+        unit = m_configs.erase(unit);
     }
 }
 
@@ -75,14 +75,14 @@ void App::LocalizationModule::OnLoadTexts(Red::Handle<TextResource>& aOnScreens,
     auto mergedAny = false;
     auto successAll = true;
 
-    if (!m_units.empty())
+    if (!m_configs.empty())
     {
         auto& entryList = aOnScreens->entries;
         auto originalCount = entryList.size;
         auto originalMaxKey = (entryList.End() - 1)->primaryKey;
         auto usedKeyMap = TextEntryMap();
 
-        for (const auto& unit : m_units)
+        for (const auto& unit : m_configs)
         {
             if (unit.onscreens.empty())
                 continue;
@@ -260,11 +260,11 @@ void App::LocalizationModule::OnLoadSubtitles(Red::Handle<SubtitleResource>& aSu
     auto mergedAny = false;
     auto successAll = true;
 
-    if (!m_units.empty())
+    if (!m_configs.empty())
     {
         auto& entryList = aSubtitles->entries;
 
-        for (const auto& unit : m_units)
+        for (const auto& unit : m_configs)
         {
             if (unit.subtitles.empty())
                 continue;
@@ -329,7 +329,7 @@ void App::LocalizationModule::OnLoadVoiceOvers(void* aContext, uint64_t a2)
     auto mergedAny = false;
     auto successAll = true;
 
-    if (!m_units.empty())
+    if (!m_configs.empty())
     {
         auto depot = Red::ResourceDepot::Get();
         auto& tokens = Raw::Localization::VoiceOverTokens::Ref(aContext);
@@ -337,7 +337,7 @@ void App::LocalizationModule::OnLoadVoiceOvers(void* aContext, uint64_t a2)
 
         for (auto& entry : map->entries)
         {
-            for (const auto& unit : m_units)
+            for (const auto& unit : m_configs)
             {
                 auto paths = unit.vomaps.find(entry.languageCode);
                 if (paths != unit.vomaps.end())
@@ -392,7 +392,7 @@ void App::LocalizationModule::OnLoadLipsyncs(void* aContext, uint8_t a2)
         auto loader = Red::ResourceLoader::Get();
         Red::DynArray<Red::SharedPtr<Red::ResourceToken<Red::animLipsyncMapping>>> tokens;
 
-        for (const auto& unit : m_units)
+        for (const auto& unit : m_configs)
         {
             auto paths = unit.lipmaps.find(language);
             if (paths != unit.lipmaps.end())

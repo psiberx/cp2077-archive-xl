@@ -33,9 +33,9 @@ void App::FactoryIndexModule::OnLoadFactoryAsync(uintptr_t aIndex, Red::Resource
     {
         LogInfo("|{}| Initializing factory index...", ModuleName);
 
-        if (!m_units.empty())
+        if (!m_configs.empty())
         {
-            for (const auto& unit : m_units)
+            for (const auto& unit : m_configs)
             {
                 LogInfo("|{}| Processing \"{}\"...", ModuleName, unit.name);
 

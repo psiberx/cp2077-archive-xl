@@ -1,16 +1,16 @@
-#include "Unit.hpp"
+#include "Config.hpp"
 
 namespace
 {
 constexpr auto JournalNodeKey = "journal";
 }
 
-bool App::JournalUnit::IsDefined()
+bool App::JournalConfig::IsDefined()
 {
     return !journals.empty();
 }
 
-void App::JournalUnit::LoadYAML(const YAML::Node& aNode)
+void App::JournalConfig::LoadYAML(const YAML::Node& aNode)
 {
     const auto& rootNode = aNode[JournalNodeKey];
 

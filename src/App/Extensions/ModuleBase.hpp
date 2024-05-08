@@ -28,7 +28,7 @@ public:
     virtual void Reload() {}
 };
 
-struct ConfigurableUnit
+struct ModuleConfig
 {
     virtual bool IsDefined() = 0;
     virtual void LoadYAML(const YAML::Node& aNode) = 0;
@@ -42,37 +42,37 @@ struct ConfigurableUnit
     Core::Vector<std::string> issues;
 };
 
-template<class U>
-requires std::is_base_of_v<ConfigurableUnit, U>
-class ConfigurableUnitModule : public ConfigurableModule
+template<class C>
+requires std::is_base_of_v<ModuleConfig, C>
+class ConfigurableModuleImpl : public ConfigurableModule
 {
 public:
     bool AddConfig(const std::string& aName, const YAML::Node& aNode) override
     {
-        U unit;
-        unit.name = aName;
-        unit.LoadYAML(aNode);
+        C config;
+        config.name = aName;
+        config.LoadYAML(aNode);
 
-        if (unit.HasIssues())
+        if (config.HasIssues())
         {
-            for (const auto& issue : unit.issues)
+            for (const auto& issue : config.issues)
                 LogError("|{}| {}", GetName(), issue);
         }
 
-        if (unit.IsDefined())
+        if (config.IsDefined())
         {
-            m_units.emplace_back(std::move(unit));
+            m_configs.emplace_back(std::move(config));
         }
 
-        return !unit.HasIssues();
+        return !config.HasIssues();
     }
 
     void ResetConfigs() override
     {
-        m_units.clear();
+        m_configs.clear();
     }
 
 protected:
-    Core::Vector<U> m_units;
+    Core::Vector<C> m_configs;
 };
 }

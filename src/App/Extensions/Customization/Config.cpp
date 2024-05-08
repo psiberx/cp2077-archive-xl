@@ -1,4 +1,4 @@
-#include "Unit.hpp"
+#include "Config.hpp"
 
 namespace
 {
@@ -7,12 +7,12 @@ constexpr auto MaleNodeKey = "male";
 constexpr auto FemaleNodeKey = "female";
 }
 
-bool App::CustomizationUnit::IsDefined()
+bool App::CustomizationConfig::IsDefined()
 {
     return !maleOptions.empty() || !femaleOptions.empty();
 }
 
-void App::CustomizationUnit::LoadYAML(const YAML::Node& aNode)
+void App::CustomizationConfig::LoadYAML(const YAML::Node& aNode)
 {
     const auto& rootNode = aNode[CustomizationNodeKey];
 
@@ -31,7 +31,7 @@ void App::CustomizationUnit::LoadYAML(const YAML::Node& aNode)
         issues.emplace_back("Bad format. Expected resource path or list of paths.");
 }
 
-bool App::CustomizationUnit::ReadOptions(const YAML::Node& aNode, Core::Vector<std::string>& aOptions)
+bool App::CustomizationConfig::ReadOptions(const YAML::Node& aNode, Core::Vector<std::string>& aOptions)
 {
     bool malformed = false;
 

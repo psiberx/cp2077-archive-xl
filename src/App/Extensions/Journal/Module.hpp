@@ -1,6 +1,6 @@
 #pragma once
 
-#include "App/Extensions/Journal/Unit.hpp"
+#include "App/Extensions/Journal/Config.hpp"
 #include "App/Extensions/ModuleBase.hpp"
 #include "Red/JournalManager.hpp"
 #include "Red/JournalTree.hpp"
@@ -8,7 +8,7 @@
 
 namespace App
 {
-class JournalModule : public ConfigurableUnitModule<JournalUnit>
+class JournalModule : public ConfigurableModuleImpl<JournalConfig>
 {
 public:
     std::string_view GetName() override;

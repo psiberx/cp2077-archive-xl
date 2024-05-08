@@ -1,7 +1,7 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
-#include "App/Extensions/WorldStreaming/Unit.hpp"
+#include "App/Extensions/WorldStreaming/Config.hpp"
 #include "Red/StreamingSector.hpp"
 #include "Red/StreamingWorld.hpp"
 
@@ -9,7 +9,7 @@ namespace App
 {
 using StreamingBlockRef = Red::ResourceReference<Red::world::StreamingBlock>;
 
-class WorldStreamingModule : public ConfigurableUnitModule<WorldStreamingUnit>
+class WorldStreamingModule : public ConfigurableModuleImpl<WorldStreamingConfig>
 {
 public:
     std::string_view GetName() override;

@@ -4,9 +4,9 @@
 
 namespace App
 {
-struct PuppetStateUnit : ConfigurableUnit
+struct PuppetStateConfig : ModuleConfig
 {
-    using ConfigurableUnit::ConfigurableUnit;
+    using ModuleConfig::ModuleConfig;
 
     bool IsDefined() override;
     void LoadYAML(const YAML::Node& aNode) override;

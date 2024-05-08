@@ -43,7 +43,7 @@ void App::QuestPhaseModule::PreparePhases()
     auto depot = Red::ResourceDepot::Get();
     Core::Set<Red::ResourcePath> invalidPaths;
 
-    for (auto& unit : m_units)
+    for (auto& unit : m_configs)
     {
         for (auto& phaseMod : unit.phases)
         {

@@ -144,7 +144,7 @@ bool App::GarmentOverrideModule::Unload()
 void App::GarmentOverrideModule::ConfigureTags()
 {
     std::unique_lock _(s_mutex);
-    for (const auto& unit : m_units)
+    for (const auto& unit : m_configs)
     {
         for (const auto& tag : unit.tags)
         {
