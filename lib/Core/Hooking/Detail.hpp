@@ -18,6 +18,49 @@ enum class HookRun
     Default,
     Once,
 };
+
+template<auto TOffset>
+struct HookResult
+{
+    HookResult()
+        : success(false)
+    {
+    }
+
+    HookResult(bool aSuccess)
+        : success(aSuccess)
+    {
+    }
+
+    constexpr operator bool() const noexcept
+    {
+        return success;
+    }
+
+    inline void OrThrow(const char* aMessage = nullptr) const
+    {
+        if (!success)
+        {
+            if (aMessage)
+            {
+                throw std::runtime_error(aMessage);
+            }
+            else
+            {
+                if constexpr (sizeof(TOffset) == sizeof(uintptr_t))
+                {
+                    throw std::runtime_error(std::format("Failed to hook at address {:#X}.", TOffset));
+                }
+                else
+                {
+                    throw std::runtime_error(std::format("Failed to hook address id {}.", TOffset));
+                }
+            }
+        }
+    }
+
+    bool success;
+};
 }
 
 namespace Core::Detail
@@ -466,7 +509,7 @@ public:
         }
     }
 
-    inline static bool Attach(HookingDriver& aDriver, TWrapper aCallback, Original* aOriginal = nullptr)
+    inline static HookResult<TOffset> Attach(HookingDriver& aDriver, TWrapper aCallback, Original* aOriginal = nullptr)
     {
         using Instance = HookInstance<Raw>;
 
@@ -484,11 +527,7 @@ public:
     inline static bool Detach()
     {
         using Instance = HookInstance<Raw>;
-
-        if (!Instance::Detach(&Handle))
-            return false;
-
-        return true;
+        return Instance::Detach(&Handle);
     }
 
     inline static void Dispose()
