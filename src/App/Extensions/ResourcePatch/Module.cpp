@@ -18,29 +18,14 @@ std::string_view App::ResourcePatchModule::GetName()
 
 bool App::ResourcePatchModule::Load()
 {
-    if (!HookBefore<Raw::ResourceDepot::RequestResource>(&OnResourceRequest))
-        throw std::runtime_error("Failed to hook [ResourceDepot::RequestResource].");
-
-    if (!HookBefore<Raw::ResourceSerializer::Deserialize>(&OnResourceDeserialize))
-        throw std::runtime_error("Failed to hook [ResourceSerializer::Deserialize].");
-
-    if (!HookAfter<Raw::EntityTemplate::OnLoad>(&OnEntityTemplateLoad))
-        throw std::runtime_error("Failed to hook [EntityTemplate::OnLoad].");
-
-    if (!HookBefore<Raw::AppearanceResource::OnLoad>(&OnAppearanceResourceLoad))
-        throw std::runtime_error("Failed to hook [AppearanceResource::OnLoad].");
-
-    if (!HookAfter<Raw::CMesh::OnLoad>(&OnMeshResourceLoad))
-        throw std::runtime_error("Failed to hook [EntityBuilder::ExtractComponentsJob].");
-
-    if (!HookBefore<Raw::EntityBuilder::ExtractComponentsJob>(&OnEntityPackageExtract))
-        throw std::runtime_error("Failed to hook [EntityBuilder::ExtractComponentsJob].");
-
-    if (!HookAfter<Raw::AppearanceDefinition::ExtractPartComponents>(&OnPartPackageExtract))
-        throw std::runtime_error("Failed to hook [AppearanceDefinition::ExtractPartComponents].");
-
-    if (!HookAfter<Raw::GarmentAssembler::ExtractComponentsJob>(&OnGarmentPackageExtract))
-        throw std::runtime_error("Failed to hook [GarmentAssembler::ProcessComponentsJob].");
+    HookBefore<Raw::ResourceDepot::RequestResource>(&OnResourceRequest).OrThrow();
+    HookBefore<Raw::ResourceSerializer::Deserialize>(&OnResourceDeserialize).OrThrow();
+    HookAfter<Raw::EntityTemplate::OnLoad>(&OnEntityTemplateLoad).OrThrow();
+    HookBefore<Raw::AppearanceResource::OnLoad>(&OnAppearanceResourceLoad).OrThrow();
+    HookAfter<Raw::CMesh::OnLoad>(&OnMeshResourceLoad).OrThrow();
+    HookBefore<Raw::EntityBuilder::ExtractComponentsJob>(&OnEntityPackageExtract).OrThrow();
+    HookAfter<Raw::AppearanceDefinition::ExtractPartComponents>(&OnPartPackageExtract).OrThrow();
+    HookAfter<Raw::GarmentAssembler::ExtractComponentsJob>(&OnGarmentPackageExtract).OrThrow();
 
     return true;
 }
