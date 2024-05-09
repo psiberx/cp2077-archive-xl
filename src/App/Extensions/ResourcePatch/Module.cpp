@@ -66,15 +66,15 @@ void App::ResourcePatchModule::Configure()
     auto depot = Red::ResourceDepot::Get();
     Core::Set<Red::ResourcePath> invalidPaths;
 
-    for (auto& unit : m_configs)
+    for (auto& config : m_configs)
     {
-        for (const auto& [patchPath, patchScope] : unit.patches)
+        for (const auto& [patchPath, patchScope] : config.patches)
         {
             if (!depot->ResourceExists(patchPath))
             {
                 if (!invalidPaths.contains(patchPath))
                 {
-                    LogWarning("|{}| Resource \"{}\" doesn't exist. Skipped.", ModuleName, unit.paths[patchPath]);
+                    LogWarning("|{}| Resource \"{}\" doesn't exist. Skipped.", ModuleName, config.paths[patchPath]);
                     invalidPaths.insert(patchPath);
                 }
                 continue;
@@ -113,10 +113,10 @@ void App::ResourcePatchModule::Configure()
             for (const auto& targetPath : targetList)
             {
                 s_patches[targetPath].insert(patchPath);
-                s_paths[targetPath] = unit.paths[targetPath];
+                s_paths[targetPath] = config.paths[targetPath];
             }
 
-            s_paths[patchPath] = unit.paths[patchPath];
+            s_paths[patchPath] = config.paths[patchPath];
         }
     }
 
