@@ -42,14 +42,7 @@ bool App::ResourcePatchModule::Load()
     if (!HookAfter<Raw::GarmentAssembler::ExtractComponentsJob>(&OnGarmentPackageExtract))
         throw std::runtime_error("Failed to hook [GarmentAssembler::ProcessComponentsJob].");
 
-    PreparePatches();
-
     return true;
-}
-
-void App::ResourcePatchModule::Reload()
-{
-    PreparePatches();
 }
 
 bool App::ResourcePatchModule::Unload()
@@ -66,7 +59,7 @@ bool App::ResourcePatchModule::Unload()
     return true;
 }
 
-void App::ResourcePatchModule::PreparePatches()
+void App::ResourcePatchModule::Configure()
 {
     s_patches.clear();
 

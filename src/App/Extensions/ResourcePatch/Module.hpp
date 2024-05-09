@@ -15,13 +15,11 @@ class ResourcePatchModule : public ConfigurableModuleImpl<ResourcePatchConfig>
 public:
     std::string_view GetName() override;
     bool Load() override;
-    void Reload() override;
     bool Unload() override;
+    void Configure() override;
 
 private:
     using DefinitionMap = Core::Map<Red::CName, Red::WeakHandle<Red::AppearanceDefinition>>;
-
-    void PreparePatches();
 
     static void OnResourceRequest(Red::ResourceDepot*, const uintptr_t* aOut, Red::ResourcePath aPath, const int32_t*);
     static void OnResourceDeserialize(void* aSerializer, uint64_t, uint64_t, Red::JobHandle& aJob,
