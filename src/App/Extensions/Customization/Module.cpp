@@ -1,4 +1,6 @@
 #include "Module.hpp"
+#include "App/Extensions/ResourceMeta/Module.hpp"
+#include "Red/AppearanceResource.hpp"
 #include "Red/TweakDB.hpp"
 
 namespace
@@ -601,4 +603,119 @@ void App::CustomizationModule::ResetCustomResources()
 {
     m_customMaleResources.clear();
     m_customFemaleResources.clear();
+}
+
+void App::CustomizationModule::FixCustomizationAppearance(Red::AppearanceResource* aResource,
+                                                          Red::Handle<Red::AppearanceDefinition>* aDefinition,
+                                                          Red::CName aAppearanceName)
+{
+    if (aResource->appearances.size == 0)
+        return;
+
+    if (!ResourceMetaModule::IsInResourceList(ResourceMetaModule::CustomizationApp, aResource->path))
+        return;
+
+    auto meshAppearanceStr = std::string_view{aAppearanceName.ToString()};
+
+    if (meshAppearanceStr.size() < 5)
+        return;
+
+    std::unique_lock _(*Raw::AppearanceResource::Mutex(aResource));
+    Red::Handle<Red::AppearanceDefinition> sourceDefinition;
+
+    if (meshAppearanceStr[2] == '_' && std::isdigit(meshAppearanceStr[0]))
+    {
+        meshAppearanceStr.remove_prefix(3);
+
+        auto sourceIndex = aResource->appearances.size > 1 ? 1 : 0;
+        sourceDefinition = aResource->appearances[sourceIndex];
+    }
+    else
+    {
+        auto delimiterPos = meshAppearanceStr.find("__");
+        if (delimiterPos != std::string_view::npos)
+        {
+            for (auto sourceIndex = 0; sourceIndex < aResource->appearances.size; ++sourceIndex)
+            {
+                auto sourceNameStr = std::string_view{aResource->appearances[sourceIndex]->name.ToString()};
+                if (sourceNameStr.compare(0, delimiterPos, meshAppearanceStr, 0, delimiterPos) == 0)
+                {
+                    sourceDefinition = aResource->appearances[sourceIndex];
+                    break;
+                }
+            }
+
+            meshAppearanceStr.remove_prefix(delimiterPos + 2);
+        }
+    }
+
+    if (!sourceDefinition)
+        return;
+
+    if (sourceDefinition->partsOverrides.size > 0)
+    {
+        if (IsFixedCustomizationAppearance(sourceDefinition))
+        {
+            *aDefinition = sourceDefinition;
+            return;
+        }
+
+        auto newDefinition = Red::MakeHandle<Red::AppearanceDefinition>();
+        for (const auto prop : Red::GetClass<Red::AppearanceDefinition>()->props)
+        {
+            prop->SetValue(newDefinition.instance, prop->GetValuePtr<void>(sourceDefinition.instance));
+        }
+
+        newDefinition->name = aAppearanceName;
+
+        auto meshAppearance = Red::CNamePool::Add(meshAppearanceStr.data());
+        for (auto& componentOverride : newDefinition->partsOverrides[0].componentsOverrides)
+        {
+            componentOverride.meshAppearance = meshAppearance;
+        }
+
+        aResource->appearances.PushBack(newDefinition);
+
+        *aDefinition = std::move(newDefinition);
+    }
+    else
+    {
+        sourceDefinition->name = aAppearanceName;
+
+        auto meshAppearance = Red::CNamePool::Add(meshAppearanceStr.data());
+        sourceDefinition->partsOverrides.EmplaceBack();
+        sourceDefinition->partsOverrides[0].componentsOverrides.EmplaceBack();
+        sourceDefinition->partsOverrides[0].componentsOverrides[0].meshAppearance = meshAppearance;
+
+        *aDefinition = std::move(sourceDefinition);
+    }
+}
+
+void App::CustomizationModule::FixCustomizationComponents(const Red::Handle<Red::AppearanceResource>& aResource,
+                                                          const Red::Handle<Red::AppearanceDefinition>& aDefinition,
+                                                          Red::DynArray<Red::Handle<Red::ISerializable>>& aComponents)
+{
+    if (!ResourceMetaModule::IsInResourceList(ResourceMetaModule::CustomizationApp, aResource->path))
+        return;
+
+    if (!IsFixedCustomizationAppearance(aDefinition))
+        return;
+
+    for (const auto& component : aComponents)
+    {
+        if (auto meshComponent = Red::Cast<Red::entSkinnedMeshComponent>(component))
+        {
+            if (meshComponent->meshAppearance && meshComponent->meshAppearance != "default")
+            {
+                meshComponent->meshAppearance = aDefinition->partsOverrides[0].componentsOverrides[0].meshAppearance;
+            }
+        }
+    }
+}
+
+bool App::CustomizationModule::IsFixedCustomizationAppearance(const Red::Handle<Red::AppearanceDefinition>& aDefinition)
+{
+    return aDefinition->partsOverrides.size == 1 &&
+           aDefinition->partsOverrides[0].componentsOverrides.size == 1 &&
+           !aDefinition->partsOverrides[0].componentsOverrides[0].componentName;
 }

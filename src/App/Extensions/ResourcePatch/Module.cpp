@@ -1,4 +1,5 @@
 #include "Module.hpp"
+#include "App/Extensions/Customization/Module.hpp"
 #include "App/Extensions/MeshTemplate/Module.hpp"
 #include "App/Extensions/ResourceMeta/Module.hpp"
 #include "Red/EntityBuilder.hpp"
@@ -431,21 +432,7 @@ void App::ResourcePatchModule::PatchPackageExtractorResults(
     if (!aResource)
         return;
 
-    if (ResourceMetaModule::IsInResourceList(ResourceMetaModule::CustomizationApp, aResource->path) &&
-        aDefinition->partsOverrides.size == 1  && aDefinition->partsOverrides[0].componentsOverrides.size == 1 &&
-        !aDefinition->partsOverrides[0].componentsOverrides[0].componentName)
-    {
-        for (auto& resultObject : aResultObjects)
-        {
-            if (auto meshComponent = Red::Cast<Red::entSkinnedMeshComponent>(resultObject))
-            {
-                if (meshComponent->meshAppearance && meshComponent->meshAppearance != "default")
-                {
-                    meshComponent->meshAppearance = aDefinition->partsOverrides[0].componentsOverrides[0].meshAppearance;
-                }
-            }
-        }
-    }
+    CustomizationModule::FixCustomizationComponents(aResource, aDefinition, aResultObjects);
 
     const auto& patchList = GetPatchList(aResource->path);
 

@@ -31,6 +31,14 @@ public:
     void Reload() override;
     bool Unload() override;
 
+    static void FixCustomizationAppearance(Red::AppearanceResource* aResource,
+                                           Red::Handle<Red::AppearanceDefinition>* aDefinition,
+                                           Red::CName aAppearanceName);
+    static void FixCustomizationComponents(const Red::Handle<Red::AppearanceResource>& aResource,
+                                           const Red::Handle<Red::AppearanceDefinition>& aDefinition,
+                                           Red::DynArray<Red::Handle<Red::ISerializable>>& aComponents);
+    static bool IsFixedCustomizationAppearance(const Red::Handle<Red::AppearanceDefinition>& aDefinition);
+
 private:
     void OnActivateSystem(CustomizationSystem* aSystem, CustomizationPuppet& aPuppet, bool aIsMale, uintptr_t a4);
     void OnDeactivateSystem(CustomizationSystem* aSystem);

@@ -1,5 +1,5 @@
 #include "Module.hpp"
-#include "App/Extensions/ResourceMeta/Module.hpp"
+#include "App/Extensions/Customization/Module.hpp"
 #include "Red/Entity.hpp"
 #include "Red/ResourcePath.hpp"
 #include "Red/TweakDB.hpp"
@@ -284,62 +284,9 @@ void App::GarmentOverrideModule::OnResolveDefinition(Red::AppearanceResource* aR
                 SelectDynamicAppearance(entityState, selector, aResource, *aDefinition);
             }
         }
-        else if (ResourceMetaModule::IsInResourceList(ResourceMetaModule::CustomizationApp, aResource->path))
+        else
         {
-            if (aResource->appearances.size >= 2)
-            {
-                auto meshAppearanceStr = std::string_view(aSelector.ToString());
-                auto delimiterPos = meshAppearanceStr.find('_');
-                if (delimiterPos != std::string_view::npos)
-                {
-                    std::unique_lock _(s_mutex);
-                    meshAppearanceStr.remove_prefix(delimiterPos + 1);
-                    auto meshAppearance = Red::CNamePool::Add(meshAppearanceStr.data());
-
-                    auto& sourceDefinition = aResource->appearances[1];
-
-                    if (sourceDefinition->partsOverrides.size > 0)
-                    {
-                        if (sourceDefinition->partsOverrides.size == 1 &&
-                            sourceDefinition->partsOverrides[0].componentsOverrides.size == 1 &&
-                            !sourceDefinition->partsOverrides[0].componentsOverrides[0].componentName)
-                        {
-                            *aDefinition = sourceDefinition;
-                            return;
-                        }
-
-                        auto newDefinition = Red::MakeHandle<Red::AppearanceDefinition>();
-                        for (const auto prop : Red::GetClass<Red::AppearanceDefinition>()->props)
-                        {
-                            prop->SetValue(newDefinition.instance, prop->GetValuePtr<void>(sourceDefinition.instance));
-                        }
-
-                        newDefinition->name = aSelector;
-
-                        for (auto& componentOverride : newDefinition->partsOverrides[0].componentsOverrides)
-                        {
-                            componentOverride.meshAppearance = meshAppearance;
-                        }
-
-                        {
-                            std::unique_lock appLock(*Raw::AppearanceResource::Mutex(aResource));
-                            aResource->appearances.PushBack(newDefinition);
-                        }
-
-                        *aDefinition = std::move(newDefinition);
-                    }
-                    else
-                    {
-                        sourceDefinition->name = aSelector;
-
-                        sourceDefinition->partsOverrides.EmplaceBack();
-                        sourceDefinition->partsOverrides[0].componentsOverrides.EmplaceBack();
-                        sourceDefinition->partsOverrides[0].componentsOverrides[0].meshAppearance = meshAppearance;
-
-                        *aDefinition = sourceDefinition;
-                    }
-                }
-            }
+            CustomizationModule::FixCustomizationAppearance(aResource, aDefinition, aSelector);
         }
     }
 }
