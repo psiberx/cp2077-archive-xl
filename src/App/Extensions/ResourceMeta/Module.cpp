@@ -12,33 +12,33 @@ std::string_view App::ResourceMetaModule::GetName()
 
 void App::ResourceMetaModule::Configure()
 {
-    s_aliases.clear();
+    s_scopes.clear();
     s_fixes.clear();
 
-    for (auto& unit : m_configs)
+    for (auto& config : m_configs)
     {
-        for (const auto& [aliasPath, targetList] : unit.aliases)
+        for (const auto& [scopePath, targetList] : config.scopes)
         {
-            s_paths[aliasPath] = unit.paths[aliasPath];
+            s_paths[scopePath] = config.paths[scopePath];
 
             for (const auto& targetPath : targetList)
             {
-                if (targetPath == aliasPath)
+                if (targetPath == scopePath)
                     continue;
 
-                s_aliases[aliasPath].insert(targetPath);
-                s_paths[targetPath] = unit.paths[targetPath];
+                s_scopes[scopePath].insert(targetPath);
+                s_paths[targetPath] = config.paths[targetPath];
             }
         }
 
-        for (auto [targetPath, targetFix] : unit.fixes)
+        for (auto [targetPath, targetFix] : config.fixes)
         {
             s_fixes[targetPath] = std::move(targetFix);
-            s_paths[targetPath] = unit.paths[targetPath];
+            s_paths[targetPath] = config.paths[targetPath];
         }
     }
 
-    for (auto& [aliasPath, targetList] : s_aliases)
+    for (auto& [scopePath, targetList] : s_scopes)
     {
         bool updated;
         do
@@ -46,11 +46,11 @@ void App::ResourceMetaModule::Configure()
             updated = false;
             for (const auto& targetPath : targetList)
             {
-                const auto& includePaths = s_aliases.find(targetPath);
-                if (includePaths != s_aliases.end())
+                const auto& includePaths = s_scopes.find(targetPath);
+                if (includePaths != s_scopes.end())
                 {
-                    s_aliases[aliasPath].erase(targetPath);
-                    s_aliases[aliasPath].insert(includePaths.value().begin(), includePaths.value().end());
+                    s_scopes[scopePath].erase(targetPath);
+                    s_scopes[scopePath].insert(includePaths.value().begin(), includePaths.value().end());
                     updated = true;
                     break;
                 }
@@ -62,22 +62,22 @@ void App::ResourceMetaModule::Configure()
     m_configs.clear();
 }
 
-const Core::Set<Red::ResourcePath>& App::ResourceMetaModule::GetResourceList(Red::ResourcePath aAliasPath)
+const Core::Set<Red::ResourcePath>& App::ResourceMetaModule::GetResourceList(Red::ResourcePath aScopePath)
 {
     static const Core::Set<Red::ResourcePath> s_null;
-    const auto& it = s_aliases.find(aAliasPath);
+    const auto& it = s_scopes.find(aScopePath);
 
-    if (it == s_aliases.end())
+    if (it == s_scopes.end())
         return s_null;
 
     return it.value();
 }
 
-bool App::ResourceMetaModule::IsInResourceList(Red::ResourcePath aAliasPath, Red::ResourcePath aTargetPath)
+bool App::ResourceMetaModule::IsInResourceList(Red::ResourcePath aScopePath, Red::ResourcePath aTargetPath)
 {
-    const auto& it = s_aliases.find(aAliasPath);
+    const auto& it = s_scopes.find(aScopePath);
 
-    if (it == s_aliases.end())
+    if (it == s_scopes.end())
         return false;
 
     return it.value().contains(aTargetPath);

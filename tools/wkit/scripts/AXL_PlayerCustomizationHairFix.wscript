@@ -2,13 +2,14 @@ import * as Logger from 'Logger.wscript'
 import { CName } from 'TypeHelper.wscript'
 import * as TypeHelper from 'TypeHelper.wscript'
 
-const config = JSON.parse(wkit.YamlToJson(wkit.LoadRawJsonFromProject('PlayerCustomizationAlias.xl', 'json')))
+const config = JSON.parse(wkit.YamlToJson(wkit.LoadRawJsonFromProject('PlayerCustomizationScope.xl', 'json')))
 
 const affectedHairMeshes = [
-  ...config['resource']['alias']['player_ma_hair.mesh'],
-  ...config['resource']['alias']['player_ma_hat_hair.mesh'],
-  ...config['resource']['alias']['player_wa_hair.mesh'],
-  ...config['resource']['alias']['player_wa_hat_hair.mesh'],
+  ...config['resource']['scope']['player_ma_beard.mesh'],
+  ...config['resource']['scope']['player_ma_hair.mesh'],
+  ...config['resource']['scope']['player_ma_hat_hair.mesh'],
+  ...config['resource']['scope']['player_wa_hair.mesh'],
+  ...config['resource']['scope']['player_wa_hat_hair.mesh'],
 ]
 
 const logInfo = false

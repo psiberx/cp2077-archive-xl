@@ -2,7 +2,7 @@
 
 bool App::ResourceMetaConfig::IsDefined()
 {
-    return !aliases.empty() || !fixes.empty();
+    return !scopes.empty() || !fixes.empty();
 }
 
 void App::ResourceMetaConfig::LoadYAML(const YAML::Node& aNode)
@@ -12,22 +12,22 @@ void App::ResourceMetaConfig::LoadYAML(const YAML::Node& aNode)
     if (!rootNode.IsDefined() || !rootNode.IsMap())
         return;
 
-    LoadAliases(rootNode["alias"]);
+    LoadScopes(rootNode["scope"]);
     LoadFixes(rootNode["fix"]);
 }
 
-void App::ResourceMetaConfig::LoadAliases(const YAML::Node& aNode)
+void App::ResourceMetaConfig::LoadScopes(const YAML::Node& aNode)
 {
     if (!aNode.IsDefined() || !aNode.IsMap())
         return;
 
     for (const auto& entryNode : aNode)
     {
-        const auto& aliasPathStr = entryNode.first.Scalar();
-        const auto& aliasPath = Red::ResourcePath(aliasPathStr.data());
+        const auto& scopePathStr = entryNode.first.Scalar();
+        const auto& scopePath = Red::ResourcePath(scopePathStr.data());
         const auto& targetsNode = entryNode.second;
 
-        paths[aliasPath] = aliasPathStr;
+        paths[scopePath] = scopePathStr;
 
         if (targetsNode.IsScalar())
         {
@@ -36,7 +36,7 @@ void App::ResourceMetaConfig::LoadAliases(const YAML::Node& aNode)
 
             if (targetPath)
             {
-                aliases[aliasPath].insert(targetPath);
+                scopes[scopePath].insert(targetPath);
                 paths[targetPath] = targetPathStr;
             }
         }
@@ -49,7 +49,7 @@ void App::ResourceMetaConfig::LoadAliases(const YAML::Node& aNode)
 
                 if (targetPath)
                 {
-                    aliases[aliasPath].insert(targetPath);
+                    scopes[scopePath].insert(targetPath);
                     paths[targetPath] = targetPathStr;
                 }
             }

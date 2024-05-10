@@ -59,7 +59,7 @@ void App::ResourcePatchModule::Configure()
             {
                 if (!invalidPaths.contains(patchPath))
                 {
-                    LogWarning("|{}| Resource \"{}\" doesn't exist. Skipped.", ModuleName, config.paths[patchPath]);
+                    LogError("|{}| Patch resource \"{}\" doesn't exist.", ModuleName, config.paths[patchPath]);
                     invalidPaths.insert(patchPath);
                 }
                 continue;
@@ -97,6 +97,17 @@ void App::ResourcePatchModule::Configure()
 
             for (const auto& targetPath : targetList)
             {
+                // if (!depot->ResourceExists(targetPath))
+                // {
+                //     if (!invalidPaths.contains(targetPath))
+                //     {
+                //         LogWarning("|{}| Target resource \"{}\" doesn't exist.",
+                //                    ModuleName, config.paths[targetPath]);
+                //         invalidPaths.insert(targetPath);
+                //     }
+                //     continue;
+                // }
+
                 s_patches[targetPath].insert(patchPath);
                 s_paths[targetPath] = config.paths[targetPath];
             }

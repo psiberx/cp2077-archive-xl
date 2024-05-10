@@ -37,10 +37,10 @@ struct ResourceMetaConfig : ModuleConfig
 
     bool IsDefined() override;
     void LoadYAML(const YAML::Node& aNode) override;
-    void LoadAliases(const YAML::Node& aNode);
+    void LoadScopes(const YAML::Node& aNode);
     void LoadFixes(const YAML::Node& aNode);
 
-    Core::Map<Red::ResourcePath, Core::Set<Red::ResourcePath>> aliases;
+    Core::Map<Red::ResourcePath, Core::Set<Red::ResourcePath>> scopes;
     Core::Map<Red::ResourcePath, ResourceFix> fixes;
     Core::Map<Red::ResourcePath, std::string> paths;
 };

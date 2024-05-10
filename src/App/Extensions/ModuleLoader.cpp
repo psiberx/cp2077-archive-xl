@@ -15,7 +15,7 @@ void App::ModuleLoader::Configure()
 
     try
     {
-        LogInfo("Configuring archive extensions...");
+        LogInfo("Discovering archive extensions...");
 
         for (const auto& module : m_configurables)
             module->ResetConfigs();
@@ -84,13 +84,13 @@ void App::ModuleLoader::Configure()
         if (foundAny)
         {
             if (successAll)
-                LogInfo("Configuration completed.");
+                LogInfo("All archive extensions loaded.");
             else
-                LogWarning("Configuration finished with issues.");
+                LogWarning("Archive extensions are loaded with issues.");
         }
         else
         {
-            LogInfo("No extensions found.");
+            LogInfo("No archive extensions found.");
         }
     }
     catch (const std::exception& ex)
@@ -99,7 +99,7 @@ void App::ModuleLoader::Configure()
     }
     catch (...)
     {
-        LogError("An unknown error occurred while reading archive extensions.");
+        LogError("An unknown error occurred while discovering archive extensions.");
     }
 }
 
@@ -111,13 +111,13 @@ bool App::ModuleLoader::AddConfig(const std::filesystem::path& aPath, const std:
     {
         if (!aSilent)
         {
-            LogInfo("Reading \"{}\"...", aPath.filename().string());
+            LogInfo("Loading \"{}\"...", aPath.filename().string());
         }
 
         std::ifstream file(aPath);
 
         if (!file)
-            throw std::runtime_error("Can't read file.");
+            throw std::runtime_error("Can't read extension file.");
 
         const auto name = aPath.filename().string();
         const auto config = YAML::Load(file);
