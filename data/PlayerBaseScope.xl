@@ -1,5 +1,5 @@
 resource:
-  alias:
+  scope:
     player.ent:
       - player_ma.ent
       - player_wa.ent

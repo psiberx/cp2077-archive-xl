@@ -1,8 +1,67 @@
 resource:
-  alias:
+  scope:
     player_customization.app:
+      - player_ma_beard.app
       - player_ma_hair.app
       - player_wa_hair.app
+    player_ma_beard.app:
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__big_beard.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__big_beard__chin.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__big_beard__mustache.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__big_beard_afro.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__big_beard_afro__chin.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__big_beard_afro__mustache.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__default.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__default__chin.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__default__chin_mustache.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__default__chin_sides.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__default__mustache.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__default__mustache_sides.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__default__sides.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__fu_manchu.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__fu_manchu__chin.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__fu_manchu__chin_mustache.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__fu_manchu__chin_sides.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__fu_manchu__mustache.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__fu_manchu__mustache_sides.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__fu_manchu__sides.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__handlebar_stache.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__jesse_beard.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__jesse_beard__chin.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__jesse_beard__mustache.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__logan.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__logan__chin.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__logan__chin_mustache.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__logan__chin_sides.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__logan__mustache.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__logan__mustache_sides.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__logan__sides.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__maelstrom_full.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__maelstrom_full__chin.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__maelstrom_full__chin_mustache.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__maelstrom_full__chin_sides.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__maelstrom_full__mustache.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__maelstrom_full__mustache_sides.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__maelstrom_full__sides.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__maelstrom_goatie.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__patmc.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__patmc__chin.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__patmc__chin_mustache.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__patmc__chin_sides.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__patmc__mustache.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__patmc__mustache_sides.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__patmc__sides.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__shadowbase_01.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__short_afro.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__short_afro__chin.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__short_afro__mustache.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__thick_beard_afro.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__thick_beard_afro__chin.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__thick_beard_afro__chin_mustache.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__thick_beard_afro__chin_sides.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__thick_beard_afro__mustache.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__thick_beard_afro__mustache_sides.app
+      - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__thick_beard_afro__sides.app
     player_ma_hair.app:
       - player_ma_hair_cw_00.app
       - player_ma_hair_cw_01.app
@@ -86,6 +145,19 @@ resource:
       - base\characters\head\player_base_heads\appearances\hairs\hh_048_pma__hairs_144_cyberware_01.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_049_pma__hairs_146_cyberware_01.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_050_pma__hairs_999_cyberware_01.app
+    player_ma_beard.mesh:
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_big_beard.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_big_beard_afro.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_fu_manchu.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_handlebar_stache.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_jesse_beard.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_logan.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_maelstrom_full.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_maelstrom_goatie.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_patmc.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_short_afro.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_thick_beard_afro.mesh
     player_ma_hair.mesh:
       - base\characters\common\hair\hh_006_ma__demo\hh_006_ma__demo.mesh
       - base\characters\common\hair\hh_007_ma__demo\hh_007_ma__demo.mesh
