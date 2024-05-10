@@ -126,7 +126,9 @@ constexpr uint32_t QuestLoader_ProcessPhaseResource = 790570700;
 constexpr uint32_t ResourceDepot_InitializeArchives = 2885423437;
 constexpr uint32_t ResourceDepot_LoadArchives = 2517385486;
 constexpr uint32_t ResourceDepot_RequestResource = 2450934495;
+constexpr uint32_t ResourceDepot_CheckResource = 43194193;
 
+constexpr uint32_t ResourceLoader_RequestResource = 2365013187; // res::ResourceLoader::IssueLoadingRequest
 constexpr uint32_t ResourceLoader_OnUpdate = 1303056161;
 
 constexpr uint32_t ResourcePath_Create = 3998356057;

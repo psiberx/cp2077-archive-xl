@@ -20,4 +20,8 @@ constexpr auto RequestResource = Core::RawFunc<
                                 const uintptr_t* aOutResourceHandle,
                                 Red::ResourcePath aPath,
                                 const int32_t* aArchiveHandle)>{};
+
+constexpr auto CheckResource = Core::RawFunc<
+    /* addr = */ Red::AddressLib::ResourceDepot_CheckResource,
+    /* type = */ bool (*)(Red::ResourceDepot* aDepot, Red::ResourcePath aPath)>{};
 }

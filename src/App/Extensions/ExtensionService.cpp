@@ -11,6 +11,7 @@
 #include "App/Extensions/MeshTemplate/Module.hpp"
 #include "App/Extensions/PuppetState/Module.hpp"
 #include "App/Extensions/QuestPhase/Module.hpp"
+#include "App/Extensions/ResourceLink/Module.hpp"
 #include "App/Extensions/ResourceMeta/Module.hpp"
 #include "App/Extensions/ResourcePatch/Module.hpp"
 #include "App/Extensions/WorldStreaming/Module.hpp"
@@ -27,21 +28,22 @@ void App::ExtensionService::OnBootstrap()
 {
     m_loader = Core::MakeUnique<ModuleLoader>(m_bundlePath, L".xl");
 
+    m_loader->Add<ResourceMetaModule>();
+    m_loader->Add<ResourceLinkModule>();
+    m_loader->Add<ResourcePatchModule>();
+    m_loader->Add<MeshTemplateModule>();
+    m_loader->Add<FactoryIndexModule>();
+    m_loader->Add<LocalizationModule>();
+    m_loader->Add<JournalModule>();
     m_loader->Add<AnimationsModule>();
     m_loader->Add<AppearanceSwapModule>();
     m_loader->Add<AttachmentSlotsModule>();
     m_loader->Add<CustomizationModule>();
-    m_loader->Add<ResourceMetaModule>();
-    m_loader->Add<ResourcePatchModule>();
-    m_loader->Add<FactoryIndexModule>();
-    m_loader->Add<InkSpawnerModule>();
-    m_loader->Add<JournalModule>();
-    m_loader->Add<LocalizationModule>();
-    m_loader->Add<MeshTemplateModule>();
     m_loader->Add<GarmentOverrideModule>();
     m_loader->Add<PuppetStateModule>();
     m_loader->Add<QuestPhaseModule>();
     m_loader->Add<WorldStreamingModule>();
+    m_loader->Add<InkSpawnerModule>();
 
     HookOnceAfter<Raw::GameApplication::InitResourceDepot>([&]() {
         m_loader->Configure();
