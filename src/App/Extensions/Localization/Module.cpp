@@ -14,17 +14,10 @@ std::string_view App::LocalizationModule::GetName()
 
 bool App::LocalizationModule::Load()
 {
-    if (!HookAfter<Raw::Localization::LoadTexts>(&LocalizationModule::OnLoadTexts))
-        throw std::runtime_error("Failed to hook [Localization::LoadOnScreens].");
-
-    if (!HookAfter<Raw::Localization::LoadSubtitles>(&LocalizationModule::OnLoadSubtitles))
-        throw std::runtime_error("Failed to hook [Localization::LoadSubtitles].");
-
-    // if (!HookBefore<Raw::Localization::LoadVoiceOvers>(&LocalizationModule::OnLoadVoiceOvers))
-    //     throw std::runtime_error("Failed to hook [Localization::LoadVoiceOverMaps].");
-
-    if (!HookAfter<Raw::Localization::LoadLipsyncs>(&LocalizationModule::OnLoadLipsyncs))
-        throw std::runtime_error("Failed to hook [Localization::LoadLipsyncs].");
+    HookAfter<Raw::Localization::LoadTexts>(&LocalizationModule::OnLoadTexts).OrThrow();
+    HookAfter<Raw::Localization::LoadSubtitles>(&LocalizationModule::OnLoadSubtitles).OrThrow();
+    //HookBefore<Raw::Localization::LoadVoiceOvers>(&LocalizationModule::OnLoadVoiceOvers).OrThrow();
+    HookAfter<Raw::Localization::LoadLipsyncs>(&LocalizationModule::OnLoadLipsyncs).OrThrow();
 
     return true;
 }

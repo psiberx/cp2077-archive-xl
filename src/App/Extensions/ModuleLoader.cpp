@@ -81,9 +81,6 @@ void App::ModuleLoader::Configure()
             foundAny = true;
         }
 
-        for (const auto& module : m_configurables)
-            module->Configure();
-
         if (foundAny)
         {
             if (successAll)
@@ -165,6 +162,22 @@ void App::ModuleLoader::Load()
         }
     }
 
+    for (const auto& module : m_configurables)
+    {
+        try
+        {
+            module->Configure();
+        }
+        catch (const std::exception& ex)
+        {
+            LogError("|{}| {}", module->GetName(), ex.what());
+        }
+        catch (...)
+        {
+            LogError("|{}| Failed to configure. An unknown error has occurred.", module->GetName());
+        }
+    }
+
     m_loaded = true;
 }
 
@@ -220,6 +233,22 @@ void App::ModuleLoader::Reload()
 {
     if (!m_loaded)
         return;
+
+    for (const auto& module : m_configurables)
+    {
+        try
+        {
+            module->Configure();
+        }
+        catch (const std::exception& ex)
+        {
+            LogError("|{}| {}", module->GetName(), ex.what());
+        }
+        catch (...)
+        {
+            LogError("|{}| Failed to configure. An unknown error has occurred.", module->GetName());
+        }
+    }
 
     for (const auto& module : m_configurables)
     {

@@ -21,36 +21,20 @@ std::string_view App::CustomizationModule::GetName()
 
 bool App::CustomizationModule::Load()
 {
-    if (!HookBefore<Raw::CharacterCustomizationSystem::Initialize>(&CustomizationModule::OnActivateSystem))
-        throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::Initialize].");
-
-    if (!HookBefore<Raw::CharacterCustomizationSystem::Uninitialize>(&CustomizationModule::OnDeactivateSystem))
-        throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::Uninitialize].");
-
-    if (!HookBefore<Raw::CharacterCustomizationSystem::GetResource>(&CustomizationModule::OnPrepareResource))
-        throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::GetResource].");
-
-    if (!HookBefore<Raw::CharacterCustomizationSystem::InitializeAppOption>(&CustomizationModule::OnInitAppOption))
-        throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::InitializeAppOption].");
-
-    if (!HookBefore<Raw::CharacterCustomizationSystem::InitializeMorphOption>(&CustomizationModule::OnInitMorphOption))
-        throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::InitializeMorphOption].");
-
-    if (!HookAfter<Raw::CharacterCustomizationSystem::InitializeSwitcherOption>(&CustomizationModule::OnInitSwitcherOption))
-        throw std::runtime_error("Failed to hook [CharacterCustomizationSystem::InitializeSwitcherOption].");
-
+    HookBefore<Raw::CharacterCustomizationSystem::Initialize>(&CustomizationModule::OnActivateSystem).OrThrow();
+    HookBefore<Raw::CharacterCustomizationSystem::Uninitialize>(&CustomizationModule::OnDeactivateSystem).OrThrow();
+    HookBefore<Raw::CharacterCustomizationSystem::GetResource>(&CustomizationModule::OnPrepareResource).OrThrow();
+    HookBefore<Raw::CharacterCustomizationSystem::InitializeAppOption>(&CustomizationModule::OnInitAppOption).OrThrow();
+    HookBefore<Raw::CharacterCustomizationSystem::InitializeMorphOption>(&CustomizationModule::OnInitMorphOption).OrThrow();
+    HookAfter<Raw::CharacterCustomizationSystem::InitializeSwitcherOption>(&CustomizationModule::OnInitSwitcherOption).OrThrow();
     HookAfter<Raw::CharacterCustomizationState::GetHeadAppearances1>(&CustomizationModule::OnGetAppearances);
     HookAfter<Raw::CharacterCustomizationState::GetHeadAppearances2>(&CustomizationModule::OnGetAppearances);
     HookAfter<Raw::CharacterCustomizationState::GetBodyAppearances1>(&CustomizationModule::OnGetAppearances);
     HookAfter<Raw::CharacterCustomizationState::GetBodyAppearances2>(&CustomizationModule::OnGetAppearances);
     HookAfter<Raw::CharacterCustomizationState::GetArmsAppearances1>(&CustomizationModule::OnGetAppearances);
     HookAfter<Raw::CharacterCustomizationState::GetArmsAppearances2>(&CustomizationModule::OnGetAppearances);
-
-    if (!HookBefore<Raw::RuntimeSystemEntityAppearanceChanger::ChangeAppearance>(&CustomizationModule::OnChangeAppearance))
-        throw std::runtime_error("Failed to hook [RuntimeSystemEntityAppearanceChanger::ChangeAppearance].");
-
-    if (!HookBefore<Raw::RuntimeSystemEntityAppearanceChanger::ChangeAppearances>(&CustomizationModule::OnChangeAppearances))
-        throw std::runtime_error("Failed to hook [RuntimeSystemEntityAppearanceChanger::ChangeAppearance].");
+    HookBefore<Raw::RuntimeSystemEntityAppearanceChanger::ChangeAppearance>(&CustomizationModule::OnChangeAppearance).OrThrow();
+    HookBefore<Raw::RuntimeSystemEntityAppearanceChanger::ChangeAppearances>(&CustomizationModule::OnChangeAppearances).OrThrow();
 
     return true;
 }
@@ -64,6 +48,7 @@ bool App::CustomizationModule::Unload()
 {
     Unhook<Raw::CharacterCustomizationSystem::Initialize>();
     Unhook<Raw::CharacterCustomizationSystem::Uninitialize>();
+    Unhook<Raw::CharacterCustomizationSystem::GetResource>();
     Unhook<Raw::CharacterCustomizationSystem::InitializeAppOption>();
     Unhook<Raw::CharacterCustomizationSystem::InitializeMorphOption>();
     Unhook<Raw::CharacterCustomizationSystem::InitializeSwitcherOption>();

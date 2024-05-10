@@ -10,8 +10,7 @@ App::ArchiveService::ArchiveService(std::filesystem::path aGameDir)
 
 void App::ArchiveService::OnBootstrap()
 {
-    if (!HookAfter<Raw::ResourceDepot::InitializeArchives>(&ArchiveService::OnInitializeArchives))
-        throw std::runtime_error("Failed to hook [ResourceDepot::InitializeArchives].");
+    HookAfter<Raw::ResourceDepot::InitializeArchives>(&ArchiveService::OnInitializeArchives).OrThrow();
 }
 
 void App::ArchiveService::OnShutdown()

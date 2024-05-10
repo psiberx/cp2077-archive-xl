@@ -31,29 +31,14 @@ std::string_view App::AttachmentSlotsModule::GetName()
 
 bool App::AttachmentSlotsModule::Load()
 {
-    if (!HookAfter<Raw::AttachmentSlots::InitializeSlots>(&OnInitializeSlots))
-        throw std::runtime_error("Failed to hook [AttachmentSlots::InitializeSlots].");
-
-    if (!Hook<Raw::AttachmentSlots::IsSlotSpawning>(&OnSlotSpawningCheck))
-        throw std::runtime_error("Failed to hook [AttachmentSlots::IsSlotSpawning].");
-
-    if (!HookAfter<Raw::TPPRepresentationComponent::OnAttach>(&OnAttachTPP))
-        throw std::runtime_error("Failed to hook [TPPRepresentationComponent::OnAttach].");
-
-    if (!HookAfter<Raw::TPPRepresentationComponent::IsAffectedSlot>(&OnSlotCheckTPP))
-        throw std::runtime_error("Failed to hook [TPPRepresentationComponent::IsAffectedSlot].");
-
-    if (!HookAfter<Raw::CharacterCustomizationHairstyleController::CheckState>(&OnCheckHairState))
-        throw std::runtime_error("Failed to hook [CharacterCustomizationHairstyleController::CheckState].");
-
-    // if (!HookAfter<Raw::CharacterCustomizationGenitalsController::CheckState>(&OnCheckBodyState))
-    //     throw std::runtime_error("Failed to hook [CharacterCustomizationGenitalsController::CheckState].");
-
-    if (!HookAfter<Raw::CharacterCustomizationFeetController::CheckState>(&OnCheckFeetState))
-        throw std::runtime_error("Failed to hook [CharacterCustomizationFeetController::CheckState].");
-
-    if (!HookWrap<Raw::AppearanceChanger::GetSuffixValue>(&OnGetSuffixValue))
-        throw std::runtime_error("Failed to hook [AppearanceChanger::GetSuffixValue].");
+    HookAfter<Raw::AttachmentSlots::InitializeSlots>(&OnInitializeSlots).OrThrow();
+    Hook<Raw::AttachmentSlots::IsSlotSpawning>(&OnSlotSpawningCheck).OrThrow();
+    HookAfter<Raw::TPPRepresentationComponent::OnAttach>(&OnAttachTPP).OrThrow();
+    HookAfter<Raw::TPPRepresentationComponent::IsAffectedSlot>(&OnSlotCheckTPP).OrThrow();
+    HookAfter<Raw::CharacterCustomizationHairstyleController::CheckState>(&OnCheckHairState).OrThrow();
+    //HookAfter<Raw::CharacterCustomizationGenitalsController::CheckState>(&OnCheckBodyState).OrThrow();
+    HookAfter<Raw::CharacterCustomizationFeetController::CheckState>(&OnCheckFeetState).OrThrow();
+    HookWrap<Raw::AppearanceChanger::GetSuffixValue>(&OnGetSuffixValue).OrThrow();
 
     {
         std::unique_lock _(s_slotsMutex);

@@ -21,11 +21,8 @@ std::string_view App::AppearanceSwapModule::GetName()
 
 bool App::AppearanceSwapModule::Load()
 {
-    if (!Hook<Raw::ItemFactoryAppearanceChangeRequest::LoadTemplate>(&OnLoadTemplate))
-        throw std::runtime_error("Failed to hook [AppearanceChangeRequest::LoadTemplate].");
-
-    if (!Hook<Raw::AppearanceChanger::SelectAppearanceName>(&OnSelectAppearance))
-        throw std::runtime_error("Failed to hook [AppearanceChanger::SelectAppearanceName].");
+    Hook<Raw::ItemFactoryAppearanceChangeRequest::LoadTemplate>(&OnLoadTemplate).OrThrow();
+    Hook<Raw::AppearanceChanger::SelectAppearanceName>(&OnSelectAppearance).OrThrow();
 
     return true;
 }

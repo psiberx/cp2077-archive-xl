@@ -10,11 +10,10 @@ class AnimationsModule : public ConfigurableModuleImpl<AnimationsConfig>
 public:
     std::string_view GetName() override;
     bool Load() override;
-    void Reload() override;
     bool Unload() override;
+    void Configure() override;
 
 private:
-    void PrepareEntries();
     void OnInitializeAnimations(Red::entAnimatedComponent* aComponent);
 
     Core::Map<uint64_t, Core::Vector<Red::animAnimSetupEntry>> m_animsByTarget;

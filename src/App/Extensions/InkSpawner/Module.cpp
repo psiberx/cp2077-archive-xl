@@ -17,20 +17,11 @@ std::string_view App::InkSpawnerModule::GetName()
 
 bool App::InkSpawnerModule::Load()
 {
-    if (!Hook<Raw::InkWidgetLibrary::SpawnFromLocal>(&OnSpawnLocal))
-        throw std::runtime_error("Failed to hook [InkWidgetLibrary::SpawnFromLocal].");
-
-    if (!Hook<Raw::InkWidgetLibrary::SpawnFromExternal>(&OnSpawnExternal))
-        throw std::runtime_error("Failed to hook [InkWidgetLibrary::SpawnFromExternal].");
-
-    if (!Hook<Raw::InkWidgetLibrary::AsyncSpawnFromLocal>(&OnAsyncSpawnLocal))
-        throw std::runtime_error("Failed to hook [InkWidgetLibrary::AsyncSpawnFromLocal].");
-
-    if (!Hook<Raw::InkWidgetLibrary::AsyncSpawnFromExternal>(&OnAsyncSpawnExternal))
-        throw std::runtime_error("Failed to hook [InkWidgetLibrary::AsyncSpawnFromExternal].");
-
-    if (!HookBefore<Raw::InkSpawner::FinishAsyncSpawn>(&OnFinishAsyncSpawn))
-        throw std::runtime_error("Failed to hook [InkSpawner::FinishAsyncSpawn].");
+    Hook<Raw::InkWidgetLibrary::SpawnFromLocal>(&OnSpawnLocal).OrThrow();
+    Hook<Raw::InkWidgetLibrary::SpawnFromExternal>(&OnSpawnExternal).OrThrow();
+    Hook<Raw::InkWidgetLibrary::AsyncSpawnFromLocal>(&OnAsyncSpawnLocal).OrThrow();
+    Hook<Raw::InkWidgetLibrary::AsyncSpawnFromExternal>(&OnAsyncSpawnExternal).OrThrow();
+    HookBefore<Raw::InkSpawner::FinishAsyncSpawn>(&OnFinishAsyncSpawn).OrThrow();
 
     return true;
 }

@@ -24,20 +24,11 @@ std::string_view App::JournalModule::GetName()
 
 bool App::JournalModule::Load()
 {
-    if (!HookBefore<Raw::JournalTree::ProcessJournalIndex>(&JournalModule::OnLoadJournal))
-        throw std::runtime_error("Failed to hook [JournalTree::ProcessJournalIndex].");
-
-    if (!HookBefore<Raw::JournalRootFolderEntry::Initialize>(&JournalModule::OnInitializeRoot))
-        throw std::runtime_error("Failed to hook [JournalRootFolderEntry::Initialize].");
-
-    if (!HookAfter<Raw::MappinSystem::OnStreamingWorldLoaded>(&JournalModule::OnMappinDataLoaded))
-        throw std::runtime_error("Failed to hook [MappinSystem::OnStreamingWorldLoaded].");
-
-    if (!Hook<Raw::MappinSystem::GetMappinData>(&JournalModule::OnGetMappinData))
-        throw std::runtime_error("Failed to hook [MappinSystem::GetMappinData].");
-
-    if (!Hook<Raw::MappinSystem::GetPoiData>(&JournalModule::OnGetPoiData))
-        throw std::runtime_error("Failed to hook [MappinSystem::GetPoiData].");
+    HookBefore<Raw::JournalTree::ProcessJournalIndex>(&JournalModule::OnLoadJournal).OrThrow();
+    HookBefore<Raw::JournalRootFolderEntry::Initialize>(&JournalModule::OnInitializeRoot).OrThrow();
+    HookAfter<Raw::MappinSystem::OnStreamingWorldLoaded>(&JournalModule::OnMappinDataLoaded).OrThrow();
+    Hook<Raw::MappinSystem::GetMappinData>(&JournalModule::OnGetMappinData).OrThrow();
+    Hook<Raw::MappinSystem::GetPoiData>(&JournalModule::OnGetPoiData).OrThrow();
 
     return true;
 }

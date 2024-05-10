@@ -12,13 +12,12 @@ class QuestPhaseModule : public ConfigurableModuleImpl<QuestPhaseConfig>
 public:
     std::string_view GetName() override;
     bool Load() override;
-    void Reload() override;
     bool Unload() override;
+    void Configure() override;
 
 private:
     using ConnectionPoint = std::pair<Red::Handle<Red::questGraphDefinition>, Red::Handle<Red::questNodeDefinition>>;
 
-    void PreparePhases();
     static void OnPhasePreload(void* aLoader, Red::ResourcePath aPhasePath,
                                Red::Handle<Red::questQuestPhaseResource>& aPhaseResource);
     // static void OnPhaseReady(Red::questPhaseNodeDefinition* aPhaseNode,

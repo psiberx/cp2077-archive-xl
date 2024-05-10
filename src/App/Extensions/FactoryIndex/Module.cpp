@@ -14,8 +14,7 @@ std::string_view App::FactoryIndexModule::GetName()
 
 bool App::FactoryIndexModule::Load()
 {
-    if (!HookAfter<Raw::FactoryIndex::LoadFactoryAsync>(&FactoryIndexModule::OnLoadFactoryAsync))
-        throw std::runtime_error("Failed to hook [FactoryIndex::LoadFactoryAsync].");
+    HookAfter<Raw::FactoryIndex::LoadFactoryAsync>(&FactoryIndexModule::OnLoadFactoryAsync).OrThrow();
 
     return true;
 }

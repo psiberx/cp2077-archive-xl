@@ -14,17 +14,9 @@ std::string_view App::AnimationsModule::GetName()
 
 bool App::AnimationsModule::Load()
 {
-    if (!HookBefore<Raw::AnimatedComponent::InitializeAnimations>(&AnimationsModule::OnInitializeAnimations))
-        throw std::runtime_error("Failed to hook [AnimatedComponent::InitializeAnimations].");
-
-    PrepareEntries();
+    HookBefore<Raw::AnimatedComponent::InitializeAnimations>(&AnimationsModule::OnInitializeAnimations).OrThrow();
 
     return true;
-}
-
-void App::AnimationsModule::Reload()
-{
-    PrepareEntries();
 }
 
 bool App::AnimationsModule::Unload()
@@ -34,7 +26,7 @@ bool App::AnimationsModule::Unload()
     return true;
 }
 
-void App::AnimationsModule::PrepareEntries()
+void App::AnimationsModule::Configure()
 {
     m_animsByTarget.clear();
 

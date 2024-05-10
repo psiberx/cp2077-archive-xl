@@ -32,65 +32,26 @@ std::string_view App::GarmentOverrideModule::GetName()
 
 bool App::GarmentOverrideModule::Load()
 {
-    if (!HookBefore<Raw::ItemFactoryRequest::LoadAppearance>(&OnLoadAppearanceResource))
-        throw std::runtime_error("Failed to hook [ItemFactoryRequest::LoadAppearance].");
-
-    if (!HookBefore<Raw::ItemFactoryAppearanceChangeRequest::LoadAppearance>(&OnChangeAppearanceResource))
-        throw std::runtime_error("Failed to hook [ItemFactoryAppearanceChangeRequest::LoadAppearance].");
-
-    if (!Hook<Raw::EntityTemplate::FindAppearance>(&OnResolveAppearance))
-        throw std::runtime_error("Failed to hook [EntityTemplate::FindAppearance].");
-
-    if (!HookAfter<Raw::AppearanceResource::FindAppearance>(&OnResolveDefinition))
-        throw std::runtime_error("Failed to hook [AppearanceResource::FindAppearance].");
-
-    if (!HookAfter<Raw::AppearanceNameVisualTagsPreset::GetVisualTags>(&OnGetVisualTags))
-        throw std::runtime_error("Failed to hook [AppearanceNameVisualTagsPreset::GetVisualTags].");
-
-    if (!HookAfter<Raw::GarmentAssembler::FindState>(&OnFindState))
-        throw std::runtime_error("Failed to hook [GarmentAssembler::FindState].");
-
-    if (!HookBefore<Raw::GarmentAssemblerState::AddItem>(&OnAddItem))
-        throw std::runtime_error("Failed to hook [GarmentAssemblerState::AddItem].");
-
-    if (!HookBefore<Raw::GarmentAssemblerState::AddCustomItem>(&OnAddCustomItem))
-        throw std::runtime_error("Failed to hook [GarmentAssemblerState::AddCustomItem].");
-
-    if (!HookBefore<Raw::GarmentAssemblerState::ChangeItem>(&OnChangeItem))
-        throw std::runtime_error("Failed to hook [GarmentAssemblerState::ChangeItem].");
-
-    if (!HookBefore<Raw::GarmentAssemblerState::ChangeCustomItem>(&OnChangeCustomItem))
-        throw std::runtime_error("Failed to hook [GarmentAssemblerState::ChangeCustomItem].");
-
-    if (!HookBefore<Raw::GarmentAssembler::RemoveItem>(&OnRemoveItem))
-        throw std::runtime_error("Failed to hook [GarmentAssembler::RemoveItem].");
-
-    if (!Hook<Raw::GarmentAssembler::ProcessGarment>(&OnProcessGarment))
-        throw std::runtime_error("Failed to hook [GarmentAssembler::ProcessGarment].");
-
-    if (!HookBefore<Raw::GarmentAssembler::ProcessSkinnedMesh>(&OnProcessGarmentMesh))
-        throw std::runtime_error("Failed to hook [GarmentAssembler::ProcessSkinnedMesh].");
-
-    if (!HookBefore<Raw::GarmentAssembler::ProcessMorphedMesh>(&OnProcessGarmentMesh))
-        throw std::runtime_error("Failed to hook [GarmentAssembler::ProcessMorphedMesh].");
-
-    if (!HookBefore<Raw::GarmentAssembler::OnGameDetach>(&OnGameDetach))
-        throw std::runtime_error("Failed to hook [GarmentAssembler::OnGameDetach].");
-
-    if (!HookBefore<Raw::AppearanceChanger::RegisterPart>(&OnRegisterPart))
-        throw std::runtime_error("Failed to hook [AppearanceChanger::RegisterPart].");
-
-    // if (!Hook<Raw::AppearanceChanger::GetBaseMeshOffset>(&OnGetBaseMeshOffset))
-    //     throw std::runtime_error("Failed to hook [AppearanceChanger::GetBaseMeshOffset].");
-
-    if (!HookBefore<Raw::AppearanceChanger::ComputePlayerGarment>(&OnComputeGarment))
-        throw std::runtime_error("Failed to hook [AppearanceChanger::ComputePlayerGarment].");
-
-    if (!HookBefore<Raw::Entity::ReassembleAppearance>(&OnReassembleAppearance))
-        throw std::runtime_error("Failed to hook [Entity::ReassembleAppearance].");
-
-    if (!HookAfter<Raw::ResourcePath::Create>(&OnCreateResourcePath))
-        throw std::runtime_error("Failed to hook [ResourcePath::Create].");
+    HookBefore<Raw::ItemFactoryRequest::LoadAppearance>(&OnLoadAppearanceResource).OrThrow();
+    HookBefore<Raw::ItemFactoryAppearanceChangeRequest::LoadAppearance>(&OnChangeAppearanceResource).OrThrow();
+    Hook<Raw::EntityTemplate::FindAppearance>(&OnResolveAppearance).OrThrow();
+    HookAfter<Raw::AppearanceResource::FindAppearance>(&OnResolveDefinition).OrThrow();
+    HookAfter<Raw::AppearanceNameVisualTagsPreset::GetVisualTags>(&OnGetVisualTags).OrThrow();
+    HookAfter<Raw::GarmentAssembler::FindState>(&OnFindState).OrThrow();
+    HookBefore<Raw::GarmentAssemblerState::AddItem>(&OnAddItem).OrThrow();
+    HookBefore<Raw::GarmentAssemblerState::AddCustomItem>(&OnAddCustomItem).OrThrow();
+    HookBefore<Raw::GarmentAssemblerState::ChangeItem>(&OnChangeItem).OrThrow();
+    HookBefore<Raw::GarmentAssemblerState::ChangeCustomItem>(&OnChangeCustomItem).OrThrow();
+    HookBefore<Raw::GarmentAssembler::RemoveItem>(&OnRemoveItem).OrThrow();
+    Hook<Raw::GarmentAssembler::ProcessGarment>(&OnProcessGarment).OrThrow();
+    HookBefore<Raw::GarmentAssembler::ProcessSkinnedMesh>(&OnProcessGarmentMesh).OrThrow();
+    HookBefore<Raw::GarmentAssembler::ProcessMorphedMesh>(&OnProcessGarmentMesh).OrThrow();
+    HookBefore<Raw::GarmentAssembler::OnGameDetach>(&OnGameDetach).OrThrow();
+    HookBefore<Raw::AppearanceChanger::RegisterPart>(&OnRegisterPart).OrThrow();
+    //Hook<Raw::AppearanceChanger::GetBaseMeshOffset>(&OnGetBaseMeshOffset).OrThrow();
+    HookBefore<Raw::AppearanceChanger::ComputePlayerGarment>(&OnComputeGarment).OrThrow();
+    HookBefore<Raw::Entity::ReassembleAppearance>(&OnReassembleAppearance).OrThrow();
+    HookAfter<Raw::ResourcePath::Create>(&OnCreateResourcePath).OrThrow();
 
     s_emptyAppearance = Core::MakeUnique<Red::TemplateAppearance>();
     s_emptyAppearance->name = EmptyAppearanceName;
@@ -101,14 +62,7 @@ bool App::GarmentOverrideModule::Load()
     s_stateManager = Core::MakeUnique<OverrideStateManager>(s_dynamicAppearance);
     s_tagManager = Core::MakeShared<OverrideTagManager>();
 
-    ConfigureTags();
-
     return true;
-}
-
-void App::GarmentOverrideModule::Reload()
-{
-    ConfigureTags();
 }
 
 bool App::GarmentOverrideModule::Unload()
@@ -141,7 +95,7 @@ bool App::GarmentOverrideModule::Unload()
     return true;
 }
 
-void App::GarmentOverrideModule::ConfigureTags()
+void App::GarmentOverrideModule::Configure()
 {
     std::unique_lock _(s_mutex);
     for (const auto& unit : m_configs)

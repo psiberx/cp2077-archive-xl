@@ -14,11 +14,10 @@ class WorldStreamingModule : public ConfigurableModuleImpl<WorldStreamingConfig>
 public:
     std::string_view GetName() override;
     bool Load() override;
-    void Reload() override;
     bool Unload() override;
+    void Configure() override;
 
 private:
-    void PrepareSectors();
     void OnWorldLoad(Red::world::StreamingWorld* aWorld, Red::BaseStream* aStream);
     static void OnSectorReady(Red::world::StreamingSector* aSector, uint64_t);
     static bool PatchSector(Red::world::StreamingSector* aSector, const WorldSectorMod& aSectorMod);

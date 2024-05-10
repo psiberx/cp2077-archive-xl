@@ -17,24 +17,14 @@ std::string_view App::WorldStreamingModule::GetName()
 
 bool App::WorldStreamingModule::Load()
 {
-    if (!HookAfter<Raw::StreamingWorld::OnLoad>(&WorldStreamingModule::OnWorldLoad))
-        throw std::runtime_error("Failed to hook [StreamingWorld::OnLoad].");
-
-    if (!HookAfter<Raw::StreamingSector::OnReady>(&OnSectorReady))
-        throw std::runtime_error("Failed to hook [StreamingSector::OnReady].");
-
-    PrepareSectors();
+    HookAfter<Raw::StreamingWorld::OnLoad>(&WorldStreamingModule::OnWorldLoad).OrThrow();
+    HookAfter<Raw::StreamingSector::OnReady>(&OnSectorReady).OrThrow();
 
     s_dummyNode = Red::MakeHandle<Red::worldAudioTagNode>();
     s_dummyNode->isVisibleInGame = false;
     s_dummyNode->radius = 0.00001;
 
     return true;
-}
-
-void App::WorldStreamingModule::Reload()
-{
-    PrepareSectors();
 }
 
 bool App::WorldStreamingModule::Unload()
@@ -45,7 +35,7 @@ bool App::WorldStreamingModule::Unload()
     return true;
 }
 
-void App::WorldStreamingModule::PrepareSectors()
+void App::WorldStreamingModule::Configure()
 {
     std::unique_lock _(s_sectorsLock);
 

@@ -12,20 +12,10 @@ std::string_view App::QuestPhaseModule::GetName()
 
 bool App::QuestPhaseModule::Load()
 {
-    if (!HookBefore<Raw::QuestLoader::ProcessPhaseResource>(&QuestPhaseModule::OnPhasePreload))
-        throw std::runtime_error("Failed to hook [QuestLoader::ProcessPhaseResource].");
-
-    // if (!HookBefore<Raw::QuestPhase::SetLoadedResource>(&QuestPhaseModule::OnPhaseReady))
-    //     throw std::runtime_error("Failed to hook [QuestPhase::SetLoadedResource].");
-
-    PreparePhases();
+    HookBefore<Raw::QuestLoader::ProcessPhaseResource>(&QuestPhaseModule::OnPhasePreload).OrThrow();
+    //HookBefore<Raw::QuestPhase::SetLoadedResource>(&QuestPhaseModule::OnPhaseReady).OrThrow();
 
     return true;
-}
-
-void App::QuestPhaseModule::Reload()
-{
-    PreparePhases();
 }
 
 bool App::QuestPhaseModule::Unload()
@@ -36,7 +26,7 @@ bool App::QuestPhaseModule::Unload()
     return true;
 }
 
-void App::QuestPhaseModule::PreparePhases()
+void App::QuestPhaseModule::Configure()
 {
     s_phases.clear();
 

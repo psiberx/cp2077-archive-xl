@@ -17,8 +17,8 @@ public:
     static constexpr auto LegsStateSuffixID = Red::TweakDBID("itemsFactoryAppearanceSuffix.LegsState");
 
     bool Load() override;
-    void Reload() override;
     bool Unload() override;
+    void Configure() override;
 
     std::string_view GetName() override;
 
@@ -29,8 +29,6 @@ public:
     static PuppetFeetState GetFeetState(const Red::WeakHandle<Red::GameObject>& aPuppet);
 
 private:
-    void FillBodyTypes();
-
     static void OnLoadTweakDB();
     static void OnAttachPuppet(Red::gameuiCharacterCustomizationGenitalsController* aComponent);
     static void OnDetachPuppet(Red::gameuiCharacterCustomizationHairstyleController* aComponent, uintptr_t);

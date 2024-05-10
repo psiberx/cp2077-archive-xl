@@ -17,16 +17,9 @@ std::string_view App::PuppetStateModule::GetName()
 
 bool App::PuppetStateModule::Load()
 {
-    if (!HookAfter<Raw::LoadTweakDB>(&OnLoadTweakDB))
-        throw std::runtime_error("Failed to hook [LoadTweakDB].");
-
-    if (!HookBefore<Raw::CharacterCustomizationGenitalsController::OnAttach>(&OnAttachPuppet))
-        throw std::runtime_error("Failed to hook [CharacterCustomizationGenitalsController::OnAttach].");
-
-    if (!HookBefore<Raw::CharacterCustomizationHairstyleController::OnDetach>(&OnDetachPuppet))
-        throw std::runtime_error("Failed to hook [CharacterCustomizationHairstyleController::OnDetach].");
-
-    FillBodyTypes();
+    HookAfter<Raw::LoadTweakDB>(&OnLoadTweakDB).OrThrow();
+    HookBefore<Raw::CharacterCustomizationGenitalsController::OnAttach>(&OnAttachPuppet).OrThrow();
+    HookBefore<Raw::CharacterCustomizationHairstyleController::OnDetach>(&OnDetachPuppet).OrThrow();
 
     return true;
 }
@@ -40,12 +33,7 @@ bool App::PuppetStateModule::Unload()
     return true;
 }
 
-void App::PuppetStateModule::Reload()
-{
-    FillBodyTypes();
-}
-
-void App::PuppetStateModule::FillBodyTypes()
+void App::PuppetStateModule::Configure()
 {
     s_bodyTypes.clear();
     s_bodyTags.clear();

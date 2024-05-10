@@ -19,11 +19,8 @@ std::string_view App::MeshTemplateModule::GetName()
 
 bool App::MeshTemplateModule::Load()
 {
-    if (!HookAfter<Raw::CMesh::FindAppearance>(&OnFindAppearance))
-        throw std::runtime_error("Failed to hook [CMesh::FindAppearance].");
-
-    if (!Hook<Raw::CMesh::LoadMaterialsAsync>(&OnLoadMaterials))
-        throw std::runtime_error("Failed to hook [CMesh::LoadMaterialsAsync].");
+    HookAfter<Raw::CMesh::FindAppearance>(&OnFindAppearance).OrThrow();
+    Hook<Raw::CMesh::LoadMaterialsAsync>(&OnLoadMaterials).OrThrow();
 
     return true;
 }
@@ -35,6 +32,7 @@ bool App::MeshTemplateModule::Unload()
         s_states.clear();
     }
 
+    Unhook<Raw::CMesh::FindAppearance>();
     Unhook<Raw::CMesh::LoadMaterialsAsync>();
 
     return true;

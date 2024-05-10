@@ -18,8 +18,8 @@ public:
     static constexpr auto ForceFlatFeetTag = Red::CName("force_FlatFeet");
 
     bool Load() override;
-    void Reload() override;
     bool Unload() override;
+    void Configure() override;
     std::string_view GetName() override;
 
     static void EnableGarmentOffsets();
@@ -29,8 +29,6 @@ public:
     static Core::SharedPtr<OverrideTagManager>& GetTagManager();
 
 private:
-    void ConfigureTags();
-
     static void OnLoadAppearanceResource(Red::ItemFactoryRequest* aRequest);
     static void OnChangeAppearanceResource(Red::ItemFactoryAppearanceChangeRequest* aRequest);
     static Red::TemplateAppearance* OnResolveAppearance(Red::EntityTemplate* aTemplate, Red::CName aSelector);
