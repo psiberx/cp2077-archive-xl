@@ -35,4 +35,6 @@ void App::Application::OnStarting()
     LogInfo("{} {} is starting...", Project::Name, Project::Version.to_string());
 
     Migration::CleanUp(Env::LegacyScriptsDir());
+    Migration::CleanUp(Env::BundleDir() / L"PlayerBaseAlias.xl");
+    Migration::CleanUp(Env::BundleDir() / L"PlayerCustomizationAlias.xl");
 }
