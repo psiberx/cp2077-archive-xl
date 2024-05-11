@@ -126,6 +126,7 @@ public: \
 #define RTTI_PROPERTY(...) X_RTTI_OVERLOAD(X_RTTI_PROPERTY, __VA_ARGS__)
 #define X_RTTI_PROPERTY_1(_property) X_RTTI_PROPERTY_2(_property, #_property)
 #define X_RTTI_PROPERTY_2(_property, _name) type->AddProperty<&Type::_property>(_name)
+#define X_RTTI_PROPERTY_3(_type, _offset, _name) type->AddProperty<_type>(_offset, _name)
 
 #define RTTI_PROPERTY_FQN(...) X_RTTI_OVERLOAD(X_RTTI_PROPERTY_FQN, __VA_ARGS__)
 #define X_RTTI_PROPERTY_FQN_1(_property) X_RTTI_PROPERTY_FQN_2(_property, X_RTTI_NAME(_property))
@@ -134,6 +135,7 @@ public: \
 #define RTTI_PERSISTENT(...) X_RTTI_OVERLOAD(X_RTTI_PERSISTENT, __VA_ARGS__)
 #define X_RTTI_PERSISTENT_1(_property) X_RTTI_PERSISTENT_2(_property, #_property)
 #define X_RTTI_PERSISTENT_2(_property, _name) type->AddProperty<&Type::_property>(_name, {.isPersistent = true})
+#define X_RTTI_PERSISTENT_3(_type, _offset, _name) type->AddProperty<_type>(_offset, _name, {.isPersistent = true})
 
 #define RTTI_PERSISTENT_FQN(...) X_RTTI_OVERLOAD(X_RTTI_PERSISTENT_FQN, __VA_ARGS__)
 #define X_RTTI_PERSISTENT_FQN_1(_property) X_RTTI_PERSISTENT_FQN_2(_property, X_RTTI_NAME(_property))

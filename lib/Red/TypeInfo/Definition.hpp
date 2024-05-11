@@ -636,6 +636,17 @@ public:
         return prop;
     }
 
+    template<typename TProperty>
+    CProperty* AddProperty(uint32_t aOffset, const char* aName, CProperty::Flags aFlags = {})
+    {
+        auto* type = ResolveType<TProperty>();
+        auto* prop = CProperty::Create(type, aName, nullptr, aOffset, nullptr, aFlags);
+
+        props.PushBack(prop);
+
+        return prop;
+    }
+
     template<auto AProperty>
     requires Detail::IsPropertyPtr<decltype(AProperty)>
     CClassFunction* AddGetter(const char* aName)
