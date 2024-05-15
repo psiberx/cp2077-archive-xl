@@ -30,8 +30,9 @@ private:
         const DynamicAttributeList& GetContext();
 
         void FillMaterials(Red::CMesh* aMesh);
-        void RegisterMaterialEntry(Red::CName aMaterialName, uint32_t aEntryIndex);
-        [[nodiscard]] uint32_t GetTemplateEntryIndex(Red::CName aMaterialName);
+        void RegisterMaterialEntry(Red::CName aMaterialName, int32_t aEntryIndex);
+        [[nodiscard]] int32_t GetTemplateEntryIndex(Red::CName aMaterialName);
+        [[nodiscard]] int32_t GetMaterialEntryIndex(Red::CName aMaterialName);
         [[nodiscard]] bool HasMaterialEntry(Red::CName aMaterialName) const;
 
         Red::CName RegisterSource(Red::CMesh* aSourceMesh);
@@ -42,8 +43,8 @@ private:
         std::shared_mutex sourceMutex;
         Red::SharedPtr<Red::ResourceToken<Red::IMaterial>> contextToken;
         DynamicAttributeList context;
-        Core::Map<Red::CName, uint32_t> templates;
-        Core::Map<Red::CName, uint32_t> materials;
+        Core::Map<Red::CName, int32_t> templates;
+        Core::Map<Red::CName, int32_t> materials;
         Core::Map<Red::CName, Red::CMesh*> sources;
     };
 
