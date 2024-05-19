@@ -165,7 +165,7 @@ bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::
         sourceState = meshState;
     }
 
-    if (sourceState->IsStatic())
+    if (sourceState == meshState && meshState->IsStatic())
         return false;
 
     std::scoped_lock _(meshState->meshMutex, sourceState->sourceMutex);
@@ -476,8 +476,6 @@ void App::MeshTemplateModule::MeshState::MarkStatic()
     dynamic = false;
     context.clear();
     templates.clear();
-    materials.clear();
-    sources.clear();
 }
 
 bool App::MeshTemplateModule::MeshState::IsStatic() const
