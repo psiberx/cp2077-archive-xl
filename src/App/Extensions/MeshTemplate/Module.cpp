@@ -45,62 +45,68 @@ bool App::MeshTemplateModule::Unload()
 void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& aOut, Red::CMesh* aMesh,
                                                Red::CName aName)
 {
-    if (aOut)
+    if (!aOut)
+        return;
+
+    const auto ownerMesh = Raw::MeshAppearance::Owner::Ptr(aOut);
+
+    if (!ownerMesh)
     {
-        const auto ownerMesh = Raw::MeshAppearance::Owner::Ptr(aOut);
+        LogWarning(R"(|{}| Mesh {} doesn't have any appearances.)", ModuleName, aMesh->path.hash);
+        return;
+    }
 
-        if (aOut->chunkMaterials.size == 0)
+    if (aOut->chunkMaterials.size == 0)
+    {
+        Red::Handle<Red::meshMeshAppearance> sourceAppearance;
+        if (aMesh->appearances.size > 0)
         {
-            Red::Handle<Red::meshMeshAppearance> sourceAppearance;
-            if (aMesh->appearances.size > 0)
-            {
-                sourceAppearance = aMesh->appearances.Front();
-            }
-            else if (ownerMesh->appearances.size > 0)
-            {
-                sourceAppearance = ownerMesh->appearances.Front();
-            }
+            sourceAppearance = aMesh->appearances.Front();
+        }
+        else if (ownerMesh->appearances.size > 0)
+        {
+            sourceAppearance = ownerMesh->appearances.Front();
+        }
 
-            if (sourceAppearance)
+        if (sourceAppearance)
+        {
+            const auto appearanceNameStr = std::string{aOut->name.ToString()};
+            for (auto chunkMaterialName : sourceAppearance->chunkMaterials)
             {
-                const auto appearanceNameStr = std::string{aOut->name.ToString()};
-                for (auto chunkMaterialName : sourceAppearance->chunkMaterials)
+                auto chunkMaterialNameStr = std::string_view{chunkMaterialName.ToString()};
+                auto templateNamePos = chunkMaterialNameStr.find(SpecialMaterialMarker);
+
+                if (templateNamePos != std::string_view::npos)
                 {
-                    auto chunkMaterialNameStr = std::string_view{chunkMaterialName.ToString()};
-                    auto templateNamePos = chunkMaterialNameStr.find(SpecialMaterialMarker);
+                    chunkMaterialNameStr.remove_prefix(templateNamePos);
 
-                    if (templateNamePos != std::string_view::npos)
-                    {
-                        chunkMaterialNameStr.remove_prefix(templateNamePos);
+                    auto generatedMaterialNameStr = appearanceNameStr;
+                    generatedMaterialNameStr.append(chunkMaterialNameStr);
 
-                        auto generatedMaterialNameStr = appearanceNameStr;
-                        generatedMaterialNameStr.append(chunkMaterialNameStr);
-
-                        chunkMaterialName = Red::CNamePool::Add(generatedMaterialNameStr.data());
-                    }
-                    else if (chunkMaterialName == sourceAppearance->name)
-                    {
-                        chunkMaterialName = aOut->name;
-                    }
-
-                    aOut->chunkMaterials.PushBack(chunkMaterialName);
+                    chunkMaterialName = Red::CNamePool::Add(generatedMaterialNameStr.data());
                 }
+                else if (chunkMaterialName == sourceAppearance->name)
+                {
+                    chunkMaterialName = aOut->name;
+                }
+
+                aOut->chunkMaterials.PushBack(chunkMaterialName);
             }
         }
+    }
 
-        if (ownerMesh != aMesh)
+    if (ownerMesh != aMesh)
+    {
+        auto meshState = AcquireMeshState(aMesh);
+
         {
-            auto meshState = AcquireMeshState(aMesh);
+            std::unique_lock _(meshState->meshMutex);
 
-            {
-                std::unique_lock _(meshState->meshMutex);
-
-                auto patchName = meshState->RegisterSource(ownerMesh);
-                aOut->chunkMaterials.PushBack(patchName);
-            }
-
-            Raw::MeshAppearance::Owner::Set(aOut, aMesh);
+            auto patchName = meshState->RegisterSource(ownerMesh);
+            aOut->chunkMaterials.PushBack(patchName);
         }
+
+        Raw::MeshAppearance::Owner::Set(aOut, aMesh);
     }
 }
 
@@ -441,7 +447,7 @@ void App::MeshTemplateModule::OnAddStubAppearance(Red::CMesh* aMesh)
 
 void App::MeshTemplateModule::OnPreloadAppearances(bool& aResult, Red::CMesh* aMesh)
 {
-    if (aResult && !aMesh->forceLoadAllAppearances && aMesh->appearances.size == 1)
+    if (aResult && !aMesh->forceLoadAllAppearances && aMesh->appearances.size == 1 && aMesh->appearances[0]->name != "default")
     {
         if (aMesh->materialEntries.size == 0 || IsSpecialMaterial(aMesh->materialEntries[0].name))
         {
