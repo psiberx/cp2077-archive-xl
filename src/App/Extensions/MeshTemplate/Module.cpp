@@ -9,6 +9,7 @@ constexpr auto ModuleName = "MeshTemplate";
 constexpr auto SpecialMaterialMarker = '@';
 constexpr auto ContextMaterialName = Red::CName("@context");
 constexpr auto DefaultTemplateName = Red::CName("@material");
+constexpr auto DefaultAppearanceName = Red::CName("default");
 constexpr auto MaterialAttr = Red::CName("material");
 }
 
@@ -61,11 +62,19 @@ void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearan
         Red::Handle<Red::meshMeshAppearance> sourceAppearance;
         if (aMesh->appearances.size > 0)
         {
-            sourceAppearance = aMesh->appearances.Front();
+            sourceAppearance = aMesh->appearances[0];
+
+            // if (sourceAppearance->name == DefaultAppearanceName)
+            // {
+            //     if (aMesh->appearances.size > 1 && aMesh->appearances[1]->chunkMaterials.size > 0)
+            //     {
+            //         sourceAppearance = aMesh->appearances[1];
+            //     }
+            // }
         }
         else if (ownerMesh->appearances.size > 0)
         {
-            sourceAppearance = ownerMesh->appearances.Front();
+            sourceAppearance = ownerMesh->appearances[0];
         }
 
         if (sourceAppearance)
@@ -447,11 +456,14 @@ void App::MeshTemplateModule::OnAddStubAppearance(Red::CMesh* aMesh)
 
 void App::MeshTemplateModule::OnPreloadAppearances(bool& aResult, Red::CMesh* aMesh)
 {
-    if (aResult && !aMesh->forceLoadAllAppearances && aMesh->appearances.size == 1 && aMesh->appearances[0]->name != "default")
+    if (aResult && !aMesh->forceLoadAllAppearances)
     {
-        if (aMesh->materialEntries.size == 0 || IsSpecialMaterial(aMesh->materialEntries[0].name))
+        if (aMesh->appearances.size == 1 && aMesh->appearances[0]->name != DefaultAppearanceName)
         {
-            aResult = false;
+            if (aMesh->materialEntries.size == 0 || IsSpecialMaterial(aMesh->materialEntries[0].name))
+            {
+                aResult = false;
+            }
         }
     }
 }
