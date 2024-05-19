@@ -51,6 +51,8 @@ private:
     static void OnFindAppearance(Red::Handle<Red::mesh::MeshAppearance>& aOut, Red::CMesh* aMesh, Red::CName aName);
     static void* OnLoadMaterials(Red::CMesh* aMesh, Red::MeshMaterialsToken& aToken,
                                  const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4);
+    static void OnAddStubAppearance(Red::CMesh* aMesh);
+    static void OnPreloadAppearances(bool& aResult, Red::CMesh* aMesh);
 
     static bool ProcessMeshResource(Red::CMesh* aMesh, const Red::DynArray<Red::CName>& aMaterialNames,
                                     Core::Vector<Red::JobHandle>& aLoadingJobs);

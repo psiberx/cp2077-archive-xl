@@ -21,6 +21,8 @@ bool App::MeshTemplateModule::Load()
 {
     HookAfter<Raw::CMesh::FindAppearance>(&OnFindAppearance).OrThrow();
     Hook<Raw::CMesh::LoadMaterialsAsync>(&OnLoadMaterials).OrThrow();
+    Hook<Raw::CMesh::AddStubAppearance>(&OnAddStubAppearance).OrThrow();
+    HookAfter<Raw::CMesh::ShouldPreloadAppearances>(&OnPreloadAppearances).OrThrow();
 
     return true;
 }
@@ -34,6 +36,8 @@ bool App::MeshTemplateModule::Unload()
 
     Unhook<Raw::CMesh::FindAppearance>();
     Unhook<Raw::CMesh::LoadMaterialsAsync>();
+    Unhook<Raw::CMesh::AddStubAppearance>();
+    Unhook<Raw::CMesh::ShouldPreloadAppearances>();
 
     return true;
 }
@@ -427,6 +431,22 @@ void App::MeshTemplateModule::PrefetchMeshState(Red::CMesh* aMesh, const Core::M
     else if (IsContextualMesh(aMesh))
     {
         AcquireMeshState(aMesh);
+    }
+}
+
+void App::MeshTemplateModule::OnAddStubAppearance(Red::CMesh* aMesh)
+{
+    // Don't add stub appearance
+}
+
+void App::MeshTemplateModule::OnPreloadAppearances(bool& aResult, Red::CMesh* aMesh)
+{
+    if (aResult && !aMesh->forceLoadAllAppearances && aMesh->appearances.size == 1)
+    {
+        if (aMesh->materialEntries.size == 0 || IsSpecialMaterial(aMesh->materialEntries[0].name))
+        {
+            aResult = false;
+        }
     }
 }
 

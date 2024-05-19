@@ -31,6 +31,14 @@ constexpr auto LoadMaterialsAsync = Core::RawFunc<
                            Red::MeshMaterialsToken& aOut,
                            const Red::DynArray<Red::CName>& aMaterialNames,
                            uint8_t a4)>();
+
+constexpr auto AddStubAppearance = Core::RawFunc<
+    /* addr = */ Red::AddressLib::CMesh_AddStubAppearance,
+    /* type = */ void (*)(Red::CMesh* aMesh)>();
+
+constexpr auto ShouldPreloadAppearances = Core::RawFunc<
+    /* addr = */ Red::AddressLib::CMesh_ShouldPreloadAppearances,
+    /* type = */ bool (*)(Red::CMesh* aMesh)>();
 }
 
 namespace Raw::MeshMaterialBuffer
