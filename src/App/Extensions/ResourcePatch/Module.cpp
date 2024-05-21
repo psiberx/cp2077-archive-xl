@@ -50,6 +50,7 @@ void App::ResourcePatchModule::Configure()
 
     auto depot = Red::ResourceDepot::Get();
     Core::Set<Red::ResourcePath> invalidPaths;
+    Core::Set<Red::ResourcePath> patchPaths;
 
     for (auto& config : m_configs)
     {
@@ -113,7 +114,27 @@ void App::ResourcePatchModule::Configure()
             }
 
             s_paths[patchPath] = config.paths[patchPath];
+            patchPaths.insert(patchPath);
         }
+    }
+
+    for (auto patch = s_patches.begin(); patch != s_patches.end();)
+    {
+        const auto& targetPath = patch->first;
+
+        if (patchPaths.contains(targetPath))
+        {
+            if (!invalidPaths.contains(targetPath))
+            {
+                LogError(R"(|{}| Patch resource "{}" cannot be patched.)", ModuleName, s_paths[targetPath]);
+                invalidPaths.insert(targetPath);
+            }
+
+            patch = s_patches.erase(patch);
+            continue;
+        }
+
+        ++patch;
     }
 
     m_configs.clear();
@@ -210,6 +231,8 @@ void App::ResourcePatchModule::OnAppearanceResourceLoad(Red::AppearanceResource*
     if (patchList.empty())
         return;
 
+    Core::Set<Red::CName> newAppearances;
+
     for (const auto& patchPath : patchList)
     {
         auto patchResource = GetPatchResource<Red::AppearanceResource>(patchPath);
@@ -225,22 +248,29 @@ void App::ResourcePatchModule::OnAppearanceResourceLoad(Red::AppearanceResource*
             {
                 if (existingDefinition->name == patchDefinition->name)
                 {
+                    if (!newAppearances.contains(patchDefinition->name))
                     {
-                        std::unique_lock _(s_definitionLock);
-                        s_definitions[patchPath][patchDefinition->name] = patchDefinition;
-                    }
+                        {
+                            std::unique_lock _(s_definitionLock);
+                            s_definitions[patchPath][patchDefinition->name] = patchDefinition;
+                        }
 
-                    for (const auto& partValue : patchDefinition->partsValues)
+                        for (const auto& partValue : patchDefinition->partsValues)
+                        {
+                            existingDefinition->partsValues.PushBack(partValue);
+                        }
+
+                        for (const auto& partOverride : patchDefinition->partsOverrides)
+                        {
+                            existingDefinition->partsOverrides.PushBack(partOverride);
+                        }
+
+                        existingDefinition->visualTags.Add(patchDefinition->visualTags);
+                    }
+                    else
                     {
-                        existingDefinition->partsValues.PushBack(partValue);
+                        existingDefinition = patchDefinition;
                     }
-
-                    for (const auto& partOverride : patchDefinition->partsOverrides)
-                    {
-                        existingDefinition->partsOverrides.PushBack(partOverride);
-                    }
-
-                    existingDefinition->visualTags.Add(patchDefinition->visualTags);
 
                     isNewAppearance = false;
                     break;
@@ -250,6 +280,7 @@ void App::ResourcePatchModule::OnAppearanceResourceLoad(Red::AppearanceResource*
             if (isNewAppearance)
             {
                 aResource->appearances.EmplaceBack(patchDefinition);
+                newAppearances.insert(patchDefinition->name);
             }
         }
     }
