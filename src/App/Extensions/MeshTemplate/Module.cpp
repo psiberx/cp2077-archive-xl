@@ -53,9 +53,26 @@ void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearan
 
     if (!ownerMesh)
     {
-        LogWarning(R"(|{}| Mesh {} doesn't have any appearances.)", ModuleName, aMesh->path.hash);
+        auto& controller = GarmentOverrideModule::GetDynamicAppearanceController();
+        auto& pathStr = controller->GetPathStr(aMesh->path);
+
+        if (!pathStr.empty())
+        {
+            LogWarning(R"(|{}| Mesh \"{}\" doesn't have any appearances.)", ModuleName, pathStr);
+        }
+        else
+        {
+            LogWarning(R"(|{}| Mesh {} doesn't have any appearances.)", ModuleName, aMesh->path.hash);
+        }
+
+        aOut = Red::MakeHandle<Red::meshMeshAppearance>();
+        Raw::MeshAppearance::Owner::Set(aOut, aMesh);
+        aMesh->appearances.PushBack(aOut);
         return;
     }
+
+    if (!aOut->name)
+        return;
 
     if (aOut->chunkMaterials.size == 0)
     {
@@ -72,12 +89,12 @@ void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearan
             //     }
             // }
         }
-        else if (ownerMesh->appearances.size > 0)
+        else if (ownerMesh != aMesh && ownerMesh->appearances.size > 0)
         {
             sourceAppearance = ownerMesh->appearances[0];
         }
 
-        if (sourceAppearance)
+        if (sourceAppearance && sourceAppearance != aOut)
         {
             const auto appearanceNameStr = std::string{aOut->name.ToString()};
             for (auto chunkMaterialName : sourceAppearance->chunkMaterials)
