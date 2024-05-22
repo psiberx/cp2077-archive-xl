@@ -468,7 +468,10 @@ void App::MeshTemplateModule::PrefetchMeshState(Red::CMesh* aMesh, const Core::M
 
 void App::MeshTemplateModule::OnAddStubAppearance(Red::CMesh* aMesh)
 {
-    // Don't add stub appearance
+    if (aMesh->boneNames.size == 0 || aMesh->surfaceAreaPerAxis.X < 0.0)
+    {
+        Raw::CMesh::AddStubAppearance(aMesh);
+    }
 }
 
 void App::MeshTemplateModule::OnPreloadAppearances(bool& aResult, Red::CMesh* aMesh)
