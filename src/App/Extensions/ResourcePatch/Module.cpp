@@ -522,12 +522,12 @@ void App::ResourcePatchModule::PatchResultComponents(Red::DynArray<Red::Handle<R
 
             for (auto& resultObject : aResultObjects)
             {
-                if (auto resultComponent = Red::Cast<Red::IComponent>(resultObject))
+                if (auto& resultComponent = Red::Cast<Red::IComponent>(resultObject))
                 {
                     if (resultComponent->name == patchComponent->name &&
                         resultComponent->id.unk00 == patchComponent->id.unk00)
                     {
-                        resultComponent = patchComponent;
+                        resultObject = patchComponent;
                         isNewComponent = false;
                         break;
                     }
