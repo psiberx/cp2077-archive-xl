@@ -512,6 +512,11 @@ inline bool IsInstanceOf(CClass* aType)
     return aType->IsA(Red::GetClass<T>());
 }
 
+inline bool IsInstanceOf(CClass* aType, CName aClassName)
+{
+    return aType->IsA(Red::GetClass(aClassName));
+}
+
 template<typename T>
 inline bool IsInstanceOf(ISerializable* aObject)
 {

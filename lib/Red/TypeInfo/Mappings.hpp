@@ -28,6 +28,7 @@ RTTI_MAP_TYPE_PREFIX(Handle, "handle:");
 RTTI_MAP_TYPE_PREFIX(WeakHandle, "whandle:");
 RTTI_MAP_TYPE_PREFIX(ResourceReference, "rRef:");
 RTTI_MAP_TYPE_PREFIX(ResourceAsyncReference, "raRef:");
+RTTI_MAP_TYPE_PREFIX(CurveData, "curveData:");
 
 RTTI_MAP_TYPE_NAME(char, "Uint8");
 RTTI_MAP_TYPE_NAME(ResourcePath, "redResourceReferenceScriptToken");

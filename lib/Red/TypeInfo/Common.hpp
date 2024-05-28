@@ -47,6 +47,9 @@ struct Scope
 namespace Detail
 {
 template<typename T>
+concept IsSerializable = std::is_base_of_v<ISerializable, T>;
+
+template<typename T>
 concept IsScriptable = std::is_base_of_v<IScriptable, T>;
 
 template<typename T>

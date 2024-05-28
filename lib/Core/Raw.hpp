@@ -128,7 +128,7 @@ template<uintptr_t A, typename T>
 class RawVFunc {};
 
 template<uintptr_t A, typename C, typename R, typename... Args>
-class RawVFunc<A, R (C::*)(Args...)> : public RawBase
+class RawVFunc<A, R (*)(C*, Args...)> : public RawBase
 {
 public:
     using Type = R (*)(C*, Args...);
@@ -144,6 +144,14 @@ public:
         auto callable = *reinterpret_cast<Callable*>(vft + offset);
         return callable(aContext, std::forward<Args>(aArgs)...);
     }
+};
+
+template<auto A, typename C, typename R, typename... Args>
+class RawVFunc<A, R (C::*)(Args...)> : public RawVFunc<A, R (*)(C*, Args...)>
+{
+public:
+    using Base = RawVFunc<A, R (*)(C*, Args...)>;
+    using Base::Base;
 };
 
 template<auto A, typename T>

@@ -306,7 +306,7 @@ inline void DescribeNativeFunction(CBaseFunction* aFunc, R(*)(Args...))
 template<typename C, typename R, typename... Args>
 inline void DescribeNativeFunction(CBaseFunction* aFunc, R (C::*)(Args...))
 {
-    if constexpr (!IsScriptable<C>)
+    if constexpr (!IsSerializable<C>)
     {
         aFunc->AddParam(ResolveTypeName<ScriptRef<C>>(), "self");
     }
@@ -561,7 +561,7 @@ public:
             auto* ptr = Detail::MakeNativeFunction<AFunction>();
 
             CClassFunction* func;
-            if constexpr (Detail::IsScriptable<Context>)
+            if constexpr (Detail::IsSerializable<Context>)
             {
                 if constexpr (!std::is_same_v<TClass, Context>)
                 {
@@ -1060,6 +1060,13 @@ struct ClassDefinition
                 {
                     type->parent = GetClass<IScriptable>();
                 }
+            }
+        }
+        else if constexpr (Detail::IsSerializable<TClass>)
+        {
+            if (!type->parent)
+            {
+                type->parent = GetClass<ISerializable>();
             }
         }
 
