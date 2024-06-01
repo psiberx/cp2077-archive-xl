@@ -4,6 +4,7 @@
 #include "App/Extensions/QuestPhase/Config.hpp"
 #include "Red/QuestLoader.hpp"
 #include "Red/QuestPhase.hpp"
+#include "Red/QuestsSystem.hpp"
 
 namespace App
 {
@@ -20,10 +21,8 @@ private:
 
     static void OnPhasePreload(void* aLoader, Red::ResourcePath aPhasePath,
                                Red::Handle<Red::questQuestPhaseResource>& aPhaseResource);
-    // static void OnPhaseReady(Red::questPhaseNodeDefinition* aPhaseNode,
-    //                          Red::Handle<Red::questQuestPhaseResource>& aPhaseResource);
+    static void OnGameRestored(Red::QuestsSystem* aSystem);
 
-    static void PatchPhase(Red::Handle<Red::questQuestPhaseResource>& aPhaseResource);
     static bool PatchPhase(Red::Handle<Red::questQuestPhaseResource>& aPhaseResource, const QuestPhaseMod& aPhaseMod);
     static ConnectionPoint FindConnectionPoint(const Red::Handle<Red::questGraphDefinition>& aPhaseGraph,
                                                const Core::Vector<uint16_t>& aNodePath, uint32_t aStep = 0);
@@ -39,5 +38,6 @@ private:
     static uint16_t GeneratePhaseNodeID(const char* aData, uint32_t aLength);
 
     inline static Core::Map<Red::ResourcePath, Core::Vector<QuestPhaseMod>> s_phases;
+    inline static Core::Map<Red::ResourcePath, Core::Set<uint16_t>> s_forced;
 };
 }

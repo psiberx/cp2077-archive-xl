@@ -104,8 +104,11 @@
 #include <RED4ext/Scripting/Natives/Generated/quest/GraphDefinition.hpp>
 #include <RED4ext/Scripting/Natives/Generated/quest/PhaseNodeDefinition.hpp>
 #include <RED4ext/Scripting/Natives/Generated/quest/QuestPhaseResource.hpp>
+#include <RED4ext/Scripting/Natives/Generated/quest/QuestResource.hpp>
+#include <RED4ext/Scripting/Natives/Generated/quest/QuestsSystem.hpp>
 #include <RED4ext/Scripting/Natives/Generated/quest/SocketDefinition.hpp>
 #include <RED4ext/Scripting/Natives/Generated/quest/SocketType.hpp>
+#include <RED4ext/Scripting/Natives/Generated/quest/StartNodeDefinition.hpp>
 #include <RED4ext/Scripting/Natives/Generated/red/TagList.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/AudioTagNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/CollisionNode.hpp>

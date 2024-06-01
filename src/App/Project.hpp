@@ -12,5 +12,5 @@ constexpr auto Author = "psiberx";
 constexpr auto NameW = L"ArchiveXL";
 constexpr auto AuthorW = L"psiberx";
 
-constexpr auto Version = semver::from_string_noexcept("1.14.6").value();
+constexpr auto Version = semver::from_string_noexcept("1.15.0").value();
 }

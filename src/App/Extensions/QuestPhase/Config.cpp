@@ -39,9 +39,6 @@ void App::QuestPhaseConfig::LoadYAML(const YAML::Node& aNode)
             FillConnection(phaseNode["input"], phaseData.input);
             FillConnection(phaseNode["output"], phaseData.output);
 
-            if (phaseData.input.nodePath.empty())
-                continue;
-
             phases.emplace_back(std::move(phaseData));
         }
     }

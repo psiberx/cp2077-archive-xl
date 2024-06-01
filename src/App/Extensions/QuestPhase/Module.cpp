@@ -12,8 +12,8 @@ std::string_view App::QuestPhaseModule::GetName()
 
 bool App::QuestPhaseModule::Load()
 {
-    HookBefore<Raw::QuestLoader::ProcessPhaseResource>(&QuestPhaseModule::OnPhasePreload).OrThrow();
-    //HookBefore<Raw::QuestPhase::SetLoadedResource>(&QuestPhaseModule::OnPhaseReady).OrThrow();
+    HookBefore<Raw::QuestLoader::ProcessPhaseResource>(&OnPhasePreload).OrThrow();
+    HookBefore<Raw::QuestsSystem::OnGameRestored>(&OnGameRestored).OrThrow();
 
     return true;
 }
@@ -21,7 +21,7 @@ bool App::QuestPhaseModule::Load()
 bool App::QuestPhaseModule::Unload()
 {
     Unhook<Raw::QuestLoader::ProcessPhaseResource>();
-    // Unhook<Raw::QuestPhase::SetLoadedResource>();
+    Unhook<Raw::QuestsSystem::OnGameRestored>();
 
     return true;
 }
@@ -71,17 +71,6 @@ void App::QuestPhaseModule::Configure()
 void App::QuestPhaseModule::OnPhasePreload(void* aLoader, Red::ResourcePath aPhasePath,
                                            Red::Handle<Red::questQuestPhaseResource>& aPhaseResource)
 {
-    PatchPhase(aPhaseResource);
-}
-
-// void App::QuestPhaseModule::OnPhaseReady(Red::questPhaseNodeDefinition* aPhaseNode,
-//                                         Red::Handle<Red::questQuestPhaseResource>& aPhaseResource)
-// {
-//     PatchPhase(aPhaseResource);
-// }
-
-void App::QuestPhaseModule::PatchPhase(Red::Handle<Red::questQuestPhaseResource>& aPhaseResource)
-{
     const auto& phaseMods = s_phases.find(aPhaseResource->path);
 
     if (phaseMods == s_phases.end())
@@ -92,6 +81,45 @@ void App::QuestPhaseModule::PatchPhase(Red::Handle<Red::questQuestPhaseResource>
     for (const auto& phaseMod : phaseMods.value())
     {
         PatchPhase(aPhaseResource, phaseMod);
+    }
+}
+
+void App::QuestPhaseModule::OnGameRestored(Red::QuestsSystem* aSystem)
+{
+    if (s_forced.empty())
+        return;
+
+    auto& factManager = Raw::QuestsSystem::FactManager::Ref(aSystem);
+    const auto& questList = Raw::QuestsSystem::QuestList::Ref(aSystem);
+
+    for (const auto& [questPath, phaseNodeIds] : s_forced)
+    {
+        Red::QuestNodeID questId = 0;
+
+        for (; questId < questList.size; ++questId)
+        {
+            if (questList[questId] == questPath)
+                break;
+        }
+
+        if (questId >= questList.size)
+            continue;
+
+        Red::QuestNodePath questNodePath{questId};
+        Red::DynArray<Red::CName> phaseNodeSockets{"In1"};
+
+        for (const auto& phaseNodeId : phaseNodeIds)
+        {
+            Red::QuestNodeKey phaseNodeKey{questNodePath, phaseNodeId};
+            Red::FactID phaseFactId{phaseNodeKey};
+
+            if (!factManager.GetFact(phaseFactId))
+            {
+                Raw::QuestsSystem::ForceStartNode(aSystem, phaseNodeKey, phaseNodeSockets);
+
+                factManager.SetFact(phaseFactId, 1);
+            }
+        }
     }
 }
 
@@ -143,6 +171,11 @@ bool App::QuestPhaseModule::PatchPhase(Red::Handle<Red::questQuestPhaseResource>
 
     AddConnection(inputNode, aPhaseMod.input.socketName ? aPhaseMod.input.socketName : "Out", modPhaseNode, "In1");
 
+    if (Red::IsInstanceOf<Red::questQuestResource>(aPhaseResource))
+    {
+        s_forced[aPhaseResource->path].insert(modPhaseNode->id);
+    }
+
     LogInfo(R"(|{}| Merged phase "{}" from "{}".)", ModuleName, aPhaseMod.phasePath, aPhaseMod.mod);
 
     return true;
@@ -153,9 +186,16 @@ App::QuestPhaseModule::ConnectionPoint App::QuestPhaseModule::FindConnectionPoin
 {
     for (const auto& node : aPhaseGraph->nodes)
     {
-        if (auto questNode = Red::Cast<Red::questNodeDefinition>(node))
+        if (const auto& questNode = Red::Cast<Red::questNodeDefinition>(node))
         {
-            if (questNode->id == aNodePath[aStep])
+            if (aNodePath.empty())
+            {
+                if (Red::IsInstanceOf<Red::questStartNodeDefinition>(node))
+                {
+                    return {aPhaseGraph, questNode};
+                }
+            }
+            else if (questNode->id == aNodePath[aStep])
             {
                 if (aStep == aNodePath.size() - 1)
                 {
