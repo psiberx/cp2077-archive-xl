@@ -253,7 +253,7 @@ void App::GarmentOverrideModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPr
                                                  Red::ResourcePath aEntityPath, Red::CName aAppearanceName,
                                                  Red::TagList& aFinalTags)
 {
-    if (aFinalTags.tags.size > 0 || !aAppearanceName)
+    if (!aAppearanceName) // aFinalTags.tags.size > 0
         return;
 
     uint64_t cacheKey;
