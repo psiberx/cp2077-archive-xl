@@ -158,10 +158,10 @@ template<auto A, typename T>
 class RawPtr : public RawBase
 {
 public:
-    using Type = std::remove_pointer_t<T>;
+    using Type = std::conditional_t<std::is_void_v<std::remove_pointer_t<T>>, void*, std::remove_pointer_t<T>>;
 
     static constexpr auto target = A;
-    static constexpr bool indirect = std::is_pointer_v<T>;
+    static constexpr bool indirect = std::is_pointer_v<T> && !std::is_void_v<std::remove_pointer_t<T>>;
 
     constexpr RawPtr() = default;
 
