@@ -134,5 +134,4 @@
 #include "Red/TypeInfo.hpp"
 #include "Red/Utils.hpp"
 
-#include "Red/Addresses/Direct.hpp"
 #include "Red/Addresses/Library.hpp"
