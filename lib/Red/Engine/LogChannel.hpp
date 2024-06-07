@@ -12,8 +12,8 @@ inline void Channel(Red::CName aChannel, const std::string& aMessage)
 
     CString message(aMessage.c_str());
     ScriptRef<CString> messageRef;
-    messageRef.innerType = s_stringType;
-    messageRef.hash = s_stringType->GetName();
+    messageRef.type = s_stringType;
+    messageRef.name = s_stringType->GetName();
     messageRef.ref = &message;
 
     StackArgs_t args;
