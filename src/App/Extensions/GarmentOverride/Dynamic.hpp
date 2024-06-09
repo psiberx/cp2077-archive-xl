@@ -1,5 +1,6 @@
 #pragma once
 
+#include "App/Shared/ResourcePathRegistry.hpp"
 #include "Red/EntityTemplate.hpp"
 #include "Red/ResourcePath.hpp"
 
@@ -80,6 +81,8 @@ public:
         DynamicTagList attributes;
     };
 
+    DynamicAppearanceController(Core::SharedPtr<ResourcePathRegistry> aPathRegistry);
+
     [[nodiscard]] DynamicAppearanceName ParseAppearance(Red::CName aAppearance) const;
     [[nodiscard]] DynamicAppearanceRef ParseReference(Red::CName aReference) const;
     [[nodiscard]] bool MatchReference(const DynamicAppearanceRef& aReference, Red::Entity* aEntity,
@@ -93,17 +96,12 @@ public:
     void UpdateState(Red::Entity* aEntity);
     void RemoveState(Red::Entity* aEntity);
 
-    void RegisterPath(Red::ResourcePath aPath, const char* aPathStr);
-    void RegisterPath(Red::ResourcePath aPath, const std::string& aPathStr);
-    void RegisterPath(Red::ResourcePath aPath, const std::string_view& aPathStr);
-    void RegisterPath(Red::ResourcePath aPath, const Red::StringView& aPathStr);
-
     bool SupportsDynamicAppearance(const Red::EntityTemplate* aTemplate);
     void MarkDynamicAppearanceName(Red::CName& aAppearanceName, Red::Entity* aEntity);
     void MarkDynamicAppearanceName(Red::CName& aAppearanceName, DynamicAppearanceName& aSelector);
     std::string_view GetBaseAppearanceName(Red::CName aAppearanceName);
 
-    [[nodiscard]] const std::string& GetPathStr(Red::ResourcePath aPath) const;
+    [[nodiscard]] std::string_view GetPathString(Red::ResourcePath aPath) const;
 
     static bool IsMale(Red::Entity* aEntity);
 
@@ -136,6 +134,6 @@ private:
     CustomizationData GetCustomizationData(Red::Entity* aEntity) const;
 
     Core::Map<Red::Entity*, EntityState> m_states;
-    Core::Map<Red::ResourcePath, std::string> m_paths;
+    Core::SharedPtr<ResourcePathRegistry> m_pathRegistry;
 };
 }

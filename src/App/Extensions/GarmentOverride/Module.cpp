@@ -1,7 +1,8 @@
 #include "Module.hpp"
 #include "App/Extensions/Customization/Module.hpp"
+#include "App/Shared/ResourcePathRegistry.hpp"
+#include "Core/Facades/Container.hpp"
 #include "Red/Entity.hpp"
-#include "Red/ResourcePath.hpp"
 #include "Red/TweakDB.hpp"
 
 namespace
@@ -55,14 +56,13 @@ bool App::GarmentOverrideModule::Load()
     //Hook<Raw::AppearanceChanger::GetBaseMeshOffset>(&OnGetBaseMeshOffset).OrThrow();
     HookBefore<Raw::AppearanceChanger::ComputePlayerGarment>(&OnComputeGarment).OrThrow();
     HookBefore<Raw::Entity::ReassembleAppearance>(&OnReassembleAppearance).OrThrow();
-    HookAfter<Raw::ResourcePath::Create>(&OnCreateResourcePath).OrThrow();
 
     s_emptyAppearance = Core::MakeUnique<Red::TemplateAppearance>();
     s_emptyAppearance->name = EmptyAppearanceName;
     s_emptyAppearance->appearanceName = DefaultAppearanceName;
     s_emptyAppearance->appearanceResource = EmptyAppearancePath;
 
-    s_dynamicAppearance = Core::MakeShared<DynamicAppearanceController>();
+    s_dynamicAppearance = Core::MakeShared<DynamicAppearanceController>(Core::Resolve<ResourcePathRegistry>());
     s_stateManager = Core::MakeUnique<OverrideStateManager>(s_dynamicAppearance);
     s_tagManager = Core::MakeShared<OverrideTagManager>();
 
@@ -90,7 +90,6 @@ bool App::GarmentOverrideModule::Unload()
     // Unhook<Raw::AppearanceChanger::GetBaseMeshOffset>();
     Unhook<Raw::AppearanceChanger::ComputePlayerGarment>();
     Unhook<Raw::Entity::ReassembleAppearance>();
-    Unhook<Raw::ResourcePath::Create>();
 
     s_dynamicAppearance.reset();
     s_stateManager.reset();
@@ -610,15 +609,6 @@ void App::GarmentOverrideModule::OnReassembleAppearance(Red::Entity* aEntity, ui
 
         ApplyDynamicAppearance(entityState);
         ApplyComponentOverrides(entityState, true);
-    }
-}
-
-void App::GarmentOverrideModule::OnCreateResourcePath(Red::ResourcePath* aPath, const Red::StringView* aPathStr)
-{
-    if (aPathStr && s_dynamicAppearance->IsDynamicValue(*aPathStr))
-    {
-        std::unique_lock _(s_mutex);
-        s_dynamicAppearance->RegisterPath(*aPath, *aPathStr);
     }
 }
 

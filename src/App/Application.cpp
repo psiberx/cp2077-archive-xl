@@ -5,6 +5,7 @@
 #include "App/Migration.hpp"
 #include "App/Patches/WorldWidgetLimitPatch.hpp"
 #include "App/Project.hpp"
+#include "App/Shared/ResourcePathRegistry.hpp"
 #include "Core/Foundation/RuntimeProvider.hpp"
 #include "Support/MinHook/MinHookProvider.hpp"
 #include "Support/RED4ext/RED4extProvider.hpp"
@@ -26,6 +27,7 @@ App::Application::Application(HMODULE aHandle, const RED4ext::Sdk* aSdk)
     Register<Support::RedLibProvider>();
 
     Register<App::WorldWidgetLimitPatch>();
+    Register<App::ResourcePathRegistry>();
     Register<App::ArchiveService>(Env::GameDir());
     Register<App::ExtensionService>(Env::BundleDir());
 }

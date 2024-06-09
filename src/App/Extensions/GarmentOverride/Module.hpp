@@ -45,7 +45,6 @@ private:
     static void OnChangeItem(Red::GarmentAssemblerState* aState, Red::GarmentItemChangeRequest&);
     static void OnChangeCustomItem(Red::GarmentAssemblerState* aState, Red::GarmentItemChangeCustomRequest&);
     static void OnRemoveItem(uintptr_t, Red::WeakHandle<Red::Entity>&, Red::GarmentItemRemoveRequest&);
-    static void OnCreateResourcePath(Red::ResourcePath* aPath, const Red::StringView* aPathStr);
     static void OnRegisterPart(uintptr_t, Red::Handle<Red::EntityTemplate>& aPart,
                                Red::Handle<Red::ComponentsStorage>& aComponents,
                                Red::Handle<Red::AppearanceDefinition>& aAppearance);

@@ -261,6 +261,11 @@ bool App::DynamicAppearanceRef::Match(const DynamicTagList& aConditions) const
     return true;
 }
 
+App::DynamicAppearanceController::DynamicAppearanceController(Core::SharedPtr<App::ResourcePathRegistry> aPathRegistry)
+    : m_pathRegistry(std::move(aPathRegistry))
+{
+}
+
 App::DynamicAppearanceName App::DynamicAppearanceController::ParseAppearance(Red::CName aAppearance) const
 {
     return DynamicAppearanceName(aAppearance);
@@ -321,7 +326,7 @@ Red::CName App::DynamicAppearanceController::ResolveName(Red::Entity* aEntity, c
 Red::ResourcePath App::DynamicAppearanceController::ResolvePath(Red::Entity* aEntity, const DynamicPartList& aVariant,
                                                                 Red::ResourcePath aPath) const
 {
-    const auto pathStr = GetPathStr(aPath);
+    const auto& pathStr = GetPathString(aPath);
 
     if (!IsDynamicValue(pathStr))
         return aPath;
@@ -588,37 +593,9 @@ bool App::DynamicAppearanceController::IsDynamicValue(Red::CName aValue) const
     return IsDynamicValue(aValue.ToString());
 }
 
-void App::DynamicAppearanceController::RegisterPath(Red::ResourcePath aPath, const char* aPathStr)
+std::string_view App::DynamicAppearanceController::GetPathString(Red::ResourcePath aPath) const
 {
-    m_paths.insert_or_assign(aPath, aPathStr);
-}
-
-void App::DynamicAppearanceController::RegisterPath(Red::ResourcePath aPath, const std::string& aPathStr)
-{
-    m_paths.insert_or_assign(aPath, aPathStr);
-}
-
-void App::DynamicAppearanceController::RegisterPath(Red::ResourcePath aPath, const std::string_view& aPathStr)
-{
-    m_paths.insert_or_assign(aPath, aPathStr);
-}
-
-void App::DynamicAppearanceController::RegisterPath(Red::ResourcePath aPath, const Red::StringView& aPathStr)
-{
-    m_paths.insert_or_assign(aPath, std::string(aPathStr.data, aPathStr.size));
-}
-
-const std::string& App::DynamicAppearanceController::GetPathStr(Red::ResourcePath aPath) const
-{
-    if (!aPath)
-        return s_emptyPathStr;
-
-    auto it = m_paths.find(aPath);
-
-    if (it == m_paths.end())
-        return s_emptyPathStr;
-
-    return it.value();
+    return m_pathRegistry->ResolvePath(aPath);
 }
 
 bool App::DynamicAppearanceController::SupportsDynamicAppearance(const Red::EntityTemplate* aTemplate)

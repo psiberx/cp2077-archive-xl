@@ -54,7 +54,7 @@ void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearan
     if (!ownerMesh)
     {
         auto& controller = GarmentOverrideModule::GetDynamicAppearanceController();
-        auto& pathStr = controller->GetPathStr(aMesh->path);
+        auto pathStr = controller->GetPathString(aMesh->path);
 
         if (!pathStr.empty())
         {
@@ -402,7 +402,7 @@ Red::ResourcePath App::MeshTemplateModule::ExpandResourcePath(Red::ResourcePath 
                                                               Red::CName aMaterialName)
 {
     auto& controller = GarmentOverrideModule::GetDynamicAppearanceController();
-    auto& pathStr = controller->GetPathStr(aPath);
+    auto pathStr = controller->GetPathString(aPath);
 
     if (!controller->IsDynamicValue(pathStr))
     {
