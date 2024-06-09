@@ -161,98 +161,127 @@ inline bool CallFunctionWithArgs(Red::CStackFrame* aFrame, CBaseFunction* aFunc,
 
     return CallFunctionWithStack(aFrame, aFunc, stack);
 }
-
-template<typename... Args>
-inline bool CallFunctionWithArgs(CBaseFunction* aFunc, IScriptable* aContext, Args&&... aArgs)
-{
-    return CallFunctionWithArgs(nullptr, aFunc, aContext, std::forward<Args>(aArgs)...);
 }
 
-inline CBaseFunction* GetFunction(CClass* aType, CName aName)
+inline CBaseFunction* GetFunction(CClass* aType, CName aName, bool aMember = true, bool aStatic = true)
 {
     if (aType)
     {
-        for (auto func : aType->funcs)
+        if (aMember || Detail::IsFakeStatic(aType->name))
         {
-            if (func->shortName == aName || func->fullName == aName)
+            for (auto func : aType->funcs)
             {
-                return func;
+                if (func->shortName == aName || func->fullName == aName)
+                {
+                    return func;
+                }
+            }
+        }
+
+        if (aStatic)
+        {
+            for (auto func : aType->staticFuncs)
+            {
+                if (func->shortName == aName || func->fullName == aName)
+                {
+                    return func;
+                }
             }
         }
 
         if (aType->parent)
         {
-            return GetFunction(aType->parent, aName);
+            return GetFunction(aType->parent, aName, aMember, aStatic);
         }
     }
 
     return nullptr;
+}
+
+inline CBaseFunction* GetFunction(CName aType, CName aName, bool aMember = true, bool aStatic = true)
+{
+    return GetFunction(GetClass(aType), aName, aMember, aStatic);
+}
+
+inline CBaseFunction* GetFunction(CName aName)
+{
+    return CRTTISystem::Get()->GetFunction(aName);
+}
+
+inline CBaseFunction* GetMemberFunction(CClass* aType, CName aName)
+{
+    return GetFunction(aType, aName, true, false);
+}
+
+inline CBaseFunction* GetMemberFunction(CName aType, CName aName)
+{
+    return GetFunction(GetClass(aType), aName, true, false);
 }
 
 inline CBaseFunction* GetStaticFunction(CClass* aType, CName aName)
 {
-    if (aType)
-    {
-        for (auto func : aType->staticFuncs)
-        {
-            if (func->shortName == aName || func->fullName == aName)
-            {
-                return func;
-            }
-        }
-
-        if (IsFakeStatic(aType->name))
-        {
-            return GetFunction(aType, aName);
-        }
-
-        if (aType->parent)
-        {
-            return GetStaticFunction(aType->parent, aName);
-        }
-    }
-
-    return nullptr;
+    return GetFunction(aType, aName, false, true);
 }
 
 inline CBaseFunction* GetStaticFunction(CName aType, CName aName)
 {
-    return GetStaticFunction(GetClass(aType), aName);
+    return GetFunction(GetClass(aType), aName, false, true);
 }
 
 inline CBaseFunction* GetGlobalFunction(CName aName)
 {
-    return CRTTISystem::Get()->GetFunction(aName);
+    return GetFunction(aName);
 }
+
+inline bool CallFunction(Red::CStackFrame* aFrame, CBaseFunction* aFunc, CStack& aStack)
+{
+    return Detail::CallFunctionWithStack(aFrame, aFunc, aStack);
+}
+
+inline bool CallFunction(CBaseFunction* aFunc, CStack& aStack)
+{
+    return Detail::CallFunctionWithStack(nullptr, aFunc, aStack);
+}
+
+template<typename... Args>
+inline bool CallFunction(Red::CStackFrame* aFrame, CBaseFunction* aFunc, IScriptable* aContext, Args&&... aArgs)
+{
+    return Detail::CallFunctionWithArgs(aFrame, aFunc, aContext, std::forward<Args>(aArgs)...);
+}
+
+template<typename... Args>
+inline bool CallFunction(CBaseFunction* aFunc, IScriptable* aContext, Args&&... aArgs)
+{
+    return Detail::CallFunctionWithArgs(nullptr, aFunc, aContext, std::forward<Args>(aArgs)...);
 }
 
 template<typename... Args>
 inline bool CallVirtual(IScriptable* aContext, CClass* aType, CName aFunc, Args&&... aArgs)
 {
-    return Detail::CallFunctionWithArgs(Detail::GetFunction(aType, aFunc), aContext, std::forward<Args>(aArgs)...);
+    return Detail::CallFunctionWithArgs(nullptr, GetMemberFunction(aType, aFunc), aContext, std::forward<Args>(aArgs)...);
 }
 
 template<typename... Args>
 inline bool CallVirtual(IScriptable* aContext, CName aFunc, Args&&... aArgs)
 {
-    return CallVirtual(aContext, aContext->GetType(), aFunc, std::forward<Args>(aArgs)...);
+    return Detail::CallFunctionWithArgs(nullptr, GetMemberFunction(aContext->GetType(), aFunc), aContext, std::forward<Args>(aArgs)...);
 }
 
 template<typename... Args>
 inline bool CallStatic(CClass* aType, CName aFunc, Args&&... aArgs)
 {
-    return Detail::CallFunctionWithArgs(Detail::GetStaticFunction(aType, aFunc), nullptr, std::forward<Args>(aArgs)...);
+    return Detail::CallFunctionWithArgs(nullptr, GetStaticFunction(aType, aFunc), nullptr, std::forward<Args>(aArgs)...);
 }
 
 template<typename... Args>
 inline bool CallStatic(CName aType, CName aFunc, Args&&... aArgs)
 {
-    return Detail::CallFunctionWithArgs(Detail::GetStaticFunction(aType, aFunc), nullptr, std::forward<Args>(aArgs)...);
+    return Detail::CallFunctionWithArgs(nullptr, GetStaticFunction(aType, aFunc), nullptr, std::forward<Args>(aArgs)...);
 }
 
 template<typename... Args>
 inline bool CallGlobal(CName aFunc, Args&&... aArgs)
 {
-    return Detail::CallFunctionWithArgs(Detail::GetGlobalFunction(aFunc), nullptr, std::forward<Args>(aArgs)...);
+    return Detail::CallFunctionWithArgs(nullptr, GetFunction(aFunc), nullptr, std::forward<Args>(aArgs)...);
 }
 }
