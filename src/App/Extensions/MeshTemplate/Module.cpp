@@ -76,23 +76,7 @@ void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearan
 
     if (aOut->chunkMaterials.size == 0)
     {
-        Red::Handle<Red::meshMeshAppearance> sourceAppearance;
-        if (aMesh->appearances.size > 0)
-        {
-            sourceAppearance = aMesh->appearances[0];
-
-            // if (sourceAppearance->name == DefaultAppearanceName)
-            // {
-            //     if (aMesh->appearances.size > 1 && aMesh->appearances[1]->chunkMaterials.size > 0)
-            //     {
-            //         sourceAppearance = aMesh->appearances[1];
-            //     }
-            // }
-        }
-        else if (ownerMesh != aMesh && ownerMesh->appearances.size > 0)
-        {
-            sourceAppearance = ownerMesh->appearances[0];
-        }
+        auto sourceAppearance = aMesh->appearances[0];
 
         if (sourceAppearance && sourceAppearance != aOut)
         {
