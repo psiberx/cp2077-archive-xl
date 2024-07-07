@@ -202,7 +202,7 @@ bool App::WorldStreamingModule::PatchSector(Red::world::StreamingSector* aSector
 
     if (buffer.nodeSetups.GetInstanceCount() != aSectorMod.expectedNodes)
     {
-        LogError(R"(|{}| {}: The sector has {} node(s), but the mod expects {}.)",
+        LogError(R"(|{}| {}: The target sector has {} node(s), but the mod expects {}.)",
                  ModuleName, aSectorMod.mod, nodeCount, aSectorMod.expectedNodes);
         return false;
     }
@@ -215,7 +215,7 @@ bool App::WorldStreamingModule::PatchSector(Red::world::StreamingSector* aSector
 
         if (nodeDeletion.nodeType != nodeDefinition->GetNativeType()->name)
         {
-            LogError(R"(|{}| {}: The node #{} has type {}, but the mod expects {}.)",
+            LogError(R"(|{}| {}: The target node #{} has type {}, but the mod expects {}.)",
                      ModuleName, aSectorMod.mod, nodeDeletion.nodeIndex,
                      nodeDefinition->GetNativeType()->name.ToString(),
                      nodeDeletion.nodeType.ToString());
@@ -228,7 +228,7 @@ bool App::WorldStreamingModule::PatchSector(Red::world::StreamingSector* aSector
             auto& actors = Raw::CollisionNode::Actors::Ref(nodeDefinition);
             if (actors.GetSize() != nodeDeletion.expectedSubNodes)
             {
-                LogError(R"(|{}| {}: The node #{} has {} actor(s), but the mod expects {}.)",
+                LogError(R"(|{}| {}: The target node #{} has {} actor(s), but the mod expects {}.)",
                          ModuleName, aSectorMod.mod, nodeDeletion.nodeIndex,
                          actors.GetSize(), nodeDeletion.expectedSubNodes);
                 nodeValidationPassed = false;
