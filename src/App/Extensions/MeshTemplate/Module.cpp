@@ -460,9 +460,13 @@ void App::MeshTemplateModule::OnAddStubAppearance(Red::CMesh* aMesh)
 
 void App::MeshTemplateModule::OnPreloadAppearances(bool& aResult, Red::CMesh* aMesh)
 {
-    if (aResult && !aMesh->forceLoadAllAppearances)
+    if (aResult && !aMesh->forceLoadAllAppearances && aMesh->appearances.size == 1)
     {
-        if (aMesh->appearances.size == 1 && aMesh->appearances[0]->name != DefaultAppearanceName)
+        if (aMesh->appearances[0]->chunkMaterials.size == 0)
+        {
+            aResult = false;
+        }
+        else if (aMesh->appearances[0]->name != DefaultAppearanceName)
         {
             if (aMesh->materialEntries.size == 0 || IsSpecialMaterial(aMesh->materialEntries[0].name))
             {
