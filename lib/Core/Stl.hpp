@@ -50,6 +50,20 @@ using WeakPtr = std::weak_ptr<T>;
 template<class T>
 using UniquePtr = std::unique_ptr<T, Detail::UniqueDeleter<T>>;
 
+template<typename T>
+struct ShareFromThis : public std::enable_shared_from_this<T>
+{
+    SharedPtr<T> ToShared()
+    {
+        return std::enable_shared_from_this<T>::shared_from_this();
+    }
+
+    WeakPtr<T> ToWeak()
+    {
+        return std::enable_shared_from_this<T>::weak_from_this();
+    }
+};
+
 template<typename T, typename... Args>
 auto MakeShared(Args&&... aArgs)
 {
