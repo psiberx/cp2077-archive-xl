@@ -15,6 +15,7 @@ public:
 
     static const Core::Set<Red::ResourcePath>& GetResourceList(Red::ResourcePath aScopePath);
     static bool IsInResourceList(Red::ResourcePath aScopePath, Red::ResourcePath aTargetPath);
+    static std::string_view GetPathString(Red::ResourcePath aTargetPath);
 
     static const ResourceFix& GetResourceFix(Red::ResourcePath aTargetPath);
 

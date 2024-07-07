@@ -1,6 +1,6 @@
 #include "Module.hpp"
+#include "App/Extensions/ResourceMeta/Module.hpp"
 #include "Red/AnimatedComponent.hpp"
-#include "Red/Entity.hpp"
 
 namespace
 {
@@ -37,18 +37,6 @@ void App::AnimationsModule::Configure()
     {
         for (const auto& animation : unit.animations)
         {
-            auto entityPath = Red::ResourcePath(animation.entity.c_str());
-
-            if (!depot->ResourceExists(entityPath))
-            {
-                if (!invalidPaths.contains(entityPath))
-                {
-                    LogWarning("|{}| Entity \"{}\" doesn't exist. Skipped.", ModuleName, animation.entity);
-                    invalidPaths.insert(entityPath);
-                }
-                continue;
-            }
-
             auto animPath = Red::ResourcePath(animation.set.c_str());
 
             if (!depot->ResourceExists(animPath))
@@ -61,26 +49,59 @@ void App::AnimationsModule::Configure()
                 continue;
             }
 
-            Red::animAnimSetupEntry animSetupEntry;
-            animSetupEntry.animSet = animPath;
-            animSetupEntry.priority = animation.priority;
-
-            for (const auto& var : animation.variables)
-            {
-                animSetupEntry.variableNames.EmplaceBack(var.c_str());
-            }
-
-            auto targetHash = entityPath.hash;
-
-            if (!animation.component.empty())
-            {
-                targetHash = Red::FNV1a64(animation.component.data(), targetHash);
-            }
-
-            m_animsByTarget[targetHash].emplace_back(std::move(animSetupEntry));
-
-            m_paths[entityPath] = animation.entity;
             m_paths[animPath] = animation.set;
+
+            Core::Set<Red::ResourcePath> targetList;
+            {
+                auto originalPath = Red::ResourcePath(animation.entity.c_str());
+                const auto& entityList = ResourceMetaModule::GetResourceList(originalPath);
+                if (!entityList.empty())
+                {
+                    targetList.insert(entityList.begin(), entityList.end());
+
+                    for (const auto& entityPath : entityList)
+                    {
+                        m_paths[entityPath] = ResourceMetaModule::GetPathString(entityPath);
+                    }
+                }
+                else
+                {
+                    targetList.insert(originalPath);
+
+                    m_paths[originalPath] = animation.entity;
+                }
+            }
+
+            for (const auto& targetPath : targetList)
+            {
+                if (!depot->ResourceExists(targetPath))
+                {
+                    if (!invalidPaths.contains(targetPath))
+                    {
+                        LogWarning("|{}| Entity \"{}\" doesn't exist. Skipped.", ModuleName, m_paths[targetPath]);
+                        invalidPaths.insert(targetPath);
+                    }
+                    continue;
+                }
+
+                Red::animAnimSetupEntry animSetupEntry;
+                animSetupEntry.animSet = animPath;
+                animSetupEntry.priority = animation.priority;
+
+                for (const auto& var : animation.variables)
+                {
+                    animSetupEntry.variableNames.EmplaceBack(var.c_str());
+                }
+
+                auto targetHash = targetPath.hash;
+
+                if (!animation.component.empty())
+                {
+                    targetHash = Red::FNV1a64(animation.component.data(), targetHash);
+                }
+
+                m_animsByTarget[targetHash].emplace_back(std::move(animSetupEntry));
+            }
         }
     }
 }

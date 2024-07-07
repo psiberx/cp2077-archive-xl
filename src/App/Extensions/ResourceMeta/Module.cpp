@@ -93,3 +93,14 @@ const App::ResourceFix& App::ResourceMetaModule::GetResourceFix(Red::ResourcePat
 
     return it.value();
 }
+
+std::string_view App::ResourceMetaModule::GetPathString(Red::ResourcePath aTargetPath)
+{
+    static const std::string_view s_null;
+    const auto& it = s_paths.find(aTargetPath);
+
+    if (it == s_paths.end())
+        return s_null;
+
+    return it.value();
+}
