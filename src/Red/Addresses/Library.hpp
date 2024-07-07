@@ -127,6 +127,8 @@ constexpr uint32_t QuestLoader_ProcessPhaseResource = 790570700;
 
 constexpr uint32_t QuestsSystem_OnGameRestored = 2048921710;
 
+constexpr uint32_t QuestRootInstance_Start = 797843833;
+
 constexpr uint32_t ResourceDepot_InitializeArchives = 2885423437;
 constexpr uint32_t ResourceDepot_LoadArchives = 2517385486;
 constexpr uint32_t ResourceDepot_RequestResource = 2450934495;

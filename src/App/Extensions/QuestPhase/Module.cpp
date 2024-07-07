@@ -14,6 +14,7 @@ bool App::QuestPhaseModule::Load()
 {
     HookBefore<Raw::QuestLoader::ProcessPhaseResource>(&OnPhasePreload).OrThrow();
     HookBefore<Raw::QuestsSystem::OnGameRestored>(&OnGameRestored).OrThrow();
+    HookBefore<Raw::QuestRootInstance::Start>(&OnQuestStart).OrThrow();
 
     return true;
 }
@@ -22,6 +23,7 @@ bool App::QuestPhaseModule::Unload()
 {
     Unhook<Raw::QuestLoader::ProcessPhaseResource>();
     Unhook<Raw::QuestsSystem::OnGameRestored>();
+    Unhook<Raw::QuestRootInstance::Start>();
 
     return true;
 }
@@ -119,6 +121,41 @@ void App::QuestPhaseModule::OnGameRestored(Red::QuestsSystem* aSystem)
 
                 factManager.SetFact(phaseFactId, 1);
             }
+        }
+    }
+}
+
+void App::QuestPhaseModule::OnQuestStart(Red::questRootInstance* aInstance, Red::QuestContext* aContext,
+                                         const Red::Handle<Red::questQuestResource>& aResource)
+{
+    if (s_forced.empty())
+        return;
+
+    auto& factManager = Raw::QuestsSystem::FactManager::Ref(aContext->phaseContext.questsSystem);
+    const auto& questList = Raw::QuestsSystem::QuestList::Ref(aContext->phaseContext.questsSystem);
+
+    for (const auto& [questPath, phaseNodeIds] : s_forced)
+    {
+        Red::QuestNodeID questId = 0;
+
+        for (; questId < questList.size; ++questId)
+        {
+            if (questList[questId] == questPath)
+                break;
+        }
+
+        if (questId >= questList.size)
+            continue;
+
+        Red::QuestNodePath questNodePath{questId};
+        Red::DynArray<Red::CName> phaseNodeSockets{"In1"};
+
+        for (const auto& phaseNodeId : phaseNodeIds)
+        {
+            Red::QuestNodeKey phaseNodeKey{questNodePath, phaseNodeId};
+            Red::FactID phaseFactId{phaseNodeKey};
+
+            factManager.SetFact(phaseFactId, 1);
         }
     }
 }

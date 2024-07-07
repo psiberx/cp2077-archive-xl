@@ -106,6 +106,7 @@
 #include <RED4ext/Scripting/Natives/Generated/quest/QuestPhaseResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/quest/QuestResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/quest/QuestsSystem.hpp>
+#include <RED4ext/Scripting/Natives/Generated/quest/RootInstance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/quest/SocketDefinition.hpp>
 #include <RED4ext/Scripting/Natives/Generated/quest/SocketType.hpp>
 #include <RED4ext/Scripting/Natives/Generated/quest/StartNodeDefinition.hpp>

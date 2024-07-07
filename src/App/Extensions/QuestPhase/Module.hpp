@@ -22,6 +22,8 @@ private:
     static void OnPhasePreload(void* aLoader, Red::ResourcePath aPhasePath,
                                Red::Handle<Red::questQuestPhaseResource>& aPhaseResource);
     static void OnGameRestored(Red::QuestsSystem* aSystem);
+    static void OnQuestStart(Red::questRootInstance* aInstance, Red::QuestContext* aContext,
+                             const Red::Handle<Red::questQuestResource>& aResource);
 
     static bool PatchPhase(Red::Handle<Red::questQuestPhaseResource>& aPhaseResource, const QuestPhaseMod& aPhaseMod);
     static ConnectionPoint FindConnectionPoint(const Red::Handle<Red::questGraphDefinition>& aPhaseGraph,

@@ -135,6 +135,31 @@ struct FactManager
 
     FactStore* data[11];
 };
+
+struct QuestPhaseContext
+{
+    virtual ~QuestPhaseContext() = default;
+
+    void* game;                  // 08
+    void* unk10;                 // 10
+    QuestsSystem* questsSystem;  // 18
+    void* unk20;                 // 20
+    void* unk28;                 // 28
+    void* prefabLoader;          // 30
+    uint8_t unk38[0x230 - 0x38]; // 38
+};
+RED4EXT_ASSERT_SIZE(QuestPhaseContext, 0x230);
+RED4EXT_ASSERT_OFFSET(QuestPhaseContext, questsSystem, 0x18);
+
+struct QuestContext
+{
+    uint8_t unk0[0xF8];                       // 00
+    DynArray<questPhaseInstance*> phaseStack; // F8
+    QuestNodeID nodeID;                       // 108
+    QuestPhaseContext phaseContext;           // 110
+};
+RED4EXT_ASSERT_SIZE(QuestContext, 0x340);
+RED4EXT_ASSERT_OFFSET(QuestContext, phaseStack, 0xF8);
 }
 
 namespace Raw::QuestsSystem
@@ -151,4 +176,13 @@ constexpr auto ForceStartNode = Core::RawVFunc<
     /* addr = */ 0x240,
     /* type = */ void (Red::questIQuestsSystem::*)(const Red::QuestNodeKey& aNodeKey,
                                                    const Red::DynArray<Red::CName>& aInputSockets)>();
+}
+
+namespace Raw::QuestRootInstance
+{
+constexpr auto Start = Core::RawFunc<
+    /* addr = */ Red::AddressLib::QuestRootInstance_Start,
+    /* type = */ void (*)(Red::questRootInstance* aInstance,
+                          Red::QuestContext* aContext,
+                          const Red::Handle<Red::questQuestResource>& aResource)>();
 }
