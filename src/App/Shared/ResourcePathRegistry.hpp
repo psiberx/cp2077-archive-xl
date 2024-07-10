@@ -22,7 +22,7 @@ public:
 protected:
     struct SharedInstance
     {
-        Red::SharedMutex m_mutex;
+        std::shared_mutex m_mutex;
         Core::Map<Red::ResourcePath, std::string> m_map;
         bool m_preloaded{false};
         bool m_hooked{false};
