@@ -260,7 +260,7 @@ bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::
 
             EnsureResourceLoaded(token);
 
-            if (token->IsFailed())
+            if (!token->IsLoaded())
             {
                 LogError("|{}| Material \"{}\" instance failed to load.", ModuleName, templateName.ToString());
                 continue;
