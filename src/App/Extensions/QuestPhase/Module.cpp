@@ -92,6 +92,7 @@ void App::QuestPhaseModule::OnGameRestored(Red::QuestsSystem* aSystem)
         return;
 
     auto& factManager = Raw::QuestsSystem::FactManager::Ref(aSystem);
+    auto& nodeHashMap = Raw::QuestsSystem::NodeHashMap::Ref(aSystem);
     const auto& questList = Raw::QuestsSystem::QuestList::Ref(aSystem);
 
     for (const auto& [questPath, phaseNodeIds] : s_forced)
@@ -108,15 +109,21 @@ void App::QuestPhaseModule::OnGameRestored(Red::QuestsSystem* aSystem)
             continue;
 
         Red::QuestNodePath questNodePath{questId};
-        Red::DynArray<Red::CName> phaseNodeSockets{"In1"};
+        Red::QuestNodePathHash questNodeHash = Red::MakeQuestNodePathHash(questNodePath);
+
+        if (!nodeHashMap.Get(questNodeHash))
+        {
+            nodeHashMap.Insert(questNodeHash, questNodePath);
+        }
 
         for (const auto& phaseNodeId : phaseNodeIds)
         {
-            Red::QuestNodeKey phaseNodeKey{questNodePath, phaseNodeId};
+            Red::QuestNodeKey phaseNodeKey{questNodeHash, phaseNodeId};
             Red::FactID phaseFactId{phaseNodeKey};
 
             if (!factManager.GetFact(phaseFactId))
             {
+                Red::DynArray<Red::CName> phaseNodeSockets{"In1"};
                 Raw::QuestsSystem::ForceStartNode(aSystem, phaseNodeKey, phaseNodeSockets);
 
                 factManager.SetFact(phaseFactId, 1);
@@ -148,11 +155,11 @@ void App::QuestPhaseModule::OnQuestStart(Red::questRootInstance* aInstance, Red:
             continue;
 
         Red::QuestNodePath questNodePath{questId};
-        Red::DynArray<Red::CName> phaseNodeSockets{"In1"};
+        Red::QuestNodePathHash questNodeHash = Red::MakeQuestNodePathHash(questNodePath);
 
         for (const auto& phaseNodeId : phaseNodeIds)
         {
-            Red::QuestNodeKey phaseNodeKey{questNodePath, phaseNodeId};
+            Red::QuestNodeKey phaseNodeKey{questNodeHash, phaseNodeId};
             Red::FactID phaseFactId{phaseNodeKey};
 
             factManager.SetFact(phaseFactId, 1);
