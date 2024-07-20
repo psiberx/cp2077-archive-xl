@@ -5,7 +5,7 @@
 
 namespace
 {
-constexpr auto SharedName = Red::CName("ResourcePathRegistry" BUILD_SUFFIX);
+constexpr auto SharedName = Red::CName("ResourcePathRegistryV2" BUILD_SUFFIX);
 }
 
 App::ResourcePathRegistry::ResourcePathRegistry(const std::filesystem::path& aPreloadPath)
