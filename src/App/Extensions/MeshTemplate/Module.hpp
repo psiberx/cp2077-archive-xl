@@ -49,13 +49,14 @@ private:
     };
 
     static void OnFindAppearance(Red::Handle<Red::mesh::MeshAppearance>& aOut, Red::CMesh* aMesh, Red::CName aName);
-    static void* OnLoadMaterials(Red::CMesh* aMesh, Red::MeshMaterialsToken& aToken,
-                                 const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4);
+    static void OnLoadMaterials(Red::CMesh* aMesh, Red::MeshMaterialsToken& aToken,
+                                const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4);
     static void OnAddStubAppearance(Red::CMesh* aMesh);
     static void OnPreloadAppearances(bool& aResult, Red::CMesh* aMesh);
 
     static bool ProcessMeshResource(Red::CMesh* aMesh, const Red::DynArray<Red::CName>& aMaterialNames,
-                                    Core::Vector<Red::JobHandle>& aLoadingJobs);
+                                    Red::DynArray<Red::Handle<Red::IMaterial>>& aFinalMaterials);
+    static bool ContainsUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials);
     static Red::Handle<Red::CMaterialInstance> CloneMaterialInstance(
         const Red::Handle<Red::CMaterialInstance>& aSourceInstance, MeshState* aState, Red::CName aMaterialName,
         Core::Vector<Red::JobHandle>& aLoadingJobs);
@@ -73,6 +74,7 @@ private:
     static MeshState* AcquireMeshState(Red::CMesh* aMesh);
 
     inline static Core::Map<Red::ResourcePath, Core::UniquePtr<MeshState>> s_states;
+    inline static Red::Handle<Red::CMaterialInstance> s_dummyMaterial;
     inline static std::shared_mutex s_stateLock;
 };
 }

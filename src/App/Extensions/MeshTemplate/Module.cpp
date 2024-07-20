@@ -21,9 +21,11 @@ std::string_view App::MeshTemplateModule::GetName()
 bool App::MeshTemplateModule::Load()
 {
     HookAfter<Raw::CMesh::FindAppearance>(&OnFindAppearance).OrThrow();
-    Hook<Raw::CMesh::LoadMaterialsAsync>(&OnLoadMaterials).OrThrow();
+    HookAfter<Raw::CMesh::LoadMaterialsAsync>(&OnLoadMaterials).OrThrow();
     Hook<Raw::CMesh::AddStubAppearance>(&OnAddStubAppearance).OrThrow();
     HookAfter<Raw::CMesh::ShouldPreloadAppearances>(&OnPreloadAppearances).OrThrow();
+
+    s_dummyMaterial = Red::MakeHandle<Red::CMaterialInstance>();
 
     return true;
 }
@@ -120,23 +122,22 @@ void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearan
     }
 }
 
-void* App::MeshTemplateModule::OnLoadMaterials(Red::CMesh* aMesh, Red::MeshMaterialsToken& aToken,
+void App::MeshTemplateModule::OnLoadMaterials(Red::CMesh* aMesh, Red::MeshMaterialsToken& aToken,
                                                const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4)
 {
-    Core::Vector<Red::JobHandle> loadingJobs(0);
-    ProcessMeshResource(aMesh, aMaterialNames, loadingJobs);
-
-    auto ret = Raw::CMesh::LoadMaterialsAsync(aMesh, aToken, aMaterialNames, a4);
-
-    if (!loadingJobs.empty())
+    if (aToken.materials->size == aMaterialNames.size && ContainsUnresolvedMaterials(*aToken.materials))
     {
-        for (const auto& loadingJob : loadingJobs)
-        {
-            aToken.job.Join(loadingJob);
-        }
-    }
+        Red::JobQueue jobQueue;
+        jobQueue.Wait(aToken.job);
+        jobQueue.Dispatch([aMesh, aMaterialNames, finalMaterials = aToken.materials]() {
+            if (ContainsUnresolvedMaterials(*finalMaterials))
+            {
+                ProcessMeshResource(aMesh, aMaterialNames, *finalMaterials);
+            }
+        });
 
-    return ret;
+        aToken.job = std::move(jobQueue.Capture());
+    }
 }
 
 App::MeshTemplateModule::MeshState* App::MeshTemplateModule::AcquireMeshState(Red::CMesh* aMesh)
@@ -153,7 +154,7 @@ App::MeshTemplateModule::MeshState* App::MeshTemplateModule::AcquireMeshState(Re
 }
 
 bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::DynArray<Red::CName>& aMaterialNames,
-                                                  Core::Vector<Red::JobHandle>& aLoadingJobs)
+                                                  Red::DynArray<Red::Handle<Red::IMaterial>>& aFinalMaterials)
 {
     auto meshState = AcquireMeshState(aMesh);
 
@@ -182,8 +183,12 @@ bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::
 
     meshState->FillMaterials(aMesh);
 
-    for (const auto& chunkMaterialName : aMaterialNames)
+    Core::Vector<Red::JobHandle> loadingJobs(0);
+
+    for (auto chunkMaterialIndex = 0;  chunkMaterialIndex < aMaterialNames.size; ++chunkMaterialIndex)
     {
+        const auto& chunkMaterialName = aMaterialNames[chunkMaterialIndex];
+
         if (meshState->HasMaterialEntry(chunkMaterialName))
             continue;
 
@@ -191,13 +196,13 @@ bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::
         {
             aMesh->materialEntries.EmplaceBack();
 
-            auto materialInstance = Red::MakeHandle<Red::CMaterialInstance>();
             auto& materialEntry = aMesh->materialEntries.Back();
             materialEntry.name = chunkMaterialName;
-            materialEntry.material = materialInstance;
-            materialEntry.materialWeak = materialInstance;
+            materialEntry.material = s_dummyMaterial;
+            materialEntry.materialWeak = s_dummyMaterial;
             materialEntry.isLocalInstance = true;
 
+            aFinalMaterials[chunkMaterialIndex] = s_dummyMaterial;
             continue;
         }
 
@@ -282,7 +287,7 @@ bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::
         aMesh->materialEntries.EmplaceBack();
 
         auto materialInstance = materialName != templateName
-            ? CloneMaterialInstance(sourceInstance, meshState, materialName, aLoadingJobs)
+            ? CloneMaterialInstance(sourceInstance, meshState, materialName, loadingJobs)
             : sourceInstance;
 
         auto& materialEntry = aMesh->materialEntries.Back();
@@ -290,9 +295,21 @@ bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::
         materialEntry.material = materialInstance;
         materialEntry.materialWeak = materialInstance;
         materialEntry.isLocalInstance = true;
+
+        aFinalMaterials[chunkMaterialIndex] = materialInstance;
+    }
+
+    if (!loadingJobs.empty())
+    {
+        Red::WaitForJobs(loadingJobs, std::chrono::milliseconds(5000));
     }
 
     return true;
+}
+
+bool App::MeshTemplateModule::ContainsUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials)
+{
+    return std::ranges::any_of(aMaterials, [](const auto& aMaterial) { return !aMaterial; });
 }
 
 Red::Handle<Red::CMaterialInstance> App::MeshTemplateModule::CloneMaterialInstance(

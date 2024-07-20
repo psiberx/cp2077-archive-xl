@@ -27,7 +27,7 @@ inline void WaitForQueue(JobQueue& aQueue, const W& aTimeout)
 }
 
 template<typename W>
-inline void WaitForJob(JobHandle& aJob, const W& aTimeout)
+inline void WaitForJob(const JobHandle& aJob, const W& aTimeout)
 {
     JobQueue queue;
     queue.Wait(aJob);
