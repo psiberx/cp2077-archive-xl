@@ -412,6 +412,9 @@ void App::EntityState::UpdateDynamicAttributes()
 bool App::EntityState::SelectDynamicAppearance(App::DynamicAppearanceName& aSelector, Red::EntityTemplate* aResource,
                                                Red::TemplateAppearance*& aAppearance)
 {
+    if (!aSelector.isDynamic)
+        return false;
+
     if (!aAppearance)
     {
         auto baseAppearance = Raw::EntityTemplate::FindAppearance(aResource, aSelector.name);
@@ -430,10 +433,6 @@ bool App::EntityState::SelectDynamicAppearance(App::DynamicAppearanceName& aSele
         aAppearance->appearanceName = baseAppearance->appearanceName
                                          ? baseAppearance->appearanceName
                                          : baseAppearance->name;
-    }
-    else if (aSelector.isDynamic)
-    {
-        return true;
     }
 
     m_dynamicAppearance->MarkDynamicAppearanceName(aAppearance->appearanceName, aSelector);

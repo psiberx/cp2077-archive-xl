@@ -260,7 +260,8 @@ void App::GarmentOverrideModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPr
     {
         std::shared_lock _(s_dynamicTagsLock);
 
-        if (s_dynamicAppearanceEntities.contains(aEntityPath))
+        if (s_dynamicAppearanceEntities.contains(aEntityPath) &&
+            s_dynamicAppearance->IsDynamicAppearanceName(aAppearanceName))
         {
             auto baseName = s_dynamicAppearance->GetBaseAppearanceName(aAppearanceName);
             cacheKey = Red::FNV1a64(reinterpret_cast<const uint8_t*>(baseName.data()), baseName.size(),
@@ -307,7 +308,8 @@ void App::GarmentOverrideModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPr
         return;
     }
 
-    if (s_dynamicAppearance->SupportsDynamicAppearance(entityTemplate))
+    if (s_dynamicAppearance->SupportsDynamicAppearance(entityTemplate) &&
+        s_dynamicAppearance->IsDynamicAppearanceName(aAppearanceName))
     {
         auto baseName = s_dynamicAppearance->GetBaseAppearanceName(aAppearanceName);
         cacheKey = Red::FNV1a64(reinterpret_cast<const uint8_t*>(baseName.data()), baseName.size(),
@@ -702,7 +704,8 @@ bool App::GarmentOverrideModule::PrepareDynamicAppearanceName(Red::WeakHandle<Re
                                                               Red::CName& aAppearanceName)
 {
     if (IsUniqueAppearanceName(aAppearanceName) &&
-        s_dynamicAppearance->SupportsDynamicAppearance(aTemplateToken->resource))
+        s_dynamicAppearance->SupportsDynamicAppearance(aTemplateToken->resource) &&
+        s_dynamicAppearance->IsDynamicAppearanceName(aAppearanceName))
     {
         s_dynamicAppearance->MarkDynamicAppearanceName(aAppearanceName, aEntity.instance);
         return true;

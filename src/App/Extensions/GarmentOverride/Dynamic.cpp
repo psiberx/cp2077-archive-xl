@@ -6,7 +6,6 @@
 #include "App/Utils/Str.hpp"
 #include "Red/AppearanceChanger.hpp"
 #include "Red/CharacterCustomization.hpp"
-#include "Red/Entity.hpp"
 #include "Red/TweakDB.hpp"
 
 namespace
@@ -602,6 +601,13 @@ bool App::DynamicAppearanceController::SupportsDynamicAppearance(const Red::Enti
 {
     return aTemplate->visualTagsSchema &&
            aTemplate->visualTagsSchema->visualTags.Contains(DynamicAppearanceTag);
+}
+
+bool App::DynamicAppearanceController::IsDynamicAppearanceName(Red::CName aAppearanceName)
+{
+    std::string_view appearanceName = aAppearanceName.ToString();
+
+    return appearanceName.find(VariantMarker) != std::string::npos;
 }
 
 void App::DynamicAppearanceController::MarkDynamicAppearanceName(Red::CName& aAppearanceName, Red::Entity* aEntity)

@@ -97,6 +97,7 @@ public:
     void RemoveState(Red::Entity* aEntity);
 
     bool SupportsDynamicAppearance(const Red::EntityTemplate* aTemplate);
+    bool IsDynamicAppearanceName(Red::CName aAppearanceName);
     void MarkDynamicAppearanceName(Red::CName& aAppearanceName, Red::Entity* aEntity);
     void MarkDynamicAppearanceName(Red::CName& aAppearanceName, DynamicAppearanceName& aSelector);
     std::string_view GetBaseAppearanceName(Red::CName aAppearanceName);
