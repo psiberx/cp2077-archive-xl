@@ -104,7 +104,7 @@ App::DynamicAppearanceName::DynamicAppearanceName(Red::CName aAppearance)
         }
 
         {
-            auto suffixPos = str.find_last_of(ConditionMarker, markerPos);
+            auto suffixPos = str.find_last_of(ConditionMarker);
             if (suffixPos != std::string_view::npos)
             {
                 str.remove_suffix(str.size() - suffixPos);
@@ -144,12 +144,22 @@ App::DynamicAppearanceName::DynamicAppearanceName(Red::CName aAppearance)
                     skip = markerPos + 1;
                 }
 
-                auto partName = Red::FNV1a64(partNum, 2, VariantAttr);
-                auto partValue = ExtractName(str.data(), 0, markerPos, true);
-                parts[partName] = partValue;
+                auto assignPos = str.find(ConditionEqual);
+                if (assignPos != std::string_view::npos && assignPos < markerPos)
+                {
+                    auto partName = ExtractName(str.data(), 0, assignPos, true);
+                    auto partValue = ExtractName(str.data(), assignPos + 1, markerPos - assignPos - 1, true);
+                    parts[partName] = partValue;
+                }
+                else
+                {
+                    auto partName = Red::FNV1a64(partNum, 2, VariantAttr);
+                    auto partValue = ExtractName(str.data(), 0, markerPos, true);
+                    parts[partName] = partValue;
+                    ++partNum[1];
+                }
 
                 str.remove_prefix(skip);
-                ++partNum[1];
             }
         }
     }
