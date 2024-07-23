@@ -193,11 +193,12 @@ Red::TemplateAppearance* App::GarmentOverrideModule::OnResolveAppearance(Red::En
             }
             else
             {
-                if (selector.name != aSelector)
+                std::unique_lock _(s_mutex);
+                if (auto& entityState = s_stateManager->GetFirstEntityState())
                 {
-                    appearance = Raw::EntityTemplate::FindAppearance(aTemplate, selector.name);
+                    SelectDynamicAppearance(entityState, selector, aTemplate, appearance);
+                    return appearance;
                 }
-                return appearance;
             }
         }
     }
@@ -233,12 +234,23 @@ void App::GarmentOverrideModule::OnResolveDefinition(Red::AppearanceResource* aR
     if (!*aDefinition)
     {
         auto selector = s_dynamicAppearance->ParseAppearance(aSelector);
-        if (selector.isDynamic && selector.context)
+        if (selector.isDynamic)
         {
-            std::unique_lock _(s_mutex);
-            if (auto& entityState = s_stateManager->GetEntityState(selector.context))
+            if (selector.context)
             {
-                SelectDynamicAppearance(entityState, selector, aResource, *aDefinition);
+                std::unique_lock _(s_mutex);
+                if (auto& entityState = s_stateManager->GetEntityState(selector.context))
+                {
+                    SelectDynamicAppearance(entityState, selector, aResource, *aDefinition);
+                }
+            }
+            else
+            {
+                std::unique_lock _(s_mutex);
+                if (auto& entityState = s_stateManager->GetFirstEntityState())
+                {
+                    SelectDynamicAppearance(entityState, selector, aResource, *aDefinition);
+                }
             }
         }
         else

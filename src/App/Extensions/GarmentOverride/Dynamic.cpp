@@ -656,8 +656,11 @@ void App::DynamicAppearanceController::MarkDynamicAppearanceName(Red::CName& aAp
         dynamicName += aSelector.variant.ToString();
     }
 
-    dynamicName += ContextMarker;
-    dynamicName += std::to_string(aSelector.context);
+    if (aSelector.context)
+    {
+        dynamicName += ContextMarker;
+        dynamicName += std::to_string(aSelector.context);
+    }
 
     aAppearanceName = Red::CNamePool::Add(dynamicName.c_str());
 }

@@ -771,15 +771,18 @@ App::OverrideStateManager::OverrideStateManager(Core::SharedPtr<DynamicAppearanc
 {
 }
 
+Core::SharedPtr<App::EntityState>& App::OverrideStateManager::GetFirstEntityState()
+{
+    if (m_entityStates.empty())
+        return s_nullEntityState;
+
+    return m_entityStates.begin().value();
+}
+
 Core::SharedPtr<App::EntityState>& App::OverrideStateManager::GetEntityState(uint64_t aContext)
 {
     return GetEntityState(reinterpret_cast<Red::Entity*>(aContext));
 }
-
-// Core::SharedPtr<App::EntityState>& App::OverrideStateManager::FindEntityState(uint64_t aContext)
-// {
-//     return FindEntityState(reinterpret_cast<Red::Entity*>(aContext));
-// }
 
 Core::SharedPtr<App::EntityState>& App::OverrideStateManager::GetEntityState(Red::Entity* aEntity)
 {

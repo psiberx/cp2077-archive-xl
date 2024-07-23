@@ -166,10 +166,10 @@ class OverrideStateManager
 public:
     explicit OverrideStateManager(Core::SharedPtr<DynamicAppearanceController> aDynamicAppearance);
 
+    Core::SharedPtr<EntityState>& GetFirstEntityState();
     Core::SharedPtr<EntityState>& GetEntityState(uint64_t aContext);
     Core::SharedPtr<EntityState>& GetEntityState(Red::Entity* aEntity);
 
-    // Core::SharedPtr<EntityState>& FindEntityState(uint64_t aContext);
     Core::SharedPtr<EntityState>& FindEntityState(Red::Entity* aEntity);
     Core::SharedPtr<EntityState>& FindEntityState(Red::ResourcePath aPath);
     Core::SharedPtr<EntityState>& FindEntityState(Red::GarmentProcessor* aProcessor);
