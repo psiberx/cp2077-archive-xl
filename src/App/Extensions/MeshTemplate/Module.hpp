@@ -68,7 +68,7 @@ private:
     static void ProcessMeshResource(MeshState* aMeshState, Red::CMesh* aMesh,
                                     MeshState* aSourceState, Red::CMesh* aSourceMesh,
                                     const Red::DynArray<Red::CName>& aMaterialNames,
-                                    Red::DynArray<Red::Handle<Red::IMaterial>>& aFinalMaterials,
+                                    const Red::SharedPtr<Red::DynArray<Red::Handle<Red::IMaterial>>>& aFinalMaterials,
                                     const Red::JobGroup& aJobGroup);
     static bool ContainsUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials);
     static Red::Handle<Red::CMaterialInstance> CloneMaterialInstance(

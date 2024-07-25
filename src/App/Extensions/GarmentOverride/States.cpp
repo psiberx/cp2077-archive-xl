@@ -433,9 +433,9 @@ bool App::EntityState::SelectDynamicAppearance(App::DynamicAppearanceName& aSele
         aAppearance->appearanceName = baseAppearance->appearanceName
                                          ? baseAppearance->appearanceName
                                          : baseAppearance->name;
-    }
 
-    m_dynamicAppearance->MarkDynamicAppearanceName(aAppearance->appearanceName, aSelector);
+        m_dynamicAppearance->MarkDynamicAppearanceName(aAppearance->appearanceName, aSelector);
+    }
 
     aAppearance->name = aAppearance->appearanceName;
 

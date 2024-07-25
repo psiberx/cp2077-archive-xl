@@ -160,17 +160,12 @@ void App::MeshTemplateModule::OnLoadMaterials(Red::CMesh* aMesh, Red::MeshMateri
         std::unique_lock _(meshState->meshMutex);
 
         Red::JobQueue jobQueue(aJobGroup);
-
-        if (meshState->lastJob.internal->unk18)
-        {
-            jobQueue.Wait(meshState->lastJob);
-        }
-
+        jobQueue.Wait(meshState->lastJob);
         jobQueue.Dispatch([meshState, aMesh, sourceState, sourceMesh, aMaterialNames, finalMaterials](const Red::JobGroup& aJobGroup) {
-            ProcessMeshResource(meshState, aMesh, sourceState, sourceMesh, aMaterialNames, *finalMaterials, aJobGroup);
+            ProcessMeshResource(meshState, aMesh, sourceState, sourceMesh, aMaterialNames, finalMaterials, aJobGroup);
         });
 
-        meshState->lastJob = jobQueue.Capture();
+        meshState->lastJob = std::move(jobQueue.Capture());
     });
 
     aToken.job = std::move(jobQueue.Capture());
@@ -192,7 +187,7 @@ App::MeshTemplateModule::MeshState* App::MeshTemplateModule::AcquireMeshState(Re
 void App::MeshTemplateModule::ProcessMeshResource(MeshState* aMeshState, Red::CMesh* aMesh,
                                                   MeshState* aSourceState, Red::CMesh* aSourceMesh,
                                                   const Red::DynArray<Red::CName>& aMaterialNames,
-                                                  Red::DynArray<Red::Handle<Red::IMaterial>>& aFinalMaterials,
+                                                  const Red::SharedPtr<Red::DynArray<Red::Handle<Red::IMaterial>>>& aFinalMaterials,
                                                   const Red::JobGroup& aJobGroup)
 {
     Red::JobQueue jobQueue(aJobGroup);
@@ -219,7 +214,7 @@ void App::MeshTemplateModule::ProcessMeshResource(MeshState* aMeshState, Red::CM
             materialEntry.materialWeak = s_dummyMaterial;
             materialEntry.isLocalInstance = true;
 
-            aFinalMaterials[chunkIndex] = s_dummyMaterial;
+            (*aFinalMaterials)[chunkIndex] = s_dummyMaterial;
             continue;
         }
 
@@ -317,7 +312,7 @@ void App::MeshTemplateModule::ProcessMeshResource(MeshState* aMeshState, Red::CM
         materialEntry.materialWeak = materialInstance;
         materialEntry.isLocalInstance = true;
 
-        aFinalMaterials[chunkIndex] = materialInstance;
+        (*aFinalMaterials)[chunkIndex] = materialInstance;
     }
 
     if (deferredMaterials.empty())
@@ -328,7 +323,7 @@ void App::MeshTemplateModule::ProcessMeshResource(MeshState* aMeshState, Red::CM
         jobQueue.Wait(deferred.sourceToken->job);
     }
 
-    jobQueue.Dispatch([aMesh, aMeshState, aSourceMesh, aSourceState, &aFinalMaterials, deferredMaterials = std::move(deferredMaterials)](const Red::JobGroup& aJobGroup) {
+    jobQueue.Dispatch([aMesh, aMeshState, aSourceMesh, aSourceState, aFinalMaterials, deferredMaterials = std::move(deferredMaterials)](const Red::JobGroup& aJobGroup) {
         std::scoped_lock _(aMeshState->meshMutex, aSourceState->sourceMutex);
 
         Red::JobQueue jobQueue(aJobGroup);
@@ -366,7 +361,7 @@ void App::MeshTemplateModule::ProcessMeshResource(MeshState* aMeshState, Red::CM
             materialEntry.materialWeak = materialInstance;
             materialEntry.isLocalInstance = true;
 
-            aFinalMaterials[deferred.chunkIndex] = materialInstance;
+            (*aFinalMaterials)[deferred.chunkIndex] = materialInstance;
         }
     });
 }
