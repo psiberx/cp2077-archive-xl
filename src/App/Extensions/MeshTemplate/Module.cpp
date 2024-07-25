@@ -123,21 +123,57 @@ void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearan
 }
 
 void App::MeshTemplateModule::OnLoadMaterials(Red::CMesh* aMesh, Red::MeshMaterialsToken& aToken,
-                                               const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4)
+                                              const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4)
 {
-    if (aToken.materials->size == aMaterialNames.size && ContainsUnresolvedMaterials(*aToken.materials))
-    {
-        Red::JobQueue jobQueue;
-        jobQueue.Wait(aToken.job);
-        jobQueue.Dispatch([aMesh, aMaterialNames, finalMaterials = aToken.materials]() {
-            if (ContainsUnresolvedMaterials(*finalMaterials))
-            {
-                ProcessMeshResource(aMesh, aMaterialNames, *finalMaterials);
-            }
+    if (aToken.materials->size != aMaterialNames.size || !ContainsUnresolvedMaterials(*aToken.materials))
+        return;
+
+    Red::JobQueue jobQueue;
+    jobQueue.Wait(aToken.job);
+    jobQueue.Dispatch([aMesh, aMaterialNames, finalMaterials = aToken.materials](const Red::JobGroup& aJobGroup) {
+        if (!ContainsUnresolvedMaterials(*finalMaterials))
+            return;
+
+        auto meshState = AcquireMeshState(aMesh);
+
+        Red::CMesh* sourceMesh;
+        MeshState* sourceState;
+
+        {
+            std::shared_lock _(meshState->meshMutex);
+            sourceMesh = meshState->ResolveSource(aMaterialNames.Back());
+        }
+
+        if (sourceMesh)
+        {
+            sourceState = AcquireMeshState(sourceMesh);
+        }
+        else
+        {
+            sourceMesh = aMesh;
+            sourceState = meshState;
+        }
+
+        if (sourceState == meshState && meshState->IsStatic())
+            return;
+
+        std::unique_lock _(meshState->meshMutex);
+
+        Red::JobQueue jobQueue(aJobGroup);
+
+        if (meshState->lastJob.internal->unk18)
+        {
+            jobQueue.Wait(meshState->lastJob);
+        }
+
+        jobQueue.Dispatch([meshState, aMesh, sourceState, sourceMesh, aMaterialNames, finalMaterials](const Red::JobGroup& aJobGroup) {
+            ProcessMeshResource(meshState, aMesh, sourceState, sourceMesh, aMaterialNames, *finalMaterials, aJobGroup);
         });
 
-        aToken.job = std::move(jobQueue.Capture());
-    }
+        meshState->lastJob = jobQueue.Capture();
+    });
+
+    aToken.job = std::move(jobQueue.Capture());
 }
 
 App::MeshTemplateModule::MeshState* App::MeshTemplateModule::AcquireMeshState(Red::CMesh* aMesh)
@@ -153,66 +189,47 @@ App::MeshTemplateModule::MeshState* App::MeshTemplateModule::AcquireMeshState(Re
     return it.value().get();
 }
 
-bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::DynArray<Red::CName>& aMaterialNames,
-                                                  Red::DynArray<Red::Handle<Red::IMaterial>>& aFinalMaterials)
+void App::MeshTemplateModule::ProcessMeshResource(MeshState* aMeshState, Red::CMesh* aMesh,
+                                                  MeshState* aSourceState, Red::CMesh* aSourceMesh,
+                                                  const Red::DynArray<Red::CName>& aMaterialNames,
+                                                  Red::DynArray<Red::Handle<Red::IMaterial>>& aFinalMaterials,
+                                                  const Red::JobGroup& aJobGroup)
 {
-    auto meshState = AcquireMeshState(aMesh);
+    Red::JobQueue jobQueue(aJobGroup);
+    Core::Vector<DeferredMaterial> deferredMaterials(0);
 
-    Red::CMesh* sourceMesh;
-    MeshState* sourceState;
+    std::scoped_lock _(aMeshState->meshMutex, aSourceState->sourceMutex);
 
+    aMeshState->FillMaterials(aMesh);
+
+    for (int32_t chunkIndex = 0; chunkIndex < aMaterialNames.size; ++chunkIndex)
     {
-        std::shared_lock _(meshState->meshMutex);
-        sourceMesh = meshState->ResolveSource(aMaterialNames.Back());
-    }
+        const auto& chunkName = aMaterialNames[chunkIndex];
 
-    if (sourceMesh)
-    {
-        sourceState = AcquireMeshState(sourceMesh);
-    }
-    else
-    {
-        sourceMesh = aMesh;
-        sourceState = meshState;
-    }
-
-    if (sourceState == meshState && meshState->IsStatic())
-        return false;
-
-    std::scoped_lock _(meshState->meshMutex, sourceState->sourceMutex);
-
-    meshState->FillMaterials(aMesh);
-
-    Core::Vector<Red::JobHandle> loadingJobs(0);
-
-    for (auto chunkMaterialIndex = 0;  chunkMaterialIndex < aMaterialNames.size; ++chunkMaterialIndex)
-    {
-        const auto& chunkMaterialName = aMaterialNames[chunkMaterialIndex];
-
-        if (meshState->HasMaterialEntry(chunkMaterialName))
+        if (aMeshState->HasMaterialEntry(chunkName))
             continue;
 
-        if (chunkMaterialName.hash == sourceMesh->path.hash)
+        if (chunkName.hash == aSourceMesh->path.hash)
         {
             aMesh->materialEntries.EmplaceBack();
 
             auto& materialEntry = aMesh->materialEntries.Back();
-            materialEntry.name = chunkMaterialName;
+            materialEntry.name = chunkName;
             materialEntry.material = s_dummyMaterial;
             materialEntry.materialWeak = s_dummyMaterial;
             materialEntry.isLocalInstance = true;
 
-            aFinalMaterials[chunkMaterialIndex] = s_dummyMaterial;
+            aFinalMaterials[chunkIndex] = s_dummyMaterial;
             continue;
         }
 
-        auto materialName = chunkMaterialName;
-        auto templateName = chunkMaterialName;
-        auto sourceIndex = sourceState->GetMaterialEntryIndex(chunkMaterialName);
+        auto materialName = chunkName;
+        auto templateName = chunkName;
+        auto sourceIndex = aSourceState->GetMaterialEntryIndex(chunkName);
 
         if (sourceIndex < 0)
         {
-            auto chunkMaterialNameStr = std::string_view(chunkMaterialName.ToString());
+            auto chunkMaterialNameStr = std::string_view(chunkName.ToString());
             auto templateNamePos = chunkMaterialNameStr.find(SpecialMaterialMarker);
             if (templateNamePos != std::string_view::npos)
             {
@@ -228,17 +245,17 @@ bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::
                 templateName = DefaultTemplateName;
             }
 
-            sourceIndex = sourceState->GetTemplateEntryIndex(templateName);
+            sourceIndex = aSourceState->GetTemplateEntryIndex(templateName);
 
             if (sourceIndex < 0)
             {
                 LogError(R"(|{}| Material template "{}" for entry "{}" not found.)",
-                         ModuleName, templateName.ToString(), chunkMaterialName.ToString());
+                         ModuleName, templateName.ToString(), chunkName.ToString());
                 continue;
             }
         }
 
-        auto& sourceEntry = sourceMesh->materialEntries[sourceIndex];
+        auto& sourceEntry = aSourceMesh->materialEntries[sourceIndex];
         auto sourceInstance = Red::Cast<Red::CMaterialInstance>(sourceEntry.materialWeak.Lock());
 
         if (!sourceInstance)
@@ -247,8 +264,8 @@ bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::
 
             if (sourceEntry.isLocalInstance)
             {
-                Raw::MeshMaterialBuffer::LoadMaterialAsync(&sourceMesh->localMaterialBuffer, token,
-                                                           Red::AsHandle(sourceMesh), sourceEntry.index, 0, 0);
+                Raw::MeshMaterialBuffer::LoadMaterialAsync(&aSourceMesh->localMaterialBuffer, token,
+                                                           Red::AsHandle(aSourceMesh), sourceEntry.index, 0, 0);
                 if (!token)
                 {
                     LogError("|{}| Material \"{}\" instance not found.", ModuleName, templateName.ToString());
@@ -257,17 +274,21 @@ bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::
             }
             else
             {
-                auto& externalPath = sourceMesh->externalMaterials[sourceEntry.index].path;
-                auto materialPath = ExpandResourcePath(externalPath, meshState, materialName);
+                auto& externalPath = aSourceMesh->externalMaterials[sourceEntry.index].path;
+                auto materialPath = ExpandResourcePath(externalPath, aMeshState, materialName);
 
                 token = Red::ResourceLoader::Get()->LoadAsync<Red::IMaterial>(materialPath);
             }
 
-            EnsureResourceLoaded(token);
+            if (token->IsFailed())
+            {
+                LogError("|{}| Material \"{}\" instance failed to load.", ModuleName, templateName.ToString());
+                continue;
+            }
 
             if (!token->IsLoaded())
             {
-                LogError("|{}| Material \"{}\" instance failed to load.", ModuleName, templateName.ToString());
+                deferredMaterials.push_back({chunkIndex, chunkName, materialName, templateName, sourceIndex, token});
                 continue;
             }
 
@@ -287,24 +308,67 @@ bool App::MeshTemplateModule::ProcessMeshResource(Red::CMesh* aMesh, const Red::
         aMesh->materialEntries.EmplaceBack();
 
         auto materialInstance = materialName != templateName
-            ? CloneMaterialInstance(sourceInstance, meshState, materialName, loadingJobs)
+            ? CloneMaterialInstance(sourceInstance, aMeshState, materialName, jobQueue)
             : sourceInstance;
 
         auto& materialEntry = aMesh->materialEntries.Back();
-        materialEntry.name = chunkMaterialName;
+        materialEntry.name = chunkName;
         materialEntry.material = materialInstance;
         materialEntry.materialWeak = materialInstance;
         materialEntry.isLocalInstance = true;
 
-        aFinalMaterials[chunkMaterialIndex] = materialInstance;
+        aFinalMaterials[chunkIndex] = materialInstance;
     }
 
-    if (!loadingJobs.empty())
+    if (deferredMaterials.empty())
+        return;
+
+    for (auto& deferred : deferredMaterials)
     {
-        Red::WaitForJobs(loadingJobs, std::chrono::milliseconds(5000));
+        jobQueue.Wait(deferred.sourceToken->job);
     }
 
-    return true;
+    jobQueue.Dispatch([aMesh, aMeshState, aSourceMesh, aSourceState, &aFinalMaterials, deferredMaterials = std::move(deferredMaterials)](const Red::JobGroup& aJobGroup) {
+        std::scoped_lock _(aMeshState->meshMutex, aSourceState->sourceMutex);
+
+        Red::JobQueue jobQueue(aJobGroup);
+
+        for (auto& deferred : deferredMaterials)
+        {
+            if (deferred.sourceToken->IsFailed())
+            {
+                LogError("|{}| Material \"{}\" instance failed to load.", ModuleName, deferred.templateName.ToString());
+                continue;
+            }
+
+            auto sourceInstance = Red::Cast<Red::CMaterialInstance>(deferred.sourceToken->resource);
+
+            if (!sourceInstance)
+            {
+                LogError("|{}| Material \"{}\" must be instance of {}.",
+                         ModuleName, deferred.templateName.ToString(), Red::CMaterialInstance::NAME);
+                continue;
+            }
+
+            auto& sourceEntry = aSourceMesh->materialEntries[deferred.sourceIndex];
+            sourceEntry.material = sourceInstance;
+            sourceEntry.materialWeak = sourceInstance;
+
+            aMesh->materialEntries.EmplaceBack();
+
+            auto materialInstance = deferred.materialName != deferred.templateName
+                ? CloneMaterialInstance(sourceInstance, aMeshState, deferred.materialName, jobQueue)
+                : sourceInstance;
+
+            auto& materialEntry = aMesh->materialEntries.Back();
+            materialEntry.name = deferred.chunkName;
+            materialEntry.material = materialInstance;
+            materialEntry.materialWeak = materialInstance;
+            materialEntry.isLocalInstance = true;
+
+            aFinalMaterials[deferred.chunkIndex] = materialInstance;
+        }
+    });
 }
 
 bool App::MeshTemplateModule::ContainsUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials)
@@ -314,7 +378,7 @@ bool App::MeshTemplateModule::ContainsUnresolvedMaterials(const Red::DynArray<Re
 
 Red::Handle<Red::CMaterialInstance> App::MeshTemplateModule::CloneMaterialInstance(
     const Red::Handle<Red::CMaterialInstance>& aSourceInstance, MeshState* aState, Red::CName aMaterialName,
-    Core::Vector<Red::JobHandle>& aLoadingJobs)
+    Red::JobQueue& aJobQueue)
 {
     auto materialInstance = Red::MakeHandle<Red::CMaterialInstance>();
     materialInstance->baseMaterial = aSourceInstance->baseMaterial;
@@ -327,41 +391,52 @@ Red::Handle<Red::CMaterialInstance> App::MeshTemplateModule::CloneMaterialInstan
         materialInstance->params.PushBack(sourceParam);
     }
 
+    ExpandMaterialInstanceParams(materialInstance, aState, aMaterialName, aJobQueue);
+
     auto& baseReference = materialInstance->baseMaterial;
 
-    if (ExpandResourceReference(baseReference, aState, aMaterialName))
+    if (ExpandResourceReference(materialInstance->baseMaterial, aState, aMaterialName))
     {
-        EnsureResourceLoaded(baseReference);
+        aJobQueue.Wait(materialInstance->baseMaterial.token->job);
+        aJobQueue.Dispatch([materialInstance, aState, aMaterialName](const Red::JobGroup& aJobGroup) {
+            auto& baseReference = materialInstance->baseMaterial;
+            if (auto baseInstance = Red::Cast<Red::CMaterialInstance>(baseReference.token->resource))
+            {
+                Red::JobQueue jobQueue(aJobGroup);
+                ExpandMaterialInstanceParams(baseInstance, aState, aMaterialName, jobQueue);
+            }
+        });
     }
     else if (materialInstance->baseMaterial.path && !materialInstance->baseMaterial.token)
     {
-        EnsureResourceLoaded(baseReference);
+        materialInstance->baseMaterial.LoadAsync();
 
-        if (auto baseInstance = Red::Cast<Red::CMaterialInstance>(baseReference.token->resource))
-        {
-            auto cloneToken = Red::MakeShared<Red::ResourceToken<Red::IMaterial>>();
-            cloneToken->self = cloneToken;
-            cloneToken->resource = CloneMaterialInstance(baseInstance, aState, aMaterialName, aLoadingJobs);
-            cloneToken->path = baseInstance->path;
-            cloneToken->finished = 1;
+        aJobQueue.Wait(baseReference.token->job);
+        aJobQueue.Dispatch([materialInstance, aState, aMaterialName](const Red::JobGroup& aJobGroup) {
+            auto& baseReference = materialInstance->baseMaterial;
+            if (auto baseInstance = Red::Cast<Red::CMaterialInstance>(baseReference.token->resource))
+            {
+                Red::JobQueue jobQueue(aJobGroup);
 
-            baseReference.token = std::move(cloneToken);
-        }
+                auto cloneToken = Red::MakeShared<Red::ResourceToken<Red::IMaterial>>();
+                cloneToken->self = cloneToken;
+                cloneToken->resource = CloneMaterialInstance(baseInstance, aState, aMaterialName, jobQueue);
+                cloneToken->path = baseInstance->path;
+                cloneToken->finished = 1;
+
+                baseReference.token = std::move(cloneToken);
+
+                ExpandMaterialInstanceParams(baseInstance, aState, aMaterialName, jobQueue);
+            }
+        });
     }
-
-    if (auto baseInstance = Red::Cast<Red::CMaterialInstance>(materialInstance->baseMaterial.token->resource))
-    {
-        ExpandMaterialInstanceParams(baseInstance, aState, aMaterialName, aLoadingJobs);
-    }
-
-    ExpandMaterialInstanceParams(materialInstance, aState, aMaterialName, aLoadingJobs);
 
     return materialInstance;
 }
 
 void App::MeshTemplateModule::ExpandMaterialInstanceParams(Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
                                                            MeshState* aState, Red::CName aMaterialName,
-                                                           Core::Vector<Red::JobHandle>& aLoadingJobs)
+                                                           Red::JobQueue& aJobQueue)
 {
     for (const auto& materialParam : aMaterialInstance->params)
     {
@@ -372,7 +447,7 @@ void App::MeshTemplateModule::ExpandMaterialInstanceParams(Red::Handle<Red::CMat
 
             if (ExpandResourceReference(materialReference, aState, aMaterialName))
             {
-                aLoadingJobs.push_back(materialReference.token->job);
+                aJobQueue.Wait(materialReference.token->job);
             }
         }
     }

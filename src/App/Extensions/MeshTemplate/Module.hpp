@@ -41,11 +41,22 @@ private:
         volatile bool dynamic;
         std::shared_mutex meshMutex;
         std::shared_mutex sourceMutex;
+        Red::JobHandle lastJob;
         Red::SharedPtr<Red::ResourceToken<Red::IMaterial>> contextToken;
         DynamicAttributeList context;
         Core::Map<Red::CName, int32_t> templates;
         Core::Map<Red::CName, int32_t> materials;
         Core::Map<Red::CName, Red::CMesh*> sources;
+    };
+
+    struct DeferredMaterial
+    {
+        int32_t chunkIndex;
+        Red::CName chunkName;
+        Red::CName materialName;
+        Red::CName templateName;
+        int32_t sourceIndex;
+        Red::SharedPtr<Red::ResourceToken<Red::IMaterial>> sourceToken;
     };
 
     static void OnFindAppearance(Red::Handle<Red::mesh::MeshAppearance>& aOut, Red::CMesh* aMesh, Red::CName aName);
@@ -54,14 +65,17 @@ private:
     static void OnAddStubAppearance(Red::CMesh* aMesh);
     static void OnPreloadAppearances(bool& aResult, Red::CMesh* aMesh);
 
-    static bool ProcessMeshResource(Red::CMesh* aMesh, const Red::DynArray<Red::CName>& aMaterialNames,
-                                    Red::DynArray<Red::Handle<Red::IMaterial>>& aFinalMaterials);
+    static void ProcessMeshResource(MeshState* aMeshState, Red::CMesh* aMesh,
+                                    MeshState* aSourceState, Red::CMesh* aSourceMesh,
+                                    const Red::DynArray<Red::CName>& aMaterialNames,
+                                    Red::DynArray<Red::Handle<Red::IMaterial>>& aFinalMaterials,
+                                    const Red::JobGroup& aJobGroup);
     static bool ContainsUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials);
     static Red::Handle<Red::CMaterialInstance> CloneMaterialInstance(
         const Red::Handle<Red::CMaterialInstance>& aSourceInstance, MeshState* aState, Red::CName aMaterialName,
-        Core::Vector<Red::JobHandle>& aLoadingJobs);
+        Red::JobQueue& aJobQueue);
     static void ExpandMaterialInstanceParams(Red::Handle<Red::CMaterialInstance>& aMaterialInstance, MeshState* aState,
-                                              Red::CName aMaterialName, Core::Vector<Red::JobHandle>& aLoadingJobs);
+                                             Red::CName aMaterialName, Red::JobQueue& aJobQueue);
     template<typename T>
     static bool ExpandResourceReference(Red::ResourceReference<T>& aRef, MeshState* aState, Red::CName aMaterialName);
     static Red::ResourcePath ExpandResourcePath(Red::ResourcePath aPath, MeshState* aState, Red::CName aMaterialName);
