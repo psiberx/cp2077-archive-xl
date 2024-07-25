@@ -27,7 +27,6 @@ constexpr auto DummyAppearancePartPath = Red::ResourcePath(R"(#non_existing_part
 
 std::shared_mutex s_dynamicTagsLock;
 Core::Map<uint64_t, Core::Vector<Red::CName>> s_dynamicTagsCache;
-Core::Set<Red::ResourcePath> s_dynamicAppearanceEntities;
 }
 
 std::string_view App::GarmentOverrideModule::GetName()
@@ -267,23 +266,10 @@ void App::GarmentOverrideModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPr
     if (!aAppearanceName) // aFinalTags.tags.size > 0
         return;
 
-    uint64_t cacheKey;
+    auto cacheKey = Red::FNV1a64(aAppearanceName.ToString(), aEntityPath.hash);
 
     {
         std::shared_lock _(s_dynamicTagsLock);
-
-        if (s_dynamicAppearanceEntities.contains(aEntityPath) &&
-            s_dynamicAppearance->IsDynamicAppearanceName(aAppearanceName))
-        {
-            auto baseName = s_dynamicAppearance->GetBaseAppearanceName(aAppearanceName);
-            cacheKey = Red::FNV1a64(reinterpret_cast<const uint8_t*>(baseName.data()), baseName.size(),
-                                    aEntityPath.hash);
-        }
-        else
-        {
-            cacheKey = Red::FNV1a64(aAppearanceName.ToString(), aEntityPath.hash);
-        }
-
         const auto& cachedTagsIt = s_dynamicTagsCache.find(cacheKey);
         if (cachedTagsIt != s_dynamicTagsCache.end())
         {
@@ -318,17 +304,6 @@ void App::GarmentOverrideModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPr
         std::unique_lock _(s_dynamicTagsLock);
         s_dynamicTagsCache.insert_or_assign(cacheKey, std::move(dynamicTags));
         return;
-    }
-
-    if (s_dynamicAppearance->SupportsDynamicAppearance(entityTemplate) &&
-        s_dynamicAppearance->IsDynamicAppearanceName(aAppearanceName))
-    {
-        auto baseName = s_dynamicAppearance->GetBaseAppearanceName(aAppearanceName);
-        cacheKey = Red::FNV1a64(reinterpret_cast<const uint8_t*>(baseName.data()), baseName.size(),
-                                aEntityPath.hash);
-
-        std::unique_lock _(s_dynamicTagsLock);
-        s_dynamicAppearanceEntities.insert(aEntityPath);
     }
 
     if (entityTemplate->visualTagsSchema)
