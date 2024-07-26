@@ -23,6 +23,12 @@ inline WeakHandle<U> ToWeakHandle(T* aInstance)
     return AsWeakHandle(aInstance);
 }
 
+template<typename T, typename U = T>
+inline WeakHandle<U> ToWeakHandle(const Handle<T>& aInstance)
+{
+    return aInstance;
+}
+
 template<typename T>
 inline Handle<T> ToHandle(T* aInstance)
 {

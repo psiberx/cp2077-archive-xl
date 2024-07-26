@@ -21,11 +21,15 @@ std::string_view App::MeshTemplateModule::GetName()
 bool App::MeshTemplateModule::Load()
 {
     HookAfter<Raw::CMesh::FindAppearance>(&OnFindAppearance).OrThrow();
-    HookAfter<Raw::CMesh::LoadMaterialsAsync>(&OnLoadMaterials).OrThrow();
+    Hook<Raw::CMesh::LoadMaterialsAsync>(&OnLoadMaterials).OrThrow();
     Hook<Raw::CMesh::AddStubAppearance>(&OnAddStubAppearance).OrThrow();
-    HookAfter<Raw::CMesh::ShouldPreloadAppearances>(&OnPreloadAppearances).OrThrow();
+    Hook<Raw::CMesh::ShouldPreloadAppearances>(&OnPreloadAppearances).OrThrow();
 
+    s_dummyMesh = Red::MakeHandle<Red::CMesh>();
+    s_dummyAppearance = Red::MakeHandle<Red::meshMeshAppearance>();
     s_dummyMaterial = Red::MakeHandle<Red::CMaterialInstance>();
+
+    Raw::MeshAppearance::Owner::Set(s_dummyAppearance.instance, s_dummyMesh.instance);
 
     return true;
 }
@@ -55,21 +59,22 @@ void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearan
 
     if (!ownerMesh)
     {
-        auto& controller = GarmentOverrideModule::GetDynamicAppearanceController();
-        auto pathStr = controller->GetPathString(aMesh->path);
+        // if (aMesh->appearances.size == 0)
+        // {
+        //     auto& controller = GarmentOverrideModule::GetDynamicAppearanceController();
+        //     auto pathStr = controller->GetPathString(aMesh->path);
+        //
+        //     if (!pathStr.empty())
+        //     {
+        //         LogWarning(R"(|{}| Mesh \"{}\" doesn't have any appearances.)", ModuleName, pathStr);
+        //     }
+        //     else
+        //     {
+        //         LogWarning(R"(|{}| Mesh {} doesn't have any appearances.)", ModuleName, aMesh->path.hash);
+        //     }
+        // }
 
-        if (!pathStr.empty())
-        {
-            LogWarning(R"(|{}| Mesh \"{}\" doesn't have any appearances.)", ModuleName, pathStr);
-        }
-        else
-        {
-            LogWarning(R"(|{}| Mesh {} doesn't have any appearances.)", ModuleName, aMesh->path.hash);
-        }
-
-        aOut = Red::MakeHandle<Red::meshMeshAppearance>();
-        Raw::MeshAppearance::Owner::Set(aOut, aMesh);
-        aMesh->appearances.PushBack(aOut);
+        aOut = s_dummyAppearance;
         return;
     }
 
@@ -122,70 +127,87 @@ void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearan
     }
 }
 
-void App::MeshTemplateModule::OnLoadMaterials(Red::CMesh* aMesh, Red::MeshMaterialsToken& aToken,
-                                              const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4)
+void* App::MeshTemplateModule::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMaterialsToken& aToken,
+                                               const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4)
 {
-    if (aToken.materials->size != aMaterialNames.size || !ContainsUnresolvedMaterials(*aToken.materials))
-        return;
+    Raw::CMesh::LoadMaterialsAsync(aTargetMesh, aToken, aMaterialNames, a4);
+
+    if (!aTargetMesh->path || aMaterialNames.size == 0 || aToken.materials->size != aMaterialNames.size ||
+        !ContainsUnresolvedMaterials(*aToken.materials))
+        return &aToken;
 
     Red::JobQueue jobQueue;
     jobQueue.Wait(aToken.job);
-    jobQueue.Dispatch([aMesh, aMaterialNames, finalMaterials = aToken.materials](const Red::JobGroup& aJobGroup) {
+    jobQueue.Dispatch([targetMeshWeak = Red::AsWeakHandle(aTargetMesh), aMaterialNames,
+                       finalMaterials = aToken.materials](const Red::JobGroup& aJobGroup) {
         if (!ContainsUnresolvedMaterials(*finalMaterials))
             return;
 
-        auto meshState = AcquireMeshState(aMesh);
+        auto targetMesh = targetMeshWeak.Lock();
+        auto targetMeshState = AcquireMeshState(targetMesh);
 
-        Red::CMesh* sourceMesh;
-        MeshState* sourceState;
+        Red::Handle<Red::CMesh> sourceMesh;
+        Core::SharedPtr<MeshState> sourceMeshState;
 
         {
-            std::shared_lock _(meshState->meshMutex);
-            sourceMesh = meshState->ResolveSource(aMaterialNames.Back());
+            std::shared_lock _(targetMeshState->meshMutex);
+            sourceMesh = targetMeshState->ResolveSource(aMaterialNames.Back());
         }
 
         if (sourceMesh)
         {
-            sourceState = AcquireMeshState(sourceMesh);
+            sourceMeshState = AcquireMeshState(sourceMesh);
         }
         else
         {
-            sourceMesh = aMesh;
-            sourceState = meshState;
+            sourceMesh = targetMesh;
+            sourceMeshState = targetMeshState;
         }
 
-        if (sourceState == meshState && meshState->IsStatic())
+        if (sourceMeshState == targetMeshState && targetMeshState->IsStatic())
             return;
 
-        std::unique_lock _(meshState->meshMutex);
+        std::unique_lock _(targetMeshState->meshMutex);
 
         Red::JobQueue jobQueue(aJobGroup);
-        jobQueue.Wait(meshState->lastJob);
-        jobQueue.Dispatch([meshState, aMesh, sourceState, sourceMesh, aMaterialNames, finalMaterials](const Red::JobGroup& aJobGroup) {
-            ProcessMeshResource(meshState, aMesh, sourceState, sourceMesh, aMaterialNames, finalMaterials, aJobGroup);
+        jobQueue.Wait(targetMeshState->lastJob);
+        jobQueue.Dispatch([targetMeshState, targetMeshWeak = Red::ToWeakHandle(targetMesh),
+                           sourceMeshState, sourceMeshWeak = Red::ToWeakHandle(sourceMesh),
+                           aMaterialNames, finalMaterials](const Red::JobGroup& aJobGroup) {
+            auto targetMesh = targetMeshWeak.Lock();
+            auto sourceMesh = sourceMeshWeak.Lock();
+            if (targetMesh && sourceMesh)
+            {
+                ProcessMeshResource(targetMeshState, targetMesh, sourceMeshState, sourceMesh, aMaterialNames,
+                                    finalMaterials, aJobGroup);
+            }
         });
 
-        meshState->lastJob = std::move(jobQueue.Capture());
+        targetMeshState->lastJob = std::move(jobQueue.Capture());
     });
 
     aToken.job = std::move(jobQueue.Capture());
+
+    return &aToken;
 }
 
-App::MeshTemplateModule::MeshState* App::MeshTemplateModule::AcquireMeshState(Red::CMesh* aMesh)
+Core::SharedPtr<App::MeshTemplateModule::MeshState> App::MeshTemplateModule::AcquireMeshState(Red::CMesh* aMesh)
 {
     std::unique_lock _(s_stateLock);
 
     auto it = s_states.find(aMesh->path);
     if (it == s_states.end())
     {
-        it = s_states.emplace(aMesh->path, Core::MakeUnique<MeshState>(aMesh)).first;
+        it = s_states.emplace(aMesh->path, Core::MakeShared<MeshState>(aMesh)).first;
     }
 
-    return it.value().get();
+    return it.value();
 }
 
-void App::MeshTemplateModule::ProcessMeshResource(MeshState* aMeshState, Red::CMesh* aMesh,
-                                                  MeshState* aSourceState, Red::CMesh* aSourceMesh,
+void App::MeshTemplateModule::ProcessMeshResource(const Core::SharedPtr<MeshState>& aMeshState,
+                                                  const Red::Handle<Red::CMesh>& aMesh,
+                                                  const Core::SharedPtr<MeshState>& aSourceState,
+                                                  const Red::Handle<Red::CMesh>& aSourceMesh,
                                                   const Red::DynArray<Red::CName>& aMaterialNames,
                                                   const Red::SharedPtr<Red::DynArray<Red::Handle<Red::IMaterial>>>& aFinalMaterials,
                                                   const Red::JobGroup& aJobGroup)
@@ -260,7 +282,7 @@ void App::MeshTemplateModule::ProcessMeshResource(MeshState* aMeshState, Red::CM
             if (sourceEntry.isLocalInstance)
             {
                 Raw::MeshMaterialBuffer::LoadMaterialAsync(&aSourceMesh->localMaterialBuffer, token,
-                                                           Red::AsHandle(aSourceMesh), sourceEntry.index, 0, 0);
+                                                           aSourceMesh, sourceEntry.index, 0, 0);
                 if (!token)
                 {
                     LogError("|{}| Material \"{}\" instance not found.", ModuleName, templateName.ToString());
@@ -323,7 +345,8 @@ void App::MeshTemplateModule::ProcessMeshResource(MeshState* aMeshState, Red::CM
         jobQueue.Wait(deferred.sourceToken->job);
     }
 
-    jobQueue.Dispatch([aMesh, aMeshState, aSourceMesh, aSourceState, aFinalMaterials, deferredMaterials = std::move(deferredMaterials)](const Red::JobGroup& aJobGroup) {
+    jobQueue.Dispatch([aMesh, aMeshState, aSourceMesh, aSourceState, aFinalMaterials,
+                       deferredMaterials = std::move(deferredMaterials)](const Red::JobGroup& aJobGroup) {
         std::scoped_lock _(aMeshState->meshMutex, aSourceState->sourceMutex);
 
         Red::JobQueue jobQueue(aJobGroup);
@@ -372,7 +395,7 @@ bool App::MeshTemplateModule::ContainsUnresolvedMaterials(const Red::DynArray<Re
 }
 
 Red::Handle<Red::CMaterialInstance> App::MeshTemplateModule::CloneMaterialInstance(
-    const Red::Handle<Red::CMaterialInstance>& aSourceInstance, MeshState* aState, Red::CName aMaterialName,
+    const Red::Handle<Red::CMaterialInstance>& aSourceInstance, const Core::SharedPtr<MeshState>& aMeshState, Red::CName aMaterialName,
     Red::JobQueue& aJobQueue)
 {
     auto materialInstance = Red::MakeHandle<Red::CMaterialInstance>();
@@ -386,19 +409,19 @@ Red::Handle<Red::CMaterialInstance> App::MeshTemplateModule::CloneMaterialInstan
         materialInstance->params.PushBack(sourceParam);
     }
 
-    ExpandMaterialInstanceParams(materialInstance, aState, aMaterialName, aJobQueue);
+    ExpandMaterialInstanceParams(materialInstance, aMeshState, aMaterialName, aJobQueue);
 
     auto& baseReference = materialInstance->baseMaterial;
 
-    if (ExpandResourceReference(materialInstance->baseMaterial, aState, aMaterialName))
+    if (ExpandResourceReference(materialInstance->baseMaterial, aMeshState, aMaterialName))
     {
         aJobQueue.Wait(materialInstance->baseMaterial.token->job);
-        aJobQueue.Dispatch([materialInstance, aState, aMaterialName](const Red::JobGroup& aJobGroup) {
+        aJobQueue.Dispatch([materialInstance, aMeshState, aMaterialName](const Red::JobGroup& aJobGroup) {
             auto& baseReference = materialInstance->baseMaterial;
             if (auto baseInstance = Red::Cast<Red::CMaterialInstance>(baseReference.token->resource))
             {
                 Red::JobQueue jobQueue(aJobGroup);
-                ExpandMaterialInstanceParams(baseInstance, aState, aMaterialName, jobQueue);
+                ExpandMaterialInstanceParams(baseInstance, aMeshState, aMaterialName, jobQueue);
             }
         });
     }
@@ -407,7 +430,7 @@ Red::Handle<Red::CMaterialInstance> App::MeshTemplateModule::CloneMaterialInstan
         materialInstance->baseMaterial.LoadAsync();
 
         aJobQueue.Wait(baseReference.token->job);
-        aJobQueue.Dispatch([materialInstance, aState, aMaterialName](const Red::JobGroup& aJobGroup) {
+        aJobQueue.Dispatch([materialInstance, aMeshState, aMaterialName](const Red::JobGroup& aJobGroup) {
             auto& baseReference = materialInstance->baseMaterial;
             if (auto baseInstance = Red::Cast<Red::CMaterialInstance>(baseReference.token->resource))
             {
@@ -415,13 +438,13 @@ Red::Handle<Red::CMaterialInstance> App::MeshTemplateModule::CloneMaterialInstan
 
                 auto cloneToken = Red::MakeShared<Red::ResourceToken<Red::IMaterial>>();
                 cloneToken->self = cloneToken;
-                cloneToken->resource = CloneMaterialInstance(baseInstance, aState, aMaterialName, jobQueue);
+                cloneToken->resource = CloneMaterialInstance(baseInstance, aMeshState, aMaterialName, jobQueue);
                 cloneToken->path = baseInstance->path;
                 cloneToken->finished = 1;
 
                 baseReference.token = std::move(cloneToken);
 
-                ExpandMaterialInstanceParams(baseInstance, aState, aMaterialName, jobQueue);
+                ExpandMaterialInstanceParams(baseInstance, aMeshState, aMaterialName, jobQueue);
             }
         });
     }
@@ -430,8 +453,8 @@ Red::Handle<Red::CMaterialInstance> App::MeshTemplateModule::CloneMaterialInstan
 }
 
 void App::MeshTemplateModule::ExpandMaterialInstanceParams(Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
-                                                           MeshState* aState, Red::CName aMaterialName,
-                                                           Red::JobQueue& aJobQueue)
+                                                           const Core::SharedPtr<MeshState>& aMeshState,
+                                                           Red::CName aMaterialName, Red::JobQueue& aJobQueue)
 {
     for (const auto& materialParam : aMaterialInstance->params)
     {
@@ -440,7 +463,7 @@ void App::MeshTemplateModule::ExpandMaterialInstanceParams(Red::Handle<Red::CMat
             auto materialParamData = materialParam.data.GetDataPtr();
             auto& materialReference = *reinterpret_cast<Red::ResourceReference<>*>(materialParamData);
 
-            if (ExpandResourceReference(materialReference, aState, aMaterialName))
+            if (ExpandResourceReference(materialReference, aMeshState, aMaterialName))
             {
                 aJobQueue.Wait(materialReference.token->job);
             }
@@ -449,7 +472,8 @@ void App::MeshTemplateModule::ExpandMaterialInstanceParams(Red::Handle<Red::CMat
 }
 
 template<typename T>
-bool App::MeshTemplateModule::ExpandResourceReference(Red::ResourceReference<T>& aReference, MeshState* aState,
+bool App::MeshTemplateModule::ExpandResourceReference(Red::ResourceReference<T>& aReference,
+                                                      const Core::SharedPtr<MeshState>& aState,
                                                       Red::CName aMaterialName)
 {
     if (aReference.token)
@@ -469,7 +493,8 @@ bool App::MeshTemplateModule::ExpandResourceReference(Red::ResourceReference<T>&
     return true;
 }
 
-Red::ResourcePath App::MeshTemplateModule::ExpandResourcePath(Red::ResourcePath aPath, MeshState* aState,
+Red::ResourcePath App::MeshTemplateModule::ExpandResourcePath(Red::ResourcePath aPath,
+                                                              const Core::SharedPtr<MeshState>& aState,
                                                               Red::CName aMaterialName)
 {
     auto& controller = GarmentOverrideModule::GetDynamicAppearanceController();
@@ -545,22 +570,29 @@ void App::MeshTemplateModule::OnAddStubAppearance(Red::CMesh* aMesh)
     }
 }
 
-void App::MeshTemplateModule::OnPreloadAppearances(bool& aResult, Red::CMesh* aMesh)
+bool App::MeshTemplateModule::OnPreloadAppearances(Red::CMesh* aMesh)
 {
-    if (aResult && !aMesh->forceLoadAllAppearances && aMesh->appearances.size == 1)
+    if (!aMesh || !aMesh->path || aMesh->appearances.size == 0)
+        return false;
+
+    auto result = Raw::CMesh::ShouldPreloadAppearances(aMesh);
+
+    if (result && !aMesh->forceLoadAllAppearances && aMesh->appearances.size == 1)
     {
         if (aMesh->appearances[0]->chunkMaterials.size == 0)
         {
-            aResult = false;
+            result = false;
         }
         else if (aMesh->appearances[0]->name != DefaultAppearanceName)
         {
             if (aMesh->materialEntries.size == 0 || IsSpecialMaterial(aMesh->materialEntries[0].name))
             {
-                aResult = false;
+                result = false;
             }
         }
     }
+
+    return result;
 }
 
 App::MeshTemplateModule::MeshState::MeshState(Red::CMesh* aMesh)
@@ -699,17 +731,17 @@ bool App::MeshTemplateModule::MeshState::HasMaterialEntry(Red::CName aMaterialNa
 Red::CName App::MeshTemplateModule::MeshState::RegisterSource(Red::CMesh* aSourceMesh)
 {
     Red::CName sourceName = aSourceMesh->path.hash;
-    sources[sourceName] = aSourceMesh;
+    sources[sourceName] = Red::AsWeakHandle(aSourceMesh);
 
     return sourceName;
 }
 
-Red::CMesh* App::MeshTemplateModule::MeshState::ResolveSource(Red::CName aSourceName)
+Red::Handle<Red::CMesh> App::MeshTemplateModule::MeshState::ResolveSource(Red::CName aSourceName)
 {
     auto sourceMesh = sources.find(aSourceName);
 
     if (sourceMesh == sources.end())
-        return nullptr;
+        return {};
 
-    return sourceMesh.value();
+    return sourceMesh.value().Lock();
 }

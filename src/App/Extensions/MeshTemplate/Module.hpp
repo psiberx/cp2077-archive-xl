@@ -36,7 +36,7 @@ private:
         [[nodiscard]] bool HasMaterialEntry(Red::CName aMaterialName) const;
 
         Red::CName RegisterSource(Red::CMesh* aSourceMesh);
-        [[nodiscard]] Red::CMesh* ResolveSource(Red::CName aSourceName);
+        [[nodiscard]] Red::Handle<Red::CMesh> ResolveSource(Red::CName aSourceName);
 
         volatile bool dynamic;
         std::shared_mutex meshMutex;
@@ -46,7 +46,7 @@ private:
         DynamicAttributeList context;
         Core::Map<Red::CName, int32_t> templates;
         Core::Map<Red::CName, int32_t> materials;
-        Core::Map<Red::CName, Red::CMesh*> sources;
+        Core::Map<Red::CName, Red::WeakHandle<Red::CMesh>> sources;
     };
 
     struct DeferredMaterial
@@ -60,34 +60,41 @@ private:
     };
 
     static void OnFindAppearance(Red::Handle<Red::mesh::MeshAppearance>& aOut, Red::CMesh* aMesh, Red::CName aName);
-    static void OnLoadMaterials(Red::CMesh* aMesh, Red::MeshMaterialsToken& aToken,
-                                const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4);
+    static void* OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMaterialsToken& aToken,
+                                 const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4);
     static void OnAddStubAppearance(Red::CMesh* aMesh);
-    static void OnPreloadAppearances(bool& aResult, Red::CMesh* aMesh);
+    static bool OnPreloadAppearances(Red::CMesh* aMesh);
 
-    static void ProcessMeshResource(MeshState* aMeshState, Red::CMesh* aMesh,
-                                    MeshState* aSourceState, Red::CMesh* aSourceMesh,
+    static void ProcessMeshResource(const Core::SharedPtr<MeshState>& aMeshState,
+                                    const Red::Handle<Red::CMesh>& aMeshWeak,
+                                    const Core::SharedPtr<MeshState>& aSourceState,
+                                    const Red::Handle<Red::CMesh>& aSourceMeshWeak,
                                     const Red::DynArray<Red::CName>& aMaterialNames,
                                     const Red::SharedPtr<Red::DynArray<Red::Handle<Red::IMaterial>>>& aFinalMaterials,
                                     const Red::JobGroup& aJobGroup);
     static bool ContainsUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials);
     static Red::Handle<Red::CMaterialInstance> CloneMaterialInstance(
-        const Red::Handle<Red::CMaterialInstance>& aSourceInstance, MeshState* aState, Red::CName aMaterialName,
-        Red::JobQueue& aJobQueue);
-    static void ExpandMaterialInstanceParams(Red::Handle<Red::CMaterialInstance>& aMaterialInstance, MeshState* aState,
-                                             Red::CName aMaterialName, Red::JobQueue& aJobQueue);
+        const Red::Handle<Red::CMaterialInstance>& aSourceInstance, const Core::SharedPtr<MeshState>& aMeshState,
+        Red::CName aMaterialName, Red::JobQueue& aJobQueue);
+    static void ExpandMaterialInstanceParams(Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
+                                             const Core::SharedPtr<MeshState>& aMeshState, Red::CName aMaterialName,
+                                             Red::JobQueue& aJobQueue);
     template<typename T>
-    static bool ExpandResourceReference(Red::ResourceReference<T>& aRef, MeshState* aState, Red::CName aMaterialName);
-    static Red::ResourcePath ExpandResourcePath(Red::ResourcePath aPath, MeshState* aState, Red::CName aMaterialName);
+    static bool ExpandResourceReference(Red::ResourceReference<T>& aRef, const Core::SharedPtr<MeshState>& aState,
+                                        Red::CName aMaterialName);
+    static Red::ResourcePath ExpandResourcePath(Red::ResourcePath aPath, const Core::SharedPtr<MeshState>& aState,
+                                                Red::CName aMaterialName);
 
     template<typename T>
     static void EnsureResourceLoaded(Red::ResourceReference<T>& aRef);
     template<typename T>
     static void EnsureResourceLoaded(Red::SharedPtr<Red::ResourceToken<T>>& aToken);
 
-    static MeshState* AcquireMeshState(Red::CMesh* aMesh);
+    static Core::SharedPtr<MeshState> AcquireMeshState(Red::CMesh* aMesh);
 
-    inline static Core::Map<Red::ResourcePath, Core::UniquePtr<MeshState>> s_states;
+    inline static Core::Map<Red::ResourcePath, Core::SharedPtr<MeshState>> s_states;
+    inline static Red::Handle<Red::CMesh> s_dummyMesh;
+    inline static Red::Handle<Red::meshMeshAppearance> s_dummyAppearance;
     inline static Red::Handle<Red::CMaterialInstance> s_dummyMaterial;
     inline static std::shared_mutex s_stateLock;
 };
