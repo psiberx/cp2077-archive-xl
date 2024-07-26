@@ -73,7 +73,7 @@ void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearan
         return;
     }
 
-    if (!aOut->name)
+    if (!aOut->name || aMesh->appearances.size == 0)
         return;
 
     if (aOut->chunkMaterials.size == 0)
@@ -539,7 +539,7 @@ void App::MeshTemplateModule::PrefetchMeshState(Red::CMesh* aMesh, const Core::M
 
 void App::MeshTemplateModule::OnAddStubAppearance(Red::CMesh* aMesh)
 {
-    if (aMesh->boneNames.size == 0 || aMesh->surfaceAreaPerAxis.X < 0.0)
+    if (!aMesh->renderResourceBlob || aMesh->surfaceAreaPerAxis.X < 0.0)
     {
         Raw::CMesh::AddStubAppearance(aMesh);
     }
