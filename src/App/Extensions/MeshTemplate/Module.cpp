@@ -171,6 +171,12 @@ void* App::MeshTemplateModule::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::Mes
 
         Red::JobQueue jobQueue(aJobGroup);
         jobQueue.Wait(targetMeshState->lastJob);
+
+        if (targetMeshState->contextToken)
+        {
+            jobQueue.Wait(targetMeshState->contextToken->job);
+        }
+
         jobQueue.Dispatch([targetMeshState, targetMeshWeak = Red::ToWeakHandle(targetMesh),
                            sourceMeshState, sourceMeshWeak = Red::ToWeakHandle(sourceMesh),
                            aMaterialNames, finalMaterials](const Red::JobGroup& aJobGroup) {
@@ -609,6 +615,7 @@ bool App::MeshTemplateModule::OnPreloadAppearances(Red::CMesh* aMesh)
 
 App::MeshTemplateModule::MeshState::MeshState(Red::CMesh* aMesh)
     : dynamic(true)
+    , meshPath(aMesh->path)
 {
     FillMaterials(aMesh);
 
@@ -662,6 +669,18 @@ const App::DynamicAttributeList& App::MeshTemplateModule::MeshState::GetContext(
 
         if (!contextToken->IsLoaded())
         {
+            auto& controller = GarmentOverrideModule::GetDynamicAppearanceController();
+            auto pathStr = controller->GetPathString(meshPath);
+
+            if (!pathStr.empty())
+            {
+                LogWarning(R"(|{}| Can't load context for mesh \"{}\".)", ModuleName, pathStr);
+            }
+            else
+            {
+                LogWarning(R"(|{}| Can't load context for mesh {}.)", ModuleName, meshPath.hash);
+            }
+
             contextToken.Reset();
             return context;
         }

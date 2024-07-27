@@ -39,6 +39,7 @@ private:
         [[nodiscard]] Red::Handle<Red::CMesh> ResolveSource(Red::CName aSourceName);
 
         volatile bool dynamic;
+        Red::ResourcePath meshPath;
         std::shared_mutex meshMutex;
         std::shared_mutex sourceMutex;
         Red::JobHandle lastJob;
