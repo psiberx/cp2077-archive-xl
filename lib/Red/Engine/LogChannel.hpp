@@ -2,7 +2,7 @@
 
 namespace Red::Log
 {
-inline void Channel(Red::CName aChannel, const std::string& aMessage)
+inline void Channel(CName aChannel, const CString& aMessage)
 {
     static auto* s_rtti = CRTTISystem::Get();
     static auto* s_logFunc = s_rtti->GetFunction("LogChannel");
@@ -10,11 +10,10 @@ inline void Channel(Red::CName aChannel, const std::string& aMessage)
     static auto* s_stringRefType = s_rtti->GetType("script_ref:String");
     static auto* s_nameType = s_rtti->GetType("CName");
 
-    CString message(aMessage.c_str());
     ScriptRef<CString> messageRef;
     messageRef.type = s_stringType;
     messageRef.name = s_stringType->GetName();
-    messageRef.ref = &message;
+    messageRef.ref = const_cast<CString*>(&aMessage);
 
     StackArgs_t args;
     args.emplace_back(s_nameType, &aChannel);
@@ -23,6 +22,11 @@ inline void Channel(Red::CName aChannel, const std::string& aMessage)
     CStack stack(nullptr, args.data(), static_cast<uint32_t>(args.size()), nullptr);
 
     s_logFunc->Execute(&stack);
+}
+
+inline void Channel(Red::CName aChannel, const std::string& aMessage)
+{
+    Channel(aChannel, Red::CString(aMessage.c_str()));
 }
 
 template<typename... Args>
