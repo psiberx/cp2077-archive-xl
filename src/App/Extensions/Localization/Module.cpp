@@ -66,8 +66,7 @@ void App::LocalizationModule::Configure()
     }
 }
 
-void App::LocalizationModule::OnLoadTexts(Red::Handle<TextResource>& aOnScreens,
-                                              Red::ResourcePath aPath)
+void App::LocalizationModule::OnLoadTexts(Red::Handle<TextResource>& aOnScreens, Red::ResourcePath aPath)
 {
     const auto language = Language::ResolveFromTextResource(aPath);
 
@@ -228,8 +227,7 @@ void App::LocalizationModule::MergeTextEntry(TextEntryList& aFinalList, TextEntr
     }
 }
 
-App::TextEntry* App::LocalizationModule::FindSameTextEntry(TextEntry& aEntry, TextEntryList& aList,
-                                                           uint32_t aCount)
+App::TextEntry* App::LocalizationModule::FindSameTextEntry(TextEntry& aEntry, TextEntryList& aList, uint32_t aCount)
 {
     auto end = aList.Begin() + aCount;
     auto it = std::lower_bound(aList.Begin(), end, aEntry,
