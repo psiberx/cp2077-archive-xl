@@ -294,6 +294,12 @@ void App::MeshTemplateModule::ProcessMeshResource(const Core::SharedPtr<MeshStat
                 auto& externalPath = aSourceMesh->externalMaterials[sourceEntry.index].path;
                 auto materialPath = ExpandResourcePath(externalPath, aMeshState, materialName);
 
+                if (!materialPath)
+                {
+                    //LogError("|{}| Material \"{}\" path cannot be resolved.", ModuleName, templateName.ToString());
+                    continue;
+                }
+
                 token = Red::ResourceLoader::Get()->LoadAsync<Red::IMaterial>(materialPath);
             }
 
@@ -456,8 +462,10 @@ void App::MeshTemplateModule::ExpandMaterialInstanceParams(Red::Handle<Red::CMat
                                                            const Core::SharedPtr<MeshState>& aMeshState,
                                                            Red::CName aMaterialName, Red::JobQueue& aJobQueue)
 {
-    for (const auto& materialParam : aMaterialInstance->params)
+    for (int32_t i = aMaterialInstance->params.size - 1; i >= 0; --i)
     {
+        const auto& materialParam = aMaterialInstance->params[i];
+
         if (materialParam.data.GetType()->GetType() == Red::ERTTIType::ResourceReference)
         {
             auto materialParamData = materialParam.data.GetDataPtr();
@@ -466,6 +474,10 @@ void App::MeshTemplateModule::ExpandMaterialInstanceParams(Red::Handle<Red::CMat
             if (ExpandResourceReference(materialReference, aMeshState, aMaterialName))
             {
                 aJobQueue.Wait(materialReference.token->job);
+            }
+            else if (!materialReference.path)
+            {
+                aMaterialInstance->params.RemoveAt(i);
             }
         }
     }
@@ -509,8 +521,8 @@ Red::ResourcePath App::MeshTemplateModule::ExpandResourcePath(Red::ResourcePath 
 
     if (!result.valid)
     {
-        LogError("|{}| Dynamic path \"{}\" is invalid and cannot be processed.", ModuleName, pathStr);
-        return aPath;
+        LogError("|{}| Dynamic path \"{}\" cannot be resolved.", ModuleName, pathStr);
+        return {};
     }
 
 #ifndef NDEBUG
