@@ -57,7 +57,7 @@ public:
         {
             for (const auto& issue : config.issues)
             {
-                LogError(issue);
+                LogError(issue.data());
                 // LogError("{}: {}", aName, issue);
                 // LogError("|{}| {}", GetName(), issue);
             }
