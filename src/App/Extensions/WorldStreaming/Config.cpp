@@ -31,67 +31,235 @@ void App::WorldStreamingConfig::LoadYAML(const YAML::Node& aNode)
         const auto& sectorsNode = streamingNode["sectors"];
         if (sectorsNode.IsDefined() && sectorsNode.IsSequence())
         {
-            for (const auto& sectorNode : sectorsNode)
+            for (size_t sectorIndex = 0, sectorCount = sectorsNode.size(); sectorIndex < sectorCount; ++sectorIndex)
             {
+                const auto& sectorNode = sectorsNode[sectorIndex];
+
                 if (!sectorNode.IsMap())
                 {
-                    continue;
-                }
-
-                const auto& pathNode = sectorNode["path"];
-                const auto& countNode = sectorNode["expectedNodes"];
-                const auto& deletionsNode = sectorNode["nodeDeletions"];
-
-                if (!pathNode.IsDefined() || !pathNode.IsScalar()
-                    || !deletionsNode.IsDefined() || !deletionsNode.IsSequence()
-                    || !countNode.IsDefined() || !countNode.IsScalar())
-                {
+                    issues.push_back(std::format("Invalid sector definition at index #{}.", sectorIndex));
                     continue;
                 }
 
                 WorldSectorMod sectorData{};
                 sectorData.mod = name;
-                sectorData.path = pathNode.Scalar();
 
-                if (!ParseInt(countNode.Scalar(), sectorData.expectedNodes))
                 {
-                    continue;
-                }
+                    const auto& pathNode = sectorNode["path"];
 
-                if (sectorData.expectedNodes <= 0)
-                {
-                    continue;
-                }
-
-                for (const auto& deletionNode : deletionsNode)
-                {
-                    const auto& typeNode = deletionNode["type"];
-                    const auto& indexNode = deletionNode["index"];
-
-                    if (!typeNode.IsDefined() || !typeNode.IsScalar() || !indexNode.IsDefined() || !indexNode.IsScalar())
+                    if (!pathNode.IsDefined())
                     {
+                        issues.push_back(std::format("Sector definition at index #{} is missing path.", sectorIndex));
                         continue;
                     }
 
-                    WorldNodeDeletion deletionData{};
-                    deletionData.nodeType = typeNode.Scalar().data();
-
-                    if (!ParseInt(indexNode.Scalar(), deletionData.nodeIndex))
+                    if (!pathNode.IsScalar())
                     {
+                        issues.push_back(std::format("Sector definition at index #{} has invalid path.", sectorIndex));
                         continue;
                     }
 
-                    if (deletionData.nodeIndex < 0 || deletionData.nodeIndex >= sectorData.expectedNodes)
+                    sectorData.path = pathNode.Scalar();
+
+                    if (sectorData.path.empty())
                     {
+                        issues.push_back(std::format("Sector definition at index #{} has invalid path.", sectorIndex));
                         continue;
                     }
-
-                    ParseSubDeletions(deletionNode, deletionData);
-
-                    sectorData.nodeDeletions.emplace_back(std::move(deletionData));
                 }
 
-                if (sectorData.path.empty() || !sectorData.expectedNodes || sectorData.nodeDeletions.empty())
+                {
+                    const auto& countNode = sectorNode["expectedNodes"];
+
+                    if (!countNode.IsDefined())
+                    {
+                        issues.push_back(std::format("Sector definition for \"{}\" is missing expected nodes count.",
+                                                     sectorData.path));
+                        continue;
+                    }
+
+                    if (!countNode.IsScalar())
+                    {
+                        issues.push_back(std::format("Sector definition for \"{}\" has invalid expected nodes count.",
+                                                     sectorData.path));
+                        continue;
+                    }
+
+                    if (!ParseInt(countNode.Scalar(), sectorData.expectedNodes))
+                    {
+                        issues.push_back(std::format("Sector definition for \"{}\" has invalid expected nodes count.",
+                                                     sectorData.path));
+                        continue;
+                    }
+
+                    if (sectorData.expectedNodes <= 0)
+                    {
+                        issues.push_back(std::format("Sector definition for \"{}\" has invalid expected nodes count.",
+                                                     sectorData.path));
+                        continue;
+                    }
+                }
+
+                // TODO: More errors
+
+                {
+                    const auto& deletionsNode = sectorNode["nodeDeletions"];
+
+                    if (deletionsNode.IsDefined() && deletionsNode.IsSequence())
+                    {
+                        for (const auto& deletionNode : deletionsNode)
+                        {
+                            if (!deletionNode.IsMap())
+                            {
+                                continue;
+                            }
+
+                            const auto& typeNode = deletionNode["type"];
+
+                            if (!typeNode.IsDefined() || !typeNode.IsScalar())
+                            {
+                                continue;
+                            }
+
+                            const auto& indexNode = deletionNode["index"];
+
+                            if (!indexNode.IsDefined() || !indexNode.IsScalar())
+                            {
+                                continue;
+                            }
+
+                            WorldNodeDeletion deletionData{};
+                            deletionData.nodeType = typeNode.Scalar().data();
+
+                            if (!ParseInt(indexNode.Scalar(), deletionData.nodeIndex))
+                            {
+                                continue;
+                            }
+
+                            if (deletionData.nodeIndex < 0 || deletionData.nodeIndex >= sectorData.expectedNodes)
+                            {
+                                continue;
+                            }
+
+                            ParseSubDeletions(deletionNode, deletionData);
+
+                            sectorData.nodeDeletions.emplace_back(std::move(deletionData));
+                        }
+                    }
+                }
+
+                {
+                    const auto& mutationsNode = sectorNode["nodeMutations"];
+
+                    if (mutationsNode.IsDefined() && mutationsNode.IsSequence())
+                    {
+                        for (const auto& mutationNode : mutationsNode)
+                        {
+                            if (!mutationNode.IsMap())
+                            {
+                                continue;
+                            }
+
+                            WorldNodeMutation mutationData{};
+
+                            {
+                                const auto& typeNode = mutationNode["type"];
+
+                                if (!typeNode.IsDefined() || !typeNode.IsScalar())
+                                {
+                                    continue;
+                                }
+
+                                mutationData.nodeType = typeNode.Scalar().data();
+                            }
+
+                            {
+                                const auto& indexNode = mutationNode["index"];
+
+                                if (!indexNode.IsDefined() || !indexNode.IsScalar())
+                                {
+                                    continue;
+                                }
+
+                                if (!ParseInt(indexNode.Scalar(), mutationData.nodeIndex))
+                                {
+                                    continue;
+                                }
+
+                                if (mutationData.nodeIndex < 0 || mutationData.nodeIndex >= sectorData.expectedNodes)
+                                {
+                                    continue;
+                                }
+                            }
+
+                            {
+                                const auto& positionNode = mutationNode["position"];
+
+                                if (!positionNode.IsDefined() || !positionNode.IsSequence())
+                                {
+                                    continue;
+                                }
+
+                                const auto positionValues = positionNode.as<std::vector<float>>();
+
+                                if (positionValues.size() != 4)
+                                {
+                                    continue;
+                                }
+
+                                mutationData.position.X = positionValues[0];
+                                mutationData.position.Y = positionValues[1];
+                                mutationData.position.Z = positionValues[2];
+                                mutationData.position.W = positionValues[3];
+                            }
+
+                            {
+                                const auto& orientationNode = mutationNode["orientation"];
+
+                                if (!orientationNode.IsDefined() || !orientationNode.IsSequence())
+                                {
+                                    continue;
+                                }
+
+                                const auto orientationValues = orientationNode.as<std::vector<float>>();
+
+                                if (orientationValues.size() != 4)
+                                {
+                                    continue;
+                                }
+
+                                mutationData.orientation.i = orientationValues[0];
+                                mutationData.orientation.j = orientationValues[1];
+                                mutationData.orientation.k = orientationValues[2];
+                                mutationData.orientation.r = orientationValues[3];
+                            }
+
+                            {
+                                const auto& scaleNode = mutationNode["scale"];
+
+                                if (!scaleNode.IsDefined() || !scaleNode.IsSequence())
+                                {
+                                    continue;
+                                }
+
+                                const auto scaleValues = scaleNode.as<std::vector<float>>();
+
+                                if (scaleValues.size() != 3)
+                                {
+                                    continue;
+                                }
+
+                                mutationData.scale.X = scaleValues[0];
+                                mutationData.scale.Y = scaleValues[1];
+                                mutationData.scale.Z = scaleValues[2];
+                            }
+
+                            sectorData.nodeMutations.emplace_back(std::move(mutationData));
+                        }
+                    }
+                }
+
+                if (sectorData.nodeDeletions.empty() && sectorData.nodeMutations.empty())
                 {
                     continue;
                 }

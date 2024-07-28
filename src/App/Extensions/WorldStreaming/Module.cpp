@@ -208,6 +208,23 @@ bool App::WorldStreamingModule::PatchSector(Red::world::StreamingSector* aSector
     }
 
     bool nodeValidationPassed = true;
+
+    for (const auto& nodeMutation : aSectorMod.nodeMutations)
+    {
+        auto* nodeInstance = buffer.nodeSetups.GetInstance(nodeMutation.nodeIndex);
+        auto* nodeDefinition = buffer.nodes[nodeInstance->nodeIndex].instance;
+
+        if (nodeMutation.nodeType != nodeDefinition->GetNativeType()->name)
+        {
+            LogError(R"(|{}| {}: The target node #{} has type {}, but the mod expects {}.)",
+                     ModuleName, aSectorMod.mod,
+                     nodeMutation.nodeIndex,
+                     nodeDefinition->GetNativeType()->name.ToString(),
+                     nodeMutation.nodeType.ToString());
+            nodeValidationPassed = false;
+        }
+    }
+
     for (const auto& nodeDeletion : aSectorMod.nodeDeletions)
     {
         auto* nodeInstance = buffer.nodeSetups.GetInstance(nodeDeletion.nodeIndex);
@@ -240,6 +257,15 @@ bool App::WorldStreamingModule::PatchSector(Red::world::StreamingSector* aSector
     if (!nodeValidationPassed)
     {
         return false;
+    }
+
+    for (const auto& nodeMutation : aSectorMod.nodeMutations)
+    {
+        auto* nodeInstance = buffer.nodeSetups.GetInstance(nodeMutation.nodeIndex);
+
+        nodeInstance->transform.position = nodeMutation.position;
+        nodeInstance->transform.orientation = nodeMutation.orientation;
+        nodeInstance->scale = nodeMutation.scale;
     }
 
     for (const auto& nodeDeletion : aSectorMod.nodeDeletions)

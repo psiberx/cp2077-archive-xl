@@ -56,7 +56,11 @@ public:
         if (config.HasIssues())
         {
             for (const auto& issue : config.issues)
-                LogError("|{}| {}", GetName(), issue);
+            {
+                LogError(issue);
+                // LogError("{}: {}", aName, issue);
+                // LogError("|{}| {}", GetName(), issue);
+            }
         }
 
         if (config.IsDefined())

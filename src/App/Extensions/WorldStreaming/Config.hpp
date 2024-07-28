@@ -4,6 +4,15 @@
 
 namespace App
 {
+struct WorldNodeMutation
+{
+    int64_t nodeIndex;
+    Red::CName nodeType;
+    Red::Vector4 position;
+    Red::Quaternion orientation;
+    Red::Vector3 scale;
+};
+
 struct WorldNodeDeletion
 {
     int64_t nodeIndex;
@@ -17,6 +26,7 @@ struct WorldSectorMod
     std::string mod;
     std::string path;
     int64_t expectedNodes;
+    Core::Vector<WorldNodeMutation> nodeMutations;
     Core::Vector<WorldNodeDeletion> nodeDeletions;
 };
 
