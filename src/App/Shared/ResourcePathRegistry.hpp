@@ -22,10 +22,10 @@ public:
 protected:
     struct SharedInstance
     {
-        std::shared_mutex m_mutex;
+        Red::SharedSpinLock m_lock;
         Core::Map<Red::ResourcePath, std::string> m_map;
         bool m_preloaded{false};
-        bool m_hooked{false};
+        bool m_initialized{false};
     };
 
     void OnBootstrap() override;
