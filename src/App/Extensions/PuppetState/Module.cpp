@@ -139,6 +139,63 @@ App::PuppetFeetState App::PuppetStateModule::GetFeetState(const Red::WeakHandle<
     return it.value()->GetFeetState();
 }
 
+Red::CName App::PuppetStateModule::GetBodyType(const Red::WeakHandle<Red::GameObject>& aPuppet)
+{
+    if (!aPuppet)
+    {
+        return BaseBodyName;
+    }
+
+    const auto& bodyTags = PuppetStateModule::GetBodyTags();
+
+    if (bodyTags.empty())
+    {
+        return BaseBodyName;
+    }
+
+    const auto& entityTags = Raw::Entity::EntityTags::Ref(aPuppet.instance);
+    const auto& visualTags = Raw::Entity::VisualTags::Ref(aPuppet.instance);
+
+    if (!entityTags.IsEmpty() || !visualTags.IsEmpty())
+    {
+        for (const auto& [bodyTag, bodyType] : bodyTags)
+        {
+            if (entityTags.Contains(bodyTag))
+            {
+                return bodyType.ToString();
+            }
+
+            if (visualTags.Contains(bodyTag))
+            {
+                return bodyType.ToString();
+            }
+        }
+    }
+
+    for (const auto& component : aPuppet.instance->components | std::views::reverse)
+    {
+        const auto& morphTarget = Red::Cast<Red::entMorphTargetSkinnedMeshComponent>(component);
+
+        for (const auto& [bodyTag, bodyType] : bodyTags)
+        {
+            if (component->name == bodyTag)
+            {
+                return bodyType.ToString();
+            }
+
+            if (morphTarget)
+            {
+                if (morphTarget->tags.Contains(bodyTag))
+                {
+                    return bodyType.ToString();
+                }
+            }
+        }
+    }
+
+    return BaseBodyName;
+}
+
 const Core::Set<Red::CName>& App::PuppetStateModule::GetBodyTypes()
 {
     return s_bodyTypes;

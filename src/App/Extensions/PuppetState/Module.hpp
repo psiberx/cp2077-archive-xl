@@ -15,6 +15,7 @@ public:
     static constexpr auto ArmsStateSuffixID = Red::TweakDBID("itemsFactoryAppearanceSuffix.ArmsState");
     static constexpr auto FeetStateSuffixID = Red::TweakDBID("itemsFactoryAppearanceSuffix.FeetState");
     static constexpr auto LegsStateSuffixID = Red::TweakDBID("itemsFactoryAppearanceSuffix.LegsState");
+    static constexpr auto BaseBodyName = "BaseBody";
 
     bool Load() override;
     bool Unload() override;
@@ -25,6 +26,7 @@ public:
     static const Core::Set<Red::CName>& GetBodyTypes();
     static const Core::Map<Red::CName, Red::CName>& GetBodyTags();
 
+    static Red::CName GetBodyType(const Red::WeakHandle<Red::GameObject>& aPuppet);
     static PuppetArmsState GetArmsState(const Red::WeakHandle<Red::GameObject>& aPuppet);
     static PuppetFeetState GetFeetState(const Red::WeakHandle<Red::GameObject>& aPuppet);
 

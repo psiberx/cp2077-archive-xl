@@ -1,64 +1,11 @@
 #include "System.hpp"
 #include "Module.hpp"
-#include "Red/Entity.hpp"
 
 Red::CString App::PuppetStateSystem::GetBodyTypeSuffix(Red::ItemID& aItemID,
                                                        const Red::WeakHandle<Red::GameObject>& aOwner,
                                                        const Red::Handle<Red::ItemsFactoryAppearanceSuffixBase_Record>&)
 {
-    if (!aOwner)
-    {
-        return BaseBodyName;
-    }
-
-    const auto& bodyTags = PuppetStateModule::GetBodyTags();
-
-    if (bodyTags.empty())
-    {
-        return BaseBodyName;
-    }
-
-    const auto& entityTags = Raw::Entity::EntityTags::Ref(aOwner.instance);
-    const auto& visualTags = Raw::Entity::VisualTags::Ref(aOwner.instance);
-
-    if (!entityTags.IsEmpty() || !visualTags.IsEmpty())
-    {
-        for (const auto& [bodyTag, bodyType] : bodyTags)
-        {
-            if (entityTags.Contains(bodyTag))
-            {
-                return bodyType.ToString();
-            }
-
-            if (visualTags.Contains(bodyTag))
-            {
-                return bodyType.ToString();
-            }
-        }
-    }
-
-    for (const auto& component : aOwner.instance->components | std::views::reverse)
-    {
-        const auto& morphTarget = Red::Cast<Red::entMorphTargetSkinnedMeshComponent>(component);
-
-        for (const auto& [bodyTag, bodyType] : bodyTags)
-        {
-            if (component->name == bodyTag)
-            {
-                return bodyType.ToString();
-            }
-
-            if (morphTarget)
-            {
-                if (morphTarget->tags.Contains(bodyTag))
-                {
-                    return bodyType.ToString();
-                }
-            }
-        }
-    }
-
-    return BaseBodyName;
+    return PuppetStateModule::GetBodyType(aOwner).ToString();
 }
 
 Red::CString App::PuppetStateSystem::GetArmsStateSuffix(Red::ItemID& aItemID,

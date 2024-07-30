@@ -1,4 +1,5 @@
 public abstract native class ArchiveXL {
+    public static native func GetBodyType(puppet: wref<GameObject>) -> CName
     public static native func EnableGarmentOffsets()
     public static native func DisableGarmentOffsets()
     public static native func Require(version: String) -> Bool

@@ -1,7 +1,6 @@
 #include "Dynamic.hpp"
 #include "App/Extensions/GarmentOverride/Wrapper.hpp"
 #include "App/Extensions/PuppetState/Module.hpp"
-#include "App/Extensions/PuppetState/System.hpp"
 #include "App/Utils/Num.hpp"
 #include "App/Utils/Str.hpp"
 #include "Red/AppearanceChanger.hpp"
@@ -50,7 +49,7 @@ constexpr auto MaleSuffixValue = "Male";
 constexpr auto FemaleSuffixValue = "Female";
 
 constexpr auto DefaultBodyTypeAttrValue = "base_body";
-constexpr auto DefaultBodyTypeSuffixValue = App::PuppetStateSystem::BaseBodyName;
+constexpr auto DefaultBodyTypeSuffixValue = App::PuppetStateModule::BaseBodyName;
 constexpr auto DefaultFeetStateAttrValue = "flat";
 constexpr auto DefaultFeetStateSuffixValue = "Flat";
 
