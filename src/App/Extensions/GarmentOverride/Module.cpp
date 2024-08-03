@@ -48,8 +48,8 @@ bool App::GarmentOverrideModule::Load()
     HookBefore<Raw::GarmentAssemblerState::ChangeCustomItem>(&OnChangeCustomItem).OrThrow();
     HookBefore<Raw::GarmentAssembler::RemoveItem>(&OnRemoveItem).OrThrow();
     Hook<Raw::GarmentAssembler::ProcessGarment>(&OnProcessGarment).OrThrow();
-    HookBefore<Raw::GarmentAssembler::ProcessSkinnedMesh>(&OnProcessGarmentMesh).OrThrow();
-    HookBefore<Raw::GarmentAssembler::ProcessMorphedMesh>(&OnProcessGarmentMesh).OrThrow();
+    HookWrap<Raw::GarmentAssembler::ProcessSkinnedMesh>(&OnProcessGarmentMesh).OrThrow();
+    HookWrap<Raw::GarmentAssembler::ProcessMorphedMesh>(&OnProcessGarmentMesh).OrThrow();
     HookBefore<Raw::GarmentAssembler::OnGameDetach>(&OnGameDetach).OrThrow();
     HookBefore<Raw::AppearanceChanger::RegisterPart>(&OnRegisterPart).OrThrow();
     //Hook<Raw::AppearanceChanger::GetBaseMeshOffset>(&OnGetBaseMeshOffset).OrThrow();
@@ -519,24 +519,42 @@ uintptr_t App::GarmentOverrideModule::OnProcessGarment(Red::SharedPtr<Red::Garme
     return result;
 }
 
-void App::GarmentOverrideModule::OnProcessGarmentMesh(Red::GarmentProcessor* aProcessor, uint32_t,
-                                                      Red::Handle<Red::EntityTemplate>& aPartTemplate,
-                                                      Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,
-                                                      Red::Handle<Red::IComponent>& aComponent,
-                                                      Red::JobGroup& aJobGroup)
+void App::GarmentOverrideModule::OnProcessGarmentMesh(Raw::GarmentAssembler::ProcessMesh aCallback,
+                                                      Red::GarmentProcessor* aProcessor, uint32_t aIndex,
+                                                      const Red::Handle<Red::EntityTemplate>& aPartTemplate,
+                                                      const Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,
+                                                      const Red::Handle<Red::IComponent>& aComponent,
+                                                      const Red::JobGroup& aJobGroup)
 {
-    if (aMeshToken->IsFailed())
+    std::unique_lock _(s_mutex);
+    if (auto& entityState = s_stateManager->FindEntityState(aProcessor))
     {
-#ifndef NDEBUG
-        LogDebug("|{}| [event=ProcessGarmentMesh comp={}]", ModuleName, aComponent->name.ToString());
-#endif
-        std::unique_lock _(s_mutex);
-        if (auto& entityState = s_stateManager->FindEntityState(aProcessor))
+        if (entityState->ApplyDynamicAppearance(aComponent, aPartTemplate->path))
         {
-            entityState->ApplyDynamicAppearance(aComponent, aPartTemplate->path);
-            aMeshToken = ComponentWrapper(aComponent).LoadResourceToken(true);
+#ifndef NDEBUG
+            LogDebug("|{}| [event=ProcessGarmentMesh entity={} comp={}]", ModuleName, entityState->GetName(), aComponent->name.ToString());
+#endif
+            if (aMeshToken->IsFailed())
+            {
+                auto meshToken = ComponentWrapper(aComponent).LoadResourceToken(false);
+                if (meshToken->IsFinished())
+                {
+                    aCallback(aProcessor, aIndex, aPartTemplate, meshToken, aComponent, aJobGroup);
+                }
+                else
+                {
+                    Red::JobQueue jobQueue{aJobGroup};
+                    jobQueue.Wait(meshToken->job);
+                    jobQueue.Dispatch([aCallback, aProcessor, aIndex, aPartTemplate, meshToken, aComponent](const Red::JobGroup& aJobGroup) {
+                        aCallback(aProcessor, aIndex, aPartTemplate, meshToken, aComponent, aJobGroup);
+                    });
+                }
+                return;
+            }
         }
     }
+
+    aCallback(aProcessor, aIndex, aPartTemplate, aMeshToken, aComponent, aJobGroup);
 }
 
 // int32_t App::GarmentOverrideModule::OnGetBaseMeshOffset(Red::Handle<Red::IComponent>& aComponent,

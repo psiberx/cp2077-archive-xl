@@ -50,10 +50,10 @@ private:
                                Red::Handle<Red::AppearanceDefinition>& aAppearance);
     static uintptr_t OnProcessGarment(Red::SharedPtr<Red::GarmentProcessor>& aProcessor, uintptr_t a2, uintptr_t a3,
                                       Red::GarmentProcessorParams* aParams);
-    static void OnProcessGarmentMesh(Red::GarmentProcessor* aProcessor, uint32_t,
-                                     Red::Handle<Red::EntityTemplate>& aPartTemplate,
-                                     Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,
-                                     Red::Handle<Red::IComponent>& aComponent, Red::JobGroup& aJobGroup);
+    static void OnProcessGarmentMesh(Raw::GarmentAssembler::ProcessMesh aCallback, Red::GarmentProcessor* aProcessor,
+                                     uint32_t, const Red::Handle<Red::EntityTemplate>& aPartTemplate,
+                                     const Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,
+                                     const Red::Handle<Red::IComponent>& aComponent, const Red::JobGroup& aJobGroup);
     // static int32_t OnGetBaseMeshOffset(Red::Handle<Red::IComponent>& aComponent,
     //                                    Red::Handle<Red::EntityTemplate>& aTemplate);
     static void OnComputeGarment(uintptr_t, Red::Handle<Red::Entity>&, Red::DynArray<int32_t>&,

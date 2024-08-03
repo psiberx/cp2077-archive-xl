@@ -98,23 +98,20 @@ constexpr auto ExtractComponentsJob = Core::RawFunc<
     /* addr = */ Red::AddressLib::GarmentAssembler_ExtractComponentsJob,
     /* type = */ void (*)(Red::GarmentComponentParams* aParams, const Red::JobGroup& aJobGroup)>();
 
+using ProcessMesh = void (*)(Red::GarmentProcessor* aProcessor,
+                             uint32_t aIndex,
+                             const Red::Handle<Red::EntityTemplate>& aPartTemplate,
+                             const Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,
+                             const Red::Handle<Red::IComponent>& aComponent,
+                             const Red::JobGroup& aJobGroup);
+
 constexpr auto ProcessSkinnedMesh = Core::RawFunc<
     /* addr = */ Red::AddressLib::GarmentAssembler_ProcessSkinnedMesh,
-    /* type = */ void (*)(Red::GarmentProcessor* aProcessor,
-                          uint32_t aIndex,
-                          Red::Handle<Red::EntityTemplate>& aPartTemplate,
-                          Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,
-                          Red::Handle<Red::IComponent>& aComponent,
-                          Red::JobGroup& aJobGroup)>();
+    /* type = */ ProcessMesh>();
 
 constexpr auto ProcessMorphedMesh = Core::RawFunc<
     /* addr = */ Red::AddressLib::GarmentAssembler_ProcessMorphedMesh,
-    /* type = */ void (*)(Red::GarmentProcessor* aProcessor,
-                          uint32_t aIndex,
-                          Red::Handle<Red::EntityTemplate>& aPartTemplate,
-                          Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,
-                          Red::Handle<Red::IComponent>& aComponent,
-                          Red::JobGroup& aJobGroup)>();
+    /* type = */ ProcessMesh>();
 
 constexpr auto OnGameDetach = Core::RawFunc<
     /* addr = */ Red::AddressLib::GarmentAssembler_OnGameDetach,
