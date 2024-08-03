@@ -574,7 +574,7 @@ void App::EntityState::ToggleConditionalComponents(Red::DynArray<Red::Handle<Red
     }
 }
 
-bool App::EntityState::ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aComponent)
+bool App::EntityState::ApplyDynamicAppearance(const Red::Handle<Red::IComponent>& aComponent)
 {
     if (!aComponent->isEnabled)
         return false;
@@ -594,7 +594,7 @@ bool App::EntityState::ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aCom
                                   !componentState->ChangesAppearance());
 }
 
-bool App::EntityState::ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aComponent,
+bool App::EntityState::ApplyDynamicAppearance(const Red::Handle<Red::IComponent>& aComponent,
                                               Red::ResourcePath aResource)
 {
     const auto& resourceState = FindResourceState(aResource);
@@ -605,7 +605,8 @@ bool App::EntityState::ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aCom
     return ApplyDynamicAppearance(aComponent, resourceState->GetActiveVariantParts(), true);
 }
 
-bool App::EntityState::ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aComponent, const DynamicPartList& aVariant,
+bool App::EntityState::ApplyDynamicAppearance(const Red::Handle<Red::IComponent>& aComponent,
+                                              const DynamicPartList& aVariant,
                                               bool aSetAppearance)
 {
     ComponentWrapper componentWrapper(aComponent);
@@ -635,7 +636,7 @@ bool App::EntityState::ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aCom
     return true;
 }
 
-bool App::EntityState::ApplyAppearanceOverride(Red::Handle<Red::IComponent>& aComponent)
+bool App::EntityState::ApplyAppearanceOverride(const Red::Handle<Red::IComponent>& aComponent)
 {
     if (!aComponent->isEnabled)
         return false;
@@ -675,7 +676,7 @@ bool App::EntityState::ApplyAppearanceOverride(Red::Handle<Red::IComponent>& aCo
     return finalAppearance && component.SetAppearanceName(finalAppearance) && component.LoadAppearance();
 }
 
-bool App::EntityState::ApplyChunkMaskOverride(Red::Handle<Red::IComponent>& aComponent)
+bool App::EntityState::ApplyChunkMaskOverride(const Red::Handle<Red::IComponent>& aComponent)
 {
     if (!aComponent->isEnabled)
         return false;

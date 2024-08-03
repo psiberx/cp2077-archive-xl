@@ -95,11 +95,11 @@ public:
 
     [[nodiscard]] const Core::Set<Red::CName>& GetPartComponentNames(Red::ResourcePath aResourcePath) const;
 
-    bool ApplyChunkMaskOverride(Red::Handle<Red::IComponent>& aComponent);
+    bool ApplyChunkMaskOverride(const Red::Handle<Red::IComponent>& aComponent);
     void AddChunkMaskOverride(uint64_t aHash, Red::CName aComponentName, uint64_t aChunkMask, bool aShow = false);
     void RemoveChunkMaskOverrides(uint64_t aHash);
 
-    bool ApplyAppearanceOverride(Red::Handle<Red::IComponent>& aComponent);
+    bool ApplyAppearanceOverride(const Red::Handle<Red::IComponent>& aComponent);
     void AddAppearanceOverride(uint64_t aHash, Red::CName aComponentName, Red::CName aAppearance);
     void RemoveAppearanceOverrides(uint64_t aHash);
 
@@ -113,8 +113,8 @@ public:
     bool SelectDynamicAppearance(DynamicAppearanceName& aSelector, Red::AppearanceResource* aResource,
                                  Red::Handle<Red::AppearanceDefinition>& aDefinition);
     void ToggleConditionalComponents(Red::DynArray<Red::Handle<Red::IComponent>>& aComponents);
-    bool ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aComponent);
-    bool ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aComponent, Red::ResourcePath aResource);
+    bool ApplyDynamicAppearance(const Red::Handle<Red::IComponent>& aComponent);
+    bool ApplyDynamicAppearance(const Red::Handle<Red::IComponent>& aComponent, Red::ResourcePath aResource);
     void LinkComponentToPart(Red::Handle<Red::IComponent>& aComponent, Red::ResourcePath aResource);
     void LinkPartToAppearance(Red::ResourcePath aResource, DynamicAppearanceName& aAppearance);
     void LinkPartToAppearance(Red::ResourcePath aResource, Red::CName aAppearance);
@@ -141,7 +141,7 @@ private:
         Core::Vector<WeightedComponentMatch> matches;
     };
 
-    bool ApplyDynamicAppearance(Red::Handle<Red::IComponent>& aComponent, const DynamicPartList& aVariant,
+    bool ApplyDynamicAppearance(const Red::Handle<Red::IComponent>& aComponent, const DynamicPartList& aVariant,
                                 bool aSetAppearance);
 
     Red::ResourcePath GetOriginalResource(ComponentWrapper& aComponent);
