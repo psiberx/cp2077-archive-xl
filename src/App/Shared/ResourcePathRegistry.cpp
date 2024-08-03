@@ -55,7 +55,7 @@ void App::ResourcePathRegistry::OnCreatePath(Red::ResourcePath* aPath, Red::Stri
     }
 }
 
-std::string_view App::ResourcePathRegistry::ResolvePath(Red::ResourcePath aPath)
+std::string App::ResourcePathRegistry::ResolvePath(Red::ResourcePath aPath)
 {
     if (!aPath)
         return {};

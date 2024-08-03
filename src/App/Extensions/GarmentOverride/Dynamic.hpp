@@ -102,7 +102,7 @@ public:
     void MarkDynamicAppearanceName(Red::CName& aAppearanceName, DynamicAppearanceName& aSelector);
     std::string_view GetBaseAppearanceName(Red::CName aAppearanceName);
 
-    [[nodiscard]] std::string_view GetPathString(Red::ResourcePath aPath) const;
+    [[nodiscard]] std::string GetPathString(Red::ResourcePath aPath) const;
 
     static bool IsMale(Red::Entity* aEntity);
 

@@ -103,7 +103,7 @@ App::DynamicAppearanceName::DynamicAppearanceName(Red::CName aAppearance)
         }
 
         {
-            auto suffixPos = str.find_last_of(ConditionMarker);
+            auto suffixPos = str.find(ConditionMarker);
             if (suffixPos != std::string_view::npos)
             {
                 str.remove_suffix(str.size() - suffixPos);
@@ -328,13 +328,13 @@ Red::CName App::DynamicAppearanceController::ResolveName(Red::Entity* aEntity, c
     if (!result.valid)
         return aName;
 
-    return result.value.data();
+    return Red::CNamePool::Add(result.value.data());
 }
 
 Red::ResourcePath App::DynamicAppearanceController::ResolvePath(Red::Entity* aEntity, const DynamicPartList& aVariant,
                                                                 Red::ResourcePath aPath) const
 {
-    const auto& pathStr = GetPathString(aPath);
+    const auto pathStr = GetPathString(aPath);
 
     if (!IsDynamicValue(pathStr))
         return aPath;
@@ -601,7 +601,7 @@ bool App::DynamicAppearanceController::IsDynamicValue(Red::CName aValue) const
     return IsDynamicValue(aValue.ToString());
 }
 
-std::string_view App::DynamicAppearanceController::GetPathString(Red::ResourcePath aPath) const
+std::string App::DynamicAppearanceController::GetPathString(Red::ResourcePath aPath) const
 {
     return m_pathRegistry->ResolvePath(aPath);
 }
