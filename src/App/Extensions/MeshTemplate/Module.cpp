@@ -148,6 +148,10 @@ void* App::MeshTemplateModule::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::Mes
             return;
 
         auto targetMesh = targetMeshWeak.Lock();
+
+        if (!targetMesh)
+            return;
+
         auto targetMeshState = AcquireMeshState(targetMesh);
 
         Red::Handle<Red::CMesh> sourceMesh;
