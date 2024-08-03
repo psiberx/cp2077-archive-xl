@@ -242,15 +242,15 @@ void App::MeshTemplateModule::ProcessMeshResource(const Core::SharedPtr<MeshStat
 
         if (chunkName.hash == aSourceMesh->path.hash)
         {
-            aMesh->materialEntries.EmplaceBack();
-
-            auto& materialEntry = aMesh->materialEntries.Back();
-            materialEntry.name = chunkName;
-            materialEntry.material = s_dummyMaterial;
-            materialEntry.materialWeak = s_dummyMaterial;
-            materialEntry.isLocalInstance = true;
-
-            (*aFinalMaterials)[chunkIndex] = s_dummyMaterial;
+            // aMesh->materialEntries.EmplaceBack();
+            //
+            // auto& materialEntry = aMesh->materialEntries.Back();
+            // materialEntry.name = chunkName;
+            // materialEntry.material = s_dummyMaterial;
+            // materialEntry.materialWeak = s_dummyMaterial;
+            // materialEntry.isLocalInstance = true;
+            //
+            // (*aFinalMaterials)[chunkIndex] = s_dummyMaterial;
             continue;
         }
 
