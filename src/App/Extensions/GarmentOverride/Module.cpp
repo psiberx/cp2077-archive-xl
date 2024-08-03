@@ -25,7 +25,7 @@ constexpr auto EmptyAppearanceTags = {
 constexpr auto AggregatedHeadAppearanceName = Red::CName("AppearanceName1");
 constexpr auto DummyAppearancePartPath = Red::ResourcePath(R"(#non_existing_part.ent)");
 
-std::shared_mutex s_dynamicTagsLock;
+Red::SharedSpinLock s_dynamicTagsLock;
 Core::Map<uint64_t, Core::Vector<Red::CName>> s_dynamicTagsCache;
 }
 

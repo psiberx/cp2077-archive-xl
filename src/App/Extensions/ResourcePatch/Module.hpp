@@ -54,10 +54,10 @@ private:
     inline static Core::Map<Red::ResourcePath, Core::Set<Red::ResourcePath>> s_patches;
     inline static Core::Map<Red::ResourcePath, std::string> s_paths;
 
-    inline static std::shared_mutex s_tokenLock;
+    inline static Red::SharedSpinLock s_tokenLock;
     inline static Core::Map<Red::ResourcePath, Red::SharedPtr<Red::ResourceToken<>>> s_tokens;
 
-    inline static std::shared_mutex s_definitionLock;
+    inline static Red::SharedSpinLock s_definitionLock;
     inline static Core::Map<Red::ResourcePath, DefinitionMap> s_definitions;
 };
 }

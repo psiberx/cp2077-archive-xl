@@ -113,6 +113,6 @@ private:
     static inline Core::UniquePtr<OverrideStateManager> s_stateManager;
     static inline Core::SharedPtr<OverrideTagManager> s_tagManager;
     static inline bool s_garmentOffsetsEnabled;
-    static inline std::shared_mutex s_mutex;
+    static inline Red::SharedSpinLock s_mutex;
 };
 }

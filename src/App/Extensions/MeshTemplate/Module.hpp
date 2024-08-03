@@ -97,6 +97,6 @@ private:
     inline static Red::Handle<Red::CMesh> s_dummyMesh;
     inline static Red::Handle<Red::meshMeshAppearance> s_dummyAppearance;
     inline static Red::Handle<Red::CMaterialInstance> s_dummyMaterial;
-    inline static std::shared_mutex s_stateLock;
+    inline static Red::SharedSpinLock s_stateLock;
 };
 }

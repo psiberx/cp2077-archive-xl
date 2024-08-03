@@ -42,6 +42,6 @@ private:
 
     inline static void InheritProperties(Red::IScriptable* aTarget, Red::IScriptable* aSource);
 
-    inline static std::shared_mutex s_mutex;
+    inline static Red::SharedSpinLock s_mutex;
 };
 }

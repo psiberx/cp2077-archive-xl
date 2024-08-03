@@ -47,6 +47,6 @@ private:
     static inline Core::Map<Red::TweakDBID, Core::Set<Red::TweakDBID>> s_dependentSlots;
     static inline Core::Map<Red::TweakDBID, Core::Set<Red::TweakDBID>> s_extraSlots;
     static inline Core::Map<Red::TweakDBID, Red::TweakDBID> s_baseSlots;
-    static inline std::shared_mutex s_slotsMutex;
+    static inline Red::SharedSpinLock s_slotsMutex;
 };
 }

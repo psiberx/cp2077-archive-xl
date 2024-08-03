@@ -42,6 +42,6 @@ private:
     inline static Core::Set<Red::CName> s_bodyTypes;
     inline static Core::Map<Red::CName, Red::CName> s_bodyTags;
     inline static Core::Map<Red::Entity*, Red::Handle<PuppetStateHandler>> s_handlers;
-    static inline std::shared_mutex s_mutex;
+    static inline Red::SharedSpinLock s_mutex;
 };
 }

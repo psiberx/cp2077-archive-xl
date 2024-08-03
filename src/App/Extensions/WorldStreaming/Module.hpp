@@ -23,6 +23,6 @@ private:
     static bool PatchSector(Red::world::StreamingSector* aSector, const WorldSectorMod& aSectorMod);
 
     inline static Core::Map<Red::ResourcePath, Core::Vector<WorldSectorMod>> s_sectors;
-    inline static std::shared_mutex s_sectorsLock;
+    inline static Red::SharedSpinLock s_sectorsLock;
 };
 }

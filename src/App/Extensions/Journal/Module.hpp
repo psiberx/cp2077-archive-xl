@@ -53,6 +53,6 @@ private:
     inline static Core::Vector<Red::SharedPtr<Red::ResourceToken<Red::game::JournalResource>>> s_resources;
     inline static Core::Map<Red::ResourcePath, std::string> s_paths;
     inline static Core::Map<uint32_t, JournalMappin> s_mappins;
-    inline static std::shared_mutex s_mappinsLock;
+    inline static Red::SharedSpinLock s_mappinsLock;
 };
 }
