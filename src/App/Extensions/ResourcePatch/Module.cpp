@@ -434,6 +434,7 @@ void App::ResourcePatchModule::PatchPackageExtractorResults(
             continue;
 
         auto patchExtractor = Red::ObjectPackageExtractor(patchHeader);
+        patchExtractor.disablePreInitialization = true;
         patchExtractor.ExtractSync();
 
         if (patchExtractor.results.size > 0)
@@ -483,6 +484,7 @@ void App::ResourcePatchModule::PatchPackageExtractorResults(
         }
 
         auto patchExtractor = Red::ObjectPackageExtractor(patchHeader);
+        patchExtractor.disablePreInitialization = true;
         patchExtractor.ExtractSync();
 
         if (patchExtractor.results.size > 0)
