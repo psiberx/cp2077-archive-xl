@@ -223,7 +223,7 @@ Red::SharedPtr<Red::ResourceToken<Red::CMesh>> App::ComponentWrapper::LoadResour
 
         if (aWait)
         {
-            Red::WaitForResource(meshRef, std::chrono::milliseconds(1000));
+            Red::WaitForResource(meshRef, std::chrono::milliseconds(5000));
         }
     }
 
