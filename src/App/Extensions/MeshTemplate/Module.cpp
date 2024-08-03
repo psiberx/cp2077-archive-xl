@@ -87,6 +87,10 @@ void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearan
 
         if (sourceAppearance && sourceAppearance != aOut)
         {
+            auto meshState = AcquireMeshState(aMesh);
+
+            std::unique_lock _(meshState->meshMutex);
+
             const auto appearanceNameStr = std::string{aOut->name.ToString()};
             for (auto chunkMaterialName : sourceAppearance->chunkMaterials)
             {

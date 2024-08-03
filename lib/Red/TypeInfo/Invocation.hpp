@@ -208,6 +208,11 @@ inline CBaseFunction* GetFunction(CName aName)
     return CRTTISystem::Get()->GetFunction(aName);
 }
 
+inline CBaseFunction* GetMemberFunction(IScriptable* aContext, CName aName)
+{
+    return aContext ? GetFunction(aContext->GetType(), aName, true, false) : nullptr;
+}
+
 inline CBaseFunction* GetMemberFunction(CClass* aType, CName aName)
 {
     return GetFunction(aType, aName, true, false);
@@ -244,15 +249,21 @@ inline bool CallFunction(CBaseFunction* aFunc, CStack& aStack)
 }
 
 template<typename... Args>
-inline bool CallFunction(Red::CStackFrame* aFrame, CBaseFunction* aFunc, IScriptable* aContext, Args&&... aArgs)
+inline bool CallFunction(Red::CStackFrame* aFrame, IScriptable* aContext, CBaseFunction* aFunc, Args&&... aArgs)
 {
     return Detail::CallFunctionWithArgs(aFrame, aFunc, aContext, std::forward<Args>(aArgs)...);
 }
 
 template<typename... Args>
-inline bool CallFunction(CBaseFunction* aFunc, IScriptable* aContext, Args&&... aArgs)
+inline bool CallFunction(IScriptable* aContext, CBaseFunction* aFunc, Args&&... aArgs)
 {
     return Detail::CallFunctionWithArgs(nullptr, aFunc, aContext, std::forward<Args>(aArgs)...);
+}
+
+template<typename... Args>
+inline bool CallFunction(CBaseFunction* aFunc, Args&&... aArgs)
+{
+    return Detail::CallFunctionWithArgs(nullptr, aFunc, nullptr, std::forward<Args>(aArgs)...);
 }
 
 template<typename... Args>

@@ -40,8 +40,8 @@ private:
 
         volatile bool dynamic;
         Red::ResourcePath meshPath;
-        std::shared_mutex meshMutex;
-        std::shared_mutex sourceMutex;
+        Red::SharedSpinLock meshMutex;
+        Red::SharedSpinLock sourceMutex;
         Red::JobHandle lastJob;
         Red::SharedPtr<Red::ResourceToken<Red::IMaterial>> contextToken;
         DynamicAttributeList context;
