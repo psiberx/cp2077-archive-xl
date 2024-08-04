@@ -21,6 +21,8 @@ bool App::PuppetStateModule::Load()
     HookBefore<Raw::CharacterCustomizationGenitalsController::OnAttach>(&OnAttachPuppet).OrThrow();
     HookBefore<Raw::CharacterCustomizationHairstyleController::OnDetach>(&OnDetachPuppet).OrThrow();
 
+    s_baseBodyType = Red::CNamePool::Add(BaseBodyName);
+
     return true;
 }
 
@@ -141,16 +143,9 @@ App::PuppetFeetState App::PuppetStateModule::GetFeetState(const Red::WeakHandle<
 
 Red::CName App::PuppetStateModule::GetBodyType(const Red::WeakHandle<Red::GameObject>& aPuppet)
 {
-    if (!aPuppet)
+    if (!aPuppet || s_bodyTags.empty())
     {
-        return BaseBodyName;
-    }
-
-    const auto& bodyTags = PuppetStateModule::GetBodyTags();
-
-    if (bodyTags.empty())
-    {
-        return BaseBodyName;
+        return s_baseBodyType;
     }
 
     const auto& entityTags = Raw::Entity::EntityTags::Ref(aPuppet.instance);
@@ -158,16 +153,16 @@ Red::CName App::PuppetStateModule::GetBodyType(const Red::WeakHandle<Red::GameOb
 
     if (!entityTags.IsEmpty() || !visualTags.IsEmpty())
     {
-        for (const auto& [bodyTag, bodyType] : bodyTags)
+        for (const auto& [bodyTag, bodyType] : s_bodyTags)
         {
             if (entityTags.Contains(bodyTag))
             {
-                return bodyType.ToString();
+                return bodyType;
             }
 
             if (visualTags.Contains(bodyTag))
             {
-                return bodyType.ToString();
+                return bodyType;
             }
         }
     }
@@ -176,24 +171,24 @@ Red::CName App::PuppetStateModule::GetBodyType(const Red::WeakHandle<Red::GameOb
     {
         const auto& morphTarget = Red::Cast<Red::entMorphTargetSkinnedMeshComponent>(component);
 
-        for (const auto& [bodyTag, bodyType] : bodyTags)
+        for (const auto& [bodyTag, bodyType] : s_bodyTags)
         {
             if (component->name == bodyTag)
             {
-                return bodyType.ToString();
+                return bodyType;
             }
 
             if (morphTarget)
             {
                 if (morphTarget->tags.Contains(bodyTag))
                 {
-                    return bodyType.ToString();
+                    return bodyType;
                 }
             }
         }
     }
 
-    return BaseBodyName;
+    return s_baseBodyType;
 }
 
 const Core::Set<Red::CName>& App::PuppetStateModule::GetBodyTypes()

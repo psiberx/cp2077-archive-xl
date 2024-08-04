@@ -39,6 +39,7 @@ private:
     static void CreateSuffixAlias(Red::TweakDBID aSuffixID, Red::TweakDBID aAliasID);
     static void ActivateSuffixRecords(const Core::Vector<Red::TweakDBID>& aSuffixIDs);
 
+    inline static Red::CName s_baseBodyType;
     inline static Core::Set<Red::CName> s_bodyTypes;
     inline static Core::Map<Red::CName, Red::CName> s_bodyTags;
     inline static Core::Map<Red::Entity*, Red::Handle<PuppetStateHandler>> s_handlers;
