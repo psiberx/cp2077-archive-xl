@@ -34,10 +34,11 @@ private:
     static void OnGarmentPackageExtract(Red::GarmentComponentParams* aParams, const Red::JobGroup& aJobGroup);
 
     static void PatchPackageExtractorResults(const Red::Handle<Red::EntityTemplate>& aTemplate,
-                                      Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects);
+                                             Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
+                                             bool aDisableImports = false);
     static void PatchPackageExtractorResults(const Red::Handle<Red::AppearanceResource>& aResource,
-                                      const Red::Handle<Red::AppearanceDefinition>& aDefinition,
-                                      Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects);
+                                             const Red::Handle<Red::AppearanceDefinition>& aDefinition,
+                                             Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects);
     static void PatchResultEntity(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
                                   Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects, int16_t aEntityIndex);
     static void PatchResultComponents(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,

@@ -383,7 +383,7 @@ void App::ResourcePatchModule::OnPartPackageExtract(
     Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
     const Red::SharedPtr<Red::ResourceToken<Red::EntityTemplate>>& aPartToken)
 {
-    PatchPackageExtractorResults(aPartToken->resource, aResultObjects);
+    PatchPackageExtractorResults(aPartToken->resource, aResultObjects, true);
 }
 
 void App::ResourcePatchModule::OnGarmentPackageExtract(Red::GarmentComponentParams* aParams,
@@ -411,7 +411,8 @@ void App::ResourcePatchModule::OnGarmentPackageExtract(Red::GarmentComponentPara
 
 void App::ResourcePatchModule::PatchPackageExtractorResults(
     const Red::Handle<Red::EntityTemplate>& aTemplate,
-    Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects)
+    Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
+    bool aDisableImports)
 {
     if (!aTemplate)
         return;
@@ -434,6 +435,7 @@ void App::ResourcePatchModule::PatchPackageExtractorResults(
             continue;
 
         auto patchExtractor = Red::ObjectPackageExtractor(patchHeader);
+        patchExtractor.disableImports = aDisableImports;
         patchExtractor.disablePreInitialization = true;
         patchExtractor.ExtractSync();
 
