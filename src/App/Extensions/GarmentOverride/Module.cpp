@@ -257,6 +257,21 @@ void App::GarmentOverrideModule::OnResolveDefinition(Red::AppearanceResource* aR
             CustomizationModule::FixCustomizationAppearance(aResource, aDefinition, aSelector);
         }
     }
+
+    if (auto definition = aDefinition->instance)
+    {
+        if (definition->partsValues.size > 0)
+        {
+            auto depot = Red::ResourceDepot::Get();
+            for (auto i = static_cast<int32_t>(definition->partsValues.size - 1); i >= 0; --i)
+            {
+                if (!depot->ResourceExists(definition->partsValues[i].resource.path))
+                {
+                    definition->partsValues.RemoveAt(i);
+                }
+            }
+        }
+    }
 }
 
 void App::GarmentOverrideModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset& aPreset,
