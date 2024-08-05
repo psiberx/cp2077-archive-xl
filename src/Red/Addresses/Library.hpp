@@ -89,6 +89,8 @@ constexpr uint32_t GarmentAssemblerState_AddCustomItem = 3128897273;
 constexpr uint32_t GarmentAssemblerState_ChangeItem = 3740082313;
 constexpr uint32_t GarmentAssemblerState_ChangeCustomItem = 956641309;
 
+constexpr uint32_t ImpostorComponent_OnAttach = 4002093843;
+
 constexpr uint32_t InkSpawner_FinishAsyncSpawn = 2488155854;
 
 constexpr uint32_t InkWidgetLibrary_AsyncSpawnFromExternal = 1396063719;

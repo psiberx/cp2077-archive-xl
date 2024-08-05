@@ -4,6 +4,7 @@
 #include "Red/AppearanceChanger.hpp"
 #include "Red/AttachmentSlots.hpp"
 #include "Red/CharacterCustomization.hpp"
+#include "Red/ImpostorComponent.hpp"
 #include "Red/TPPRepresentationComponent.hpp"
 
 namespace App
@@ -23,6 +24,7 @@ private:
     static void OnInitializeSlots(Red::game::AttachmentSlots* aComponent, Red::DynArray<Red::TweakDBID>& aSlotIDs);
     static bool OnSlotSpawningCheck(Red::game::AttachmentSlots* aComponent, Red::TweakDBID aSlotID);
     static void OnAttachTPP(Red::game::TPPRepresentationComponent* aComponent, uintptr_t);
+    static void OnAttachImpostor(Red::game::ImpostorComponent* aComponent, uintptr_t);
     static void OnSlotCheckTPP(bool& aAffected, Red::TweakDBID aSlotID);
     // static void OnItemChangeTPP(Raw::TPPRepresentationComponent::SlotListenerCallback aCallback,
     //                             Red::game::TPPRepresentationComponent* aComponent,

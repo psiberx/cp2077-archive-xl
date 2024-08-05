@@ -1,6 +1,5 @@
 #include "Module.hpp"
 #include "App/Extensions/GarmentOverride/Module.hpp"
-#include "Red/Entity.hpp"
 #include "Red/ItemObject.hpp"
 #include "Red/TweakDB.hpp"
 
@@ -35,6 +34,7 @@ bool App::AttachmentSlotsModule::Load()
     Hook<Raw::AttachmentSlots::IsSlotSpawning>(&OnSlotSpawningCheck).OrThrow();
     HookAfter<Raw::TPPRepresentationComponent::OnAttach>(&OnAttachTPP).OrThrow();
     HookAfter<Raw::TPPRepresentationComponent::IsAffectedSlot>(&OnSlotCheckTPP).OrThrow();
+    HookAfter<Raw::ImpostorComponent::OnAttach>(&OnAttachImpostor).OrThrow();
     HookAfter<Raw::CharacterCustomizationHairstyleController::CheckState>(&OnCheckHairState).OrThrow();
     //HookAfter<Raw::CharacterCustomizationGenitalsController::CheckState>(&OnCheckBodyState).OrThrow();
     HookAfter<Raw::CharacterCustomizationFeetController::CheckState>(&OnCheckFeetState).OrThrow();
@@ -55,6 +55,7 @@ bool App::AttachmentSlotsModule::Unload()
     Unhook<Raw::AttachmentSlots::IsSlotSpawning>();
     Unhook<Raw::TPPRepresentationComponent::OnAttach>();
     Unhook<Raw::TPPRepresentationComponent::IsAffectedSlot>();
+    Unhook<Raw::ImpostorComponent::OnAttach>();
     Unhook<Raw::CharacterCustomizationHairstyleController::CheckState>();
     // Unhook<Raw::CharacterCustomizationGenitalsController::CheckState>();
     Unhook<Raw::CharacterCustomizationFeetController::CheckState>();
@@ -148,28 +149,27 @@ void App::AttachmentSlotsModule::OnAttachTPP(Red::game::TPPRepresentationCompone
 
     std::shared_lock _(s_slotsMutex);
 
-    for (const auto slotID : TPPAffectedSlots)
+    for (const auto& [baseSlotID, extasSlotIDs] : s_extraSlots)
     {
-        const auto& subSlots = s_extraSlots.find(slotID);
-        if (subSlots != s_extraSlots.end())
+        if (aComponent->affectedAppearanceSlots.Contains(baseSlotID))
         {
-            for (const auto& subSlotID : subSlots->second)
+            for (const auto extasSlotID : extasSlotIDs)
             {
-                if (!aComponent->affectedAppearanceSlots.Contains(subSlotID))
+                if (!aComponent->affectedAppearanceSlots.Contains(extasSlotID))
                 {
-                    aComponent->affectedAppearanceSlots.PushBack(subSlotID);
+                    aComponent->affectedAppearanceSlots.PushBack(extasSlotID);
                 }
 
                 if (aComponent->owner)
                 {
 #ifndef NDEBUG
-                    auto debugSlotName = Red::ToStringDebug(subSlotID);
+                    auto debugSlotName = Red::ToStringDebug(extasSlotID);
 #endif
 
                     auto slotData = transactionSystem->FindSlotData(aComponent->owner,
-                                                                   [subSlotID](const Red::AttachmentSlotData& aSlotData)
+                                                                   [extasSlotID](const Red::AttachmentSlotData& aSlotData)
                                                                    {
-                                                                       return aSlotData.slotID == subSlotID;
+                                                                       return aSlotData.slotID == extasSlotID;
                                                                    });
                     if (slotData && slotData->itemObject)
                     {
@@ -198,6 +198,29 @@ void App::AttachmentSlotsModule::OnSlotCheckTPP(bool& aAffected, Red::TweakDBID 
         if (baseSlot != s_baseSlots.end())
         {
             aAffected = (baseSlot.value() == HeadSlot || baseSlot.value() == FaceSlot);
+        }
+    }
+}
+
+void App::AttachmentSlotsModule::OnAttachImpostor(Red::game::ImpostorComponent* aComponent, uintptr_t)
+{
+#ifndef NDEBUG
+    LogDebug("|{}| [event=AttachImpostor]", ModuleName);
+#endif
+
+    std::shared_lock _(s_slotsMutex);
+
+    for (const auto& [baseSlotID, extasSlotIDs] : s_extraSlots)
+    {
+        if (aComponent->slotIDsToOmit.Contains(baseSlotID))
+        {
+            for (const auto extasSlotID : extasSlotIDs)
+            {
+                if (!aComponent->slotIDsToOmit.Contains(extasSlotID))
+                {
+                    aComponent->slotIDsToOmit.PushBack(extasSlotID);
+                }
+            }
         }
     }
 }
