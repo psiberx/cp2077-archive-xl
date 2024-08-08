@@ -149,11 +149,12 @@ void App::AttachmentSlotsModule::OnAttachTPP(Red::game::TPPRepresentationCompone
 
     std::shared_lock _(s_slotsMutex);
 
-    for (const auto& [baseSlotID, extasSlotIDs] : s_extraSlots)
+    for (const auto baseSlotID : TPPAffectedSlots)
     {
-        if (aComponent->affectedAppearanceSlots.Contains(baseSlotID))
+        const auto& extasSlots = s_extraSlots.find(baseSlotID);
+        if (extasSlots != s_extraSlots.end())
         {
-            for (const auto extasSlotID : extasSlotIDs)
+            for (const auto& extasSlotID : extasSlots->second)
             {
                 if (!aComponent->affectedAppearanceSlots.Contains(extasSlotID))
                 {
@@ -214,7 +215,7 @@ void App::AttachmentSlotsModule::OnAttachImpostor(Red::game::ImpostorComponent* 
     {
         if (aComponent->slotIDsToOmit.Contains(baseSlotID))
         {
-            for (const auto extasSlotID : extasSlotIDs)
+            for (const auto& extasSlotID : extasSlotIDs)
             {
                 if (!aComponent->slotIDsToOmit.Contains(extasSlotID))
                 {
