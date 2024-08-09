@@ -34,7 +34,6 @@ bool App::AttachmentSlotsModule::Load()
     Hook<Raw::AttachmentSlots::IsSlotSpawning>(&OnSlotSpawningCheck).OrThrow();
     HookAfter<Raw::TPPRepresentationComponent::OnAttach>(&OnAttachTPP).OrThrow();
     HookAfter<Raw::TPPRepresentationComponent::IsAffectedSlot>(&OnSlotCheckTPP).OrThrow();
-    HookAfter<Raw::ImpostorComponent::OnAttach>(&OnAttachImpostor).OrThrow();
     HookAfter<Raw::CharacterCustomizationHairstyleController::CheckState>(&OnCheckHairState).OrThrow();
     //HookAfter<Raw::CharacterCustomizationGenitalsController::CheckState>(&OnCheckBodyState).OrThrow();
     HookAfter<Raw::CharacterCustomizationFeetController::CheckState>(&OnCheckFeetState).OrThrow();
@@ -55,7 +54,6 @@ bool App::AttachmentSlotsModule::Unload()
     Unhook<Raw::AttachmentSlots::IsSlotSpawning>();
     Unhook<Raw::TPPRepresentationComponent::OnAttach>();
     Unhook<Raw::TPPRepresentationComponent::IsAffectedSlot>();
-    Unhook<Raw::ImpostorComponent::OnAttach>();
     Unhook<Raw::CharacterCustomizationHairstyleController::CheckState>();
     // Unhook<Raw::CharacterCustomizationGenitalsController::CheckState>();
     Unhook<Raw::CharacterCustomizationFeetController::CheckState>();
@@ -149,28 +147,28 @@ void App::AttachmentSlotsModule::OnAttachTPP(Red::game::TPPRepresentationCompone
 
     std::shared_lock _(s_slotsMutex);
 
-    for (const auto baseSlotID : TPPAffectedSlots)
+    for (const auto slotID : TPPAffectedSlots)
     {
-        const auto& extasSlots = s_extraSlots.find(baseSlotID);
-        if (extasSlots != s_extraSlots.end())
+        const auto& subSlots = s_extraSlots.find(slotID);
+        if (subSlots != s_extraSlots.end())
         {
-            for (const auto& extasSlotID : extasSlots->second)
+            for (const auto& subSlotID : subSlots->second)
             {
-                if (!aComponent->affectedAppearanceSlots.Contains(extasSlotID))
+                if (!aComponent->affectedAppearanceSlots.Contains(subSlotID))
                 {
-                    aComponent->affectedAppearanceSlots.PushBack(extasSlotID);
+                    aComponent->affectedAppearanceSlots.PushBack(subSlotID);
                 }
 
                 if (aComponent->owner)
                 {
 #ifndef NDEBUG
-                    auto debugSlotName = Red::ToStringDebug(extasSlotID);
+                    auto debugSlotName = Red::ToStringDebug(subSlotID);
 #endif
 
                     auto slotData = transactionSystem->FindSlotData(aComponent->owner,
-                                                                   [extasSlotID](const Red::AttachmentSlotData& aSlotData)
+                                                                   [subSlotID](const Red::AttachmentSlotData& aSlotData)
                                                                    {
-                                                                       return aSlotData.slotID == extasSlotID;
+                                                                       return aSlotData.slotID == subSlotID;
                                                                    });
                     if (slotData && slotData->itemObject)
                     {
@@ -199,29 +197,6 @@ void App::AttachmentSlotsModule::OnSlotCheckTPP(bool& aAffected, Red::TweakDBID 
         if (baseSlot != s_baseSlots.end())
         {
             aAffected = (baseSlot.value() == HeadSlot || baseSlot.value() == FaceSlot);
-        }
-    }
-}
-
-void App::AttachmentSlotsModule::OnAttachImpostor(Red::game::ImpostorComponent* aComponent, uintptr_t)
-{
-#ifndef NDEBUG
-    LogDebug("|{}| [event=AttachImpostor]", ModuleName);
-#endif
-
-    std::shared_lock _(s_slotsMutex);
-
-    for (const auto& [baseSlotID, extasSlotIDs] : s_extraSlots)
-    {
-        if (aComponent->slotIDsToOmit.Contains(baseSlotID))
-        {
-            for (const auto& extasSlotID : extasSlotIDs)
-            {
-                if (!aComponent->slotIDsToOmit.Contains(extasSlotID))
-                {
-                    aComponent->slotIDsToOmit.PushBack(extasSlotID);
-                }
-            }
         }
     }
 }
