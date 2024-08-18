@@ -237,7 +237,7 @@ void App::MeshTemplateModule::ProcessMeshResource(const Core::SharedPtr<MeshStat
     {
         const auto& chunkName = aMaterialNames[chunkIndex];
 
-        if (aMeshState->HasMaterialEntry(chunkName))
+        if ((*aFinalMaterials)[chunkIndex])
             continue;
 
         if (chunkName.hash == aSourceMesh->path.hash)
