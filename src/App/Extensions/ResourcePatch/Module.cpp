@@ -20,7 +20,7 @@ bool App::ResourcePatchModule::Load()
 {
     HookBefore<Raw::ResourceDepot::RequestResource>(&OnResourceRequest).OrThrow();
     HookBefore<Raw::ResourceSerializer::Deserialize>(&OnResourceDeserialize).OrThrow();
-    HookAfter<Raw::EntityTemplate::OnLoad>(&OnEntityTemplateLoad).OrThrow();
+    HookBefore<Raw::EntityTemplate::OnLoad>(&OnEntityTemplateLoad).OrThrow();
     HookBefore<Raw::AppearanceResource::OnLoad>(&OnAppearanceResourceLoad).OrThrow();
     Hook<Raw::CMesh::OnLoad>(&OnMeshResourceLoad).OrThrow();
     HookBefore<Raw::EntityBuilder::ExtractComponentsJob>(&OnEntityPackageExtract).OrThrow();
