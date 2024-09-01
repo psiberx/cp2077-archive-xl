@@ -22,7 +22,7 @@ bool App::ResourcePatchModule::Load()
     HookBefore<Raw::ResourceSerializer::Deserialize>(&OnResourceDeserialize).OrThrow();
     HookAfter<Raw::EntityTemplate::OnLoad>(&OnEntityTemplateLoad).OrThrow();
     HookBefore<Raw::AppearanceResource::OnLoad>(&OnAppearanceResourceLoad).OrThrow();
-    HookAfter<Raw::CMesh::OnLoad>(&OnMeshResourceLoad).OrThrow();
+    Hook<Raw::CMesh::OnLoad>(&OnMeshResourceLoad).OrThrow();
     HookBefore<Raw::EntityBuilder::ExtractComponentsJob>(&OnEntityPackageExtract).OrThrow();
     HookAfter<Raw::AppearanceDefinition::ExtractPartComponents>(&OnPartPackageExtract).OrThrow();
     HookAfter<Raw::GarmentAssembler::ExtractComponentsJob>(&OnGarmentPackageExtract).OrThrow();
@@ -286,7 +286,7 @@ void App::ResourcePatchModule::OnAppearanceResourceLoad(Red::AppearanceResource*
     }
 }
 
-void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
+void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void* a2)
 {
     const auto& fix = ResourceMetaModule::GetResourceFix(aMesh->path);
 
@@ -307,43 +307,52 @@ void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void*)
 
     const auto& patchList = GetPatchList(aMesh->path);
 
-    if (patchList.empty())
-        return;
-
-    for (const auto& patchPath : patchList)
+    if (!patchList.empty())
     {
-        auto patchMesh = GetPatchResource<Red::CMesh>(patchPath);
-
-        if (!patchMesh)
-            continue;
-
-        for (const auto& patchAppearance : patchMesh->appearances)
+        if (aMesh->appearances.size == 0 && aMesh->forceLoadAllAppearances)
         {
-            auto cloneAppearance = Red::MakeHandle<Red::meshMeshAppearance>();
-            cloneAppearance->name = patchAppearance->name;
-            cloneAppearance->chunkMaterials = patchAppearance->chunkMaterials;
-            cloneAppearance->tags = patchAppearance->tags;
+            aMesh->forceLoadAllAppearances = false;
+        }
 
-            Raw::MeshAppearance::Owner::Set(cloneAppearance, patchMesh.instance);
+        for (const auto& patchPath : patchList)
+        {
+            auto patchMesh = GetPatchResource<Red::CMesh>(patchPath);
 
-            auto isNewAppearance = true;
+            if (!patchMesh || patchMesh->appearances.size == 0)
+                continue;
 
-            for (auto& existingAppearance : aMesh->appearances)
+            auto patchName = MeshTemplateModule::RegisterMeshSource(aMesh, patchMesh);
+
+            for (const auto& patchAppearance : patchMesh->appearances)
             {
-                if (existingAppearance->name == cloneAppearance->name)
+                auto cloneAppearance = Red::MakeHandle<Red::meshMeshAppearance>();
+                cloneAppearance->name = patchAppearance->name;
+                cloneAppearance->chunkMaterials = patchAppearance->chunkMaterials;
+
+                cloneAppearance->tags.Clear();
+                cloneAppearance->tags.PushBack(patchName);
+
+                auto isNewAppearance = true;
+
+                for (auto& existingAppearance : aMesh->appearances)
                 {
-                    existingAppearance = cloneAppearance;
-                    isNewAppearance = false;
-                    break;
+                    if (existingAppearance->name == cloneAppearance->name)
+                    {
+                        existingAppearance = cloneAppearance;
+                        isNewAppearance = false;
+                        break;
+                    }
                 }
-            }
 
-            if (isNewAppearance)
-            {
-                aMesh->appearances.EmplaceBack(cloneAppearance);
+                if (isNewAppearance)
+                {
+                    aMesh->appearances.EmplaceBack(cloneAppearance);
+                }
             }
         }
     }
+
+    Raw::CMesh::OnLoad(aMesh, a2);
 
     MeshTemplateModule::PrefetchMeshState(aMesh, fix.GetContext());
 }

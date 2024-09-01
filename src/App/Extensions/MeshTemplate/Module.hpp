@@ -16,6 +16,7 @@ public:
     static bool IsContextualMesh(Red::CMesh* aMesh);
     static bool IsSpecialMaterial(Red::CName aMaterialName);
     static void PrefetchMeshState(Red::CMesh* aMesh, const Core::Map<Red::CName, std::string>& aContext);
+    static Red::CName RegisterMeshSource(Red::CMesh* aMesh, Red::CMesh* aSourceMesh);
 
 private:
     struct MeshState

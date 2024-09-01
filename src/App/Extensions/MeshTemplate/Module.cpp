@@ -59,21 +59,6 @@ void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearan
 
     if (!ownerMesh)
     {
-        // if (aMesh->appearances.size == 0)
-        // {
-        //     auto& controller = GarmentOverrideModule::GetDynamicAppearanceController();
-        //     auto pathStr = controller->GetPathString(aMesh->path);
-        //
-        //     if (!pathStr.empty())
-        //     {
-        //         LogWarning(R"(|{}| Mesh \"{}\" doesn't have any appearances.)", ModuleName, pathStr);
-        //     }
-        //     else
-        //     {
-        //         LogWarning(R"(|{}| Mesh {} doesn't have any appearances.)", ModuleName, aMesh->path.hash);
-        //     }
-        // }
-
         aOut = s_dummyAppearance;
         return;
     }
@@ -116,18 +101,17 @@ void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearan
         }
     }
 
-    if (ownerMesh != aMesh)
+    if (aOut->chunkMaterials.size > 0 && aOut->tags.size > 0)
     {
         auto meshState = AcquireMeshState(aMesh);
 
+        std::unique_lock _(meshState->meshMutex);
+
+        if (aOut->tags.size == 1)
         {
-            std::unique_lock _(meshState->meshMutex);
-
-            auto patchName = meshState->RegisterSource(ownerMesh);
-            aOut->chunkMaterials.PushBack(patchName);
+            aOut->chunkMaterials.PushBack(aOut->tags[0]);
+            aOut->tags.Clear();
         }
-
-        Raw::MeshAppearance::Owner::Set(aOut, aMesh);
     }
 }
 
@@ -540,7 +524,10 @@ Red::ResourcePath App::MeshTemplateModule::ExpandResourcePath(Red::ResourcePath 
     }
 
 #ifndef NDEBUG
-    LogDebug("|{}| Dynamic path resolved to \"{}\".", ModuleName, result.value);
+    if (!result.value.empty() && result.value != pathStr)
+    {
+        LogDebug("|{}| Dynamic path resolved to \"{}\".", ModuleName, result.value);
+    }
 #endif
 
     return result.value.data();
@@ -586,6 +573,12 @@ void App::MeshTemplateModule::PrefetchMeshState(Red::CMesh* aMesh, const Core::M
     {
         AcquireMeshState(aMesh);
     }
+}
+
+Red::CName App::MeshTemplateModule::RegisterMeshSource(Red::CMesh* aMesh, Red::CMesh* aSourceMesh)
+{
+    auto meshState = AcquireMeshState(aMesh);
+    return meshState->RegisterSource(aSourceMesh);
 }
 
 void App::MeshTemplateModule::OnAddStubAppearance(Red::CMesh* aMesh)
