@@ -93,7 +93,7 @@ public:
     [[nodiscard]] Red::ResourcePath ResolvePath(Red::Entity* aEntity, const DynamicPartList& aVariant,
                                                 Red::ResourcePath aPath) const;
 
-    void UpdateState(Red::Entity* aEntity);
+    void UpdateState(Red::Entity* aEntity, Red::TweakDBID aEquippedItemID = {});
     void RemoveState(Red::Entity* aEntity);
 
     bool SupportsDynamicAppearance(const Red::EntityTemplate* aTemplate);
@@ -103,6 +103,7 @@ public:
     std::string_view GetBaseAppearanceName(Red::CName aAppearanceName);
 
     [[nodiscard]] std::string GetPathString(Red::ResourcePath aPath) const;
+    [[nodiscard]] std::string GetPathStringOrHash(Red::ResourcePath aPath) const;
 
     static bool IsMale(Red::Entity* aEntity);
 
@@ -131,7 +132,8 @@ private:
         Red::CName hairColor;
     };
 
-    DynamicAttributeData GetSuffixData(Red::Entity* aEntity, Red::TweakDBID aSuffixID) const;
+    DynamicAttributeData GetSuffixData(Red::Entity* aEntity, Red::TweakDBID aSuffixID,
+                                       Red::TweakDBID aEquippedItemID) const;
     CustomizationData GetCustomizationData(Red::Entity* aEntity) const;
 
     Core::Map<Red::Entity*, EntityState> m_states;

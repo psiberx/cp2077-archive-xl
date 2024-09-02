@@ -35,7 +35,12 @@ private:
     static void OnResolveDefinition(Red::AppearanceResource* aResource,
                                     Red::Handle<Red::AppearanceDefinition>* aDefinition,
                                     Red::CName aAppearanceSelector, uint32_t a4, uint8_t a5);
-    static void OnGetVisualTags(Red::AppearanceNameVisualTagsPreset& aPreset,
+    static void* OnResolveSuffixes(Red::CString& aResult,
+                                   Red::Handle<Red::GameObject>& aOwner,
+                                   Red::Handle<Red::GameObject>& aOwnerOverride,
+                                   const Red::TweakDBRecord& aItemRecord,
+                                   const Red::ItemID& aItemID);
+    static void OnGetVisualTags(Red::AppearanceNameVisualTagsPreset* aPreset,
                                 Red::ResourcePath aEntityPath,
                                 Red::CName aAppearanceName,
                                 Red::TagList& aFinalTags);
@@ -101,6 +106,7 @@ private:
                                      Red::DynArray<Red::ResourcePath>& aResourcePaths);
 
     static void UpdateDynamicAttributes(Core::SharedPtr<EntityState>& aEntityState);
+    static void UpdateDynamicAttributes(Core::SharedPtr<EntityState>& aEntityState, Red::TweakDBID aEquippedItemID);
     static void UpdateDynamicAttributes();
 
     static bool IsUniqueAppearanceName(Red::CName aName);

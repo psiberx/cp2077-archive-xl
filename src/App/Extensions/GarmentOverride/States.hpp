@@ -119,6 +119,7 @@ public:
     void LinkPartToAppearance(Red::ResourcePath aResource, DynamicAppearanceName& aAppearance);
     void LinkPartToAppearance(Red::ResourcePath aResource, Red::CName aAppearance);
     void UpdateDynamicAttributes();
+    void UpdateDynamicAttributes(Red::TweakDBID aEquippedItemID);
 
     void RemoveAllOverrides(uint64_t aHash);
 

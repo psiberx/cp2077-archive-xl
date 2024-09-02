@@ -464,16 +464,16 @@ App::DynamicAppearanceController::DynamicString App::DynamicAppearanceController
     return result;
 }
 
-void App::DynamicAppearanceController::UpdateState(Red::Entity* aEntity)
+void App::DynamicAppearanceController::UpdateState(Red::Entity* aEntity, Red::TweakDBID aEquippedItemID)
 {
     auto& state = m_states[aEntity];
 
-    state.values[GenderAttr] = GetSuffixData(aEntity, GenderSuffix);
-    state.values[CameraAttr] = GetSuffixData(aEntity, CameraSuffix);
-    state.values[BodyTypeAttr] = GetSuffixData(aEntity, BodyTypeSuffix);
-    state.values[ArmsStateAttr] = GetSuffixData(aEntity, ArmsStateSuffix);
-    state.values[FeetStateAttr] = GetSuffixData(aEntity, FeetStateSuffix);
-    state.values[InnerSleevesAttr] = GetSuffixData(aEntity, InnerSleevesSuffix);
+    state.values[GenderAttr] = GetSuffixData(aEntity, GenderSuffix, aEquippedItemID);
+    state.values[CameraAttr] = GetSuffixData(aEntity, CameraSuffix, aEquippedItemID);
+    state.values[BodyTypeAttr] = GetSuffixData(aEntity, BodyTypeSuffix, aEquippedItemID);
+    state.values[ArmsStateAttr] = GetSuffixData(aEntity, ArmsStateSuffix, aEquippedItemID);
+    state.values[FeetStateAttr] = GetSuffixData(aEntity, FeetStateSuffix, aEquippedItemID);
+    state.values[InnerSleevesAttr] = GetSuffixData(aEntity, InnerSleevesSuffix, aEquippedItemID);
 
     auto custimizationData = GetCustomizationData(aEntity);
     state.values[SkinColorAttr] = {custimizationData.skinColor};
@@ -501,7 +501,8 @@ void App::DynamicAppearanceController::RemoveState(Red::Entity* aEntity)
 }
 
 App::DynamicAttributeData App::DynamicAppearanceController::GetSuffixData(Red::Entity* aEntity,
-                                                                          Red::TweakDBID aSuffixID) const
+                                                                          Red::TweakDBID aSuffixID,
+                                                                          Red::TweakDBID aEquippedItemID) const
 {
     DynamicAttributeData data{};
 
@@ -510,7 +511,7 @@ App::DynamicAttributeData App::DynamicAppearanceController::GetSuffixData(Red::E
         auto* handle = reinterpret_cast<Red::Handle<Red::GameObject>*>(&aEntity->ref);
 
         Red::CString suffixValue;
-        Raw::AppearanceChanger::GetSuffixValue({}, 1ull, *handle, aSuffixID, suffixValue);
+        (~Raw::AppearanceChanger::GetSuffixValue)({aEquippedItemID}, 1ull, *handle, aSuffixID, suffixValue);
 
         data.suffix = suffixValue.c_str();
     }
@@ -604,6 +605,12 @@ bool App::DynamicAppearanceController::IsDynamicValue(Red::CName aValue) const
 std::string App::DynamicAppearanceController::GetPathString(Red::ResourcePath aPath) const
 {
     return m_pathRegistry->ResolvePath(aPath);
+}
+
+std::string App::DynamicAppearanceController::GetPathStringOrHash(Red::ResourcePath aPath) const
+{
+    auto pathStr = m_pathRegistry->ResolvePath(aPath);
+    return !pathStr.empty() ? pathStr : std::to_string(aPath.hash);
 }
 
 bool App::DynamicAppearanceController::SupportsDynamicAppearance(const Red::EntityTemplate* aTemplate)

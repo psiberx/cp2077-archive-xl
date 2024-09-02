@@ -66,9 +66,17 @@ RED4EXT_ASSERT_OFFSET(AppearanceChangeRequest, newAppearance, 0x20);
 
 namespace Raw::AppearanceChanger
 {
+constexpr auto GetSuffixes = Core::RawFunc<
+    /* addr = */ Red::AddressLib::AppearanceChanger_GetSuffixes,
+    /* type = */ void* (*)(Red::CString& aResult,
+                           Red::Handle<Red::GameObject>& aOwner,
+                           Red::Handle<Red::GameObject>& aOwnerOverride,
+                           const Red::TweakDBRecord& aItemRecord,
+                           const Red::ItemID& aItemID)>();
+
 constexpr auto GetSuffixValue = Core::RawFunc<
     /* addr = */ Red::AddressLib::AppearanceChanger_GetSuffixValue,
-    /* type = */ bool (*)(Red::ItemID aItemID,
+    /* type = */ bool (*)(const Red::ItemID& aItemID,
                           uint64_t a2, // Must be non-zero
                           Red::Handle<Red::GameObject>& aOwner,
                           Red::TweakDBID aSuffixRecordID,

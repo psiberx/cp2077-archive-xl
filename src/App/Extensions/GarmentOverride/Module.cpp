@@ -40,6 +40,7 @@ bool App::GarmentOverrideModule::Load()
     HookBefore<Raw::ItemFactoryAppearanceChangeRequest::LoadAppearance>(&OnChangeAppearanceResource).OrThrow();
     Hook<Raw::EntityTemplate::FindAppearance>(&OnResolveAppearance).OrThrow();
     HookAfter<Raw::AppearanceResource::FindAppearance>(&OnResolveDefinition).OrThrow();
+    Hook<Raw::AppearanceChanger::GetSuffixes>(&OnResolveSuffixes).OrThrow();
     HookAfter<Raw::AppearanceNameVisualTagsPreset::GetVisualTags>(&OnGetVisualTags).OrThrow();
     HookAfter<Raw::GarmentAssembler::FindState>(&OnFindState).OrThrow();
     HookBefore<Raw::GarmentAssemblerState::AddItem>(&OnAddItem).OrThrow();
@@ -74,6 +75,7 @@ bool App::GarmentOverrideModule::Unload()
     Unhook<Raw::ItemFactoryAppearanceChangeRequest::LoadAppearance>();
     Unhook<Raw::EntityTemplate::FindAppearance>();
     Unhook<Raw::AppearanceResource::FindAppearance>();
+    Unhook<Raw::AppearanceChanger::GetSuffixes>();
     Unhook<Raw::AppearanceNameVisualTagsPreset::GetVisualTags>();
     Unhook<Raw::GarmentAssembler::FindState>();
     Unhook<Raw::GarmentAssemblerState::AddItem>();
@@ -114,14 +116,11 @@ void App::GarmentOverrideModule::OnLoadAppearanceResource(Red::ItemFactoryReques
     auto& entityWeak = Raw::ItemFactoryRequest::Entity::Ref(aRequest);
     auto& templateToken = Raw::ItemFactoryRequest::EntityTemplate::Ref(aRequest);
     auto& appearanceName = Raw::ItemFactoryRequest::AppearanceName::Ref(aRequest);
+    auto itemRecord = Raw::ItemFactoryRequest::ItemRecord::Ptr(aRequest);
 
-    if (!appearanceName)
+    if (!appearanceName && itemRecord)
     {
-        auto itemRecord = Raw::ItemFactoryRequest::ItemRecord::Ptr(aRequest);
-        if (itemRecord)
-        {
-            appearanceName = Red::GetFlatValue<Red::CName>({itemRecord->recordID, ".appearanceName"});
-        }
+        appearanceName = Red::GetFlatValue<Red::CName>({itemRecord->recordID, ".appearanceName"});
     }
 
     if (PrepareDynamicAppearanceName(entityWeak, templateToken, appearanceName))
@@ -132,7 +131,14 @@ void App::GarmentOverrideModule::OnLoadAppearanceResource(Red::ItemFactoryReques
 #ifndef NDEBUG
             LogDebug("|{}| [event=LoadAppearanceResource entity={}]", ModuleName, entityState->GetName());
 #endif
-            UpdateDynamicAttributes(entityState);
+            if (itemRecord)
+            {
+                UpdateDynamicAttributes(entityState, itemRecord->recordID);
+            }
+            else
+            {
+                UpdateDynamicAttributes(entityState);
+            }
         }
     }
 }
@@ -142,14 +148,11 @@ void App::GarmentOverrideModule::OnChangeAppearanceResource(Red::ItemFactoryAppe
     auto& entityWeak = Raw::ItemFactoryAppearanceChangeRequest::Entity::Ref(aRequest);
     auto& templateToken = Raw::ItemFactoryAppearanceChangeRequest::EntityTemplate::Ref(aRequest);
     auto& appearanceName = Raw::ItemFactoryAppearanceChangeRequest::AppearanceName::Ref(aRequest);
+    auto itemRecord = Raw::ItemFactoryAppearanceChangeRequest::ItemRecord::Ptr(aRequest);
 
-    if (!appearanceName)
+    if (!appearanceName && itemRecord)
     {
-        auto itemRecord = Raw::ItemFactoryAppearanceChangeRequest::ItemRecord::Ptr(aRequest);
-        if (itemRecord)
-        {
-            appearanceName = Red::GetFlatValue<Red::CName>({itemRecord->recordID, ".appearanceName"});
-        }
+        appearanceName = Red::GetFlatValue<Red::CName>({itemRecord->recordID, ".appearanceName"});
     }
 
     if (PrepareDynamicAppearanceName(entityWeak, templateToken, appearanceName))
@@ -160,7 +163,14 @@ void App::GarmentOverrideModule::OnChangeAppearanceResource(Red::ItemFactoryAppe
 #ifndef NDEBUG
             LogDebug("|{}| [event=ChangeAppearanceResource entity={}]", ModuleName, entityState->GetName());
 #endif
-            UpdateDynamicAttributes(entityState);
+            if (itemRecord)
+            {
+                UpdateDynamicAttributes(entityState, itemRecord->recordID);
+            }
+            else
+            {
+                UpdateDynamicAttributes(entityState);
+            }
         }
     }
 }
@@ -274,12 +284,38 @@ void App::GarmentOverrideModule::OnResolveDefinition(Red::AppearanceResource* aR
     }
 }
 
-void App::GarmentOverrideModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset& aPreset,
+void* App::GarmentOverrideModule::OnResolveSuffixes(Red::CString& aResult,
+                                                    Red::Handle<Red::GameObject>& aOwner,
+                                                    Red::Handle<Red::GameObject>& aOwnerOverride,
+                                                    const Red::TweakDBRecord& aItemRecord,
+                                                    const Red::ItemID& aItemID)
+{
+    auto appearanceName = Red::GetFlatValue<Red::CName>({aItemRecord.recordID, ".appearanceName"});
+    if (s_dynamicAppearance->IsDynamicAppearanceName(appearanceName))
+    {
+        if (aResult.Length() > 0)
+        {
+            aResult = {};
+        }
+        return &aResult;
+    }
+
+    return Raw::AppearanceChanger::GetSuffixes(aResult, aOwner, aOwnerOverride, aItemRecord, aItemID);
+}
+
+void App::GarmentOverrideModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset* aPreset,
                                                  Red::ResourcePath aEntityPath, Red::CName aAppearanceName,
                                                  Red::TagList& aFinalTags)
 {
-    if (!aAppearanceName) // aFinalTags.tags.size > 0
+    if (!aAppearanceName || aAppearanceName == EmptyAppearanceName)
         return;
+
+#ifndef NDEBUG
+    if (aFinalTags.tags.size == 0)
+    {
+        LogDebug("|{}| [event=GetVisualTags ent={} app={}]", ModuleName, aEntityPath.hash, aAppearanceName.ToString());
+    }
+#endif
 
     auto cacheKey = Red::FNV1a64(aAppearanceName.ToString(), aEntityPath.hash);
 
@@ -857,6 +893,12 @@ void App::GarmentOverrideModule::DisableGarmentOffsets()
 void App::GarmentOverrideModule::UpdateDynamicAttributes(Core::SharedPtr<EntityState>& aEntityState)
 {
     aEntityState->UpdateDynamicAttributes();
+}
+
+void App::GarmentOverrideModule::UpdateDynamicAttributes(Core::SharedPtr<EntityState>& aEntityState,
+                                                         Red::TweakDBID aEquippedItemID)
+{
+    aEntityState->UpdateDynamicAttributes(aEquippedItemID);
 }
 
 void App::GarmentOverrideModule::UpdateDynamicAttributes()

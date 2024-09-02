@@ -498,7 +498,7 @@ inline const Handle<T>& Cast(const Handle<U>& aObject)
 }
 
 template<typename T, typename U = ISerializable>
-inline const WeakHandle<T>& Cast(const WeakHandle<U>& aObject)
+inline const WeakHandle<T>& CastWeak(const WeakHandle<U>& aObject)
 {
     static const WeakHandle<T> s_null;
     return (aObject && aObject.instance->GetType()->IsA(Red::GetClass<T>()))

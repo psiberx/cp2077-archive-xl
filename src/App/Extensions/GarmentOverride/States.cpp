@@ -409,6 +409,11 @@ void App::EntityState::UpdateDynamicAttributes()
     m_dynamicAppearance->UpdateState(m_entity);
 }
 
+void App::EntityState::UpdateDynamicAttributes(Red::TweakDBID aEquippedItemID)
+{
+    m_dynamicAppearance->UpdateState(m_entity, aEquippedItemID);
+}
+
 bool App::EntityState::SelectDynamicAppearance(App::DynamicAppearanceName& aSelector, Red::EntityTemplate* aResource,
                                                Red::TemplateAppearance*& aAppearance)
 {
