@@ -55,9 +55,7 @@ void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearan
     if (!aOut)
         return;
 
-    const auto ownerMesh = Raw::MeshAppearance::Owner::Ptr(aOut);
-
-    if (!ownerMesh)
+    if (!Raw::MeshAppearance::Owner::Ptr(aOut))
     {
         aOut = s_dummyAppearance;
         return;
@@ -66,16 +64,18 @@ void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearan
     if (!aOut->name || aMesh->appearances.size == 0)
         return;
 
+    if (aOut->chunkMaterials.size > 0 && aOut->tags.size == 0)
+        return;
+
+    auto meshState = AcquireMeshState(aMesh);
+
+    std::unique_lock _(meshState->meshMutex);
+
     if (aOut->chunkMaterials.size == 0)
     {
         auto sourceAppearance = aMesh->appearances[0];
-
         if (sourceAppearance && sourceAppearance != aOut)
         {
-            auto meshState = AcquireMeshState(aMesh);
-
-            std::unique_lock _(meshState->meshMutex);
-
             const auto appearanceNameStr = std::string{aOut->name.ToString()};
             for (auto chunkMaterialName : sourceAppearance->chunkMaterials)
             {
@@ -101,17 +101,10 @@ void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearan
         }
     }
 
-    if (aOut->chunkMaterials.size > 0 && aOut->tags.size > 0)
+    if (aOut->chunkMaterials.size > 0 && aOut->tags.size == 1)
     {
-        auto meshState = AcquireMeshState(aMesh);
-
-        std::unique_lock _(meshState->meshMutex);
-
-        if (aOut->tags.size == 1)
-        {
-            aOut->chunkMaterials.PushBack(aOut->tags[0]);
-            aOut->tags.Clear();
-        }
+        aOut->chunkMaterials.PushBack(aOut->tags[0]);
+        aOut->tags.Clear();
     }
 }
 
