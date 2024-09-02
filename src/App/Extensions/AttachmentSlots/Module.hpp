@@ -36,12 +36,13 @@ private:
                                  Red::CharacterBodyPartState& aLiftedState,
                                  Red::CharacterBodyPartState& aFlatState);
     static bool OnGetSuffixValue(Raw::AppearanceChanger::GetSuffixValuePtr aOriginalFunc,
-                                 Red::ItemID aItemID, uint64_t a2, Red::Handle<Red::GameObject>& aOwner,
+                                 const Red::ItemID& aItemID, uint64_t a2, Red::Handle<Red::GameObject>& aOwner,
                                  Red::TweakDBID aSuffixRecordID, Red::CString& aResult);
 
-    static bool IsVisualTagActive(Red::Handle<Red::Entity>& aOwner, Red::TweakDBID aBaseSlotID, Red::CName aVisualTag);
+    static bool IsVisualTagActive(Red::Handle<Red::Entity>& aOwner, Red::TweakDBID aBaseSlotID, Red::CName aVisualTag,
+                                  Red::TweakDBID aEquippedItemID = {});
     static bool IsVisualTagActive(Red::ITransactionSystem* aTransactionSystem, Red::Handle<Red::Entity>& aOwner,
-                                  Red::TweakDBID aSlotID, Red::CName aVisualTag);
+                                  Red::TweakDBID aSlotID, Red::CName aVisualTag, Red::TweakDBID aEquippedItemID);
 
     static inline thread_local bool s_skipVisualTagCheck = false;
     static inline Core::Map<Red::TweakDBID, Core::Set<Red::TweakDBID>> s_dependentSlots;

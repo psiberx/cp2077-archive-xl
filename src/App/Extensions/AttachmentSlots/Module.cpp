@@ -246,7 +246,7 @@ void App::AttachmentSlotsModule::OnCheckFeetState(Red::game::ui::CharacterCustom
 }
 
 bool App::AttachmentSlotsModule::OnGetSuffixValue(Raw::AppearanceChanger::GetSuffixValuePtr aOriginalFunc,
-                                                  Red::ItemID aItemID, uint64_t a2,
+                                                  const Red::ItemID& aItemID, uint64_t a2,
                                                   Red::Handle<Red::GameObject>& aOwner,
                                                   Red::TweakDBID aSuffixRecordID,
                                                   Red::CString& aResult)
@@ -258,7 +258,7 @@ bool App::AttachmentSlotsModule::OnGetSuffixValue(Raw::AppearanceChanger::GetSuf
         if (!s_skipVisualTagCheck)
         {
             s_skipVisualTagCheck = true;
-            hideSleeves = IsVisualTagActive(aOwner, TorsoSlot, HideInnerSleevesTag);
+            hideSleeves = IsVisualTagActive(aOwner, TorsoSlot, HideInnerSleevesTag, aItemID.tdbid);
             s_skipVisualTagCheck = false;
         }
 
@@ -270,11 +270,12 @@ bool App::AttachmentSlotsModule::OnGetSuffixValue(Raw::AppearanceChanger::GetSuf
 }
 
 bool App::AttachmentSlotsModule::IsVisualTagActive(Red::Handle<Red::Entity>& aOwner,
-                                                   Red::TweakDBID aBaseSlotID, Red::CName aVisualTag)
+                                                   Red::TweakDBID aBaseSlotID, Red::CName aVisualTag,
+                                                   Red::TweakDBID aEquippedItemID)
 {
     auto transactionSystem = Red::GetGameSystem<Red::ITransactionSystem>();
 
-    if (IsVisualTagActive(transactionSystem, aOwner, aBaseSlotID, aVisualTag))
+    if (IsVisualTagActive(transactionSystem, aOwner, aBaseSlotID, aVisualTag, aEquippedItemID))
     {
         return true;
     }
@@ -286,7 +287,7 @@ bool App::AttachmentSlotsModule::IsVisualTagActive(Red::Handle<Red::Entity>& aOw
         {
             for (const auto& subSlotID : subSlots->second)
             {
-                if (IsVisualTagActive(transactionSystem, aOwner, subSlotID, aVisualTag))
+                if (IsVisualTagActive(transactionSystem, aOwner, subSlotID, aVisualTag, aEquippedItemID))
                 {
                     return true;
                 }
@@ -299,7 +300,8 @@ bool App::AttachmentSlotsModule::IsVisualTagActive(Red::Handle<Red::Entity>& aOw
 
 bool App::AttachmentSlotsModule::IsVisualTagActive(Red::ITransactionSystem* aTransactionSystem,
                                                    Red::Handle<Red::Entity>& aOwner,
-                                                   Red::TweakDBID aSlotID, Red::CName aVisualTag)
+                                                   Red::TweakDBID aSlotID, Red::CName aVisualTag,
+                                                   Red::TweakDBID aEquippedItemID)
 {
     auto slotData = aTransactionSystem->FindSlotData(aOwner,
                                                      [aSlotID](const Red::AttachmentSlotData& aSlotData)
@@ -321,23 +323,24 @@ bool App::AttachmentSlotsModule::IsVisualTagActive(Red::ITransactionSystem* aTra
                    aTransactionSystem->MatchVisualTag(slotData->itemObject, aVisualTag, false);
         }
 
-        if (slotData->spawningItemID)
-        {
-#ifndef NDEBUG
-            auto debugItemName = Red::ToStringDebug(slotData->spawningItemID.tdbid);
-#endif
+//         if (slotData->spawningItemID && slotData->spawningItemID.tdbid != aEquippedItemID)
+//         {
+// #ifndef NDEBUG
+//             auto debugItemName = Red::ToStringDebug(slotData->spawningItemID.tdbid);
+//             auto debugEquipppedItemName = Red::ToStringDebug(aEquippedItemID);
+// #endif
+//
+//             return aTransactionSystem->MatchVisualTagByItemID(slotData->spawningItemID, aOwner, aVisualTag);
+//         }
 
-            return aTransactionSystem->MatchVisualTagByItemID(slotData->spawningItemID, aOwner, aVisualTag);
-        }
-
-        if (slotData->appearanceItemID)
-        {
-#ifndef NDEBUG
-            auto debugItemName = Red::ToStringDebug(slotData->appearanceItemID.tdbid);
-#endif
-
-            return aTransactionSystem->MatchVisualTagByItemID(slotData->appearanceItemID, aOwner, aVisualTag);
-        }
+//         if (slotData->appearanceItemID)
+//         {
+// #ifndef NDEBUG
+//             auto debugItemName = Red::ToStringDebug(slotData->appearanceItemID.tdbid);
+// #endif
+//
+//             return aTransactionSystem->MatchVisualTagByItemID(slotData->appearanceItemID, aOwner, aVisualTag);
+//         }
     }
 
     return false;
