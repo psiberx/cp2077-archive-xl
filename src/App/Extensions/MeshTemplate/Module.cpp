@@ -119,7 +119,7 @@ void* App::MeshTemplateModule::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::Mes
 
     Red::JobQueue jobQueue;
     jobQueue.Wait(aToken.job);
-    jobQueue.Dispatch([targetMeshWeak = Red::AsWeakHandle(aTargetMesh), aMaterialNames,
+    jobQueue.Dispatch([targetMeshWeak = Red::AsWeakHandle(aTargetMesh), materialNames = aMaterialNames,
                        finalMaterials = aToken.materials](const Red::JobGroup& aJobGroup) {
         if (!ContainsUnresolvedMaterials(*finalMaterials))
             return;
@@ -136,7 +136,7 @@ void* App::MeshTemplateModule::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::Mes
 
         {
             std::shared_lock _(targetMeshState->meshMutex);
-            sourceMesh = targetMeshState->ResolveSource(aMaterialNames.Back());
+            sourceMesh = targetMeshState->ResolveSource(materialNames.Back());
         }
 
         if (sourceMesh)
@@ -164,12 +164,12 @@ void* App::MeshTemplateModule::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::Mes
 
         jobQueue.Dispatch([targetMeshState, targetMeshWeak = Red::ToWeakHandle(targetMesh),
                            sourceMeshState, sourceMeshWeak = Red::ToWeakHandle(sourceMesh),
-                           aMaterialNames, finalMaterials](const Red::JobGroup& aJobGroup) {
+                           materialNames, finalMaterials](const Red::JobGroup& aJobGroup) {
             auto targetMesh = targetMeshWeak.Lock();
             auto sourceMesh = sourceMeshWeak.Lock();
             if (targetMesh && sourceMesh)
             {
-                ProcessMeshResource(targetMeshState, targetMesh, sourceMeshState, sourceMesh, aMaterialNames,
+                ProcessMeshResource(targetMeshState, targetMesh, sourceMeshState, sourceMesh, materialNames,
                                     finalMaterials, aJobGroup);
             }
         });
@@ -209,27 +209,20 @@ void App::MeshTemplateModule::ProcessMeshResource(const Core::SharedPtr<MeshStat
     std::scoped_lock _(aMeshState->meshMutex, aSourceState->sourceMutex);
 
     aMeshState->FillMaterials(aMesh);
+    if (aSourceState != aMeshState)
+    {
+        aSourceState->FillMaterials(aSourceMesh);
+    }
 
     for (int32_t chunkIndex = 0; chunkIndex < aMaterialNames.size; ++chunkIndex)
     {
         const auto& chunkName = aMaterialNames[chunkIndex];
 
-        if ((*aFinalMaterials)[chunkIndex])
+        if (aMeshState->HasMaterialEntry(chunkName))
             continue;
 
         if (chunkName.hash == aSourceMesh->path.hash)
-        {
-            // aMesh->materialEntries.EmplaceBack();
-            //
-            // auto& materialEntry = aMesh->materialEntries.Back();
-            // materialEntry.name = chunkName;
-            // materialEntry.material = s_dummyMaterial;
-            // materialEntry.materialWeak = s_dummyMaterial;
-            // materialEntry.isLocalInstance = true;
-            //
-            // (*aFinalMaterials)[chunkIndex] = s_dummyMaterial;
             continue;
-        }
 
         auto materialName = chunkName;
         auto templateName = chunkName;
@@ -319,6 +312,7 @@ void App::MeshTemplateModule::ProcessMeshResource(const Core::SharedPtr<MeshStat
             sourceEntry.materialWeak = sourceInstance;
         }
 
+        aMeshState->materials[chunkName] = static_cast<int32_t>(aMesh->materialEntries.size);
         aMesh->materialEntries.EmplaceBack();
 
         auto materialInstance = materialName != templateName
@@ -330,19 +324,32 @@ void App::MeshTemplateModule::ProcessMeshResource(const Core::SharedPtr<MeshStat
         materialEntry.material = materialInstance;
         materialEntry.materialWeak = materialInstance;
         materialEntry.isLocalInstance = true;
-
-        (*aFinalMaterials)[chunkIndex] = materialInstance;
     }
 
     if (deferredMaterials.empty())
+    {
+        for (int32_t chunkIndex = 0; chunkIndex < aMaterialNames.size; ++chunkIndex)
+        {
+            const auto& chunkName = aMaterialNames[chunkIndex];
+            auto materialIndex = aMeshState->GetMaterialEntryIndex(chunkName);
+            if (materialIndex >= 0)
+            {
+                (*aFinalMaterials)[chunkIndex] = aMesh->materialEntries[materialIndex].material;
+            }
+            else
+            {
+                (*aFinalMaterials)[chunkIndex] = {};
+            }
+        }
         return;
+    }
 
     for (auto& deferred : deferredMaterials)
     {
         jobQueue.Wait(deferred.sourceToken->job);
     }
 
-    jobQueue.Dispatch([aMesh, aMeshState, aSourceMesh, aSourceState, aFinalMaterials,
+    jobQueue.Dispatch([aMesh, aMeshState, aSourceMesh, aSourceState, aMaterialNames, aFinalMaterials,
                        deferredMaterials = std::move(deferredMaterials)](const Red::JobGroup& aJobGroup) {
         std::scoped_lock _(aMeshState->meshMutex, aSourceState->sourceMutex);
 
@@ -369,6 +376,7 @@ void App::MeshTemplateModule::ProcessMeshResource(const Core::SharedPtr<MeshStat
             sourceEntry.material = sourceInstance;
             sourceEntry.materialWeak = sourceInstance;
 
+            aMeshState->materials[deferred.chunkName] = static_cast<int32_t>(aMesh->materialEntries.size);
             aMesh->materialEntries.EmplaceBack();
 
             auto materialInstance = deferred.materialName != deferred.templateName
@@ -380,8 +388,20 @@ void App::MeshTemplateModule::ProcessMeshResource(const Core::SharedPtr<MeshStat
             materialEntry.material = materialInstance;
             materialEntry.materialWeak = materialInstance;
             materialEntry.isLocalInstance = true;
+        }
 
-            (*aFinalMaterials)[deferred.chunkIndex] = materialInstance;
+        for (int32_t chunkIndex = 0; chunkIndex < aMaterialNames.size; ++chunkIndex)
+        {
+            const auto& chunkName = aMaterialNames[chunkIndex];
+            auto materialIndex = aMeshState->GetMaterialEntryIndex(chunkName);
+            if (materialIndex >= 0)
+            {
+                (*aFinalMaterials)[chunkIndex] = aMesh->materialEntries[materialIndex].material;
+            }
+            else
+            {
+                (*aFinalMaterials)[chunkIndex] = {};
+            }
         }
     });
 }
