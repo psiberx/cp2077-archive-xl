@@ -50,7 +50,6 @@ void App::ResourcePathRegistry::OnCreatePath(Red::ResourcePath* aPath, Red::Stri
     if (aPathStr)
     {
         std::scoped_lock _(s_instance->m_lock);
-        auto size = s_instance->m_map.size();
         s_instance->m_map[*aPath] = {aPathStr->data, aPathStr->size};
     }
 }
@@ -67,6 +66,23 @@ std::string App::ResourcePathRegistry::ResolvePath(Red::ResourcePath aPath)
         return {};
 
     return it.value();
+}
+
+void App::ResourcePathRegistry::RegisterPath(Red::ResourcePath aPath, const std::string& aPathStr)
+{
+    if (!aPath)
+        return;
+
+    {
+        std::shared_lock _(s_instance->m_lock);
+        if (s_instance->m_map.contains(aPath))
+            return;
+    }
+
+    {
+        std::scoped_lock _(s_instance->m_lock);
+        s_instance->m_map[aPath] = aPathStr;
+    }
 }
 
 App::ResourcePathRegistry* App::ResourcePathRegistry::Get()

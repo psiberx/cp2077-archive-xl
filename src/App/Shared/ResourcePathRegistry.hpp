@@ -16,6 +16,7 @@ public:
     ResourcePathRegistry(const std::filesystem::path& aPreloadPath = {});
 
     [[nodiscard]] std::string ResolvePath(Red::ResourcePath aPath);
+    void RegisterPath(Red::ResourcePath aPath, const std::string& aPathStr);
 
     static ResourcePathRegistry* Get();
 

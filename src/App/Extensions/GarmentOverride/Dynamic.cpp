@@ -361,6 +361,8 @@ Red::ResourcePath App::DynamicAppearanceController::ResolvePath(Red::Entity* aEn
         }
     }
 
+    m_pathRegistry->RegisterPath(finalPath, result.value);
+
     return finalPath;
 }
 
