@@ -309,11 +309,6 @@ void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void* a2)
 
     if (!patchList.empty())
     {
-        if (aMesh->appearances.size == 0 && aMesh->forceLoadAllAppearances)
-        {
-            aMesh->forceLoadAllAppearances = false;
-        }
-
         for (const auto& patchPath : patchList)
         {
             auto patchMesh = GetPatchResource<Red::CMesh>(patchPath);
@@ -349,6 +344,8 @@ void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void* a2)
                     aMesh->appearances.EmplaceBack(cloneAppearance);
                 }
             }
+
+            aMesh->forceLoadAllAppearances = false;
         }
     }
 
