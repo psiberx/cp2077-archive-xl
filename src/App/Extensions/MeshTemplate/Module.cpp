@@ -155,12 +155,13 @@ void* App::MeshTemplateModule::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::Mes
         std::unique_lock _(targetMeshState->meshMutex);
 
         Red::JobQueue jobQueue(aJobGroup);
-        jobQueue.Wait(targetMeshState->lastJob);
 
         if (targetMeshState->contextToken)
         {
             jobQueue.Wait(targetMeshState->contextToken->job);
         }
+
+        jobQueue.Wait(targetMeshState->lastJob);
 
         jobQueue.Dispatch([targetMeshState, targetMeshWeak = Red::ToWeakHandle(targetMesh),
                            sourceMeshState, sourceMeshWeak = Red::ToWeakHandle(sourceMesh),

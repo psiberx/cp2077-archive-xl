@@ -349,9 +349,9 @@ void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void* a2)
         }
     }
 
-    Raw::CMesh::OnLoad(aMesh, a2);
-
     MeshTemplateModule::PrefetchMeshState(aMesh, fix.GetContext());
+
+    Raw::CMesh::OnLoad(aMesh, a2);
 }
 
 void App::ResourcePatchModule::OnEntityPackageExtract(Red::EntityBuilderJobParams* aParams, void* a2)
