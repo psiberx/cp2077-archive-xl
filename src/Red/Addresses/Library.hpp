@@ -8,8 +8,8 @@ constexpr uint32_t AnimatedComponent_InitializeAnimations = 2855474741;
 
 constexpr uint32_t AppearanceChanger_ComputePlayerGarment = 3243419919;
 constexpr uint32_t AppearanceChanger_GetBaseMeshOffset = 4219677283;
-constexpr uint32_t AppearanceChanger_GetSuffixes = 332345115;
-constexpr uint32_t AppearanceChanger_GetSuffixValue = 1317875529;
+constexpr uint32_t AppearanceChanger_GetSuffixes = 63057648;
+constexpr uint32_t AppearanceChanger_GetSuffixValue = 1003499294;
 constexpr uint32_t AppearanceChanger_RegisterPart = 3169139695;
 constexpr uint32_t AppearanceChanger_SelectAppearanceName = 2770550105;
 
@@ -67,7 +67,7 @@ constexpr uint32_t MeshMaterialBuffer_LoadMaterialAsync = 1609519068;
 
 constexpr uint32_t Entity_ReassembleAppearance = 1560690857;
 
-constexpr uint32_t EntityBuilder_ExtractComponentsJob = 525669984;
+constexpr uint32_t EntityBuilder_ExtractComponentsJob = 489494088;
 
 constexpr uint32_t EntityTemplate_OnLoad = 2741376473;
 constexpr uint32_t EntityTemplate_FindAppearance = 36838056;
@@ -80,7 +80,7 @@ constexpr uint32_t GameApplication_InitResourceDepot = 2923109755;
 constexpr uint32_t GarmentAssembler_FindState = 2594581880;
 constexpr uint32_t GarmentAssembler_RemoveItem = 1863723270;
 constexpr uint32_t GarmentAssembler_ProcessGarment = 29053464;
-constexpr uint32_t GarmentAssembler_ExtractComponentsJob = 1164187413;
+constexpr uint32_t GarmentAssembler_ExtractComponentsJob = 809178766;
 constexpr uint32_t GarmentAssembler_ProcessSkinnedMesh = 1663588463;
 constexpr uint32_t GarmentAssembler_ProcessMorphedMesh = 1567972572;
 constexpr uint32_t GarmentAssembler_OnGameDetach = 709304039;
@@ -92,7 +92,7 @@ constexpr uint32_t GarmentAssemblerState_ChangeCustomItem = 956641309;
 
 constexpr uint32_t ImpostorComponent_OnAttach = 4002093843;
 
-constexpr uint32_t InkSpawner_FinishAsyncSpawn = 2488155854;
+constexpr uint32_t InkSpawner_FinishAsyncSpawn = 2698985195;
 
 constexpr uint32_t InkWidgetLibrary_AsyncSpawnFromExternal = 1396063719;
 constexpr uint32_t InkWidgetLibrary_AsyncSpawnFromLocal = 118698863;
@@ -113,7 +113,7 @@ constexpr uint32_t JournalManager_TrackQuest = 3274382593;
 
 constexpr uint32_t JournalRootFolderEntry_Initialize = 1945256833;
 
-constexpr uint32_t JournalTree_ProcessJournalIndex = 873338560;
+constexpr uint32_t JournalTree_ProcessJournalIndex = 837162664;
 
 constexpr uint32_t Localization_LoadOnScreens = 3550098299;
 constexpr uint32_t Localization_LoadSubtitles = 772484645;
@@ -152,7 +152,7 @@ constexpr uint32_t TPPRepresentationComponent_OnAttach = 4129169021;
 constexpr uint32_t TPPRepresentationComponent_OnItemEquipped = 4010810747;
 constexpr uint32_t TPPRepresentationComponent_OnItemUnequipped = 1933319146;
 constexpr uint32_t TPPRepresentationComponent_RegisterAffectedItem = 3037343626;
-constexpr uint32_t TPPRepresentationComponent_IsAffectedSlot = 684464829;
+constexpr uint32_t TPPRepresentationComponent_IsAffectedSlot = 678894266;
 
 constexpr uint32_t TweakDB_Load = 3602585178; // game::data::TweakDB::LoadOptimized
 }
