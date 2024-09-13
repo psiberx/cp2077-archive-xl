@@ -99,7 +99,7 @@ constexpr uint32_t InkWidgetLibrary_AsyncSpawnFromLocal = 118698863;
 constexpr uint32_t InkWidgetLibrary_SpawnFromExternal = 506278179;
 constexpr uint32_t InkWidgetLibrary_SpawnFromLocal = 1158555307;
 
-constexpr uint32_t InkWorldLayer_UpdateComponents = 310722176;
+constexpr uint32_t InkWorldLayer_UpdateComponents = 1693194103;
 
 constexpr uint32_t ItemFactoryAppearanceChangeRequest_LoadTemplate = 1291460507;
 constexpr uint32_t ItemFactoryAppearanceChangeRequest_LoadAppearance = 3392610574;
