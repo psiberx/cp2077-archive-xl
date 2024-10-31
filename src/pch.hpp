@@ -23,6 +23,8 @@
 #include <RED4ext/JobQueue.hpp>
 #include <RED4ext/ResourceDepot.hpp>
 #include <RED4ext/ResourceLoader.hpp>
+#include <RED4ext/Scripting/Natives/Generated/AI/SpotPersistentData.hpp>
+#include <RED4ext/Scripting/Natives/Generated/AI/WorkspotManager.hpp>
 #include <RED4ext/Scripting/Natives/Generated/CMaterialInstance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/CMesh.hpp>
 #include <RED4ext/Scripting/Natives/Generated/IRenderResourceBlob.hpp>

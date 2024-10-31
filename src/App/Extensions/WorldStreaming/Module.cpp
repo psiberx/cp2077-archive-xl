@@ -1,4 +1,5 @@
 #include "Module.hpp"
+#include "Red/CommunitySystem.hpp"
 
 namespace
 {
@@ -19,6 +20,7 @@ bool App::WorldStreamingModule::Load()
 {
     HookAfter<Raw::StreamingWorld::OnLoad>(&WorldStreamingModule::OnWorldLoad).OrThrow();
     HookAfter<Raw::StreamingSector::OnReady>(&OnSectorReady).OrThrow();
+    Hook<Raw::AIWorkspotManager::RegisterSpots>(&OnRegisterSpots).OrThrow();
 
     s_dummyNode = Red::MakeHandle<Red::worldAudioTagNode>();
     s_dummyNode->isVisibleInGame = false;
@@ -31,6 +33,7 @@ bool App::WorldStreamingModule::Unload()
 {
     Unhook<Raw::StreamingWorld::OnLoad>();
     Unhook<Raw::StreamingSector::OnReady>();
+    Unhook<Raw::AIWorkspotManager::RegisterSpots>();
 
     return true;
 }
@@ -296,4 +299,24 @@ bool App::WorldStreamingModule::PatchSector(Red::world::StreamingSector* aSector
     }
 
     return true;
+}
+
+void App::WorldStreamingModule::OnRegisterSpots(Red::AIWorkspotManager* aManager,
+                                                const Red::DynArray<Red::AISpotPersistentData>& aNewSpots)
+{
+    auto allSpots = Raw::AIWorkspotManager::Spots::Ptr(aManager);
+    auto merging = (allSpots->size != 0);
+
+    if (merging)
+    {
+        auto newSize = allSpots->size + aNewSpots.size;
+        if (allSpots->capacity < newSize)
+        {
+            Raw::AISpotPersistentDataArray::Reserve(allSpots, newSize);
+        }
+
+        allSpots->flags |= static_cast<int32_t>(Red::SortedArray<Red::AISpotPersistentData>::Flags::NotSorted);
+    }
+
+    Raw::AIWorkspotManager::RegisterSpots(aManager, aNewSpots);
 }

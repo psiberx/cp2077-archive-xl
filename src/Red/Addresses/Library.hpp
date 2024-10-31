@@ -4,6 +4,9 @@ namespace Red::AddressLib
 {
 constexpr uint32_t Main = 3545369307;
 
+constexpr uint32_t AISpotPersistentDataArray_Reserve = 3842971216;
+constexpr uint32_t AIWorkspotManager_RegisterSpots = 2515346652;
+
 constexpr uint32_t AnimatedComponent_InitializeAnimations = 2855474741;
 
 constexpr uint32_t AppearanceChanger_ComputePlayerGarment = 3243419919;
