@@ -8,7 +8,7 @@ constexpr auto LocKeyPrefixLength = std::char_traits<char>::length(LocKeyPrefix)
 
 namespace Raw::Localization
 {
-using VoiceOverTokens = Core::OffsetPtr<0x8, Red::Map<uint32_t, Red::SharedPtr<Red::ResourceToken<Red::JsonResource>>>>;
+using VoiceOverTokens = Core::OffsetPtr<0x8, Red::HashMap<uint32_t, Red::DynArray<Red::SharedPtr<Red::ResourceToken<Red::JsonResource>>>>>;
 using LipMapToken = Core::OffsetPtr<0x188, Red::SharedPtr<Red::ResourceToken<Red::animLipsyncMapping>>>;
 
 constexpr auto LoadTexts = Core::RawFunc<

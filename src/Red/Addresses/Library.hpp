@@ -120,7 +120,7 @@ constexpr uint32_t JournalTree_ProcessJournalIndex = 837162664;
 
 constexpr uint32_t Localization_LoadOnScreens = 3550098299;
 constexpr uint32_t Localization_LoadSubtitles = 772484645;
-constexpr uint32_t Localization_LoadVoiceOvers = 4259845555;
+constexpr uint32_t Localization_LoadVoiceOvers = 4223669659;
 constexpr uint32_t Localization_LoadLipsyncs = 1488657506;
 
 constexpr uint32_t MappinSystem_GetMappinData = 3299551353;

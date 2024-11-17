@@ -16,7 +16,7 @@ bool App::LocalizationModule::Load()
 {
     HookAfter<Raw::Localization::LoadTexts>(&LocalizationModule::OnLoadTexts).OrThrow();
     HookAfter<Raw::Localization::LoadSubtitles>(&LocalizationModule::OnLoadSubtitles).OrThrow();
-    //HookBefore<Raw::Localization::LoadVoiceOvers>(&LocalizationModule::OnLoadVoiceOvers).OrThrow();
+    HookBefore<Raw::Localization::LoadVoiceOvers>(&LocalizationModule::OnLoadVoiceOvers).OrThrow();
     HookAfter<Raw::Localization::LoadLipsyncs>(&LocalizationModule::OnLoadLipsyncs).OrThrow();
 
     return true;
@@ -26,7 +26,7 @@ bool App::LocalizationModule::Unload()
 {
     Unhook<Raw::Localization::LoadTexts>();
     Unhook<Raw::Localization::LoadSubtitles>();
-    // Unhook<Raw::Localization::LoadVoiceOvers>();
+    Unhook<Raw::Localization::LoadVoiceOvers>();
     Unhook<Raw::Localization::LoadLipsyncs>();
 
     return true;
@@ -335,7 +335,7 @@ void App::LocalizationModule::OnLoadVoiceOvers(void* aContext, uint64_t a2)
     {
         auto depot = Red::ResourceDepot::Get();
         auto& tokens = Raw::Localization::VoiceOverTokens::Ref(aContext);
-        auto map = tokens.values[0]->resource->root.GetPtr<Red::locVoLanguageDataMap>();
+        auto map = tokens.Get(0)->entries[0]->resource->root.GetPtr<Red::locVoLanguageDataMap>();
 
         for (auto& entry : map->entries)
         {
