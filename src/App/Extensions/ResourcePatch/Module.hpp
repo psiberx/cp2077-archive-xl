@@ -28,6 +28,7 @@ private:
     static void OnEntityTemplateLoad(Red::EntityTemplate* aTemplate, void*);
     static void OnAppearanceResourceLoad(Red::AppearanceResource* aResource);
     static void OnMeshResourceLoad(Red::CMesh* aMesh, void*);
+    static void OnEntityPackageLoad(Red::JobQueue& aJobQueue, void*, Red::EntityBuilderJobParams* aParams);
     static void OnEntityPackageExtract(Red::EntityBuilderJobParams* aParams, void*);
     static void OnPartPackageExtract(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
                                      const Red::SharedPtr<Red::ResourceToken<Red::EntityTemplate>>& aPartToken);
@@ -39,9 +40,15 @@ private:
     static void PatchPackageExtractorResults(const Red::Handle<Red::AppearanceResource>& aResource,
                                              const Red::Handle<Red::AppearanceDefinition>& aDefinition,
                                              Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects);
-    static void PatchResultEntity(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
+
+    static void MergeAppearanceParts(const Red::Handle<Red::AppearanceResource>& aResource,
+                                     const Red::Handle<Red::AppearanceDefinition>& aDefinition,
+                                     Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
+                                     const Red::JobGroup& aJobGroup, bool aForceParts);
+
+    static void MergeResultEntity(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
                                   Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects, int16_t aEntityIndex);
-    static void PatchResultComponents(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
+    static void MergeResultComponents(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
                                       Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects);
 
     static const Core::Set<Red::ResourcePath>& GetPatchList(Red::ResourcePath aTargetPath);

@@ -98,7 +98,7 @@ namespace Raw::CharacterCustomizationSystem
 {
 using MaleResource = Core::OffsetPtr<0x48, Red::SharedPtr<Red::ResourceToken<Red::gameuiCharacterCustomizationInfoResource>>>;
 using FemaleResource = Core::OffsetPtr<0x58, Red::SharedPtr<Red::ResourceToken<Red::gameuiCharacterCustomizationInfoResource>>>;
-using StateLock = Core::OffsetPtr<0x70, Red::SharedMutex>;
+using StateLock = Core::OffsetPtr<0x70, Red::SharedSpinLock>;
 using State = Core::OffsetPtr<0x78, Red::Handle<Red::gameuiCharacterCustomizationState>>;
 
 constexpr auto Initialize = Core::RawFunc<

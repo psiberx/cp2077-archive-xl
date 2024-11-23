@@ -11,7 +11,7 @@ inline T* AcquireSharedInstance(Args&&... args)
     if (!rtti)
          return nullptr;
 
-    auto* mutex = const_cast<SharedMutex*>(reinterpret_cast<volatile SharedMutex*>(&rtti->typesLock));
+    auto* mutex = const_cast<SharedSpinLock*>(reinterpret_cast<volatile SharedSpinLock*>(&rtti->typesLock));
     auto* storage = reinterpret_cast<HashMap<CName, T*>*>(&rtti->unkF8);
 
     std::lock_guard _(*mutex);

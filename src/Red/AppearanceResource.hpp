@@ -18,7 +18,7 @@ constexpr auto ExtractPartComponents = Core::RawFunc<
 
 namespace Raw::AppearanceResource
 {
-using Mutex = Core::OffsetPtr<0xF0, Red::SharedMutex>;
+using Mutex = Core::OffsetPtr<0xF0, Red::SharedSpinLock>;
 
 constexpr auto OnLoad = Core::RawFunc<
     /* addr = */ Red::AddressLib::AppearanceResource_OnLoad,

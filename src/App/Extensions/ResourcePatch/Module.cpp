@@ -9,6 +9,8 @@
 namespace
 {
 constexpr auto ModuleName = "ResourcePatch";
+
+constexpr auto AppearancePartsTag = Red::CName("AppearanceParts");
 }
 
 std::string_view App::ResourcePatchModule::GetName()
@@ -23,6 +25,7 @@ bool App::ResourcePatchModule::Load()
     HookBefore<Raw::EntityTemplate::OnLoad>(&OnEntityTemplateLoad).OrThrow();
     HookBefore<Raw::AppearanceResource::OnLoad>(&OnAppearanceResourceLoad).OrThrow();
     Hook<Raw::CMesh::OnLoad>(&OnMeshResourceLoad).OrThrow();
+    HookBefore<Raw::EntityBuilder::ScheduleExtractComponentsJob>(&OnEntityPackageLoad).OrThrow();
     HookBefore<Raw::EntityBuilder::ExtractComponentsJob>(&OnEntityPackageExtract).OrThrow();
     HookAfter<Raw::AppearanceDefinition::ExtractPartComponents>(&OnPartPackageExtract).OrThrow();
     HookAfter<Raw::GarmentAssembler::ExtractComponentsJob>(&OnGarmentPackageExtract).OrThrow();
@@ -37,6 +40,7 @@ bool App::ResourcePatchModule::Unload()
     Unhook<Raw::EntityTemplate::OnLoad>();
     Unhook<Raw::AppearanceResource::OnLoad>();
     Unhook<Raw::CMesh::OnLoad>();
+    Unhook<Raw::EntityBuilder::ScheduleExtractComponentsJob>();
     Unhook<Raw::EntityBuilder::ExtractComponentsJob>();
     Unhook<Raw::AppearanceDefinition::ExtractPartComponents>();
     Unhook<Raw::GarmentAssembler::ExtractComponentsJob>();
@@ -354,6 +358,38 @@ void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void* a2)
     Raw::CMesh::OnLoad(aMesh, a2);
 }
 
+void App::ResourcePatchModule::OnEntityPackageLoad(Red::JobQueue& aJobQueue, void*,
+                                                   Red::EntityBuilderJobParams* aParams)
+{
+    aJobQueue.Dispatch([entityBuilderWeak = aParams->entityBuilderWeak](const Red::JobGroup& aJobGroup) {
+        if (entityBuilderWeak.Expired())
+            return;
+
+        auto& entityBuilder = entityBuilderWeak.instance;
+        auto forceParts = entityBuilder->entityTemplate->visualTagsSchema &&
+                          entityBuilder->entityTemplate->visualTagsSchema->visualTags.Contains(AppearancePartsTag);
+
+        if (entityBuilder->flags.ExtractAppearance)
+        {
+            MergeAppearanceParts(entityBuilder->appearance.resource,
+                                 entityBuilder->appearance.definition,
+                                 entityBuilder->appearance.extractor->results,
+                                 aJobGroup, forceParts);
+        }
+
+        if (entityBuilder->flags.ExtractAppearances)
+        {
+            for (auto& appearance : entityBuilder->appearances)
+            {
+                MergeAppearanceParts(appearance.resource,
+                                     appearance.definition,
+                                     appearance.extractor->results,
+                                     aJobGroup, forceParts);
+            }
+        }
+    });
+}
+
 void App::ResourcePatchModule::OnEntityPackageExtract(Red::EntityBuilderJobParams* aParams, void* a2)
 {
     if (aParams->entityBuilderWeak.Expired())
@@ -447,8 +483,8 @@ void App::ResourcePatchModule::PatchPackageExtractorResults(
 
         if (patchExtractor.results.size > 0)
         {
-            PatchResultEntity(aResultObjects, patchExtractor.results, patchHeader.rootIndex);
-            PatchResultComponents(aResultObjects, patchExtractor.results);
+            MergeResultEntity(aResultObjects, patchExtractor.results, patchHeader.rootIndex);
+            MergeResultComponents(aResultObjects, patchExtractor.results);
         }
     }
 }
@@ -497,12 +533,57 @@ void App::ResourcePatchModule::PatchPackageExtractorResults(
 
         if (patchExtractor.results.size > 0)
         {
-            PatchResultComponents(aResultObjects, patchExtractor.results);
+            MergeResultComponents(aResultObjects, patchExtractor.results);
         }
     }
 }
 
-void App::ResourcePatchModule::PatchResultEntity(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
+void App::ResourcePatchModule::MergeAppearanceParts(const Red::Handle<Red::AppearanceResource>& aResource,
+                                                    const Red::Handle<Red::AppearanceDefinition>& aDefinition,
+                                                    Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
+                                                    const Red::JobGroup& aJobGroup, bool aForceParts)
+{
+    if (!aResource)
+        return;
+
+    if (aDefinition->partsValues.size == 0 || (!aForceParts && !aDefinition->visualTags.Contains(AppearancePartsTag)))
+        return;
+
+#ifndef NDEBUG
+    auto appPathStr = ResourcePathRegistry::Get()->ResolvePath(aResource->path);
+    auto appNameStr = aDefinition->name.ToString();
+#endif
+
+    Red::JobQueue jobQueue{aJobGroup};
+
+    for (const auto& part : aDefinition->partsValues)
+    {
+        auto token = Red::ResourceLoader::Get()->LoadAsync<Red::EntityTemplate>(part.resource.path);
+
+        jobQueue.Wait(token->job);
+        jobQueue.Dispatch([token = std::move(token), &aResultObjects]() {
+            if (token->IsFailed())
+                return;
+
+            auto& partHeader = token->resource->compiledDataHeader;
+
+            if (partHeader.IsEmpty())
+                return;
+
+            auto partExtractor = Red::ObjectPackageExtractor(partHeader);
+            partExtractor.disableImports = true;
+            partExtractor.disablePreInitialization = true;
+            partExtractor.ExtractSync();
+
+            if (partExtractor.results.size > 0)
+            {
+                MergeResultComponents(aResultObjects, partExtractor.results);
+            }
+        });
+    }
+}
+
+void App::ResourcePatchModule::MergeResultEntity(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
                                                  Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects,
                                                  int16_t aEntityIndex)
 {
@@ -521,7 +602,7 @@ void App::ResourcePatchModule::PatchResultEntity(Red::DynArray<Red::Handle<Red::
     }
 }
 
-void App::ResourcePatchModule::PatchResultComponents(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
+void App::ResourcePatchModule::MergeResultComponents(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
                                                      Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects)
 {
     for (auto& patchObject : aPatchObjects)

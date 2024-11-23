@@ -11,7 +11,7 @@ struct MeshMaterialsToken
 
 namespace Raw::CMesh
 {
-using MaterialLock = Core::OffsetPtr<0x218, Red::SharedMutex>;
+using MaterialLock = Core::OffsetPtr<0x218, Red::SharedSpinLock>;
 
 constexpr auto OnLoad = Core::RawFunc<
     /* addr = */ Red::AddressLib::CMesh_OnLoad,

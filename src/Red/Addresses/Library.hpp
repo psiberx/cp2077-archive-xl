@@ -71,6 +71,7 @@ constexpr uint32_t MeshMaterialBuffer_LoadMaterialAsync = 1609519068;
 constexpr uint32_t Entity_ReassembleAppearance = 1560690857;
 
 constexpr uint32_t EntityBuilder_ExtractComponentsJob = 489494088;
+constexpr uint32_t EntityBuilder_ScheduleExtractComponentsJob = 437791594;
 
 constexpr uint32_t EntityTemplate_OnLoad = 2741376473;
 constexpr uint32_t EntityTemplate_FindAppearance = 36838056;

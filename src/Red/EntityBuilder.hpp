@@ -37,7 +37,7 @@ struct EntityBuilder
     DynArray<Handle<IComponent>> components;           // C0
     DynArray<void*> unkD0;                             // D0
     DynArray<void*> unkE0;                             // E0
-    SharedMutex lock;                                  // F0
+    SharedSpinLock lock;                               // F0
     redTagList visualTags;                             // F8
     uint64_t unk108;                                   // 108
     Flags flags;                                       // 110
@@ -68,4 +68,8 @@ namespace Raw::EntityBuilder
 constexpr auto ExtractComponentsJob = Core::RawFunc<
     /* addr = */ Red::AddressLib::EntityBuilder_ExtractComponentsJob,
     /* type = */ void (*)(Red::EntityBuilderJobParams* aParams, void* a2)>();
+
+constexpr auto ScheduleExtractComponentsJob = Core::RawFunc<
+    /* addr = */ Red::AddressLib::EntityBuilder_ScheduleExtractComponentsJob,
+    /* type = */ void (*)(Red::JobQueue& aJobQueue, void* a2, Red::EntityBuilderJobParams* aParams)>();
 }

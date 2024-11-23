@@ -164,7 +164,7 @@ RED4EXT_ASSERT_OFFSET(QuestContext, phaseStack, 0xF8);
 
 namespace Raw::QuestsSystem
 {
-using Mutex = Core::OffsetPtr<0x60, Red::SharedMutex>;
+using Mutex = Core::OffsetPtr<0x60, Red::SharedSpinLock>;
 using NodeHashMap = Core::OffsetPtr<0x78, Red::HashMap<Red::QuestNodePathHash, Red::QuestNodePath>>;
 using QuestList = Core::OffsetPtr<0xA8, Red::DynArray<Red::ResourcePath>>;
 using FactManager = Core::OffsetPtr<0xF8, Red::FactManager*>;
