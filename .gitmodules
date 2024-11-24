@@ -1,12 +1,12 @@
 [submodule "vendor/RED4ext.SDK"]
 	path = vendor/RED4ext.SDK
-	url = git@github.com:psiberx/RED4ext.SDK.git
+	url = https://github.com/psiberx/RED4ext.SDK.git
 [submodule "vendor/wil"]
 	path = vendor/wil
-	url = git@github.com:microsoft/wil.git
+	url = https://github.com/microsoft/wil.git
 [submodule "vendor/semver"]
 	path = vendor/semver
-	url = git@github.com:Neargye/semver.git
+	url = https://github.com/Neargye/semver.git
 [submodule "vendor/nameof"]
 	path = vendor/nameof
-	url = git@github.com:Neargye/nameof.git
+	url = https://github.com/Neargye/nameof.git
