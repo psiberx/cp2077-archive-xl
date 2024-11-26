@@ -364,9 +364,14 @@ void App::CustomizationModule::MergeCustomOptions(Red::DynArray<CustomizationOpt
                         continue;
                 }
             }
-            else
+            else if (sourceOption->uiSlot)
             {
                 if (targetOption->uiSlot != sourceOption->uiSlot)
+                    continue;
+            }
+            else if (sourceOption->link)
+            {
+                if (targetOption->link != sourceOption->link)
                     continue;
             }
 
