@@ -61,7 +61,7 @@ void App::PuppetStateHandler::OnItemEquipped(const Red::ItemID& aItemID, Red::Tw
 #ifndef NDEBUG
     auto debugSlotName = Red::ToStringDebug(aSlotID);
     auto debugItemName = Red::ToStringDebug(aItemID.tdbid);
-    Core::Log::Debug("|PuppetStateHandler| [event=OnItemEquipped slot={} item={}]",
+    Core::Log::Debug("|PuppetState| [event=OnItemEquipped slot={} item={}]",
                      debugSlotName.c_str(), debugItemName.c_str());
 #endif
 
@@ -73,7 +73,7 @@ void App::PuppetStateHandler::OnItemEquippedVisual(const Red::ItemID& aItemID, R
 #ifndef NDEBUG
     auto debugSlotName = Red::ToStringDebug(aSlotID);
     auto debugItemName = Red::ToStringDebug(aItemID.tdbid);
-    Core::Log::Debug("|PuppetStateHandler| [event=OnItemEquippedVisual slot={} item={}]",
+    Core::Log::Debug("|PuppetState| [event=OnItemEquippedVisual slot={} item={}]",
                      debugSlotName.c_str(), debugItemName.c_str());
 #endif
 
@@ -85,7 +85,7 @@ void App::PuppetStateHandler::OnItemEquippedComplete(const Red::ItemID& aItemID,
 #ifndef NDEBUG
     auto debugSlotName = Red::ToStringDebug(aSlotID);
     auto debugItemName = Red::ToStringDebug(aItemID.tdbid);
-    Core::Log::Debug("|PuppetStateHandler| [event=OnItemEquippedComplete slot={} item={}]",
+    Core::Log::Debug("|PuppetState| [event=OnItemEquippedComplete slot={} item={}]",
                      debugSlotName.c_str(), debugItemName.c_str());
 #endif
 
@@ -97,7 +97,7 @@ void App::PuppetStateHandler::OnItemUnequipped(const Red::ItemID& aItemID, Red::
 #ifndef NDEBUG
     auto debugSlotName = Red::ToStringDebug(aSlotID);
     auto debugItemName = Red::ToStringDebug(aItemID.tdbid);
-    Core::Log::Debug("|PuppetStateHandler| [event=OnItemUnequipped slot={} item={}]",
+    Core::Log::Debug("|PuppetState| [event=OnItemUnequipped slot={} item={}]",
                      debugSlotName.c_str(), debugItemName.c_str());
 #endif
 
@@ -109,7 +109,7 @@ void App::PuppetStateHandler::OnItemUnequippedComplete(const Red::ItemID& aItemI
 #ifndef NDEBUG
     auto debugSlotName = Red::ToStringDebug(aSlotID);
     auto debugItemName = Red::ToStringDebug(aItemID.tdbid);
-    Core::Log::Debug("|PuppetStateHandler| [event=OnItemUnequippedComplete slot={} item={}]",
+    Core::Log::Debug("|PuppetState| [event=OnItemUnequippedComplete slot={} item={}]",
                      debugSlotName.c_str(), debugItemName.c_str());
 #endif
 
