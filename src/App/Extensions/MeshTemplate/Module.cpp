@@ -223,7 +223,18 @@ void App::MeshTemplateModule::ProcessMeshResource(const Core::SharedPtr<MeshStat
             continue;
 
         if (chunkName.hash == aSourceMesh->path.hash)
+        {
+            aMeshState->materials[chunkName] = static_cast<int32_t>(aMesh->materialEntries.size);
+            aMesh->materialEntries.EmplaceBack();
+
+            auto& materialEntry = aMesh->materialEntries.Back();
+            materialEntry.name = chunkName;
+            materialEntry.material = Red::MakeHandle<Red::CMaterialInstance>();
+            materialEntry.materialWeak = materialEntry.material;
+            materialEntry.isLocalInstance = true;
+
             continue;
+        }
 
         auto materialName = chunkName;
         auto templateName = chunkName;
@@ -474,7 +485,7 @@ void App::MeshTemplateModule::ExpandMaterialInstanceParams(Red::Handle<Red::CMat
                                                            const Core::SharedPtr<MeshState>& aMeshState,
                                                            Red::CName aMaterialName, Red::JobQueue& aJobQueue)
 {
-    for (int32_t i = aMaterialInstance->params.size - 1; i >= 0; --i)
+    for (auto i = static_cast<int32_t>(aMaterialInstance->params.size) - 1; i >= 0; --i)
     {
         const auto& materialParam = aMaterialInstance->params[i];
 
