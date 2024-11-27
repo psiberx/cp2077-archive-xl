@@ -229,8 +229,8 @@ void App::MeshExtension::ProcessMeshResource(const Core::SharedPtr<MeshState>& a
 
             auto& materialEntry = aMesh->materialEntries.Back();
             materialEntry.name = chunkName;
-            materialEntry.material = Red::MakeHandle<Red::CMaterialInstance>();
-            materialEntry.materialWeak = materialEntry.material;
+            materialEntry.material = s_dummyMaterial;
+            materialEntry.materialWeak = s_dummyMaterial;
             materialEntry.isLocalInstance = true;
 
             continue;
@@ -346,7 +346,7 @@ void App::MeshExtension::ProcessMeshResource(const Core::SharedPtr<MeshState>& a
             auto materialIndex = aMeshState->GetMaterialEntryIndex(chunkName);
             if (materialIndex >= 0)
             {
-                (*aFinalMaterials)[chunkIndex] = aMesh->materialEntries[materialIndex].material;
+                (*aFinalMaterials)[chunkIndex] = aMesh->materialEntries[materialIndex].materialWeak;
             }
             else
             {
@@ -408,7 +408,7 @@ void App::MeshExtension::ProcessMeshResource(const Core::SharedPtr<MeshState>& a
             auto materialIndex = aMeshState->GetMaterialEntryIndex(chunkName);
             if (materialIndex >= 0)
             {
-                (*aFinalMaterials)[chunkIndex] = aMesh->materialEntries[materialIndex].material;
+                (*aFinalMaterials)[chunkIndex] = aMesh->materialEntries[materialIndex].materialWeak;
             }
             else
             {
