@@ -90,7 +90,8 @@ private:
     void MergeCustomGroups(Red::DynArray<CustomizationGroup>& aTargetGroups,
                            Red::DynArray<CustomizationGroup>& aSourceGroups);
     void MergeCustomOptions(Red::DynArray<CustomizationOption>& aTargetOptions,
-                            Red::DynArray<CustomizationOption>& aSourceOptions);
+                            Red::DynArray<CustomizationOption>& aSourceOptions,
+                            bool aSlotsAndLinks);
 
     void RemoveCustomEntries();
     void RemoveCustomEntries(CustomizationResourceToken& aTargetResource);

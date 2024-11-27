@@ -280,7 +280,7 @@ void App::CustomizationModule::MergeCustomEntries(CustomizationResourceToken& aT
         Red::WaitForResource(aTargetResource, std::chrono::milliseconds(250));
         if (!aTargetResource.instance->finished)
         {
-            LogWarning("|{}| Game customization resource is not ready.", ModuleName);
+            LogError("|{}| Game customization resource is not ready.", ModuleName);
             return;
         }
     }
@@ -291,7 +291,7 @@ void App::CustomizationModule::MergeCustomEntries(CustomizationResourceToken& aT
     {
         if (!customResource->finished)
         {
-            LogWarning("|{}| Mod customization resource is not ready.", ModuleName);
+            LogError("|{}| Mod customization resource is not ready.", ModuleName);
             continue;
         }
 
@@ -301,9 +301,13 @@ void App::CustomizationModule::MergeCustomEntries(CustomizationResourceToken& aT
         MergeCustomGroups(gameData->bodyGroups, customData->bodyGroups);
         MergeCustomGroups(gameData->headGroups, customData->headGroups);
 
-        MergeCustomOptions(gameData->armsCustomizationOptions, customData->armsCustomizationOptions);
-        MergeCustomOptions(gameData->bodyCustomizationOptions, customData->bodyCustomizationOptions);
-        MergeCustomOptions(gameData->headCustomizationOptions, customData->headCustomizationOptions);
+        MergeCustomOptions(gameData->armsCustomizationOptions, customData->armsCustomizationOptions, false);
+        MergeCustomOptions(gameData->bodyCustomizationOptions, customData->bodyCustomizationOptions, false);
+        MergeCustomOptions(gameData->headCustomizationOptions, customData->headCustomizationOptions, false);
+
+        MergeCustomOptions(gameData->armsCustomizationOptions, customData->armsCustomizationOptions, true);
+        MergeCustomOptions(gameData->bodyCustomizationOptions, customData->bodyCustomizationOptions, true);
+        MergeCustomOptions(gameData->headCustomizationOptions, customData->headCustomizationOptions, true);
     }
 
     if (!m_hairColorNames.empty())
@@ -333,15 +337,41 @@ void App::CustomizationModule::MergeCustomGroups(Red::DynArray<CustomizationGrou
 }
 
 void App::CustomizationModule::MergeCustomOptions(Red::DynArray<CustomizationOption>& aTargetOptions,
-                                                  Red::DynArray<CustomizationOption>& aSourceOptions)
+                                                  Red::DynArray<CustomizationOption>& aSourceOptions,
+                                                  bool aSlotsAndLinks)
 {
     for (auto sourceOption : aSourceOptions)
     {
+        if (aSlotsAndLinks)
+        {
+            if (sourceOption->name || (!sourceOption->uiSlot && !sourceOption->link))
+                continue;
+        }
+        else
+        {
+            if (!sourceOption->name)
+                continue;
+        }
+
         bool isExistingOption = false;
 
         for (auto& targetOption : aTargetOptions)
         {
-            if (sourceOption->name)
+            if (aSlotsAndLinks)
+            {
+                if (sourceOption->uiSlot)
+                {
+                    if (targetOption->uiSlot != sourceOption->uiSlot)
+                        continue;
+                }
+
+                if (sourceOption->link)
+                {
+                    if (targetOption->link != sourceOption->link)
+                        continue;
+                }
+            }
+            else
             {
                 if (targetOption->name != sourceOption->name)
                     continue;
@@ -364,22 +394,17 @@ void App::CustomizationModule::MergeCustomOptions(Red::DynArray<CustomizationOpt
                         continue;
                 }
             }
-            else if (sourceOption->uiSlot)
-            {
-                if (targetOption->uiSlot != sourceOption->uiSlot)
-                    continue;
-            }
-            else if (sourceOption->link)
-            {
-                if (targetOption->link != sourceOption->link)
-                    continue;
-            }
 
             isExistingOption = true;
 
             if (targetOption->GetNativeType() != sourceOption->GetNativeType())
-                // TODO: Warning
+            {
+                LogWarning("|{}| Option \"{}\" can't be merged: expected {}, got {}.",
+                           ModuleName, targetOption->name.ToString(),
+                           targetOption->GetNativeType()->GetName().ToString(),
+                           sourceOption->GetNativeType()->GetName().ToString());
                 break;
+            }
 
             if (targetOption->GetNativeType()->IsA(s_AppInfoType))
             {
@@ -481,7 +506,7 @@ void App::CustomizationModule::MergeCustomOptions(Red::DynArray<CustomizationOpt
             }
         }
 
-        if (!isExistingOption)
+        if (!isExistingOption && !aSlotsAndLinks && sourceOption->name)
         {
             aTargetOptions.EmplaceBack(sourceOption);
 
