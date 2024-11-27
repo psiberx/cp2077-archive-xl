@@ -1,12 +1,12 @@
 #pragma once
 
-#include "App/Extensions/ModuleBase.hpp"
+#include "App/Extensions/ExtensionBase.hpp"
 
 namespace App
 {
-struct PuppetStateConfig : ModuleConfig
+struct PuppetStateConfig : ExtensionConfig
 {
-    using ModuleConfig::ModuleConfig;
+    using ExtensionConfig::ExtensionConfig;
 
     bool IsDefined() override;
     void LoadYAML(const YAML::Node& aNode) override;

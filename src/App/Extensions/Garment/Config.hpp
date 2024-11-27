@@ -1,13 +1,13 @@
 #pragma once
 
-#include "App/Extensions/ModuleBase.hpp"
+#include "App/Extensions/ExtensionBase.hpp"
 #include "App/Extensions/Garment/Tags.hpp"
 
 namespace App
 {
-struct GarmentOverrideConfig : ModuleConfig
+struct GarmentOverrideConfig : ExtensionConfig
 {
-    using ModuleConfig::ModuleConfig;
+    using ExtensionConfig::ExtensionConfig;
 
     bool IsDefined() override;
     void LoadYAML(const YAML::Node& aNode) override;

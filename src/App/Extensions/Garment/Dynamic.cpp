@@ -1,6 +1,6 @@
 #include "Dynamic.hpp"
 #include "App/Extensions/Garment/Wrapper.hpp"
-#include "App/Extensions/PuppetState/Module.hpp"
+#include "App/Extensions/PuppetState/Extension.hpp"
 #include "App/Utils/Num.hpp"
 #include "App/Utils/Str.hpp"
 #include "Red/AppearanceChanger.hpp"
@@ -38,9 +38,9 @@ constexpr auto VariantAttr = Red::CName("variant");
 
 constexpr auto GenderSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.Gender");
 constexpr auto CameraSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.Camera");
-constexpr auto BodyTypeSuffix = App::PuppetStateModule::BodyTypeSuffixID;
-constexpr auto ArmsStateSuffix = App::PuppetStateModule::ArmsStateSuffixID;
-constexpr auto FeetStateSuffix = App::PuppetStateModule::FeetStateSuffixID;
+constexpr auto BodyTypeSuffix = App::PuppetStateExtension::BodyTypeSuffixID;
+constexpr auto ArmsStateSuffix = App::PuppetStateExtension::ArmsStateSuffixID;
+constexpr auto FeetStateSuffix = App::PuppetStateExtension::FeetStateSuffixID;
 constexpr auto InnerSleevesSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.Partial");
 
 constexpr auto MaleAttrValue = "m";
@@ -49,7 +49,7 @@ constexpr auto MaleSuffixValue = "Male";
 constexpr auto FemaleSuffixValue = "Female";
 
 constexpr auto DefaultBodyTypeAttrValue = "base_body";
-constexpr auto DefaultBodyTypeSuffixValue = App::PuppetStateModule::BaseBodyName;
+constexpr auto DefaultBodyTypeSuffixValue = App::PuppetStateExtension::BaseBodyName;
 constexpr auto DefaultFeetStateAttrValue = "flat";
 constexpr auto DefaultFeetStateSuffixValue = "Flat";
 

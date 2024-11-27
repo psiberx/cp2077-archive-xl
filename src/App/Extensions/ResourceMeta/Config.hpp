@@ -1,6 +1,6 @@
 #pragma once
 
-#include "App/Extensions/ModuleBase.hpp"
+#include "App/Extensions/ExtensionBase.hpp"
 
 namespace App
 {
@@ -31,9 +31,9 @@ struct ResourceFix
     Core::Map<Red::CName, std::string> context;
 };
 
-struct ResourceMetaConfig : ModuleConfig
+struct ResourceMetaConfig : ExtensionConfig
 {
-    using ModuleConfig::ModuleConfig;
+    using ExtensionConfig::ExtensionConfig;
 
     bool IsDefined() override;
     void LoadYAML(const YAML::Node& aNode) override;

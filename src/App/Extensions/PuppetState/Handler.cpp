@@ -1,7 +1,7 @@
 #include "Handler.hpp"
-#include "App/Extensions/Attachment/Module.hpp"
-#include "App/Extensions/Garment/Module.hpp"
-#include "App/Extensions/PuppetState/Module.hpp"
+#include "App/Extensions/Attachment/Extension.hpp"
+#include "App/Extensions/Garment/Extension.hpp"
+#include "App/Extensions/PuppetState/Extension.hpp"
 #include "Core/Facades/Log.hpp"
 #include "Red/ItemObject.hpp"
 #include "Red/TweakDB.hpp"
@@ -23,13 +23,13 @@ constexpr auto HideFootwearTag = Red::CName("hide_S1");
 
 constexpr auto HighHeelsTag = Red::CName("HighHeels");
 constexpr auto FlatShoesTag = Red::CName("FlatShoes");
-constexpr auto ForceFlatFeetTag = App::GarmentModule::ForceFlatFeetTag;
+constexpr auto ForceFlatFeetTag = App::GarmentExtension::ForceFlatFeetTag;
 
 constexpr auto CameraSuffix = {Red::TweakDBID("itemsFactoryAppearanceSuffix.Camera")};
 constexpr auto InnerSleevesSuffix = {Red::TweakDBID("itemsFactoryAppearanceSuffix.Partial")};
-constexpr auto ArmsStateSuffix = {App::PuppetStateModule::ArmsStateSuffixID};
-constexpr auto FeetStateSuffixes = {App::PuppetStateModule::FeetStateSuffixID,
-                                    App::PuppetStateModule::LegsStateSuffixID};
+constexpr auto ArmsStateSuffix = {App::PuppetStateExtension::ArmsStateSuffixID};
+constexpr auto FeetStateSuffixes = {App::PuppetStateExtension::FeetStateSuffixID,
+                                    App::PuppetStateExtension::LegsStateSuffixID};
 
 constexpr auto EmptyAppearanceName = Red::CName("empty_appearance_default");
 
@@ -44,12 +44,12 @@ constexpr auto ProjectileLauncherType = Red::CName("ProjectileLauncher");
 App::PuppetStateHandler::PuppetStateHandler(Red::Entity* aPuppet)
     : m_puppetWeak(Red::ToWeakHandle(aPuppet))
     , m_transactionSystem(Red::GetGameSystem<Red::ITransactionSystem>())
-    , m_torsoSlots(AttachmentModule::GetRelatedSlots(TorsoSlot))
-    , m_feetSlots(AttachmentModule::GetRelatedSlots(FeetSlot))
-    , m_headDependentSlots(AttachmentModule::GetDependentSlots(HeadSlot))
-    , m_torsoDependentSlots(AttachmentModule::GetDependentSlots(TorsoSlot))
-    , m_handsDependentSlots(AttachmentModule::GetDependentSlots(HandsSlot))
-    , m_feetDependentSlots(AttachmentModule::GetDependentSlots(FeetSlot))
+    , m_torsoSlots(AttachmentExtension::GetRelatedSlots(TorsoSlot))
+    , m_feetSlots(AttachmentExtension::GetRelatedSlots(FeetSlot))
+    , m_headDependentSlots(AttachmentExtension::GetDependentSlots(HeadSlot))
+    , m_torsoDependentSlots(AttachmentExtension::GetDependentSlots(TorsoSlot))
+    , m_handsDependentSlots(AttachmentExtension::GetDependentSlots(HandsSlot))
+    , m_feetDependentSlots(AttachmentExtension::GetDependentSlots(FeetSlot))
     , m_armsState(PuppetArmsState::BaseArms)
     , m_feetState(PuppetFeetState::None)
 {

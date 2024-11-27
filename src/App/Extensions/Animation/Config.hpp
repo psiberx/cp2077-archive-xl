@@ -1,6 +1,6 @@
 #pragma once
 
-#include "App/Extensions/ModuleBase.hpp"
+#include "App/Extensions/ExtensionBase.hpp"
 
 namespace App
 {
@@ -19,9 +19,9 @@ struct AnimationEntry
     Core::Vector<std::string> variables;
 };
 
-struct AnimationsConfig : ModuleConfig
+struct AnimationsConfig : ExtensionConfig
 {
-    using ModuleConfig::ModuleConfig;
+    using ExtensionConfig::ExtensionConfig;
 
     bool IsDefined() override;
     void LoadYAML(const YAML::Node& aNode) override;

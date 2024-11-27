@@ -1,20 +1,20 @@
 #include "ExtensionService.hpp"
-#include "App/Extensions/Animation/Module.hpp"
-#include "App/Extensions/Attachment/Module.hpp"
-#include "App/Extensions/Customization/Module.hpp"
-#include "App/Extensions/FactoryIndex/Module.hpp"
-#include "App/Extensions/Garment/Module.hpp"
-#include "App/Extensions/InkSpawner/Module.hpp"
-#include "App/Extensions/Journal/Module.hpp"
-#include "App/Extensions/Localization/Module.hpp"
-#include "App/Extensions/Mesh/Module.hpp"
-#include "App/Extensions/PuppetState/Module.hpp"
-#include "App/Extensions/QuestPhase/Module.hpp"
-#include "App/Extensions/ResourceLink/Module.hpp"
-#include "App/Extensions/ResourceMeta/Module.hpp"
-#include "App/Extensions/ResourcePatch/Module.hpp"
-#include "App/Extensions/Transmog/Module.hpp"
-#include "App/Extensions/WorldStreaming/Module.hpp"
+#include "App/Extensions/Animation/Extension.hpp"
+#include "App/Extensions/Attachment/Extension.hpp"
+#include "App/Extensions/Customization/Extension.hpp"
+#include "App/Extensions/FactoryIndex/Extension.hpp"
+#include "App/Extensions/Garment/Extension.hpp"
+#include "App/Extensions/InkSpawner/Extension.hpp"
+#include "App/Extensions/Journal/Extension.hpp"
+#include "App/Extensions/Localization/Extension.hpp"
+#include "App/Extensions/Mesh/Extension.hpp"
+#include "App/Extensions/PuppetState/Extension.hpp"
+#include "App/Extensions/QuestPhase/Extension.hpp"
+#include "App/Extensions/ResourceLink/Extension.hpp"
+#include "App/Extensions/ResourceMeta/Extension.hpp"
+#include "App/Extensions/ResourcePatch/Extension.hpp"
+#include "App/Extensions/Transmog/Extension.hpp"
+#include "App/Extensions/WorldStreaming/Extension.hpp"
 #include "Red/GameApplication.hpp"
 #include "Red/GameEngine.hpp"
 #include "Red/ResourceLoader.hpp"
@@ -26,24 +26,24 @@ App::ExtensionService::ExtensionService(std::filesystem::path aBundlePath)
 
 void App::ExtensionService::OnBootstrap()
 {
-    m_loader = Core::MakeUnique<ModuleLoader>(m_bundlePath, L".xl");
+    m_loader = Core::MakeUnique<ExtensionLoader>(m_bundlePath, L".xl");
 
-    m_loader->Add<ResourceMetaModule>();
-    m_loader->Add<ResourceLinkModule>();
-    m_loader->Add<ResourcePatchModule>();
-    m_loader->Add<MeshModule>();
-    m_loader->Add<FactoryIndexModule>();
-    m_loader->Add<LocalizationModule>();
-    m_loader->Add<JournalModule>();
-    m_loader->Add<AnimationModule>();
-    m_loader->Add<TransmogModule>();
-    m_loader->Add<AttachmentModule>();
-    m_loader->Add<CustomizationModule>();
-    m_loader->Add<GarmentModule>();
-    m_loader->Add<PuppetStateModule>();
-    m_loader->Add<QuestPhaseModule>();
-    m_loader->Add<WorldStreamingModule>();
-    m_loader->Add<InkSpawnerModule>();
+    m_loader->Add<ResourceMetaExtension>();
+    m_loader->Add<ResourceLinkExtension>();
+    m_loader->Add<ResourcePatchExtension>();
+    m_loader->Add<MeshExtension>();
+    m_loader->Add<FactoryIndexExtension>();
+    m_loader->Add<LocalizationExtension>();
+    m_loader->Add<JournalExtension>();
+    m_loader->Add<AnimationExtension>();
+    m_loader->Add<TransmogExtension>();
+    m_loader->Add<AttachmentExtension>();
+    m_loader->Add<CustomizationExtension>();
+    m_loader->Add<GarmentExtension>();
+    m_loader->Add<PuppetStateExtension>();
+    m_loader->Add<QuestPhaseExtension>();
+    m_loader->Add<WorldStreamingExtension>();
+    m_loader->Add<InkSpawnerExtension>();
 
     HookOnceAfter<Raw::GameApplication::InitResourceDepot>([&]() {
         m_loader->Configure();

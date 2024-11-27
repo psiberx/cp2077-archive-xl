@@ -1,8 +1,8 @@
 #include "Facade.hpp"
 #include "App/Archives/ArchiveService.hpp"
 #include "App/Extensions/ExtensionService.hpp"
-#include "App/Extensions/Garment/Module.hpp"
-#include "App/Extensions/PuppetState/Module.hpp"
+#include "App/Extensions/Garment/Extension.hpp"
+#include "App/Extensions/PuppetState/Extension.hpp"
 #include "Core/Facades/Container.hpp"
 
 bool App::Facade::RegisterDir(Red::CString& aPath)
@@ -17,17 +17,17 @@ bool App::Facade::RegisterArchive(Red::CString& aPath)
 
 Red::CName App::Facade::GetBodyType(const Red::WeakHandle<Red::GameObject>& aPuppet)
 {
-    return PuppetStateModule::GetBodyType(aPuppet);
+    return PuppetStateExtension::GetBodyType(aPuppet);
 }
 
 void App::Facade::EnableGarmentOffsets()
 {
-    GarmentModule::EnableGarmentOffsets();
+    GarmentExtension::EnableGarmentOffsets();
 }
 
 void App::Facade::DisableGarmentOffsets()
 {
-    GarmentModule::DisableGarmentOffsets();
+    GarmentExtension::DisableGarmentOffsets();
 }
 
 void App::Facade::Reload()

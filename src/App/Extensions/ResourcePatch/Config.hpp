@@ -1,6 +1,6 @@
 #pragma once
 
-#include "App/Extensions/ModuleBase.hpp"
+#include "App/Extensions/ExtensionBase.hpp"
 
 namespace App
 {
@@ -10,9 +10,9 @@ struct ResourcePatchScope
     Core::Set<Red::ResourcePath> excludes;
 };
 
-struct ResourcePatchConfig : ModuleConfig
+struct ResourcePatchConfig : ExtensionConfig
 {
-    using ModuleConfig::ModuleConfig;
+    using ExtensionConfig::ExtensionConfig;
 
     bool IsDefined() override;
     void LoadYAML(const YAML::Node& aNode) override;

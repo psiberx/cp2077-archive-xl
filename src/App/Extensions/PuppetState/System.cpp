@@ -1,11 +1,11 @@
 #include "System.hpp"
-#include "Module.hpp"
+#include "Extension.hpp"
 
 Red::CString App::PuppetStateSystem::GetBodyTypeSuffix(Red::ItemID& aItemID,
                                                        const Red::WeakHandle<Red::GameObject>& aOwner,
                                                        const Red::Handle<Red::ItemsFactoryAppearanceSuffixBase_Record>&)
 {
-    return PuppetStateModule::GetBodyType(aOwner).ToString();
+    return PuppetStateExtension::GetBodyType(aOwner).ToString();
 }
 
 Red::CString App::PuppetStateSystem::GetArmsStateSuffix(Red::ItemID& aItemID,
@@ -17,7 +17,7 @@ Red::CString App::PuppetStateSystem::GetArmsStateSuffix(Red::ItemID& aItemID,
     constexpr auto MonowireStr = RTTI_ENUM_NAME_STR(PuppetArmsState::Monowire);
     constexpr auto ProjectileLauncherStr = RTTI_ENUM_NAME_STR(PuppetArmsState::ProjectileLauncher);
 
-    switch (PuppetStateModule::GetArmsState(aOwner))
+    switch (PuppetStateExtension::GetArmsState(aOwner))
     {
     case PuppetArmsState::BaseArms: return BaseArmsStr;
     case PuppetArmsState::MantisBlades: return MantisBladesStr;
@@ -36,7 +36,7 @@ Red::CString App::PuppetStateSystem::GetFeetStateSuffix(Red::ItemID& aItemID,
     constexpr auto HighHeelsStr = RTTI_ENUM_NAME_STR(PuppetFeetState::HighHeels);
     constexpr auto FlatShoesStr = RTTI_ENUM_NAME_STR(PuppetFeetState::FlatShoes);
 
-    switch (PuppetStateModule::GetFeetState(aOwner))
+    switch (PuppetStateExtension::GetFeetState(aOwner))
     {
     case PuppetFeetState::Flat: return FlatStr;
     case PuppetFeetState::Lifted: return LiftedStr;

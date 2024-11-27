@@ -1,10 +1,10 @@
 #pragma once
 
-#include "App/Extensions/ModuleBase.hpp"
+#include "App/Extensions/ExtensionBase.hpp"
 
 namespace App
 {
-struct LocalizationConfig : ModuleConfig
+struct LocalizationConfig : ExtensionConfig
 {
     bool IsDefined() override;
     void LoadYAML(const YAML::Node& aNode) override;

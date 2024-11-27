@@ -1,6 +1,6 @@
 #pragma once
 
-#include "App/Extensions/ModuleLoader.hpp"
+#include "App/Extensions/ExtensionLoader.hpp"
 #include "Core/Foundation/Feature.hpp"
 #include "Core/Hooking/HookingAgent.hpp"
 #include "Core/Logging/LoggingAgent.hpp"
@@ -21,7 +21,7 @@ protected:
     void OnBootstrap() override;
     void OnShutdown() override;
 
-    Core::UniquePtr<ModuleLoader> m_loader;
+    Core::UniquePtr<ExtensionLoader> m_loader;
     std::filesystem::path m_bundlePath;
     std::mutex m_reloadMutex;
 };
