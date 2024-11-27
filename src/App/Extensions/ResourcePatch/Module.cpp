@@ -480,7 +480,8 @@ void App::ResourcePatchModule::PatchPackageExtractorResults(
 
         if (patchExtractor.results.size > 0)
         {
-            MergeResultEntity(aResultObjects, patchExtractor.results, patchHeader.rootIndex);
+            MergeResultEntity(aResultObjects, patchExtractor.results,
+                              aTemplate->compiledDataHeader.rootIndex, patchHeader.rootIndex);
             MergeResultComponents(aResultObjects, patchExtractor.results);
         }
     }
@@ -582,19 +583,19 @@ void App::ResourcePatchModule::MergeAppearanceParts(const Red::Handle<Red::Appea
 
 void App::ResourcePatchModule::MergeResultEntity(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
                                                  Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects,
-                                                 int16_t aEntityIndex)
+                                                 int16_t aResultEntityIndex, int16_t aPatchEntityIndex)
 {
-    if (aEntityIndex == -1)
+    if (aResultEntityIndex < 0 || aResultEntityIndex >= aResultObjects.size)
         return;
 
-    if (aResultObjects.size > aEntityIndex && aPatchObjects.size > aEntityIndex)
+    if (aPatchEntityIndex < 0 || aPatchEntityIndex >= aPatchObjects.size)
+        return;
+
+    if (auto patchEntity = Red::Cast<Red::Entity>(aPatchObjects[aPatchEntityIndex]))
     {
-        if (auto patchEntity = Red::Cast<Red::Entity>(aPatchObjects[aEntityIndex]))
+        if (patchEntity->GetNativeType() != Red::GetClass<Red::Entity>())
         {
-            if (patchEntity->GetNativeType() != Red::GetClass<Red::Entity>())
-            {
-                aResultObjects[aEntityIndex] = std::move(patchEntity);
-            }
+            aResultObjects[aResultEntityIndex] = std::move(patchEntity);
         }
     }
 }

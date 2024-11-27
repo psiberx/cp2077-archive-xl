@@ -46,7 +46,8 @@ private:
                                      const Red::JobGroup& aJobGroup, bool aForceParts);
 
     static void MergeResultEntity(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
-                                  Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects, int16_t aEntityIndex);
+                                  Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects,
+                                  int16_t aResultEntityIndex, int16_t aPatchEntityIndex);
     static void MergeResultComponents(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
                                       Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects);
 
