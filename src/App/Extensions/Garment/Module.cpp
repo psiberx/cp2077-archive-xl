@@ -7,7 +7,7 @@
 
 namespace
 {
-constexpr auto ModuleName = "GarmentOverride";
+constexpr auto ModuleName = "Garment";
 
 constexpr auto BodyPartTag = Red::CName("PlayerBodyPart");
 
@@ -29,12 +29,12 @@ Red::SharedSpinLock s_dynamicTagsLock;
 Core::Map<uint64_t, Core::Vector<Red::CName>> s_dynamicTagsCache;
 }
 
-std::string_view App::GarmentOverrideModule::GetName()
+std::string_view App::GarmentModule::GetName()
 {
     return ModuleName;
 }
 
-bool App::GarmentOverrideModule::Load()
+bool App::GarmentModule::Load()
 {
     HookBefore<Raw::ItemFactoryRequest::LoadAppearance>(&OnLoadAppearanceResource).OrThrow();
     HookBefore<Raw::ItemFactoryAppearanceChangeRequest::LoadAppearance>(&OnChangeAppearanceResource).OrThrow();
@@ -69,7 +69,7 @@ bool App::GarmentOverrideModule::Load()
     return true;
 }
 
-bool App::GarmentOverrideModule::Unload()
+bool App::GarmentModule::Unload()
 {
     Unhook<Raw::ItemFactoryRequest::LoadAppearance>();
     Unhook<Raw::ItemFactoryAppearanceChangeRequest::LoadAppearance>();
@@ -99,7 +99,7 @@ bool App::GarmentOverrideModule::Unload()
     return true;
 }
 
-void App::GarmentOverrideModule::Configure()
+void App::GarmentModule::Configure()
 {
     std::unique_lock _(s_mutex);
     for (const auto& unit : m_configs)
@@ -111,7 +111,7 @@ void App::GarmentOverrideModule::Configure()
     }
 }
 
-void App::GarmentOverrideModule::OnLoadAppearanceResource(Red::ItemFactoryRequest* aRequest)
+void App::GarmentModule::OnLoadAppearanceResource(Red::ItemFactoryRequest* aRequest)
 {
     auto& entityWeak = Raw::ItemFactoryRequest::Entity::Ref(aRequest);
     auto& templateToken = Raw::ItemFactoryRequest::EntityTemplate::Ref(aRequest);
@@ -143,7 +143,7 @@ void App::GarmentOverrideModule::OnLoadAppearanceResource(Red::ItemFactoryReques
     }
 }
 
-void App::GarmentOverrideModule::OnChangeAppearanceResource(Red::ItemFactoryAppearanceChangeRequest* aRequest)
+void App::GarmentModule::OnChangeAppearanceResource(Red::ItemFactoryAppearanceChangeRequest* aRequest)
 {
     auto& entityWeak = Raw::ItemFactoryAppearanceChangeRequest::Entity::Ref(aRequest);
     auto& templateToken = Raw::ItemFactoryAppearanceChangeRequest::EntityTemplate::Ref(aRequest);
@@ -175,7 +175,7 @@ void App::GarmentOverrideModule::OnChangeAppearanceResource(Red::ItemFactoryAppe
     }
 }
 
-Red::TemplateAppearance* App::GarmentOverrideModule::OnResolveAppearance(Red::EntityTemplate* aTemplate,
+Red::TemplateAppearance* App::GarmentModule::OnResolveAppearance(Red::EntityTemplate* aTemplate,
                                                                          Red::CName aSelector)
 {
     if (aSelector == EmptyAppearanceName)
@@ -236,7 +236,7 @@ Red::TemplateAppearance* App::GarmentOverrideModule::OnResolveAppearance(Red::En
     return appearance;
 }
 
-void App::GarmentOverrideModule::OnResolveDefinition(Red::AppearanceResource* aResource,
+void App::GarmentModule::OnResolveDefinition(Red::AppearanceResource* aResource,
                                                      Red::Handle<Red::AppearanceDefinition>* aDefinition,
                                                      Red::CName aSelector, uint32_t a4, uint8_t a5)
 {
@@ -284,7 +284,7 @@ void App::GarmentOverrideModule::OnResolveDefinition(Red::AppearanceResource* aR
     }
 }
 
-void* App::GarmentOverrideModule::OnResolveSuffixes(Red::CString& aResult,
+void* App::GarmentModule::OnResolveSuffixes(Red::CString& aResult,
                                                     Red::Handle<Red::GameObject>& aOwner,
                                                     Red::Handle<Red::GameObject>& aOwnerOverride,
                                                     const Red::TweakDBRecord& aItemRecord,
@@ -303,7 +303,7 @@ void* App::GarmentOverrideModule::OnResolveSuffixes(Red::CString& aResult,
     return Raw::AppearanceChanger::GetSuffixes(aResult, aOwner, aOwnerOverride, aItemRecord, aItemID);
 }
 
-void App::GarmentOverrideModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset* aPreset,
+void App::GarmentModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset* aPreset,
                                                  Red::ResourcePath aEntityPath, Red::CName aAppearanceName,
                                                  Red::TagList& aFinalTags)
 {
@@ -433,7 +433,7 @@ void App::GarmentOverrideModule::OnGetVisualTags(Red::AppearanceNameVisualTagsPr
     s_dynamicTagsCache.insert_or_assign(cacheKey, std::move(dynamicTags));
 }
 
-void App::GarmentOverrideModule::OnFindState(uintptr_t, Red::GarmentAssemblerState* aState,
+void App::GarmentModule::OnFindState(uintptr_t, Red::GarmentAssemblerState* aState,
                                              Red::WeakHandle<Red::Entity>& aEntityWeak)
 {
     if (aState->unk00)
@@ -446,7 +446,7 @@ void App::GarmentOverrideModule::OnFindState(uintptr_t, Red::GarmentAssemblerSta
     }
 }
 
-void App::GarmentOverrideModule::OnAddItem(Red::GarmentAssemblerState* aState,
+void App::GarmentModule::OnAddItem(Red::GarmentAssemblerState* aState,
                                            Red::GarmentItemAddRequest& aRequest)
 {
     std::unique_lock _(s_mutex);
@@ -463,7 +463,7 @@ void App::GarmentOverrideModule::OnAddItem(Red::GarmentAssemblerState* aState,
     }
 }
 
-void App::GarmentOverrideModule::OnAddCustomItem(Red::GarmentAssemblerState* aState,
+void App::GarmentModule::OnAddCustomItem(Red::GarmentAssemblerState* aState,
                                                  Red::GarmentItemAddCustomRequest& aRequest)
 {
     std::unique_lock _(s_mutex);
@@ -481,7 +481,7 @@ void App::GarmentOverrideModule::OnAddCustomItem(Red::GarmentAssemblerState* aSt
     }
 }
 
-void App::GarmentOverrideModule::OnChangeItem(Red::GarmentAssemblerState* aState,
+void App::GarmentModule::OnChangeItem(Red::GarmentAssemblerState* aState,
                                               Red::GarmentItemChangeRequest& aRequest)
 {
     std::unique_lock _(s_mutex);
@@ -498,7 +498,7 @@ void App::GarmentOverrideModule::OnChangeItem(Red::GarmentAssemblerState* aState
     }
 }
 
-void App::GarmentOverrideModule::OnChangeCustomItem(Red::GarmentAssemblerState* aState,
+void App::GarmentModule::OnChangeCustomItem(Red::GarmentAssemblerState* aState,
                                                     Red::GarmentItemChangeCustomRequest& aRequest)
 {
     std::unique_lock _(s_mutex);
@@ -516,7 +516,7 @@ void App::GarmentOverrideModule::OnChangeCustomItem(Red::GarmentAssemblerState* 
     }
 }
 
-void App::GarmentOverrideModule::OnRemoveItem(uintptr_t, Red::WeakHandle<Red::Entity>& aEntityWeak,
+void App::GarmentModule::OnRemoveItem(uintptr_t, Red::WeakHandle<Red::Entity>& aEntityWeak,
                                               Red::GarmentItemRemoveRequest& aRequest)
 {
     if (auto entity = aEntityWeak.Lock())
@@ -535,7 +535,7 @@ void App::GarmentOverrideModule::OnRemoveItem(uintptr_t, Red::WeakHandle<Red::En
     }
 }
 
-void App::GarmentOverrideModule::OnRegisterPart(uintptr_t, Red::Handle<Red::EntityTemplate>& aPart,
+void App::GarmentModule::OnRegisterPart(uintptr_t, Red::Handle<Red::EntityTemplate>& aPart,
                                                 Red::Handle<Red::ComponentsStorage>& aComponentStorage,
                                                 Red::Handle<Red::AppearanceDefinition>& aAppearance)
 {
@@ -547,7 +547,7 @@ void App::GarmentOverrideModule::OnRegisterPart(uintptr_t, Red::Handle<Red::Enti
     UpdatePartAssignments(aComponentStorage->components, aPart->path);
 }
 
-uintptr_t App::GarmentOverrideModule::OnProcessGarment(Red::SharedPtr<Red::GarmentProcessor>& aProcessor, uintptr_t a2,
+uintptr_t App::GarmentModule::OnProcessGarment(Red::SharedPtr<Red::GarmentProcessor>& aProcessor, uintptr_t a2,
                                                        uintptr_t a3, Red::GarmentProcessorParams* aParams)
 {
     if (!aParams)
@@ -570,7 +570,7 @@ uintptr_t App::GarmentOverrideModule::OnProcessGarment(Red::SharedPtr<Red::Garme
     return result;
 }
 
-void App::GarmentOverrideModule::OnProcessGarmentMesh(Raw::GarmentAssembler::ProcessMesh aCallback,
+void App::GarmentModule::OnProcessGarmentMesh(Raw::GarmentAssembler::ProcessMesh aCallback,
                                                       Red::GarmentProcessor* aProcessor, uint32_t aIndex,
                                                       const Red::Handle<Red::EntityTemplate>& aPartTemplate,
                                                       const Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,
@@ -628,7 +628,7 @@ void App::GarmentOverrideModule::OnProcessGarmentMesh(Raw::GarmentAssembler::Pro
 //     return offset;
 // }
 
-void App::GarmentOverrideModule::OnComputeGarment(uintptr_t, Red::Handle<Red::Entity>& aEntity,
+void App::GarmentModule::OnComputeGarment(uintptr_t, Red::Handle<Red::Entity>& aEntity,
                                                   Red::DynArray<int32_t>& aOffsets,
                                                   Red::SharedPtr<Red::GarmentComputeData>& aData,
                                                   uintptr_t, uintptr_t, uintptr_t, bool)
@@ -652,7 +652,7 @@ void App::GarmentOverrideModule::OnComputeGarment(uintptr_t, Red::Handle<Red::En
     }
 }
 
-void App::GarmentOverrideModule::OnReassembleAppearance(Red::Entity* aEntity, uintptr_t, uintptr_t, uintptr_t,
+void App::GarmentModule::OnReassembleAppearance(Red::Entity* aEntity, uintptr_t, uintptr_t, uintptr_t,
                                                         uintptr_t, uintptr_t)
 {
     std::unique_lock _(s_mutex);
@@ -670,13 +670,13 @@ void App::GarmentOverrideModule::OnReassembleAppearance(Red::Entity* aEntity, ui
     }
 }
 
-void App::GarmentOverrideModule::OnGameDetach()
+void App::GarmentModule::OnGameDetach()
 {
     std::unique_lock _(s_mutex);
     s_stateManager->ClearStates();
 }
 
-void App::GarmentOverrideModule::RegisterOffsetOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
+void App::GarmentModule::RegisterOffsetOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
                                                          Red::Handle<Red::AppearanceDefinition>& aApperance,
                                                          int32_t aOffset)
 {
@@ -686,7 +686,7 @@ void App::GarmentOverrideModule::RegisterOffsetOverrides(Core::SharedPtr<EntityS
     }
 }
 
-void App::GarmentOverrideModule::RegisterComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
+void App::GarmentModule::RegisterComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
                                                             Red::Handle<Red::AppearanceDefinition>& aApperance)
 {
     RegisterComponentOverrides(aEntityState, aHash, aApperance->partsOverrides);
@@ -700,7 +700,7 @@ void App::GarmentOverrideModule::RegisterComponentOverrides(Core::SharedPtr<Enti
     }
 }
 
-void App::GarmentOverrideModule::RegisterComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
+void App::GarmentModule::RegisterComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
                                                             Red::DynArray<Red::AppearancePartOverrides>& aOverrides)
 {
     for (const auto& partOverrides : aOverrides)
@@ -716,18 +716,18 @@ void App::GarmentOverrideModule::RegisterComponentOverrides(Core::SharedPtr<Enti
     }
 }
 
-void App::GarmentOverrideModule::UnregisterOffsetOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash)
+void App::GarmentModule::UnregisterOffsetOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash)
 {
     aEntityState->RemoveOffsetOverrides(aHash);
 }
 
-void App::GarmentOverrideModule::UnregisterComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash)
+void App::GarmentModule::UnregisterComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash)
 {
     aEntityState->RemoveChunkMaskOverrides(aHash);
     aEntityState->RemoveAppearanceOverrides(aHash);
 }
 
-void App::GarmentOverrideModule::UpdatePartAttributes(Core::SharedPtr<EntityState>& aEntityState,
+void App::GarmentModule::UpdatePartAttributes(Core::SharedPtr<EntityState>& aEntityState,
                                                       Red::Handle<Red::AppearanceDefinition>& aApperance)
 {
     for (const auto& partValue : aApperance->partsValues)
@@ -736,7 +736,7 @@ void App::GarmentOverrideModule::UpdatePartAttributes(Core::SharedPtr<EntityStat
     }
 }
 
-void App::GarmentOverrideModule::UpdatePartAssignments(Red::DynArray<Red::Handle<Red::IComponent>>& aComponents,
+void App::GarmentModule::UpdatePartAssignments(Red::DynArray<Red::Handle<Red::IComponent>>& aComponents,
                                                        Red::ResourcePath aPartResource)
 {
     for (auto i = 0; i < aComponents.size; ++i)
@@ -745,7 +745,7 @@ void App::GarmentOverrideModule::UpdatePartAssignments(Red::DynArray<Red::Handle
     }
 }
 
-void App::GarmentOverrideModule::UpdatePartAssignments(Core::SharedPtr<App::EntityState>& aEntityState,
+void App::GarmentModule::UpdatePartAssignments(Core::SharedPtr<App::EntityState>& aEntityState,
                                                        Red::DynArray<Red::Handle<Red::IComponent>>& aComponents,
                                                        Red::DynArray<Red::ResourcePath>& aPartResources)
 {
@@ -755,7 +755,7 @@ void App::GarmentOverrideModule::UpdatePartAssignments(Core::SharedPtr<App::Enti
     }
 }
 
-bool App::GarmentOverrideModule::PrepareDynamicAppearanceName(Red::WeakHandle<Red::Entity>& aEntity,
+bool App::GarmentModule::PrepareDynamicAppearanceName(Red::WeakHandle<Red::Entity>& aEntity,
                                                               Red::ResourceTokenPtr<Red::EntityTemplate>& aTemplateToken,
                                                               Red::CName& aAppearanceName)
 {
@@ -770,7 +770,7 @@ bool App::GarmentOverrideModule::PrepareDynamicAppearanceName(Red::WeakHandle<Re
     return false;
 }
 
-void App::GarmentOverrideModule::SelectDynamicAppearance(Core::SharedPtr<App::EntityState>& aEntityState,
+void App::GarmentModule::SelectDynamicAppearance(Core::SharedPtr<App::EntityState>& aEntityState,
                                                         App::DynamicAppearanceName& aSelector,
                                                         Red::EntityTemplate* aResource,
                                                         Red::TemplateAppearance*& aAppearance)
@@ -778,7 +778,7 @@ void App::GarmentOverrideModule::SelectDynamicAppearance(Core::SharedPtr<App::En
     aEntityState->SelectDynamicAppearance(aSelector, aResource, aAppearance);
 }
 
-void App::GarmentOverrideModule::SelectDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState,
+void App::GarmentModule::SelectDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState,
                                                          DynamicAppearanceName& aSelector,
                                                          Red::AppearanceResource* aResource,
                                                          Red::Handle<Red::AppearanceDefinition>& aDefinition)
@@ -786,7 +786,7 @@ void App::GarmentOverrideModule::SelectDynamicAppearance(Core::SharedPtr<EntityS
     aEntityState->SelectDynamicAppearance(aSelector, aResource, aDefinition);
 }
 
-void App::GarmentOverrideModule::ApplyDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState,
+void App::GarmentModule::ApplyDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState,
                                                         Red::DynArray<Red::Handle<Red::IComponent>>& aComponents)
 {
     aEntityState->ToggleConditionalComponents(aComponents);
@@ -797,17 +797,17 @@ void App::GarmentOverrideModule::ApplyDynamicAppearance(Core::SharedPtr<EntitySt
     }
 }
 
-void App::GarmentOverrideModule::ApplyDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState)
+void App::GarmentModule::ApplyDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState)
 {
     ApplyDynamicAppearance(aEntityState, aEntityState->GetEntity()->components);
 }
 
-void App::GarmentOverrideModule::ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, bool aForceUpdate)
+void App::GarmentModule::ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, bool aForceUpdate)
 {
     ApplyComponentOverrides(aEntityState, aEntityState->GetEntity()->components, aForceUpdate);
 }
 
-void App::GarmentOverrideModule::ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState,
+void App::GarmentModule::ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState,
                                                          Red::DynArray<Red::Handle<Red::IComponent>>& aComponents,
                                                          bool aForceUpdate)
 {
@@ -861,7 +861,7 @@ void App::GarmentOverrideModule::ApplyComponentOverrides(Core::SharedPtr<EntityS
 #endif
 }
 
-void App::GarmentOverrideModule::ApplyOffsetOverrides(Core::SharedPtr<App::EntityState>& aEntityState,
+void App::GarmentModule::ApplyOffsetOverrides(Core::SharedPtr<App::EntityState>& aEntityState,
                                                       Red::DynArray<int32_t>& aOffsets,
                                                       Red::DynArray<Red::ResourcePath>& aResourcePaths)
 {
@@ -880,38 +880,38 @@ void App::GarmentOverrideModule::ApplyOffsetOverrides(Core::SharedPtr<App::Entit
     }
 }
 
-void App::GarmentOverrideModule::EnableGarmentOffsets()
+void App::GarmentModule::EnableGarmentOffsets()
 {
     s_garmentOffsetsEnabled = true;
 }
 
-void App::GarmentOverrideModule::DisableGarmentOffsets()
+void App::GarmentModule::DisableGarmentOffsets()
 {
     s_garmentOffsetsEnabled = false;
 }
 
-void App::GarmentOverrideModule::UpdateDynamicAttributes(Core::SharedPtr<EntityState>& aEntityState)
+void App::GarmentModule::UpdateDynamicAttributes(Core::SharedPtr<EntityState>& aEntityState)
 {
     aEntityState->UpdateDynamicAttributes();
 }
 
-void App::GarmentOverrideModule::UpdateDynamicAttributes(Core::SharedPtr<EntityState>& aEntityState,
+void App::GarmentModule::UpdateDynamicAttributes(Core::SharedPtr<EntityState>& aEntityState,
                                                          Red::TweakDBID aEquippedItemID)
 {
     aEntityState->UpdateDynamicAttributes(aEquippedItemID);
 }
 
-void App::GarmentOverrideModule::UpdateDynamicAttributes()
+void App::GarmentModule::UpdateDynamicAttributes()
 {
     s_stateManager->UpdateDynamicAttributes();
 }
 
-bool App::GarmentOverrideModule::IsUniqueAppearanceName(Red::CName aName)
+bool App::GarmentModule::IsUniqueAppearanceName(Red::CName aName)
 {
     return aName && aName != DefaultAppearanceName && aName != RandomAppearanceName && aName != EmptyAppearanceName;
 }
 
-void App::GarmentOverrideModule::PatchHeadGarmentOverrides(Core::SharedPtr<EntityState>& aEntityState,
+void App::GarmentModule::PatchHeadGarmentOverrides(Core::SharedPtr<EntityState>& aEntityState,
                                                            Red::Handle<Red::AppearanceDefinition>& aDefinition)
 {
     if (aDefinition->name != AggregatedHeadAppearanceName)
@@ -963,12 +963,12 @@ void App::GarmentOverrideModule::PatchHeadGarmentOverrides(Core::SharedPtr<Entit
     }
 }
 
-Core::SharedPtr<App::DynamicAppearanceController>& App::GarmentOverrideModule::GetDynamicAppearanceController()
+Core::SharedPtr<App::DynamicAppearanceController>& App::GarmentModule::GetDynamicAppearanceController()
 {
     return s_dynamicAppearance;
 }
 
-Core::SharedPtr<App::OverrideTagManager>& App::GarmentOverrideModule::GetTagManager()
+Core::SharedPtr<App::OverrideTagManager>& App::GarmentModule::GetTagManager()
 {
     return s_tagManager;
 }

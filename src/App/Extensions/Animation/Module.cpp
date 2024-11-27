@@ -4,29 +4,29 @@
 
 namespace
 {
-constexpr auto ModuleName = "Animations";
+constexpr auto ModuleName = "Animation";
 }
 
-std::string_view App::AnimationsModule::GetName()
+std::string_view App::AnimationModule::GetName()
 {
     return ModuleName;
 }
 
-bool App::AnimationsModule::Load()
+bool App::AnimationModule::Load()
 {
-    HookBefore<Raw::AnimatedComponent::InitializeAnimations>(&AnimationsModule::OnInitializeAnimations).OrThrow();
+    HookBefore<Raw::AnimatedComponent::InitializeAnimations>(&AnimationModule::OnInitializeAnimations).OrThrow();
 
     return true;
 }
 
-bool App::AnimationsModule::Unload()
+bool App::AnimationModule::Unload()
 {
     Unhook<Raw::AnimatedComponent::InitializeAnimations>();
 
     return true;
 }
 
-void App::AnimationsModule::Configure()
+void App::AnimationModule::Configure()
 {
     m_animsByTarget.clear();
 
@@ -106,7 +106,7 @@ void App::AnimationsModule::Configure()
     }
 }
 
-void App::AnimationsModule::OnInitializeAnimations(Red::entAnimatedComponent* aComponent)
+void App::AnimationModule::OnInitializeAnimations(Red::entAnimatedComponent* aComponent)
 {
     const auto& templatePath = aComponent->owner->templatePath;
 

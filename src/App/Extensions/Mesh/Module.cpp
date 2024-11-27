@@ -1,10 +1,10 @@
 #include "Module.hpp"
-#include "App/Extensions/GarmentOverride/Module.hpp"
+#include "App/Extensions/Garment/Module.hpp"
 #include "App/Utils/Str.hpp"
 
 namespace
 {
-constexpr auto ModuleName = "MeshTemplate";
+constexpr auto ModuleName = "Mesh";
 
 constexpr auto SpecialMaterialMarker = '@';
 constexpr auto ContextMaterialName = Red::CName("@context");
@@ -13,12 +13,12 @@ constexpr auto DefaultAppearanceName = Red::CName("default");
 constexpr auto MaterialAttr = Red::CName("material");
 }
 
-std::string_view App::MeshTemplateModule::GetName()
+std::string_view App::MeshModule::GetName()
 {
     return ModuleName;
 }
 
-bool App::MeshTemplateModule::Load()
+bool App::MeshModule::Load()
 {
     HookAfter<Raw::CMesh::FindAppearance>(&OnFindAppearance).OrThrow();
     Hook<Raw::CMesh::LoadMaterialsAsync>(&OnLoadMaterials).OrThrow();
@@ -34,7 +34,7 @@ bool App::MeshTemplateModule::Load()
     return true;
 }
 
-bool App::MeshTemplateModule::Unload()
+bool App::MeshModule::Unload()
 {
     {
         std::unique_lock _(s_stateLock);
@@ -49,7 +49,7 @@ bool App::MeshTemplateModule::Unload()
     return true;
 }
 
-void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& aOut, Red::CMesh* aMesh,
+void App::MeshModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& aOut, Red::CMesh* aMesh,
                                                Red::CName aName)
 {
     if (!aOut)
@@ -108,7 +108,7 @@ void App::MeshTemplateModule::OnFindAppearance(Red::Handle<Red::meshMeshAppearan
     }
 }
 
-void* App::MeshTemplateModule::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMaterialsToken& aToken,
+void* App::MeshModule::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMaterialsToken& aToken,
                                                const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4)
 {
     Raw::CMesh::LoadMaterialsAsync(aTargetMesh, aToken, aMaterialNames, a4);
@@ -183,7 +183,7 @@ void* App::MeshTemplateModule::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::Mes
     return &aToken;
 }
 
-Core::SharedPtr<App::MeshTemplateModule::MeshState> App::MeshTemplateModule::AcquireMeshState(Red::CMesh* aMesh)
+Core::SharedPtr<App::MeshModule::MeshState> App::MeshModule::AcquireMeshState(Red::CMesh* aMesh)
 {
     std::unique_lock _(s_stateLock);
 
@@ -196,7 +196,7 @@ Core::SharedPtr<App::MeshTemplateModule::MeshState> App::MeshTemplateModule::Acq
     return it.value();
 }
 
-void App::MeshTemplateModule::ProcessMeshResource(const Core::SharedPtr<MeshState>& aMeshState,
+void App::MeshModule::ProcessMeshResource(const Core::SharedPtr<MeshState>& aMeshState,
                                                   const Red::Handle<Red::CMesh>& aMesh,
                                                   const Core::SharedPtr<MeshState>& aSourceState,
                                                   const Red::Handle<Red::CMesh>& aSourceMesh,
@@ -418,12 +418,12 @@ void App::MeshTemplateModule::ProcessMeshResource(const Core::SharedPtr<MeshStat
     });
 }
 
-bool App::MeshTemplateModule::ContainsUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials)
+bool App::MeshModule::ContainsUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials)
 {
     return std::ranges::any_of(aMaterials, [](const auto& aMaterial) { return !aMaterial; });
 }
 
-Red::Handle<Red::CMaterialInstance> App::MeshTemplateModule::CloneMaterialInstance(
+Red::Handle<Red::CMaterialInstance> App::MeshModule::CloneMaterialInstance(
     const Red::Handle<Red::CMaterialInstance>& aSourceInstance, const Core::SharedPtr<MeshState>& aMeshState, Red::CName aMaterialName,
     Red::JobQueue& aJobQueue)
 {
@@ -481,7 +481,7 @@ Red::Handle<Red::CMaterialInstance> App::MeshTemplateModule::CloneMaterialInstan
     return materialInstance;
 }
 
-void App::MeshTemplateModule::ExpandMaterialInstanceParams(Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
+void App::MeshModule::ExpandMaterialInstanceParams(Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
                                                            const Core::SharedPtr<MeshState>& aMeshState,
                                                            Red::CName aMaterialName, Red::JobQueue& aJobQueue)
 {
@@ -507,7 +507,7 @@ void App::MeshTemplateModule::ExpandMaterialInstanceParams(Red::Handle<Red::CMat
 }
 
 template<typename T>
-bool App::MeshTemplateModule::ExpandResourceReference(Red::ResourceReference<T>& aReference,
+bool App::MeshModule::ExpandResourceReference(Red::ResourceReference<T>& aReference,
                                                       const Core::SharedPtr<MeshState>& aState,
                                                       Red::CName aMaterialName)
 {
@@ -528,11 +528,11 @@ bool App::MeshTemplateModule::ExpandResourceReference(Red::ResourceReference<T>&
     return true;
 }
 
-Red::ResourcePath App::MeshTemplateModule::ExpandResourcePath(Red::ResourcePath aPath,
+Red::ResourcePath App::MeshModule::ExpandResourcePath(Red::ResourcePath aPath,
                                                               const Core::SharedPtr<MeshState>& aState,
                                                               Red::CName aMaterialName)
 {
-    auto& controller = GarmentOverrideModule::GetDynamicAppearanceController();
+    auto& controller = GarmentModule::GetDynamicAppearanceController();
     auto pathStr = controller->GetPathString(aPath);
 
     if (!controller->IsDynamicValue(pathStr))
@@ -559,7 +559,7 @@ Red::ResourcePath App::MeshTemplateModule::ExpandResourcePath(Red::ResourcePath 
 }
 
 template<typename T>
-void App::MeshTemplateModule::EnsureResourceLoaded(Red::ResourceReference<T>& aRef)
+void App::MeshModule::EnsureResourceLoaded(Red::ResourceReference<T>& aRef)
 {
     if (!aRef.token)
     {
@@ -570,24 +570,24 @@ void App::MeshTemplateModule::EnsureResourceLoaded(Red::ResourceReference<T>& aR
 }
 
 template<typename T>
-void App::MeshTemplateModule::EnsureResourceLoaded(Red::SharedPtr<Red::ResourceToken<T>>& aToken)
+void App::MeshModule::EnsureResourceLoaded(Red::SharedPtr<Red::ResourceToken<T>>& aToken)
 {
     Red::WaitForResource(aToken, std::chrono::milliseconds(1000));
 }
 
-bool App::MeshTemplateModule::IsSpecialMaterial(Red::CName aMaterialName)
+bool App::MeshModule::IsSpecialMaterial(Red::CName aMaterialName)
 {
     return aMaterialName.ToString()[0] == SpecialMaterialMarker;
 }
 
-bool App::MeshTemplateModule::IsContextualMesh(Red::CMesh* aMesh)
+bool App::MeshModule::IsContextualMesh(Red::CMesh* aMesh)
 {
     return aMesh->materialEntries.size > 0 &&
            aMesh->materialEntries.Front().isLocalInstance &&
            aMesh->materialEntries.Front().name == ContextMaterialName;
 }
 
-void App::MeshTemplateModule::PrefetchMeshState(Red::CMesh* aMesh, const Core::Map<Red::CName, std::string>& aContext)
+void App::MeshModule::PrefetchMeshState(Red::CMesh* aMesh, const Core::Map<Red::CName, std::string>& aContext)
 {
     if (!aContext.empty())
     {
@@ -600,13 +600,13 @@ void App::MeshTemplateModule::PrefetchMeshState(Red::CMesh* aMesh, const Core::M
     }
 }
 
-Red::CName App::MeshTemplateModule::RegisterMeshSource(Red::CMesh* aMesh, Red::CMesh* aSourceMesh)
+Red::CName App::MeshModule::RegisterMeshSource(Red::CMesh* aMesh, Red::CMesh* aSourceMesh)
 {
     auto meshState = AcquireMeshState(aMesh);
     return meshState->RegisterSource(aSourceMesh);
 }
 
-void App::MeshTemplateModule::OnAddStubAppearance(Red::CMesh* aMesh)
+void App::MeshModule::OnAddStubAppearance(Red::CMesh* aMesh)
 {
     if (!aMesh->renderResourceBlob || aMesh->surfaceAreaPerAxis.X < 0.0)
     {
@@ -614,7 +614,7 @@ void App::MeshTemplateModule::OnAddStubAppearance(Red::CMesh* aMesh)
     }
 }
 
-bool App::MeshTemplateModule::OnPreloadAppearances(Red::CMesh* aMesh)
+bool App::MeshModule::OnPreloadAppearances(Red::CMesh* aMesh)
 {
     if (!aMesh || !aMesh->path || aMesh->appearances.size == 0)
         return false;
@@ -639,7 +639,7 @@ bool App::MeshTemplateModule::OnPreloadAppearances(Red::CMesh* aMesh)
     return result;
 }
 
-App::MeshTemplateModule::MeshState::MeshState(Red::CMesh* aMesh)
+App::MeshModule::MeshState::MeshState(Red::CMesh* aMesh)
     : dynamic(true)
     , meshPath(aMesh->path)
 {
@@ -655,19 +655,19 @@ App::MeshTemplateModule::MeshState::MeshState(Red::CMesh* aMesh)
     }
 }
 
-void App::MeshTemplateModule::MeshState::MarkStatic()
+void App::MeshModule::MeshState::MarkStatic()
 {
     dynamic = false;
     context.clear();
     templates.clear();
 }
 
-bool App::MeshTemplateModule::MeshState::IsStatic() const
+bool App::MeshModule::MeshState::IsStatic() const
 {
     return !dynamic;
 }
 
-void App::MeshTemplateModule::MeshState::PrefetchContext(Red::CMesh* aMesh)
+void App::MeshModule::MeshState::PrefetchContext(Red::CMesh* aMesh)
 {
     auto contextIndex = GetTemplateEntryIndex(ContextMaterialName);
     if (contextIndex == 0)
@@ -677,7 +677,7 @@ void App::MeshTemplateModule::MeshState::PrefetchContext(Red::CMesh* aMesh)
     }
 }
 
-void App::MeshTemplateModule::MeshState::FillContext(const Core::Map<Red::CName, std::string>& aContext)
+void App::MeshModule::MeshState::FillContext(const Core::Map<Red::CName, std::string>& aContext)
 {
     contextToken.Reset();
 
@@ -687,7 +687,7 @@ void App::MeshTemplateModule::MeshState::FillContext(const Core::Map<Red::CName,
     }
 }
 
-const App::DynamicAttributeList& App::MeshTemplateModule::MeshState::GetContext()
+const App::DynamicAttributeList& App::MeshModule::MeshState::GetContext()
 {
     if (contextToken)
     {
@@ -695,7 +695,7 @@ const App::DynamicAttributeList& App::MeshTemplateModule::MeshState::GetContext(
 
         if (!contextToken->IsLoaded())
         {
-            auto& controller = GarmentOverrideModule::GetDynamicAppearanceController();
+            auto& controller = GarmentModule::GetDynamicAppearanceController();
             auto pathStr = controller->GetPathString(meshPath);
 
             if (!pathStr.empty())
@@ -736,7 +736,7 @@ const App::DynamicAttributeList& App::MeshTemplateModule::MeshState::GetContext(
     return context;
 }
 
-void App::MeshTemplateModule::MeshState::FillMaterials(Red::CMesh* aMesh)
+void App::MeshModule::MeshState::FillMaterials(Red::CMesh* aMesh)
 {
     materials.clear();
 
@@ -755,12 +755,12 @@ void App::MeshTemplateModule::MeshState::FillMaterials(Red::CMesh* aMesh)
     }
 }
 
-void App::MeshTemplateModule::MeshState::RegisterMaterialEntry(Red::CName aMaterialName, int32_t aEntryIndex)
+void App::MeshModule::MeshState::RegisterMaterialEntry(Red::CName aMaterialName, int32_t aEntryIndex)
 {
     materials[aMaterialName] = aEntryIndex;
 }
 
-int32_t App::MeshTemplateModule::MeshState::GetTemplateEntryIndex(Red::CName aMaterialName)
+int32_t App::MeshModule::MeshState::GetTemplateEntryIndex(Red::CName aMaterialName)
 {
     auto templateEntry = templates.find(aMaterialName);
 
@@ -770,7 +770,7 @@ int32_t App::MeshTemplateModule::MeshState::GetTemplateEntryIndex(Red::CName aMa
     return templateEntry.value();
 }
 
-int32_t App::MeshTemplateModule::MeshState::GetMaterialEntryIndex(Red::CName aMaterialName)
+int32_t App::MeshModule::MeshState::GetMaterialEntryIndex(Red::CName aMaterialName)
 {
     auto materialEntry = materials.find(aMaterialName);
 
@@ -780,12 +780,12 @@ int32_t App::MeshTemplateModule::MeshState::GetMaterialEntryIndex(Red::CName aMa
     return materialEntry.value();
 }
 
-bool App::MeshTemplateModule::MeshState::HasMaterialEntry(Red::CName aMaterialName) const
+bool App::MeshModule::MeshState::HasMaterialEntry(Red::CName aMaterialName) const
 {
     return materials.contains(aMaterialName);
 }
 
-Red::CName App::MeshTemplateModule::MeshState::RegisterSource(Red::CMesh* aSourceMesh)
+Red::CName App::MeshModule::MeshState::RegisterSource(Red::CMesh* aSourceMesh)
 {
     Red::CName sourceName = aSourceMesh->path.hash;
     sources[sourceName] = Red::AsWeakHandle(aSourceMesh);
@@ -793,7 +793,7 @@ Red::CName App::MeshTemplateModule::MeshState::RegisterSource(Red::CMesh* aSourc
     return sourceName;
 }
 
-Red::Handle<Red::CMesh> App::MeshTemplateModule::MeshState::ResolveSource(Red::CName aSourceName)
+Red::Handle<Red::CMesh> App::MeshModule::MeshState::ResolveSource(Red::CName aSourceName)
 {
     auto sourceMesh = sources.find(aSourceName);
 

@@ -1,5 +1,5 @@
 #include "Dynamic.hpp"
-#include "App/Extensions/GarmentOverride/Wrapper.hpp"
+#include "App/Extensions/Garment/Wrapper.hpp"
 #include "App/Extensions/PuppetState/Module.hpp"
 #include "App/Utils/Num.hpp"
 #include "App/Utils/Str.hpp"

@@ -8,7 +8,7 @@
 
 namespace App
 {
-class AttachmentSlotsModule : public Module
+class AttachmentModule : public Module
 {
 public:
     bool Load() override;

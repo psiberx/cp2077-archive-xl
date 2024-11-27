@@ -1,7 +1,7 @@
 #include "Facade.hpp"
 #include "App/Archives/ArchiveService.hpp"
 #include "App/Extensions/ExtensionService.hpp"
-#include "App/Extensions/GarmentOverride/Module.hpp"
+#include "App/Extensions/Garment/Module.hpp"
 #include "App/Extensions/PuppetState/Module.hpp"
 #include "Core/Facades/Container.hpp"
 
@@ -22,12 +22,12 @@ Red::CName App::Facade::GetBodyType(const Red::WeakHandle<Red::GameObject>& aPup
 
 void App::Facade::EnableGarmentOffsets()
 {
-    GarmentOverrideModule::EnableGarmentOffsets();
+    GarmentModule::EnableGarmentOffsets();
 }
 
 void App::Facade::DisableGarmentOffsets()
 {
-    GarmentOverrideModule::DisableGarmentOffsets();
+    GarmentModule::DisableGarmentOffsets();
 }
 
 void App::Facade::Reload()

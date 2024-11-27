@@ -1,7 +1,7 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
-#include "App/Extensions/GarmentOverride/Tags.hpp"
+#include "App/Extensions/Garment/Tags.hpp"
 
 namespace App
 {

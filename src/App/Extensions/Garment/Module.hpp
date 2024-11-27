@@ -1,9 +1,9 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
-#include "App/Extensions/GarmentOverride/Dynamic.hpp"
-#include "App/Extensions/GarmentOverride/States.hpp"
-#include "App/Extensions/GarmentOverride/Config.hpp"
+#include "App/Extensions/Garment/Dynamic.hpp"
+#include "App/Extensions/Garment/States.hpp"
+#include "App/Extensions/Garment/Config.hpp"
 #include "Red/AppearanceChanger.hpp"
 #include "Red/EntityTemplate.hpp"
 #include "Red/GarmentAssembler.hpp"
@@ -11,7 +11,7 @@
 
 namespace App
 {
-class GarmentOverrideModule : public ConfigurableModuleImpl<GarmentOverrideConfig>
+class GarmentModule : public ConfigurableModuleImpl<GarmentOverrideConfig>
 {
 public:
     static constexpr auto ForceHairTag = Red::CName("force_Hair");

@@ -1,12 +1,12 @@
 #pragma once
 
 #include "App/Extensions/ModuleBase.hpp"
-#include "App/Extensions/GarmentOverride/Dynamic.hpp"
+#include "App/Extensions/Garment/Dynamic.hpp"
 #include "Red/Mesh.hpp"
 
 namespace App
 {
-class MeshTemplateModule : public Module
+class MeshModule : public Module
 {
 public:
     bool Load() override;

@@ -5,7 +5,7 @@
 
 namespace App
 {
-class AppearanceSwapModule : public Module
+class TransmogModule : public Module
 {
 public:
     bool Load() override;

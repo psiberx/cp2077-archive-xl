@@ -1,11 +1,11 @@
 #include "Module.hpp"
-#include "App/Extensions/GarmentOverride/Dynamic.hpp"
+#include "App/Extensions/Garment/Dynamic.hpp"
 #include "Red/FactoryIndex.hpp"
 #include "Red/TweakDB.hpp"
 
 namespace
 {
-constexpr auto ModuleName = "AppearanceSwap";
+constexpr auto ModuleName = "Transmog";
 
 constexpr auto ItemEntityOffset = 0xD0; // todo: use OffsetPtr
 constexpr auto EntityPathOffset = 0x60;
@@ -14,12 +14,12 @@ constexpr auto RecordOffset = 0x100;
 constexpr auto FactoryOffset = 0x120;
 }
 
-std::string_view App::AppearanceSwapModule::GetName()
+std::string_view App::TransmogModule::GetName()
 {
     return ModuleName;
 }
 
-bool App::AppearanceSwapModule::Load()
+bool App::TransmogModule::Load()
 {
     Hook<Raw::ItemFactoryAppearanceChangeRequest::LoadTemplate>(&OnLoadTemplate).OrThrow();
     Hook<Raw::AppearanceChanger::SelectAppearanceName>(&OnSelectAppearance).OrThrow();
@@ -27,7 +27,7 @@ bool App::AppearanceSwapModule::Load()
     return true;
 }
 
-bool App::AppearanceSwapModule::Unload()
+bool App::TransmogModule::Unload()
 {
     Unhook<Raw::ItemFactoryAppearanceChangeRequest::LoadTemplate>();
     Unhook<Raw::AppearanceChanger::SelectAppearanceName>();
@@ -35,7 +35,7 @@ bool App::AppearanceSwapModule::Unload()
     return true;
 }
 
-bool App::AppearanceSwapModule::OnLoadTemplate(Red::ItemFactoryAppearanceChangeRequest* aRequest)
+bool App::TransmogModule::OnLoadTemplate(Red::ItemFactoryAppearanceChangeRequest* aRequest)
 {
     Red::ResourcePath originalPath;
 
@@ -74,7 +74,7 @@ bool App::AppearanceSwapModule::OnLoadTemplate(Red::ItemFactoryAppearanceChangeR
     return result;
 }
 
-void* App::AppearanceSwapModule::OnSelectAppearance(Red::CName* aOut,
+void* App::TransmogModule::OnSelectAppearance(Red::CName* aOut,
                                                     const Red::Handle<Red::TweakDBRecord>& aItemRecord,
                                                     const Red::ItemID& aItemID,
                                                     const Red::Handle<Red::AppearanceResource>& aAppearanceResource,

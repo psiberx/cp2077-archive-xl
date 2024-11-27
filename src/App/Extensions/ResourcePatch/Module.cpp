@@ -1,6 +1,6 @@
 #include "Module.hpp"
 #include "App/Extensions/Customization/Module.hpp"
-#include "App/Extensions/MeshTemplate/Module.hpp"
+#include "App/Extensions/Mesh/Module.hpp"
 #include "App/Extensions/ResourceMeta/Module.hpp"
 #include "Red/EntityBuilder.hpp"
 #include "Red/Mesh.hpp"
@@ -318,7 +318,7 @@ void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void* a2)
             if (!patchMesh || patchMesh->appearances.size == 0)
                 continue;
 
-            auto patchName = MeshTemplateModule::RegisterMeshSource(aMesh, patchMesh);
+            auto patchName = MeshModule::RegisterMeshSource(aMesh, patchMesh);
 
             for (const auto& patchAppearance : patchMesh->appearances)
             {
@@ -351,7 +351,7 @@ void App::ResourcePatchModule::OnMeshResourceLoad(Red::CMesh* aMesh, void* a2)
         }
     }
 
-    MeshTemplateModule::PrefetchMeshState(aMesh, fix.GetContext());
+    MeshModule::PrefetchMeshState(aMesh, fix.GetContext());
 
     Raw::CMesh::OnLoad(aMesh, a2);
 }

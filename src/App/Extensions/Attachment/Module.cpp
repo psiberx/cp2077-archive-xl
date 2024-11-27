@@ -1,11 +1,11 @@
 #include "Module.hpp"
-#include "App/Extensions/GarmentOverride/Module.hpp"
+#include "App/Extensions/Garment/Module.hpp"
 #include "Red/ItemObject.hpp"
 #include "Red/TweakDB.hpp"
 
 namespace
 {
-constexpr auto ModuleName = "AttachmentSlots";
+constexpr auto ModuleName = "Attachment";
 
 constexpr auto HeadSlot = Red::TweakDBID("AttachmentSlots.Head");
 constexpr auto FaceSlot = Red::TweakDBID("AttachmentSlots.Eyes");
@@ -23,12 +23,12 @@ constexpr auto ShowInnerSleevesSuffixValue = "Full";
 constexpr auto EmptyAppearanceName = Red::CName("empty_appearance_default");
 }
 
-std::string_view App::AttachmentSlotsModule::GetName()
+std::string_view App::AttachmentModule::GetName()
 {
     return ModuleName;
 }
 
-bool App::AttachmentSlotsModule::Load()
+bool App::AttachmentModule::Load()
 {
     HookAfter<Raw::AttachmentSlots::InitializeSlots>(&OnInitializeSlots).OrThrow();
     Hook<Raw::AttachmentSlots::IsSlotSpawning>(&OnSlotSpawningCheck).OrThrow();
@@ -48,7 +48,7 @@ bool App::AttachmentSlotsModule::Load()
     return true;
 }
 
-bool App::AttachmentSlotsModule::Unload()
+bool App::AttachmentModule::Unload()
 {
     Unhook<Raw::AttachmentSlots::InitializeSlots>();
     Unhook<Raw::AttachmentSlots::IsSlotSpawning>();
@@ -62,7 +62,7 @@ bool App::AttachmentSlotsModule::Unload()
     return true;
 }
 
-void App::AttachmentSlotsModule::OnInitializeSlots(Red::game::AttachmentSlots* aComponent,
+void App::AttachmentModule::OnInitializeSlots(Red::game::AttachmentSlots* aComponent,
                                                    Red::DynArray<Red::TweakDBID>& aSlotIDs)
 {
     if (aSlotIDs.size > 0)
@@ -105,7 +105,7 @@ void App::AttachmentSlotsModule::OnInitializeSlots(Red::game::AttachmentSlots* a
     }
 }
 
-bool App::AttachmentSlotsModule::OnSlotSpawningCheck(Red::game::AttachmentSlots* aComponent, Red::TweakDBID aSlotID)
+bool App::AttachmentModule::OnSlotSpawningCheck(Red::game::AttachmentSlots* aComponent, Red::TweakDBID aSlotID)
 {
 #ifndef NDEBUG
     auto debugSlotName = Red::ToStringDebug(aSlotID);
@@ -137,7 +137,7 @@ bool App::AttachmentSlotsModule::OnSlotSpawningCheck(Red::game::AttachmentSlots*
     return result;
 }
 
-void App::AttachmentSlotsModule::OnAttachTPP(Red::game::TPPRepresentationComponent* aComponent, uintptr_t)
+void App::AttachmentModule::OnAttachTPP(Red::game::TPPRepresentationComponent* aComponent, uintptr_t)
 {
 #ifndef NDEBUG
     LogDebug("|{}| [event=AttachTPP]", ModuleName);
@@ -184,7 +184,7 @@ void App::AttachmentSlotsModule::OnAttachTPP(Red::game::TPPRepresentationCompone
     }
 }
 
-void App::AttachmentSlotsModule::OnSlotCheckTPP(bool& aAffected, Red::TweakDBID aSlotID)
+void App::AttachmentModule::OnSlotCheckTPP(bool& aAffected, Red::TweakDBID aSlotID)
 {
     if (!aAffected)
     {
@@ -201,26 +201,26 @@ void App::AttachmentSlotsModule::OnSlotCheckTPP(bool& aAffected, Red::TweakDBID 
     }
 }
 
-void App::AttachmentSlotsModule::OnCheckHairState(Red::game::ui::CharacterCustomizationHairstyleController* aComponent,
+void App::AttachmentModule::OnCheckHairState(Red::game::ui::CharacterCustomizationHairstyleController* aComponent,
                                                   Red::CharacterBodyPartState& aHairState)
 {
     if (aHairState == Red::CharacterBodyPartState::Hidden)
     {
         auto owner = Red::ToHandle(aComponent->owner);
-        if (IsVisualTagActive(owner, HeadSlot, GarmentOverrideModule::ForceHairTag))
+        if (IsVisualTagActive(owner, HeadSlot, GarmentModule::ForceHairTag))
         {
             aHairState = Red::CharacterBodyPartState::Visible;
         }
     }
 }
 
-void App::AttachmentSlotsModule::OnCheckBodyState(Red::game::ui::CharacterCustomizationGenitalsController* aComponent,
+void App::AttachmentModule::OnCheckBodyState(Red::game::ui::CharacterCustomizationGenitalsController* aComponent,
                                                   Red::CharacterBodyPartState& aUpperState,
                                                   Red::CharacterBodyPartState& aBottomState)
 {
 }
 
-void App::AttachmentSlotsModule::OnCheckFeetState(Red::game::ui::CharacterCustomizationFeetController* aComponent,
+void App::AttachmentModule::OnCheckFeetState(Red::game::ui::CharacterCustomizationFeetController* aComponent,
                                                   Red::CharacterBodyPartState& aLiftedState,
                                                   Red::CharacterBodyPartState& aFlatState)
 {
@@ -237,7 +237,7 @@ void App::AttachmentSlotsModule::OnCheckFeetState(Red::game::ui::CharacterCustom
     if (aLiftedState == Red::CharacterBodyPartState::Visible)
     {
         auto owner = Red::ToHandle(aComponent->owner);
-        if (IsVisualTagActive(owner, FeetSlot, GarmentOverrideModule::ForceFlatFeetTag))
+        if (IsVisualTagActive(owner, FeetSlot, GarmentModule::ForceFlatFeetTag))
         {
             aLiftedState = Red::CharacterBodyPartState::Hidden;
             aFlatState = Red::CharacterBodyPartState::Visible;
@@ -245,7 +245,7 @@ void App::AttachmentSlotsModule::OnCheckFeetState(Red::game::ui::CharacterCustom
     }
 }
 
-bool App::AttachmentSlotsModule::OnGetSuffixValue(Raw::AppearanceChanger::GetSuffixValuePtr aOriginalFunc,
+bool App::AttachmentModule::OnGetSuffixValue(Raw::AppearanceChanger::GetSuffixValuePtr aOriginalFunc,
                                                   const Red::ItemID& aItemID, uint64_t a2,
                                                   Red::Handle<Red::GameObject>& aOwner,
                                                   Red::TweakDBID aSuffixRecordID,
@@ -269,7 +269,7 @@ bool App::AttachmentSlotsModule::OnGetSuffixValue(Raw::AppearanceChanger::GetSuf
     return aOriginalFunc(aItemID, a2, aOwner, aSuffixRecordID, aResult);
 }
 
-bool App::AttachmentSlotsModule::IsVisualTagActive(Red::Handle<Red::Entity>& aOwner,
+bool App::AttachmentModule::IsVisualTagActive(Red::Handle<Red::Entity>& aOwner,
                                                    Red::TweakDBID aBaseSlotID, Red::CName aVisualTag,
                                                    Red::TweakDBID aEquippedItemID)
 {
@@ -298,7 +298,7 @@ bool App::AttachmentSlotsModule::IsVisualTagActive(Red::Handle<Red::Entity>& aOw
     return false;
 }
 
-bool App::AttachmentSlotsModule::IsVisualTagActive(Red::ITransactionSystem* aTransactionSystem,
+bool App::AttachmentModule::IsVisualTagActive(Red::ITransactionSystem* aTransactionSystem,
                                                    Red::Handle<Red::Entity>& aOwner,
                                                    Red::TweakDBID aSlotID, Red::CName aVisualTag,
                                                    Red::TweakDBID aEquippedItemID)
@@ -346,7 +346,7 @@ bool App::AttachmentSlotsModule::IsVisualTagActive(Red::ITransactionSystem* aTra
     return false;
 }
 
-Core::Set<Red::TweakDBID> App::AttachmentSlotsModule::GetExtraSlots(Red::TweakDBID aBaseSlotID)
+Core::Set<Red::TweakDBID> App::AttachmentModule::GetExtraSlots(Red::TweakDBID aBaseSlotID)
 {
     std::shared_lock _(s_slotsMutex);
     const auto& extraSlotsIt = s_extraSlots.find(aBaseSlotID);
@@ -357,7 +357,7 @@ Core::Set<Red::TweakDBID> App::AttachmentSlotsModule::GetExtraSlots(Red::TweakDB
     return extraSlotsIt.value();
 }
 
-Core::Set<Red::TweakDBID> App::AttachmentSlotsModule::GetRelatedSlots(Red::TweakDBID aBaseSlotID)
+Core::Set<Red::TweakDBID> App::AttachmentModule::GetRelatedSlots(Red::TweakDBID aBaseSlotID)
 {
     Core::Set<Red::TweakDBID> result;
     result.insert(aBaseSlotID);
@@ -375,7 +375,7 @@ Core::Set<Red::TweakDBID> App::AttachmentSlotsModule::GetRelatedSlots(Red::Tweak
     return result;
 }
 
-Core::Set<Red::TweakDBID> App::AttachmentSlotsModule::GetDependentSlots(Red::TweakDBID aBaseSlotID)
+Core::Set<Red::TweakDBID> App::AttachmentModule::GetDependentSlots(Red::TweakDBID aBaseSlotID)
 {
     std::shared_lock _(s_slotsMutex);
     const auto& dependentSlotsIt = s_dependentSlots.find(aBaseSlotID);
