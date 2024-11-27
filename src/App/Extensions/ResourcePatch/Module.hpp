@@ -29,7 +29,6 @@ private:
     static void OnAppearanceResourceLoad(Red::AppearanceResource* aResource);
     static void OnMeshResourceLoad(Red::CMesh* aMesh, void*);
     static void OnEntityPackageLoad(Red::JobQueue& aJobQueue, void*, Red::EntityBuilderJobParams* aParams);
-    static void OnEntityPackageExtract(Red::EntityBuilderJobParams* aParams, void*);
     static void OnPartPackageExtract(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
                                      const Red::SharedPtr<Red::ResourceToken<Red::EntityTemplate>>& aPartToken);
     static void OnGarmentPackageExtract(Red::GarmentComponentParams* aParams, const Red::JobGroup& aJobGroup);

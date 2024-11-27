@@ -26,7 +26,6 @@ bool App::ResourcePatchModule::Load()
     HookBefore<Raw::AppearanceResource::OnLoad>(&OnAppearanceResourceLoad).OrThrow();
     Hook<Raw::CMesh::OnLoad>(&OnMeshResourceLoad).OrThrow();
     HookBefore<Raw::EntityBuilder::ScheduleExtractComponentsJob>(&OnEntityPackageLoad).OrThrow();
-    HookBefore<Raw::EntityBuilder::ExtractComponentsJob>(&OnEntityPackageExtract).OrThrow();
     HookAfter<Raw::AppearanceDefinition::ExtractPartComponents>(&OnPartPackageExtract).OrThrow();
     HookAfter<Raw::GarmentAssembler::ExtractComponentsJob>(&OnGarmentPackageExtract).OrThrow();
 
@@ -41,7 +40,6 @@ bool App::ResourcePatchModule::Unload()
     Unhook<Raw::AppearanceResource::OnLoad>();
     Unhook<Raw::CMesh::OnLoad>();
     Unhook<Raw::EntityBuilder::ScheduleExtractComponentsJob>();
-    Unhook<Raw::EntityBuilder::ExtractComponentsJob>();
     Unhook<Raw::AppearanceDefinition::ExtractPartComponents>();
     Unhook<Raw::GarmentAssembler::ExtractComponentsJob>();
 
@@ -388,37 +386,36 @@ void App::ResourcePatchModule::OnEntityPackageLoad(Red::JobQueue& aJobQueue, voi
             }
         }
     });
-}
 
-void App::ResourcePatchModule::OnEntityPackageExtract(Red::EntityBuilderJobParams* aParams, void* a2)
-{
-    if (aParams->entityBuilderWeak.Expired())
-        return;
+    aJobQueue.Dispatch([entityBuilderWeak = aParams->entityBuilderWeak](const Red::JobGroup&) {
+        if (entityBuilderWeak.Expired())
+            return;
 
-    auto& entityBuilder = aParams->entityBuilder;
+        auto& entityBuilder = entityBuilderWeak.instance;
 
-    if (entityBuilder->flags.ExtractEntity)
-    {
-        PatchPackageExtractorResults(entityBuilder->entityTemplate,
-                                     entityBuilder->entityExtractor->results);
-    }
-
-    if (entityBuilder->flags.ExtractAppearance)
-    {
-        PatchPackageExtractorResults(entityBuilder->appearance.resource,
-                                     entityBuilder->appearance.definition,
-                                     entityBuilder->appearance.extractor->results);
-    }
-
-    if (entityBuilder->flags.ExtractAppearances)
-    {
-        for (auto& appearance : entityBuilder->appearances)
+        if (entityBuilder->flags.ExtractEntity)
         {
-            PatchPackageExtractorResults(appearance.resource,
-                                         appearance.definition,
-                                         appearance.extractor->results);
+            PatchPackageExtractorResults(entityBuilder->entityTemplate,
+                                         entityBuilder->entityExtractor->results);
         }
-    }
+
+        if (entityBuilder->flags.ExtractAppearance)
+        {
+            PatchPackageExtractorResults(entityBuilder->appearance.resource,
+                                         entityBuilder->appearance.definition,
+                                         entityBuilder->appearance.extractor->results);
+        }
+
+        if (entityBuilder->flags.ExtractAppearances)
+        {
+            for (auto& appearance : entityBuilder->appearances)
+            {
+                PatchPackageExtractorResults(appearance.resource,
+                                             appearance.definition,
+                                             appearance.extractor->results);
+            }
+        }
+    });
 }
 
 void App::ResourcePatchModule::OnPartPackageExtract(
