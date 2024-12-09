@@ -254,7 +254,11 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
                     {
                         {
                             std::unique_lock _(s_definitionLock);
-                            s_definitions[patchPath][patchDefinition->name] = patchDefinition;
+                            if (!s_definitions[patchPath].contains(patchDefinition->name))
+                            {
+                                auto patchBufferToken = patchDefinition->compiledData.LoadAsync();
+                                s_definitions[patchPath][patchDefinition->name] = {patchDefinition, patchBufferToken};
+                            }
                         }
 
                         for (const auto& partValue : patchDefinition->partsValues)
@@ -581,19 +585,23 @@ void App::ResourcePatchExtension::PatchPackageResults(const Red::Handle<Red::App
         if (!patchDefinition)
             continue;
 
-        jobQueue.Wait(patchDefinition->compiledData.LoadAsync()->job);
-        jobQueue.Dispatch([patchDefinition, &aResultObjects, aDisablePostLoad, aDisableImports,
-                           aDisablePreInitialization](const Red::JobGroup& aJobGroup) {
-            auto patchLoader = Red::ObjectPackageReader(patchDefinition->compiledData);
-            patchLoader.ReadHeader(patchDefinition->compiledDataHeader);
+        auto patchBufferToken = patchDefinition->compiledData.LoadAsync();
+
+        jobQueue.Wait(patchBufferToken->job);
+        jobQueue.Dispatch([patchDefinition = std::move(patchDefinition), &aResultObjects, aDisablePostLoad,
+                           aDisableImports, aDisablePreInitialization](const Red::JobGroup& aJobGroup) {
+            auto patchReader = Red::ObjectPackageReader(patchDefinition->compiledData);
+            patchReader.ReadHeader(patchDefinition->compiledDataHeader);
 
             auto patchExtractor = Red::MakeShared<Red::ObjectPackageExtractor>(patchDefinition->compiledDataHeader);
             patchExtractor->disablePostLoad = aDisablePostLoad;
             patchExtractor->disableImports = aDisableImports;
             patchExtractor->disablePreInitialization = aDisablePreInitialization;
 
+            auto patchExtractionJob = patchExtractor->ExtractAsync();
+
             Red::JobQueue jobQueue{aJobGroup};
-            jobQueue.Wait(patchExtractor->ExtractAsync());
+            jobQueue.Wait(patchExtractionJob);
             jobQueue.Dispatch([patchExtractor = std::move(patchExtractor), &aResultObjects]() {
                 if (patchExtractor->results.size > 0)
                 {
@@ -725,8 +733,8 @@ Red::Handle<T> App::ResourcePatchExtension::GetPatchResource(Red::ResourcePath a
     return token->resource;
 }
 
-Red::Handle<Red::AppearanceDefinition> App::ResourcePatchExtension::GetPatchDefinition(Red::ResourcePath aResourcePath,
-                                                                                       Red::CName aDefinitionName)
+Red::Handle<Red::AppearanceDefinition> App::ResourcePatchExtension::GetPatchDefinition(
+    Red::ResourcePath aResourcePath, Red::CName aDefinitionName)
 {
     std::shared_lock _(s_definitionLock);
 
@@ -738,5 +746,5 @@ Red::Handle<Red::AppearanceDefinition> App::ResourcePatchExtension::GetPatchDefi
     if (definitionIt == resourceIt.value().end())
         return {};
 
-    return definitionIt.value().Lock();
+    return definitionIt.value().first;
 }

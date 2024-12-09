@@ -19,7 +19,8 @@ public:
     void Configure() override;
 
 private:
-    using DefinitionMap = Core::Map<Red::CName, Red::WeakHandle<Red::AppearanceDefinition>>;
+    using DefinitionData = std::pair<Red::Handle<Red::AppearanceDefinition>, Red::SharedPtr<Red::DeferredDataBufferToken>>;
+    using DefinitionMap = Core::Map<Red::CName, DefinitionData>;
 
     static void OnResourceRequest(Red::ResourceDepot*, const uintptr_t* aOut, Red::ResourcePath aPath, const int32_t*);
     static void OnResourceDeserialize(void* aSerializer, uint64_t, uint64_t, Red::JobHandle& aJob,
@@ -67,8 +68,7 @@ private:
     static Red::Handle<T> GetPatchResource(Red::ResourcePath aPatchPath);
     template<typename T = Red::CResource>
     static Red::SharedPtr<Red::ResourceToken<T>> GetPatchToken(Red::ResourcePath aPatchPath);
-    static Red::Handle<Red::AppearanceDefinition> GetPatchDefinition(Red::ResourcePath aResourcePath,
-                                                                     Red::CName aDefinitionName);
+    static Red::Handle<Red::AppearanceDefinition> GetPatchDefinition(Red::ResourcePath aResourcePath, Red::CName aDefinitionName);
 
     inline static Core::Map<Red::ResourcePath, Core::Set<Red::ResourcePath>> s_patches;
     inline static Core::Map<Red::ResourcePath, std::string> s_paths;
