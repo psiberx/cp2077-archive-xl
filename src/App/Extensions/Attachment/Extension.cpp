@@ -253,16 +253,9 @@ bool App::AttachmentExtension::OnGetSuffixValue(Raw::AppearanceChanger::GetSuffi
 {
     if (aOwner && a2 && aSuffixRecordID == InnerSleevesSuffix)
     {
-        bool hideSleeves = false;
-
-        if (!s_skipVisualTagCheck)
-        {
-            s_skipVisualTagCheck = true;
-            hideSleeves = IsVisualTagActive(aOwner, TorsoSlot, HideInnerSleevesTag, aItemID.tdbid);
-            s_skipVisualTagCheck = false;
-        }
-
-        aResult = hideSleeves ? HideInnerSleevesSuffixValue : ShowInnerSleevesSuffixValue;
+        aResult = IsVisualTagActive(aOwner, TorsoSlot, HideInnerSleevesTag, aItemID.tdbid)
+                      ? HideInnerSleevesSuffixValue
+                      : ShowInnerSleevesSuffixValue;
         return true;
     }
 
