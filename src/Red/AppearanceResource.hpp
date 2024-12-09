@@ -10,6 +10,8 @@ using AppearanceDefinition = appearance::AppearanceDefinition;
 
 namespace Raw::AppearanceDefinition
 {
+using Mutex = Core::OffsetPtr<0xE6, Red::SharedSpinLock>;
+
 constexpr auto ExtractPartComponents = Core::RawFunc<
     /* addr = */ Red::AddressLib::AppearanceDefinition_ExtractPartComponents,
     /* type = */ void* (*)(Red::DynArray<Red::Handle<Red::ISerializable>>& aOut,

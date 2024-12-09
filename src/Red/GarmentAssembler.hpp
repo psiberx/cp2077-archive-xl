@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Red/Entity.hpp"
+
 namespace Red
 {
 using EntityTemplate = ent::EntityTemplate;
@@ -7,17 +9,15 @@ using TemplateAppearance = ent::TemplateAppearance;
 using AppearanceDefinition = appearance::AppearanceDefinition;
 using AppearancePartOverrides = appearance::AppearancePartOverrides;
 
-struct GarmentProcessor {};
+struct GarmentAssembler {};
 
-struct GarmentProcessorParams
+struct GarmentAssemblerState
 {
-    Handle<Entity> entity;
+    uintptr_t unk00; // 00
+    uintptr_t unk08; // 08
+    uintptr_t unk10; // 10
 };
-
-struct GarmentComponentParams
-{
-    Handle<EntityTemplate> entityTemplate;
-};
+RED4EXT_ASSERT_SIZE(GarmentAssemblerState, 0x18);
 
 struct GarmentItemAddRequest
 {
@@ -70,13 +70,30 @@ struct GarmentItemRemoveRequest
 RED4EXT_ASSERT_SIZE(GarmentItemRemoveRequest, 0x8);
 RED4EXT_ASSERT_OFFSET(GarmentItemRemoveRequest, hash, 0x0);
 
-struct GarmentAssemblerState
+struct GarmentProcessingContext
 {
-    uintptr_t unk00; // 00
-    uintptr_t unk08; // 08
-    uintptr_t unk10; // 10
+    SharedPtr<void> unk00;                               // 00
+    DynArray<Handle<ent::IComponent>> components;        // 10
+    DynArray<Handle<CMesh>> meshes;                      // 20
+    DynArray<Handle<ent::EntityTemplate>> templates;     // 30
+    DynArray<ResourcePath> resources;                    // 40
+    uint64_t unk50;                                      // 50
+    Handle<appearance::AppearanceDefinition> definition; // 58
+    EntityInitializeRequest request;                     // 68
+    JobHandle job;                                       // 138
+    int32_t unk140;                                      // 140
 };
-RED4EXT_ASSERT_SIZE(GarmentAssemblerState, 0x18);
+
+struct GarmentLoadingParams
+{
+    Handle<Entity> entity; // 00
+};
+
+struct GarmentExtractionParams
+{
+    Handle<entEntityTemplate> partTemplate;      // 00
+    SharedPtr<GarmentProcessingContext> context; // 10
+};
 }
 
 namespace Raw::GarmentAssembler
@@ -91,14 +108,14 @@ constexpr auto RemoveItem = Core::RawFunc<
 
 constexpr auto ProcessGarment = Core::RawFunc<
     /* addr = */ Red::AddressLib::GarmentAssembler_ProcessGarment,
-    /* type = */ uintptr_t (*)(Red::SharedPtr<Red::GarmentProcessor>& aProcessor, uintptr_t a2, uintptr_t a3,
-                               Red::GarmentProcessorParams* aParams)>();
+    /* type = */ uintptr_t (*)(Red::SharedPtr<Red::GarmentProcessingContext>& aProcessor, uintptr_t a2, uintptr_t a3,
+                               Red::GarmentLoadingParams* aParams)>();
 
 constexpr auto ExtractComponentsJob = Core::RawFunc<
     /* addr = */ Red::AddressLib::GarmentAssembler_ExtractComponentsJob,
-    /* type = */ void (*)(Red::GarmentComponentParams* aParams, const Red::JobGroup& aJobGroup)>();
+    /* type = */ void (*)(Red::GarmentExtractionParams* aParams, const Red::JobGroup& aJobGroup)>();
 
-using ProcessMesh = void (*)(Red::GarmentProcessor* aProcessor,
+using ProcessMesh = void (*)(Red::GarmentProcessingContext* aProcessor,
                              uint32_t aIndex,
                              const Red::Handle<Red::EntityTemplate>& aPartTemplate,
                              const Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,

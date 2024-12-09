@@ -547,8 +547,8 @@ void App::GarmentExtension::OnRegisterPart(uintptr_t, Red::Handle<Red::EntityTem
     UpdatePartAssignments(aComponentStorage->components, aPart->path);
 }
 
-uintptr_t App::GarmentExtension::OnProcessGarment(Red::SharedPtr<Red::GarmentProcessor>& aProcessor, uintptr_t a2,
-                                                       uintptr_t a3, Red::GarmentProcessorParams* aParams)
+uintptr_t App::GarmentExtension::OnProcessGarment(Red::SharedPtr<Red::GarmentProcessingContext>& aProcessor, uintptr_t a2,
+                                                       uintptr_t a3, Red::GarmentLoadingParams* aParams)
 {
     if (!aParams)
         return Raw::GarmentAssembler::ProcessGarment(aProcessor, a2, a3, aParams);
@@ -571,11 +571,11 @@ uintptr_t App::GarmentExtension::OnProcessGarment(Red::SharedPtr<Red::GarmentPro
 }
 
 void App::GarmentExtension::OnProcessGarmentMesh(Raw::GarmentAssembler::ProcessMesh aCallback,
-                                                      Red::GarmentProcessor* aProcessor, uint32_t aIndex,
-                                                      const Red::Handle<Red::EntityTemplate>& aPartTemplate,
-                                                      const Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,
-                                                      const Red::Handle<Red::IComponent>& aComponent,
-                                                      const Red::JobGroup& aJobGroup)
+                                                 Red::GarmentProcessingContext* aProcessor, uint32_t aIndex,
+                                                 const Red::Handle<Red::EntityTemplate>& aPartTemplate,
+                                                 const Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,
+                                                 const Red::Handle<Red::IComponent>& aComponent,
+                                                 const Red::JobGroup& aJobGroup)
 {
     std::unique_lock _(s_mutex);
     if (auto& entityState = s_stateManager->FindEntityState(aProcessor))
@@ -585,8 +585,8 @@ void App::GarmentExtension::OnProcessGarmentMesh(Raw::GarmentAssembler::ProcessM
 #ifndef NDEBUG
             LogDebug("|{}| [event=ProcessGarmentMesh entity={} comp={}]", ExtensionName, entityState->GetName(), aComponent->name.ToString());
 #endif
-            if (aMeshToken->IsFailed())
-            {
+            // if (aMeshToken->IsFailed())
+            // {
                 auto meshToken = ComponentWrapper(aComponent).LoadResourceToken(false);
                 if (meshToken->IsFinished())
                 {
@@ -601,7 +601,7 @@ void App::GarmentExtension::OnProcessGarmentMesh(Raw::GarmentAssembler::ProcessM
                     });
                 }
                 return;
-            }
+            // }
         }
     }
 
@@ -629,9 +629,9 @@ void App::GarmentExtension::OnProcessGarmentMesh(Raw::GarmentAssembler::ProcessM
 // }
 
 void App::GarmentExtension::OnComputeGarment(uintptr_t, Red::Handle<Red::Entity>& aEntity,
-                                                  Red::DynArray<int32_t>& aOffsets,
-                                                  Red::SharedPtr<Red::GarmentComputeData>& aData,
-                                                  uintptr_t, uintptr_t, uintptr_t, bool)
+                                              Red::DynArray<int32_t>& aOffsets,
+                                              Red::SharedPtr<Red::GarmentProcessingContext>& aData,
+                                              uintptr_t, uintptr_t, uintptr_t, bool)
 {
     std::unique_lock _(s_mutex);
     if (auto& entityState = s_stateManager->FindEntityState(aEntity))

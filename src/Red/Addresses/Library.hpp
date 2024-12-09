@@ -30,6 +30,9 @@ constexpr uint32_t AttachmentSlots_InitializeSlots = 3224838039;
 constexpr uint32_t AttachmentSlots_IsSlotEmpty = 4231927464;
 constexpr uint32_t AttachmentSlots_IsSlotSpawning = 1283201918;
 
+constexpr uint32_t CNamePool_RegisterName = 627643257;
+constexpr uint32_t CNamePool_GetStringView = 2878476560;
+
 constexpr uint32_t CBaseEngine_LoadGatheredResources = 3729789488;
 
 constexpr uint32_t CharacterCustomizationFeetController_CheckState = 3015323410;
@@ -68,7 +71,14 @@ constexpr uint32_t CMesh_ShouldPreloadAppearances = 503977943;
 
 constexpr uint32_t MeshMaterialBuffer_LoadMaterialAsync = 1609519068;
 
-constexpr uint32_t Entity_ReassembleAppearance = 1560690857;
+constexpr uint32_t Entity_Attach = 4248638169;
+constexpr uint32_t Entity_Detach = 2263681375;
+constexpr uint32_t Entity_Dispose = 2515274237;
+constexpr uint32_t Entity_Initialize = 3490519617;
+constexpr uint32_t Entity_Assemble = 2182550867;
+constexpr uint32_t Entity_Reassemble = 1560690857;
+constexpr uint32_t Entity_Uninitialize = 3596356635;
+constexpr uint32_t Entity_RequestComponents = 2296260874;
 
 constexpr uint32_t EntityBuilder_ExtractComponentsJob = 489494088;
 constexpr uint32_t EntityBuilder_ScheduleExtractComponentsJob = 437791594;
@@ -109,6 +119,8 @@ constexpr uint32_t ItemFactoryAppearanceChangeRequest_LoadTemplate = 1291460507;
 constexpr uint32_t ItemFactoryAppearanceChangeRequest_LoadAppearance = 3392610574;
 
 constexpr uint32_t ItemFactoryRequest_LoadAppearance = 3659799256;
+
+constexpr uint32_t IPlacedComponent_SetTransform = 1828854026;
 
 constexpr uint32_t JobHandle_Wait = 1576079097;
 

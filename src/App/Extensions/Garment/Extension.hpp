@@ -53,16 +53,16 @@ private:
     static void OnRegisterPart(uintptr_t, Red::Handle<Red::EntityTemplate>& aPart,
                                Red::Handle<Red::ComponentsStorage>& aComponents,
                                Red::Handle<Red::AppearanceDefinition>& aAppearance);
-    static uintptr_t OnProcessGarment(Red::SharedPtr<Red::GarmentProcessor>& aProcessor, uintptr_t a2, uintptr_t a3,
-                                      Red::GarmentProcessorParams* aParams);
-    static void OnProcessGarmentMesh(Raw::GarmentAssembler::ProcessMesh aCallback, Red::GarmentProcessor* aProcessor,
+    static uintptr_t OnProcessGarment(Red::SharedPtr<Red::GarmentProcessingContext>& aProcessor, uintptr_t a2, uintptr_t a3,
+                                      Red::GarmentLoadingParams* aParams);
+    static void OnProcessGarmentMesh(Raw::GarmentAssembler::ProcessMesh aCallback, Red::GarmentProcessingContext* aProcessor,
                                      uint32_t, const Red::Handle<Red::EntityTemplate>& aPartTemplate,
                                      const Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,
                                      const Red::Handle<Red::IComponent>& aComponent, const Red::JobGroup& aJobGroup);
     // static int32_t OnGetBaseMeshOffset(Red::Handle<Red::IComponent>& aComponent,
     //                                    Red::Handle<Red::EntityTemplate>& aTemplate);
     static void OnComputeGarment(uintptr_t, Red::Handle<Red::Entity>&, Red::DynArray<int32_t>&,
-                                 Red::SharedPtr<Red::GarmentComputeData>&, uintptr_t, uintptr_t, uintptr_t, bool);
+                                 Red::SharedPtr<Red::GarmentProcessingContext>&, uintptr_t, uintptr_t, uintptr_t, bool);
     static void OnReassembleAppearance(Red::Entity*, uintptr_t, uintptr_t, uintptr_t, uintptr_t, uintptr_t);
     static void OnGameDetach();
 

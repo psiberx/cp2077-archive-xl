@@ -41,7 +41,10 @@
 #include <RED4ext/Scripting/Natives/Generated/ent/ComponentsStorage.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/Entity.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/EntityID.hpp>
+#include <RED4ext/Scripting/Natives/Generated/ent/EntityInstanceData.hpp>
+#include <RED4ext/Scripting/Natives/Generated/ent/EntityParametersStorage.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/EntityTemplate.hpp>
+#include <RED4ext/Scripting/Natives/Generated/ent/ExternalComponent.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/GarmentSkinnedMeshComponent.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/IBinding.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/IComponent.hpp>
@@ -103,6 +106,8 @@
 #include <RED4ext/Scripting/Natives/Generated/localization/PersistenceSubtitleMap.hpp>
 #include <RED4ext/Scripting/Natives/Generated/mesh/MeshAppearance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/mesh/MeshParameter.hpp>
+#include <RED4ext/Scripting/Natives/Generated/net/PeerID.hpp>
+#include <RED4ext/Scripting/Natives/Generated/population/PopulationSpawnParameter.hpp>
 #include <RED4ext/Scripting/Natives/Generated/quest/GraphDefinition.hpp>
 #include <RED4ext/Scripting/Natives/Generated/quest/PhaseNodeDefinition.hpp>
 #include <RED4ext/Scripting/Natives/Generated/quest/QuestPhaseResource.hpp>
@@ -122,6 +127,7 @@
 #include <RED4ext/Scripting/Natives/Generated/world/StreamingSector.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/StreamingWorld.hpp>
 #include <RED4ext/Scripting/Natives/ScriptGameInstance.hpp>
+#include <RED4ext/StringView.hpp>
 
 #include <nameof.hpp>
 #include <semver.hpp>

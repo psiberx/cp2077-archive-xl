@@ -68,4 +68,8 @@ namespace Raw::MeshComponent
 constexpr auto LoadResource = Core::RawVFunc<
         /* offset = */ 0x260,
         /* type = */ uint64_t(Red::IComponent::*)(Red::JobQueue& aQueue)>();
+
+constexpr auto RefreshAppearance = Core::RawVFunc<
+        /* offset = */ 0x280,
+        /* type = */ void(Red::IComponent::*)()>();
 }

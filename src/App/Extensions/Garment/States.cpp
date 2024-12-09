@@ -498,8 +498,12 @@ bool App::EntityState::SelectDynamicAppearance(DynamicAppearanceName& aSelector,
 
             aDefinition = std::move(definition);
         }
+        else
+        {
+            aDefinition = std::move(match);
+        }
 
-        for (const auto& partValue : match->partsValues)
+        for (const auto& partValue : aDefinition->partsValues)
         {
             LinkPartToAppearance(partValue.resource.path, aSelector);
         }
@@ -615,6 +619,7 @@ bool App::EntityState::ApplyDynamicAppearance(const Red::Handle<Red::IComponent>
                                               bool aSetAppearance)
 {
     ComponentWrapper componentWrapper(aComponent);
+    auto updated = false;
 
     if (componentWrapper.IsMeshComponent())
     {
@@ -624,6 +629,7 @@ bool App::EntityState::ApplyDynamicAppearance(const Red::Handle<Red::IComponent>
         if (finalResource != originalResource && finalResource != componentWrapper.GetResourcePath())
         {
             componentWrapper.SetResourcePath(finalResource);
+            updated = true;
         }
 
         if (aSetAppearance)
@@ -634,11 +640,12 @@ bool App::EntityState::ApplyDynamicAppearance(const Red::Handle<Red::IComponent>
             if (finalAppearance != originalAppearance && finalAppearance != componentWrapper.GetAppearanceName())
             {
                 componentWrapper.SetAppearanceName(finalAppearance);
+                updated = true;
             }
         }
     }
 
-    return true;
+    return updated;
 }
 
 bool App::EntityState::ApplyAppearanceOverride(const Red::Handle<Red::IComponent>& aComponent)
@@ -678,7 +685,7 @@ bool App::EntityState::ApplyAppearanceOverride(const Red::Handle<Red::IComponent
     const auto& activeVariant = resourceState->GetActiveVariantParts();
     finalAppearance = m_dynamicAppearance->ResolveName(m_entity, activeVariant, finalAppearance);
 
-    return finalAppearance && component.SetAppearanceName(finalAppearance) && component.LoadAppearance();
+    return finalAppearance && component.SetAppearanceName(finalAppearance) && component.RefreshAppearance();
 }
 
 bool App::EntityState::ApplyChunkMaskOverride(const Red::Handle<Red::IComponent>& aComponent)
@@ -838,7 +845,7 @@ Core::SharedPtr<App::EntityState>& App::OverrideStateManager::FindEntityState(Re
     return it.value();
 }
 
-Core::SharedPtr<App::EntityState>& App::OverrideStateManager::FindEntityState(Red::GarmentProcessor* aProcessor)
+Core::SharedPtr<App::EntityState>& App::OverrideStateManager::FindEntityState(Red::GarmentProcessingContext* aProcessor)
 {
     if (!aProcessor)
         return s_nullEntityState;
@@ -872,7 +879,7 @@ void App::OverrideStateManager::ClearStates()
     m_entityStatesByPointer.clear();
 }
 
-void App::OverrideStateManager::LinkEntityToAssembler(Red::Entity* aEntity, Red::GarmentProcessor* aProcessor)
+void App::OverrideStateManager::LinkEntityToAssembler(Red::Entity* aEntity, Red::GarmentProcessingContext* aProcessor)
 {
     auto it = m_entityStates.find(aEntity);
 

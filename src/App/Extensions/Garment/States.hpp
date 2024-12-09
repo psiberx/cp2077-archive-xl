@@ -173,12 +173,12 @@ public:
 
     Core::SharedPtr<EntityState>& FindEntityState(Red::Entity* aEntity);
     Core::SharedPtr<EntityState>& FindEntityState(Red::ResourcePath aPath);
-    Core::SharedPtr<EntityState>& FindEntityState(Red::GarmentProcessor* aProcessor);
+    Core::SharedPtr<EntityState>& FindEntityState(Red::GarmentProcessingContext* aProcessor);
     Core::SharedPtr<EntityState>& FindEntityState(uintptr_t aPointer);
 
     void ClearStates();
 
-    void LinkEntityToAssembler(Red::Entity* aEntity, Red::GarmentProcessor* aProcessor);
+    void LinkEntityToAssembler(Red::Entity* aEntity, Red::GarmentProcessingContext* aProcessor);
     void LinkEntityToPointer(Red::Entity* aEntity, uintptr_t aPointer);
     void LinkComponentToPart(Red::Handle<Red::IComponent>& aComponent, Red::ResourcePath aResource);
     void UpdateDynamicAttributes();
@@ -186,7 +186,7 @@ public:
 private:
     Core::Map<Red::Entity*, Core::SharedPtr<EntityState>> m_entityStates;
     Core::Map<Red::ResourcePath, Core::SharedPtr<EntityState>> m_entityStatesByPath;
-    Core::Map<Red::GarmentProcessor*, Core::SharedPtr<EntityState>> m_entityStatesByProcessor;
+    Core::Map<Red::GarmentProcessingContext*, Core::SharedPtr<EntityState>> m_entityStatesByProcessor;
     Core::Map<uintptr_t, Core::SharedPtr<EntityState>> m_entityStatesByPointer;
     Core::SharedPtr<DynamicAppearanceController> m_dynamicAppearance;
 };

@@ -181,13 +181,23 @@ bool App::ComponentWrapper::SetResourcePath(Red::ResourcePath aPath) const
     return false;
 }
 
-bool App::ComponentWrapper::LoadResource(bool aWait) const
+bool App::ComponentWrapper::LoadResource(bool aRefresh, bool aWait) const
 {
     if (!IsMeshComponent())
         return false;
 
     Red::JobQueue jobQueue;
     Raw::MeshComponent::LoadResource(m_component, jobQueue);
+
+    if (aRefresh)
+    {
+        jobQueue.Dispatch([componentWeak = Red::AsWeakHandle(m_component)] {
+            if (auto component = componentWeak.Lock())
+            {
+                Raw::MeshComponent::RefreshAppearance(component);
+            }
+        });
+    }
 
     if (aWait)
     {
@@ -338,4 +348,13 @@ bool App::ComponentWrapper::SetChunkMask(uint64_t aChunkMask) const
     }
 
     return false;
+}
+
+bool App::ComponentWrapper::RefreshAppearance() const
+{
+    if (!IsMeshComponent())
+        return false;
+
+    Raw::MeshComponent::RefreshAppearance(m_component);
+    return true;
 }
