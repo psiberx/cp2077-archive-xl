@@ -646,7 +646,7 @@ void App::ResourcePatchExtension::MergeComponents(Red::DynArray<Red::Handle<Red:
                 }
             }
 
-            if (isNewComponent)
+            if (isNewComponent && !Red::IsInstanceOf<Red::entExternalComponent>(patchComponent))
             {
                 aResultObjects.PushBack(std::move(patchComponent));
             }
