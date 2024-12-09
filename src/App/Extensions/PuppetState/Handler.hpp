@@ -31,14 +31,14 @@ public:
 private:
     using SlotState = std::pair<Red::Handle<Red::ItemObject>, bool>;
 
-    void OnItemEquipped(const Red::ItemID& aItemID, Red::TweakDBID aSlotID) override;
-    void OnItemEquippedVisual(const Red::ItemID& aItemID, Red::TweakDBID aSlotID) override;
+    // void OnItemEquipped(const Red::ItemID& aItemID, Red::TweakDBID aSlotID) override;
+    // void OnItemEquippedVisual(const Red::ItemID& aItemID, Red::TweakDBID aSlotID) override;
     void OnItemEquippedComplete(const Red::ItemID& aItemID, Red::TweakDBID aSlotID) override;
-    void OnItemUnequipped(const Red::ItemID& aItemID, Red::TweakDBID aSlotID) override;
+    // void OnItemUnequipped(const Red::ItemID& aItemID, Red::TweakDBID aSlotID) override;
     void OnItemUnequippedComplete(const Red::ItemID& aItemID, Red::TweakDBID aSlotID) override;
 
-    void HandleAppearanceChange(const Red::ItemID& aItemID, Red::TweakDBID aSlotID, bool aEquipped);
-    void FinalizeAppearanceChange(const Red::ItemID& aItemID, Red::TweakDBID aSlotID);
+    // void HandleAppearanceChange(const Red::ItemID& aItemID, Red::TweakDBID aSlotID, bool aEquipped);
+    void FinalizeAppearanceChange(const Red::ItemID& aItemID, Red::TweakDBID aSlotID, bool aEquipped);
 
     bool UpdateArmsState(const Red::Handle<Red::Entity>& aPuppet, const Red::ItemID& aItemID, bool aEquipped);
     PuppetArmsState ResolveArmsState(const Red::Handle<Red::Entity>& aPuppet, const Red::ItemID& aItemID,

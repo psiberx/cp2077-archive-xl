@@ -56,29 +56,29 @@ App::PuppetStateHandler::PuppetStateHandler(Red::Entity* aPuppet)
     UpdateFeetState(m_puppetWeak.Lock());
 }
 
-void App::PuppetStateHandler::OnItemEquipped(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
-{
-#ifndef NDEBUG
-    auto debugSlotName = Red::ToStringDebug(aSlotID);
-    auto debugItemName = Red::ToStringDebug(aItemID.tdbid);
-    Core::Log::Debug("|PuppetState| [event=OnItemEquipped slot={} item={}]",
-                     debugSlotName.c_str(), debugItemName.c_str());
-#endif
+// void App::PuppetStateHandler::OnItemEquipped(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
+// {
+// #ifndef NDEBUG
+//     auto debugSlotName = Red::ToStringDebug(aSlotID);
+//     auto debugItemName = Red::ToStringDebug(aItemID.tdbid);
+//     Core::Log::Debug("|PuppetState| [event=OnItemEquipped slot={} item={}]",
+//                      debugSlotName.c_str(), debugItemName.c_str());
+// #endif
+//
+//     HandleAppearanceChange(aItemID, aSlotID, true);
+// }
 
-    HandleAppearanceChange(aItemID, aSlotID, true);
-}
-
-void App::PuppetStateHandler::OnItemEquippedVisual(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
-{
-#ifndef NDEBUG
-    auto debugSlotName = Red::ToStringDebug(aSlotID);
-    auto debugItemName = Red::ToStringDebug(aItemID.tdbid);
-    Core::Log::Debug("|PuppetState| [event=OnItemEquippedVisual slot={} item={}]",
-                     debugSlotName.c_str(), debugItemName.c_str());
-#endif
-
-    HandleAppearanceChange(aItemID, aSlotID, true);
-}
+// void App::PuppetStateHandler::OnItemEquippedVisual(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
+// {
+// #ifndef NDEBUG
+//     auto debugSlotName = Red::ToStringDebug(aSlotID);
+//     auto debugItemName = Red::ToStringDebug(aItemID.tdbid);
+//     Core::Log::Debug("|PuppetState| [event=OnItemEquippedVisual slot={} item={}]",
+//                      debugSlotName.c_str(), debugItemName.c_str());
+// #endif
+//
+//     HandleAppearanceChange(aItemID, aSlotID, true);
+// }
 
 void App::PuppetStateHandler::OnItemEquippedComplete(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
 {
@@ -89,20 +89,20 @@ void App::PuppetStateHandler::OnItemEquippedComplete(const Red::ItemID& aItemID,
                      debugSlotName.c_str(), debugItemName.c_str());
 #endif
 
-    FinalizeAppearanceChange(aItemID, aSlotID);
+    FinalizeAppearanceChange(aItemID, aSlotID, true);
 }
 
-void App::PuppetStateHandler::OnItemUnequipped(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
-{
-#ifndef NDEBUG
-    auto debugSlotName = Red::ToStringDebug(aSlotID);
-    auto debugItemName = Red::ToStringDebug(aItemID.tdbid);
-    Core::Log::Debug("|PuppetState| [event=OnItemUnequipped slot={} item={}]",
-                     debugSlotName.c_str(), debugItemName.c_str());
-#endif
-
-    HandleAppearanceChange(aItemID, aSlotID, false);
-}
+// void App::PuppetStateHandler::OnItemUnequipped(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
+// {
+// #ifndef NDEBUG
+//     auto debugSlotName = Red::ToStringDebug(aSlotID);
+//     auto debugItemName = Red::ToStringDebug(aItemID.tdbid);
+//     Core::Log::Debug("|PuppetState| [event=OnItemUnequipped slot={} item={}]",
+//                      debugSlotName.c_str(), debugItemName.c_str());
+// #endif
+//
+//     HandleAppearanceChange(aItemID, aSlotID, false);
+// }
 
 void App::PuppetStateHandler::OnItemUnequippedComplete(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
 {
@@ -113,18 +113,55 @@ void App::PuppetStateHandler::OnItemUnequippedComplete(const Red::ItemID& aItemI
                      debugSlotName.c_str(), debugItemName.c_str());
 #endif
 
-    HandleAppearanceChange(aItemID, aSlotID, false);
+    FinalizeAppearanceChange(aItemID, aSlotID, false);
 }
 
-void App::PuppetStateHandler::HandleAppearanceChange(const Red::ItemID& aItemID, Red::TweakDBID aSlotID, bool aEquipped)
+// void App::PuppetStateHandler::HandleAppearanceChange(const Red::ItemID& aItemID, Red::TweakDBID aSlotID, bool aEquipped)
+// {
+//     auto puppet = m_puppetWeak.Lock();
+//     if (puppet)
+//     {
+// #ifndef NDEBUG
+//         auto debugSlotName = Red::ToStringDebug(aSlotID);
+//         auto debugItemName = Red::ToStringDebug(aItemID.tdbid);
+// #endif
+//
+//         if (IsWeaponSlot(aSlotID))
+//         {
+//             if (UpdateArmsState(puppet, aItemID, aEquipped))
+//             {
+//                 RefreshArmsDependentAppearances(puppet);
+//             }
+//         }
+//
+//         if (IsFeetSlot(aSlotID) || HidesFootwear(puppet, aItemID))
+//         {
+//             if (UpdateFeetState(puppet))
+//             {
+//                 RefreshFeetDependentAppearances(puppet);
+//             }
+//         }
+//
+//         if (IsTorsoSlot(aSlotID) && RollsUpSleeves(puppet, aItemID))
+//         {
+//             RefreshSleevesDependentAppearances(puppet);
+//         }
+//     }
+// }
+
+void App::PuppetStateHandler::FinalizeAppearanceChange(const Red::ItemID& aItemID, Red::TweakDBID aSlotID, bool aEquipped)
 {
     auto puppet = m_puppetWeak.Lock();
     if (puppet)
     {
-#ifndef NDEBUG
-        auto debugSlotName = Red::ToStringDebug(aSlotID);
-        auto debugItemName = Red::ToStringDebug(aItemID.tdbid);
-#endif
+        if (PullPendingRefresh(aSlotID))
+        {
+            auto [itemObject, _] = GetItemInSlot(puppet, aSlotID);
+            if (itemObject && IsVisible(itemObject))
+            {
+                RefreshItemAppearance(puppet, itemObject);
+            }
+        }
 
         if (IsWeaponSlot(aSlotID))
         {
@@ -145,22 +182,6 @@ void App::PuppetStateHandler::HandleAppearanceChange(const Red::ItemID& aItemID,
         if (IsTorsoSlot(aSlotID) && RollsUpSleeves(puppet, aItemID))
         {
             RefreshSleevesDependentAppearances(puppet);
-        }
-    }
-}
-
-void App::PuppetStateHandler::FinalizeAppearanceChange(const Red::ItemID& aItemID, Red::TweakDBID aSlotID)
-{
-    auto puppet = m_puppetWeak.Lock();
-    if (puppet)
-    {
-        if (PullPendingRefresh(aSlotID))
-        {
-            auto [itemObject, _] = GetItemInSlot(puppet, aSlotID);
-            if (itemObject && IsVisible(itemObject))
-            {
-                RefreshItemAppearance(puppet, itemObject);
-            }
         }
 
         if (IsTppHeadSlot(aSlotID))
