@@ -13,7 +13,7 @@ class ArchiveService
     , public Core::LoggingAgent
 {
 public:
-    explicit ArchiveService(std::filesystem::path aGameDir);
+    explicit ArchiveService(std::filesystem::path aGameDir, std::filesystem::path aBundleDir = {});
 
     bool RegisterArchive(std::filesystem::path aPath);
     bool RegisterDirectory(std::filesystem::path aPath);

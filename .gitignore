@@ -2,6 +2,10 @@
 /.vs
 /.vscode
 /.xmake
+/archive/packed
+/archive/source/raw/**/*.json
+/archive/*.xml
+/archive/*.zip
 /build
 /dev
 /src/App/Project.hpp

@@ -1,6 +1,7 @@
 param ($StageDir, $ReleaseBin, $ProjectName)
 
-$DataDir = "${StageDir}/red4ext/plugins/${ProjectName}/Bundle"
+$BundleDir = "${StageDir}/red4ext/plugins/${ProjectName}/Bundle"
 
-New-Item -ItemType directory -Force -Path ${DataDir} | Out-Null
-Copy-Item -Path "data/*" -Destination ${DataDir}
+New-Item -ItemType directory -Force -Path ${BundleDir} | Out-Null
+Copy-Item -Path "archive/packed/archive/pc/mod/*" -Destination ${BundleDir}
+Copy-Item -Path "archive/source/resources/*" -Destination ${BundleDir}

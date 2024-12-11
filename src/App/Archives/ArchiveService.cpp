@@ -1,11 +1,14 @@
 #include "ArchiveService.hpp"
 #include "Core/Facades/Runtime.hpp"
-#include "Red/ResourceLoader.hpp"
 
-App::ArchiveService::ArchiveService(std::filesystem::path aGameDir)
+App::ArchiveService::ArchiveService(std::filesystem::path aGameDir, std::filesystem::path aBundleDir)
     : m_gameDir(std::move(aGameDir))
     , m_loaded(false)
 {
+    if (!aBundleDir.empty())
+    {
+        RegisterDirectory(std::move(aBundleDir));
+    }
 }
 
 void App::ArchiveService::OnBootstrap()

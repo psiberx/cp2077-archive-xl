@@ -28,15 +28,14 @@ App::Application::Application(HMODULE aHandle, const RED4ext::Sdk* aSdk)
 
     Register<App::WorldWidgetLimitPatch>();
     Register<App::ResourcePathRegistry>();
-    Register<App::ArchiveService>(Env::GameDir());
-    Register<App::ExtensionService>(Env::BundleDir());
+    Register<App::ArchiveService>(Env::GameDir(), Env::ArchiveDir());
+    Register<App::ExtensionService>();
 }
 
 void App::Application::OnStarting()
 {
     LogInfo("{} {} is starting...", Project::Name, Project::Version.to_string());
 
+    Migration::CleanUp(Env::LegacyBundleDir());
     Migration::CleanUp(Env::LegacyScriptsDir());
-    Migration::CleanUp(Env::BundleDir() / L"PlayerBaseAlias.xl");
-    Migration::CleanUp(Env::BundleDir() / L"PlayerCustomizationAlias.xl");
 }
