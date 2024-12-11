@@ -384,13 +384,16 @@ void App::ResourcePatchExtension::OnEntityPackageLoad(Red::JobQueue& aJobQueue, 
         {
             for (auto& appearance : entityBuilder->appearances)
             {
-                IncludeAppearanceParts(appearance.resource,
-                                       appearance.definition,
-                                       appearance.extractor->results,
-                                       appearance.extractor->disablePostLoad,
-                                       appearance.extractor->disableImports,
-                                       appearance.extractor->disablePreInitialization,
-                                       forceParts, aJobGroup);
+                if (appearance.extractor)
+                {
+                    IncludeAppearanceParts(appearance.resource,
+                                           appearance.definition,
+                                           appearance.extractor->results,
+                                           appearance.extractor->disablePostLoad,
+                                           appearance.extractor->disableImports,
+                                           appearance.extractor->disablePreInitialization,
+                                           forceParts, aJobGroup);
+                }
             }
         }
     });
@@ -425,13 +428,16 @@ void App::ResourcePatchExtension::OnEntityPackageLoad(Red::JobQueue& aJobQueue, 
         {
             for (auto& appearance : entityBuilder->appearances)
             {
-                PatchPackageResults(appearance.resource,
-                                    appearance.definition,
-                                    appearance.extractor->results,
-                                    appearance.extractor->disablePostLoad,
-                                    appearance.extractor->disableImports,
-                                    appearance.extractor->disablePreInitialization,
-                                    aJobGroup);
+                if (appearance.extractor)
+                {
+                    PatchPackageResults(appearance.resource,
+                                        appearance.definition,
+                                        appearance.extractor->results,
+                                        appearance.extractor->disablePostLoad,
+                                        appearance.extractor->disableImports,
+                                        appearance.extractor->disablePreInitialization,
+                                        aJobGroup);
+                }
             }
         }
     });
