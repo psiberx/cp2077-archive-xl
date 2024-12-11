@@ -63,7 +63,7 @@ bool App::AttachmentExtension::Unload()
 }
 
 void App::AttachmentExtension::OnInitializeSlots(Red::game::AttachmentSlots* aComponent,
-                                                   Red::DynArray<Red::TweakDBID>& aSlotIDs)
+                                                 Red::DynArray<Red::TweakDBID>& aSlotIDs)
 {
     if (aSlotIDs.size > 0)
     {
@@ -202,7 +202,7 @@ void App::AttachmentExtension::OnSlotCheckTPP(bool& aAffected, Red::TweakDBID aS
 }
 
 void App::AttachmentExtension::OnCheckHairState(Red::game::ui::CharacterCustomizationHairstyleController* aComponent,
-                                                  Red::CharacterBodyPartState& aHairState)
+                                                Red::CharacterBodyPartState& aHairState)
 {
     if (aHairState == Red::CharacterBodyPartState::Hidden)
     {
@@ -221,8 +221,8 @@ void App::AttachmentExtension::OnCheckBodyState(Red::game::ui::CharacterCustomiz
 }
 
 void App::AttachmentExtension::OnCheckFeetState(Red::game::ui::CharacterCustomizationFeetController* aComponent,
-                                                  Red::CharacterBodyPartState& aLiftedState,
-                                                  Red::CharacterBodyPartState& aFlatState)
+                                                Red::CharacterBodyPartState& aLiftedState,
+                                                Red::CharacterBodyPartState& aFlatState)
 {
     if (aLiftedState != Red::CharacterBodyPartState::Visible)
     {
@@ -246,10 +246,10 @@ void App::AttachmentExtension::OnCheckFeetState(Red::game::ui::CharacterCustomiz
 }
 
 bool App::AttachmentExtension::OnGetSuffixValue(Raw::AppearanceChanger::GetSuffixValuePtr aOriginalFunc,
-                                                  const Red::ItemID& aItemID, uint64_t a2,
-                                                  Red::Handle<Red::GameObject>& aOwner,
-                                                  Red::TweakDBID aSuffixRecordID,
-                                                  Red::CString& aResult)
+                                                const Red::ItemID& aItemID, uint64_t a2,
+                                                Red::Handle<Red::GameObject>& aOwner,
+                                                Red::TweakDBID aSuffixRecordID,
+                                                Red::CString& aResult)
 {
     if (aOwner && a2 && aSuffixRecordID == InnerSleevesSuffix)
     {
@@ -263,8 +263,8 @@ bool App::AttachmentExtension::OnGetSuffixValue(Raw::AppearanceChanger::GetSuffi
 }
 
 bool App::AttachmentExtension::IsVisualTagActive(Red::Handle<Red::Entity>& aOwner,
-                                                   Red::TweakDBID aBaseSlotID, Red::CName aVisualTag,
-                                                   Red::TweakDBID aEquippedItemID)
+                                                 Red::TweakDBID aBaseSlotID, Red::CName aVisualTag,
+                                                 Red::TweakDBID aEquippedItemID)
 {
     auto transactionSystem = Red::GetGameSystem<Red::ITransactionSystem>();
 
@@ -292,9 +292,9 @@ bool App::AttachmentExtension::IsVisualTagActive(Red::Handle<Red::Entity>& aOwne
 }
 
 bool App::AttachmentExtension::IsVisualTagActive(Red::ITransactionSystem* aTransactionSystem,
-                                                   Red::Handle<Red::Entity>& aOwner,
-                                                   Red::TweakDBID aSlotID, Red::CName aVisualTag,
-                                                   Red::TweakDBID aEquippedItemID)
+                                                 Red::Handle<Red::Entity>& aOwner,
+                                                 Red::TweakDBID aSlotID, Red::CName aVisualTag,
+                                                 Red::TweakDBID aEquippedItemID)
 {
     auto slotData = aTransactionSystem->FindSlotData(aOwner,
                                                      [aSlotID](const Red::AttachmentSlotData& aSlotData)
