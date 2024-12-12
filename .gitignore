@@ -6,6 +6,7 @@
 /archive/source/raw/**/*.json
 /archive/*.xml
 /archive/*.zip
+/archive/fileTreeState.json
 /build
 /dev
 /src/App/Project.hpp
