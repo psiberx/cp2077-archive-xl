@@ -621,8 +621,8 @@ void App::CustomizationExtension::ResetCustomResources()
 }
 
 void App::CustomizationExtension::FixCustomizationAppearance(Red::AppearanceResource* aResource,
-                                                          Red::Handle<Red::AppearanceDefinition>* aDefinition,
-                                                          Red::CName aAppearanceName)
+                                                             Red::Handle<Red::AppearanceDefinition>* aDefinition,
+                                                             Red::CName aAppearanceName)
 {
     if (aResource->appearances.size == 0)
         return;
@@ -707,22 +707,38 @@ void App::CustomizationExtension::FixCustomizationAppearance(Red::AppearanceReso
 }
 
 void App::CustomizationExtension::FixCustomizationComponents(const Red::Handle<Red::AppearanceResource>& aResource,
-                                                          const Red::Handle<Red::AppearanceDefinition>& aDefinition,
-                                                          Red::DynArray<Red::Handle<Red::ISerializable>>& aComponents)
+                                                             const Red::Handle<Red::AppearanceDefinition>& aDefinition,
+                                                             Red::DynArray<Red::Handle<Red::ISerializable>>& aComponents)
 {
     if (!ResourceMetaExtension::IsInResourceList(ResourceMetaExtension::CustomizationApp, aResource->path))
         return;
 
-    if (!IsFixedCustomizationAppearance(aDefinition))
+    if (aDefinition->compiledData.unk30 && !IsFixedCustomizationAppearance(aDefinition))
         return;
 
-    for (const auto& component : aComponents)
+    for (auto& override : aDefinition->partsOverrides[0].componentsOverrides)
     {
-        if (auto meshComponent = Red::Cast<Red::entSkinnedMeshComponent>(component))
+        for (const auto& component : aComponents)
         {
-            if (meshComponent->meshAppearance && meshComponent->meshAppearance != "default")
+            if (auto meshComponent = Red::Cast<Red::entSkinnedMeshComponent>(component))
             {
-                meshComponent->meshAppearance = aDefinition->partsOverrides[0].componentsOverrides[0].meshAppearance;
+                if (!override.componentName || meshComponent->name == override.componentName)
+                {
+                    if (meshComponent->meshAppearance && meshComponent->meshAppearance != "default")
+                    {
+                        meshComponent->meshAppearance = override.meshAppearance;
+                    }
+                }
+            }
+            else if (auto morphComponent = Red::Cast<Red::entMorphTargetSkinnedMeshComponent>(component))
+            {
+                if (!override.componentName || morphComponent->name == override.componentName)
+                {
+                    if (morphComponent->meshAppearance && morphComponent->meshAppearance != "default")
+                    {
+                        morphComponent->meshAppearance = override.meshAppearance;
+                    }
+                }
             }
         }
     }

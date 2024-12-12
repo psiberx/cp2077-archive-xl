@@ -11,6 +11,8 @@ using AppearanceDefinition = appearance::AppearanceDefinition;
 namespace Raw::AppearanceDefinition
 {
 using Mutex = Core::OffsetPtr<0xE6, Red::SharedSpinLock>;
+using CompilationFlag = Core::OffsetPtr<0xE7, bool>;
+using CompilationJob = Core::OffsetPtr<0xE8, Red::JobHandle>;
 
 constexpr auto ExtractPartComponents = Core::RawFunc<
     /* addr = */ Red::AddressLib::AppearanceDefinition_ExtractPartComponents,
