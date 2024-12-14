@@ -1,11 +1,81 @@
 resource:
   scope:
+    ##### Customization ######
     player_customization.app:
-      - player_ma_beard.app
+      - player_ma_lashes.app
       - player_ma_brows.app
+      - player_ma_beard.app
       - player_ma_hair.app
+      - player_wa_lashes.app
       - player_wa_brows.app
       - player_wa_hair.app
+    ##### Customization ## Lashes #####
+    player_ma_lashes.app:
+      - base\characters\head\player_base_heads\appearances\head\hel_pma_lashes.app
+    player_ma_lashes.mesh:
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\he_000_pma_c__basehead.mesh
+    player_wa_lashes.app:
+      - base\characters\head\player_base_heads\appearances\head\hel_pwa_lashes.app
+    player_wa_lashes.mesh:
+      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\he_000_pwa_c__basehead.mesh
+    ##### Customization ## Brows #####
+    player_ma_brows.app:
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_01.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_02.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_03.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_04.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_05.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_06.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_07.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_08.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_09.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_10.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_11.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_12.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_13.app
+    player_ma_brows.mesh:
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__01.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__02.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__03.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__04.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__05.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__06.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__07.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__08.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__09.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__10.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__11.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__12.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__13.mesh
+    player_wa_brows.app:
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_01.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_02.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_03.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_04.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_05.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_06.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_07.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_08.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_09.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_10.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_11.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_12.app
+      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_13.app
+    player_wa_brows.mesh:
+      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__01.mesh
+      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__02.mesh
+      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__03.mesh
+      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__04.mesh
+      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__05.mesh
+      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__06.mesh
+      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__07.mesh
+      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__08.mesh
+      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__09.mesh
+      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__10.mesh
+      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__11.mesh
+      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__12.mesh
+      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__13.mesh
+    ##### Customization ## Beard #####
     player_ma_beard.app:
       - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__big_beard.app
       - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__big_beard__chin.app
@@ -64,20 +134,20 @@ resource:
       - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__thick_beard_afro__mustache.app
       - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__thick_beard_afro__mustache_sides.app
       - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__thick_beard_afro__sides.app
-    player_ma_brows.app:
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_01.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_02.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_03.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_04.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_05.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_06.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_07.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_08.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_09.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_10.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_11.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_12.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_13.app
+    player_ma_beard.mesh:
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_big_beard.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_big_beard_afro.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_fu_manchu.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_handlebar_stache.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_jesse_beard.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_logan.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_maelstrom_full.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_maelstrom_goatie.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_patmc.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_short_afro.mesh
+      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_thick_beard_afro.mesh
+    ##### Customization ## Hair #####
     player_ma_hair.app:
       - player_ma_hair_cw_00.app
       - player_ma_hair_cw_01.app
@@ -161,47 +231,6 @@ resource:
       - base\characters\head\player_base_heads\appearances\hairs\hh_048_pma__hairs_144_cyberware_01.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_049_pma__hairs_146_cyberware_01.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_050_pma__hairs_999_cyberware_01.app
-    player_wa_brows.app:
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_01.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_02.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_03.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_04.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_05.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_06.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_07.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_08.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_09.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_10.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_11.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_12.app
-      - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_13.app
-    player_ma_beard.mesh:
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_big_beard.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_big_beard_afro.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_fu_manchu.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_handlebar_stache.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_jesse_beard.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_logan.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_maelstrom_full.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_maelstrom_goatie.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_patmc.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_short_afro.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_thick_beard_afro.mesh
-    player_ma_brows.mesh:
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__01.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__02.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__03.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__04.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__05.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__06.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__07.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__08.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__09.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__10.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__11.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__12.mesh
-      - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__13.mesh
     player_ma_hair.mesh:
       - base\characters\common\hair\hh_006_ma__demo\hh_006_ma__demo.mesh
       - base\characters\common\hair\hh_007_ma__demo\hh_007_ma__demo.mesh
@@ -355,20 +384,6 @@ resource:
       - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_02\h1_084_ma_hat__bucket_hat_hh_02.mesh
       - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_03\h1_084_ma_hat__bucket_hat_hh_03.mesh
       - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_04\h1_084_ma_hat__bucket_hat_hh_04.mesh
-    player_wa_brows.mesh:
-      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__01.mesh
-      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__02.mesh
-      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__03.mesh
-      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__04.mesh
-      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__05.mesh
-      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__06.mesh
-      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__07.mesh
-      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__08.mesh
-      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__09.mesh
-      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__10.mesh
-      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__11.mesh
-      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__12.mesh
-      - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__13.mesh
     player_wa_hair.app:
       - player_wa_hair_cw_00.app
       - player_wa_hair_cw_01.app

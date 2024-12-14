@@ -6,6 +6,7 @@
 /archive/source/raw/**/*.json
 /archive/*.xml
 /archive/*.zip
+/archive/custom_refs.txt
 /archive/fileTreeState.json
 /build
 /dev
