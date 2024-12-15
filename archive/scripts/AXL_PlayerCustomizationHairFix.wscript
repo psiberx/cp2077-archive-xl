@@ -2,7 +2,7 @@ import * as Logger from 'Logger.wscript'
 import { CName } from 'TypeHelper.wscript'
 import * as TypeHelper from 'TypeHelper.wscript'
 
-const config = JSON.parse(wkit.YamlToJson(wkit.LoadRawJsonFromProject('PlayerCustomizationScope.xl', 'json')))
+const config = JSON.parse(wkit.YamlToJson(wkit.LoadFromResources('PlayerCustomizationScope.xl')))
 
 const affectedHairMeshes = [
   ...config['resource']['scope']['player_ma_beard.mesh'],
@@ -176,7 +176,7 @@ if (logInfo || logWarnings) {
 }
 
 if (generateExtensionJson) {
-  wkit.SaveToRaw('PlayerCustomizationHairFix.xl', wkit.JsonToYaml(JSON.stringify({resource: {fix: extensionData}})))
+  wkit.SaveToResources('PlayerCustomizationFix.xl', wkit.JsonToYaml(JSON.stringify({resource: {fix: extensionData}})))
 }
 
 function collectMaterialData(materialInstance, materialData, contextParams) {
