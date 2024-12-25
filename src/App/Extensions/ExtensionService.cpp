@@ -8,6 +8,7 @@
 #include "App/Extensions/Journal/Extension.hpp"
 #include "App/Extensions/Localization/Extension.hpp"
 #include "App/Extensions/Mesh/Extension.hpp"
+#include "App/Extensions/PhotoMode/Extension.hpp"
 #include "App/Extensions/PuppetState/Extension.hpp"
 #include "App/Extensions/QuestPhase/Extension.hpp"
 #include "App/Extensions/ResourceLink/Extension.hpp"
@@ -44,6 +45,7 @@ void App::ExtensionService::OnBootstrap()
     m_loader->Add<PuppetStateExtension>();
     m_loader->Add<QuestPhaseExtension>();
     m_loader->Add<WorldStreamingExtension>();
+    m_loader->Add<PhotoModeExtension>();
     m_loader->Add<InkSpawnerExtension>();
 
     HookOnceAfter<Raw::GameApplication::InitResourceDepot>([&]() {
