@@ -33,6 +33,7 @@ constexpr uint32_t AttachmentSlots_IsSlotSpawning = 1283201918;
 constexpr uint32_t CNamePool_RegisterName = 627643257;
 constexpr uint32_t CNamePool_GetStringView = 2878476560;
 
+constexpr uint32_t CBaseEngine_InitEngine = 3273923080;
 constexpr uint32_t CBaseEngine_LoadGatheredResources = 3729789488;
 
 constexpr uint32_t CharacterCustomizationFeetController_CheckState = 3015323410;
@@ -159,6 +160,7 @@ constexpr uint32_t ResourceLoader_OnUpdate = 1303056161;
 constexpr uint32_t ResourcePath_Create = 3998356057;
 
 constexpr uint32_t ResourceSerializer_Deserialize = 2901686778;
+constexpr uint32_t ResourceSerializer_PostLoad = 1350901460;
 
 constexpr uint32_t StreamingSector_OnReady = 3972601611;
 
