@@ -197,12 +197,12 @@ Core::SharedPtr<App::MeshExtension::MeshState> App::MeshExtension::AcquireMeshSt
 }
 
 void App::MeshExtension::ProcessMeshResource(const Core::SharedPtr<MeshState>& aMeshState,
-                                                  const Red::Handle<Red::CMesh>& aMesh,
-                                                  const Core::SharedPtr<MeshState>& aSourceState,
-                                                  const Red::Handle<Red::CMesh>& aSourceMesh,
-                                                  const Red::DynArray<Red::CName>& aMaterialNames,
-                                                  const Red::SharedPtr<Red::DynArray<Red::Handle<Red::IMaterial>>>& aFinalMaterials,
-                                                  const Red::JobGroup& aJobGroup)
+                                             const Red::Handle<Red::CMesh>& aMesh,
+                                             const Core::SharedPtr<MeshState>& aSourceState,
+                                             const Red::Handle<Red::CMesh>& aSourceMesh,
+                                             const Red::DynArray<Red::CName>& aMaterialNames,
+                                             const Red::SharedPtr<Red::DynArray<Red::Handle<Red::IMaterial>>>& aFinalMaterials,
+                                             const Red::JobGroup& aJobGroup)
 {
     Red::JobQueue jobQueue(aJobGroup);
     Core::Vector<DeferredMaterial> deferredMaterials(0);
@@ -473,7 +473,7 @@ Red::Handle<Red::CMaterialInstance> App::MeshExtension::CloneMaterialInstance(
 
                 baseReference.token = std::move(cloneToken);
 
-                ExpandMaterialInstanceParams(baseInstance, aMeshState, aMaterialName, jobQueue);
+                // ExpandMaterialInstanceParams(baseInstance, aMeshState, aMaterialName, jobQueue);
             }
         });
     }
