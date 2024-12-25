@@ -199,7 +199,31 @@ void App::ExtensionLoader::PostLoad()
         }
         catch (...)
         {
-            LogError("|{}| Failed to post load. An unknown error has occurred.", module->GetName());
+            LogError("|{}| Failed to apply post load effects. An unknown error has occurred.", module->GetName());
+            module->Unload();
+        }
+    }
+}
+
+void App::ExtensionLoader::ApplyTweaks()
+{
+    if (!m_loaded)
+        return;
+
+    for (const auto& module : m_modules)
+    {
+        try
+        {
+            module->ApplyTweaks();
+        }
+        catch (const std::exception& ex)
+        {
+            LogError("|{}| {}", module->GetName(), ex.what());
+            module->Unload();
+        }
+        catch (...)
+        {
+            LogError("|{}| Failed to apply TweakDB changes. An unknown error has occurred.", module->GetName());
             module->Unload();
         }
     }

@@ -3,6 +3,58 @@
 namespace Red
 {
 template<typename T>
+inline T* GetFlatPtr(TweakDBID aFlatID)
+{
+    auto tweakDB = Red::TweakDB::Get();
+
+    std::shared_lock _(tweakDB->mutex00);
+
+    auto* flatValue = tweakDB->GetFlatValue(aFlatID);
+
+    if (flatValue == nullptr)
+        return nullptr;
+
+    return flatValue->GetValue<T>();
+}
+
+template<typename T>
+inline T GetFlatValue(TweakDBID aFlatID)
+{
+    auto* flatPtr = GetFlatPtr<T>(aFlatID);
+
+    if (flatPtr == nullptr)
+        return {};
+
+    return *flatPtr;
+}
+
+template<typename T>
+inline T GetFlat(TweakDBID aFlatID)
+{
+    auto* flatPtr = GetFlatPtr<T>(aFlatID);
+
+    if (flatPtr == nullptr)
+        return {};
+
+    return *flatPtr;
+}
+
+template<typename T>
+inline void SetFlat(TweakDBID aFlatID, T&& aValue)
+{
+    auto tweakDB = TweakDB::Get();
+
+    const auto type = GetType<T>();
+    const auto offset = tweakDB->CreateFlatValue({type, &aValue});
+
+    aFlatID.SetTDBOffset(offset);
+
+    std::shared_lock _(tweakDB->mutex00);
+
+    tweakDB->flats.InsertOrAssign(aFlatID);
+}
+
+template<typename T>
 inline TweakDBID CreateFlat(TweakDBID aFlatID, T&& aValue)
 {
     auto tweakDB = TweakDB::Get();
@@ -115,30 +167,19 @@ inline bool RecordExists(TweakDBID aRecordID)
     return tweakDB->recordsByID.Get(aRecordID);
 }
 
-template<typename T>
-inline T* GetFlatPtr(TweakDBID aFlatID)
+template<typename R>
+inline DynArray<Handle<R>> GetRecords()
 {
     auto tweakDB = Red::TweakDB::Get();
 
-    std::shared_lock _(tweakDB->mutex00);
+    std::shared_lock _(tweakDB->mutex01);
 
-    auto* flatValue = tweakDB->GetFlatValue(aFlatID);
+    auto* records = tweakDB->recordsByType.Get(GetType<R>());
 
-    if (flatValue == nullptr)
-        return nullptr;
-
-    return flatValue->GetValue<T>();
-}
-
-template<typename T>
-inline T GetFlatValue(TweakDBID aFlatID)
-{
-    auto* flatPtr = GetFlatPtr<T>(aFlatID);
-
-    if (flatPtr == nullptr)
+    if (!records)
         return {};
 
-    return *flatPtr;
+    return *std::bit_cast<DynArray<Handle<R>>*>(records);
 }
 
 inline CString ToStringDebug(TweakDBID aID)

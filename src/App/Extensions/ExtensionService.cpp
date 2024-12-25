@@ -18,6 +18,7 @@
 #include "Red/GameApplication.hpp"
 #include "Red/GameEngine.hpp"
 #include "Red/ResourceLoader.hpp"
+#include "Red/TweakDB.hpp"
 
 App::ExtensionService::ExtensionService(std::filesystem::path aBundlePath)
     : m_bundlePath(std::move(aBundlePath))
@@ -52,6 +53,10 @@ void App::ExtensionService::OnBootstrap()
 
     HookOnceAfter<Raw::CBaseEngine::LoadGatheredResources>([&]() {
         m_loader->PostLoad();
+    });
+
+    HookAfter<Raw::LoadTweakDB>([&]() {
+        m_loader->ApplyTweaks();
     });
 }
 

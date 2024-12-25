@@ -25,6 +25,7 @@ public:
     void Configure();
     void Load();
     void PostLoad();
+    void ApplyTweaks();
     void Unload();
     void Reload();
 

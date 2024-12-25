@@ -20,6 +20,7 @@ public:
     bool Load() override;
     bool Unload() override;
     void Configure() override;
+    void ApplyTweaks() override;
 
     std::string_view GetName() override;
 
@@ -31,7 +32,6 @@ public:
     static PuppetFeetState GetFeetState(const Red::WeakHandle<Red::GameObject>& aPuppet);
 
 private:
-    static void OnLoadTweakDB();
     static void OnAttachPuppet(Red::gameuiCharacterCustomizationGenitalsController* aComponent);
     static void OnDetachPuppet(Red::gameuiCharacterCustomizationHairstyleController* aComponent, uintptr_t);
 

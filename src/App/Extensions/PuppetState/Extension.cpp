@@ -17,7 +17,6 @@ std::string_view App::PuppetStateExtension::GetName()
 
 bool App::PuppetStateExtension::Load()
 {
-    HookAfter<Raw::LoadTweakDB>(&OnLoadTweakDB).OrThrow();
     HookBefore<Raw::CharacterCustomizationGenitalsController::OnAttach>(&OnAttachPuppet).OrThrow();
     HookBefore<Raw::CharacterCustomizationHairstyleController::OnDetach>(&OnDetachPuppet).OrThrow();
 
@@ -28,7 +27,6 @@ bool App::PuppetStateExtension::Load()
 
 bool App::PuppetStateExtension::Unload()
 {
-    Unhook<Raw::LoadTweakDB>();
     Unhook<Raw::CharacterCustomizationGenitalsController::OnAttach>();
     Unhook<Raw::CharacterCustomizationHairstyleController::OnDetach>();
 
@@ -51,7 +49,7 @@ void App::PuppetStateExtension::Configure()
     }
 }
 
-void App::PuppetStateExtension::OnLoadTweakDB()
+void App::PuppetStateExtension::ApplyTweaks()
 {
     CreateSuffixRecord(BodyTypeSuffixID,
                        RTTI_TYPE_NAME(PuppetStateSystem),

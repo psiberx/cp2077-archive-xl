@@ -17,6 +17,7 @@ public:
     virtual bool Load() { return true; }
     virtual bool Unload() { return true; }
     virtual void PostLoad() {}
+    virtual void ApplyTweaks() {}
 };
 
 class ConfigurableExtension : public Extension
