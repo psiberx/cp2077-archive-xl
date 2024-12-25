@@ -1,4 +1,5 @@
 #include "Extension.hpp"
+#include "Red/GameEngine.hpp"
 
 namespace
 {
@@ -17,11 +18,16 @@ std::string_view App::InkSpawnerExtension::GetName()
 
 bool App::InkSpawnerExtension::Load()
 {
-    Hook<Raw::InkWidgetLibrary::SpawnFromLocal>(&OnSpawnLocal).OrThrow();
-    Hook<Raw::InkWidgetLibrary::SpawnFromExternal>(&OnSpawnExternal).OrThrow();
-    Hook<Raw::InkWidgetLibrary::AsyncSpawnFromLocal>(&OnAsyncSpawnLocal).OrThrow();
-    Hook<Raw::InkWidgetLibrary::AsyncSpawnFromExternal>(&OnAsyncSpawnExternal).OrThrow();
-    HookBefore<Raw::InkSpawner::FinishAsyncSpawn>(&OnFinishAsyncSpawn).OrThrow();
+    HookOnceAfter<Raw::CBaseEngine::InitEngine>(+[]() {
+        if (Red::GetType<"Codeware">())
+            return;
+
+        Hook<Raw::InkWidgetLibrary::SpawnFromLocal>(&OnSpawnLocal).OrThrow();
+        Hook<Raw::InkWidgetLibrary::SpawnFromExternal>(&OnSpawnExternal).OrThrow();
+        Hook<Raw::InkWidgetLibrary::AsyncSpawnFromLocal>(&OnAsyncSpawnLocal).OrThrow();
+        Hook<Raw::InkWidgetLibrary::AsyncSpawnFromExternal>(&OnAsyncSpawnExternal).OrThrow();
+        HookBefore<Raw::InkSpawner::FinishAsyncSpawn>(&OnFinishAsyncSpawn).OrThrow();
+    });
 
     return true;
 }
@@ -38,8 +44,8 @@ bool App::InkSpawnerExtension::Unload()
 }
 
 uintptr_t App::InkSpawnerExtension::OnSpawnLocal(Red::ink::WidgetLibraryResource& aLibrary,
-                                              Red::Handle<Red::ink::WidgetLibraryItemInstance>& aInstance,
-                                              Red::CName aItemName)
+                                                 Red::Handle<Red::ink::WidgetLibraryItemInstance>& aInstance,
+                                                 Red::CName aItemName)
 {
     auto result = Raw::InkWidgetLibrary::SpawnFromLocal(aLibrary, aInstance, aItemName);
 
@@ -64,37 +70,18 @@ uintptr_t App::InkSpawnerExtension::OnSpawnLocal(Red::ink::WidgetLibraryResource
 }
 
 uintptr_t App::InkSpawnerExtension::OnSpawnExternal(Red::ink::WidgetLibraryResource& aLibrary,
-                                                 Red::Handle<Red::ink::WidgetLibraryItemInstance>& aInstance,
-                                                 Red::ResourcePath aExternalPath,
-                                                 Red::CName aItemName)
+                                                    Red::Handle<Red::ink::WidgetLibraryItemInstance>& aInstance,
+                                                    Red::ResourcePath aExternalPath,
+                                                    Red::CName aItemName)
 {
     InjectDependency(aLibrary, aExternalPath);
 
-    auto result = Raw::InkWidgetLibrary::SpawnFromExternal(aLibrary, aInstance, aExternalPath, aItemName);
-
-    if (!aInstance)
-    {
-        auto* itemNameStr = aItemName.ToString();
-        auto* controllerSep = strchr(itemNameStr, ControllerSeparator);
-
-        if (controllerSep)
-        {
-            Red::CName itemName(Red::FNV1a64(reinterpret_cast<const uint8_t*>(itemNameStr), controllerSep - itemNameStr));
-            Raw::InkWidgetLibrary::SpawnFromExternal(aLibrary, aInstance, aExternalPath, itemName);
-
-            if (aInstance)
-            {
-                InjectController(aInstance, controllerSep + 1);
-            }
-        }
-    }
-
-    return result;
+    return Raw::InkWidgetLibrary::SpawnFromExternal(aLibrary, aInstance, aExternalPath, aItemName);
 }
 
 bool App::InkSpawnerExtension::OnAsyncSpawnLocal(Red::ink::WidgetLibraryResource& aLibrary,
-                                              Red::InkSpawningInfo& aSpawningInfo,
-                                              Red::CName aItemName)
+                                                 Red::InkSpawningInfo& aSpawningInfo,
+                                                 Red::CName aItemName)
 {
     auto* itemNameStr = aItemName.ToString();
     auto* controllerSep = strchr(itemNameStr, ControllerSeparator);
@@ -108,25 +95,17 @@ bool App::InkSpawnerExtension::OnAsyncSpawnLocal(Red::ink::WidgetLibraryResource
 }
 
 bool App::InkSpawnerExtension::OnAsyncSpawnExternal(Red::ink::WidgetLibraryResource& aLibrary,
-                                                 Red::InkSpawningInfo& aSpawningInfo,
-                                                 Red::ResourcePath aExternalPath,
-                                                 Red::CName aItemName)
+                                                    Red::InkSpawningInfo& aSpawningInfo,
+                                                    Red::ResourcePath aExternalPath,
+                                                    Red::CName aItemName)
 {
     InjectDependency(aLibrary, aExternalPath);
-
-    auto* itemNameStr = aItemName.ToString();
-    auto* controllerSep = strchr(itemNameStr, ControllerSeparator);
-
-    if (controllerSep)
-    {
-        aItemName = Red::FNV1a64(reinterpret_cast<const uint8_t*>(itemNameStr), controllerSep - itemNameStr);
-    }
 
     return Raw::InkWidgetLibrary::AsyncSpawnFromExternal(aLibrary, aSpawningInfo, aExternalPath, aItemName);
 }
 
 void App::InkSpawnerExtension::OnFinishAsyncSpawn(Red::InkSpawningContext& aContext,
-                                               Red::Handle<Red::ink::WidgetLibraryItemInstance>& aInstance)
+                                                  Red::Handle<Red::ink::WidgetLibraryItemInstance>& aInstance)
 {
     auto* itemNameStr = aContext.request->itemName.ToString();
     auto* controllerSep = strchr(itemNameStr, ControllerSeparator);
@@ -169,7 +148,7 @@ void App::InkSpawnerExtension::InjectDependency(Red::ink::WidgetLibraryResource&
 }
 
 void App::InkSpawnerExtension::InjectController(Red::Handle<Red::ink::WidgetLibraryItemInstance>& aInstance,
-                                             Red::CName aControllerName)
+                                                Red::CName aControllerName)
 {
     auto* controllerType = Red::CRTTISystem::Get()->GetClass(aControllerName);
 
