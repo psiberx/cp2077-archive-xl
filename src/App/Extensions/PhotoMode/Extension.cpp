@@ -8,6 +8,7 @@ namespace
 constexpr auto ExtensionName = "PhotoMode";
 
 constexpr uint32_t CharacterSelectorAttribute = 63;
+constexpr uint32_t DummyCharacterSlots = 2;
 }
 
 std::string_view App::PhotoModeExtension::GetName()
@@ -19,6 +20,7 @@ bool App::PhotoModeExtension::Load()
 {
     HookAfter<Raw::PhotoModeSystem::Activate>(&PhotoModeExtension::OnActivatePhotoMode).OrThrow();
     HookBefore<Raw::PhotoModeMenuController::SetupGridSelector>(&OnSetupGridSelector).OrThrow();
+    Hook<Raw::PhotoModeMenuController::SetNpcImageCallback>(&OnSetNpcImage).OrThrow();
 
     return true;
 }
@@ -27,6 +29,7 @@ bool App::PhotoModeExtension::Unload()
 {
     Unhook<Raw::PhotoModeSystem::Activate>();
     Unhook<Raw::PhotoModeMenuController::SetupGridSelector>();
+    Unhook<Raw::PhotoModeMenuController::SetNpcImageCallback>();
 
     return true;
 }
@@ -78,15 +81,18 @@ void App::PhotoModeExtension::ApplyTweaks()
             auto dummyName = "PhotoModeNpcs.DoNotTouch";
             Red::CreateRecord(dummyName, "PhotoModeSticker");
 
-            iconList.PushBack(dummyName);
-            puppetList.PushBack("");
-            nameList.PushBack("");
-            factList.PushBack("");
-            enabledList.PushBack(false);
-            customizationList.PushBack(false);
-            expressionList.PushBack(false);
-            collisionRadiusList.PushBack(0.0);
-            collisionHeightList.PushBack(0.0);
+            for (auto i = DummyCharacterSlots; i > 0; --i)
+            {
+                iconList.PushBack(dummyName);
+                puppetList.PushBack("");
+                nameList.PushBack("");
+                factList.PushBack("");
+                enabledList.PushBack(false);
+                customizationList.PushBack(false);
+                expressionList.PushBack(false);
+                collisionRadiusList.PushBack(0.0);
+                collisionHeightList.PushBack(0.0);
+            }
         }
 
         auto characterIndex = puppetList.size;
@@ -151,6 +157,22 @@ void App::PhotoModeExtension::OnSetupGridSelector(Red::gameuiPhotoModeMenuContro
 {
     if (aAttribute == CharacterSelectorAttribute && s_dummyCharacterIndex && aGridData.size >= s_dummyCharacterIndex)
     {
-        aGridData.RemoveAt(s_dummyCharacterIndex - 1);
+        aElementsCount -= DummyCharacterSlots;
+
+        for (auto i = DummyCharacterSlots; i > 0; --i)
+        {
+            aGridData.RemoveAt(s_dummyCharacterIndex - 1);
+        }
     }
+}
+
+void App::PhotoModeExtension::OnSetNpcImage(void* aCallback, uint32_t aCharacterIndex, Red::ResourcePath aAtlasPath,
+                                            Red::CName aImagePart, uint32_t aImageIndex)
+{
+    if (aImageIndex >= s_dummyCharacterIndex)
+    {
+        aImageIndex -= DummyCharacterSlots;
+    }
+
+    Raw::PhotoModeMenuController::SetNpcImageCallback(aCallback, aCharacterIndex, aAtlasPath, aImagePart, aImageIndex);
 }

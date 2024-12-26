@@ -37,4 +37,8 @@ constexpr auto SetupGridSelector = Core::RawFunc<
     /* type = */ bool (*)(Red::gameuiPhotoModeMenuController* aController, Red::CName aEventName, uint8_t& a3,
                           uint32_t& aAttribute, Red::DynArray<Red::gameuiPhotoModeOptionGridButtonData>& aGridData,
                           uint32_t& aElementsCount, uint32_t& aElementsInRow)>();
+
+constexpr auto SetNpcImageCallback = Core::RawFunc<
+    /* addr = */ Red::AddressLib::PhotoModeMenuController_SetNpcImageCallback,
+    /* type = */ void (*)(void* aCallback, uint32_t aCharacterIndex, Red::ResourcePath aAtlasPath, Red::CName aImagePart, uint32_t aImageIndex)>();
 }

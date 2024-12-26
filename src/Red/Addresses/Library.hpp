@@ -144,6 +144,7 @@ constexpr uint32_t MappinSystem_OnStreamingWorldLoaded = 140387944;
 constexpr uint32_t MeshAppearance_LoadMaterialSetupAsync = 1419388740;
 
 constexpr uint32_t PhotoModeMenuController_SetupGridSelector = 3755427483;
+constexpr uint32_t PhotoModeMenuController_SetNpcImageCallback = 3051761678;
 
 constexpr uint32_t PhotoModeSystem_Activate = 2593396187;
 constexpr uint32_t PhotoModeSystem_RegisterCharacter = 3267708234;
