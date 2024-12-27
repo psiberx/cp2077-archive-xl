@@ -167,7 +167,7 @@ void App::PhotoModeExtension::OnSetupGridSelector(Red::gameuiPhotoModeMenuContro
 }
 
 void App::PhotoModeExtension::OnSetNpcImage(void* aCallback, uint32_t aCharacterIndex, Red::ResourcePath aAtlasPath,
-                                            Red::CName aImagePart, uint32_t aImageIndex)
+                                            Red::CName aImagePart, int32_t aImageIndex)
 {
     if (aImageIndex >= s_dummyCharacterIndex)
     {

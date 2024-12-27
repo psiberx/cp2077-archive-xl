@@ -40,5 +40,6 @@ constexpr auto SetupGridSelector = Core::RawFunc<
 
 constexpr auto SetNpcImageCallback = Core::RawFunc<
     /* addr = */ Red::AddressLib::PhotoModeMenuController_SetNpcImageCallback,
-    /* type = */ void (*)(void* aCallback, uint32_t aCharacterIndex, Red::ResourcePath aAtlasPath, Red::CName aImagePart, uint32_t aImageIndex)>();
+    /* type = */ void (*)(void* aCallback, uint32_t aCharacterIndex, Red::ResourcePath aAtlasPath,
+                          Red::CName aImagePart, int32_t aImageIndex)>();
 }

@@ -20,7 +20,8 @@ private:
                                     Red::CName aEventName, uint8_t& a3, uint32_t& aAttribute,
                                     Red::DynArray<Red::gameuiPhotoModeOptionGridButtonData>& aGridData,
                                     uint32_t& aElementsCount, uint32_t& aElementsInRow);
-    static void OnSetNpcImage(void* aCallback, uint32_t aCharacterIndex, Red::ResourcePath aAtlasPath, Red::CName aImagePart, uint32_t aImageIndex);
+    static void OnSetNpcImage(void* aCallback, uint32_t aCharacterIndex, Red::ResourcePath aAtlasPath,
+                              Red::CName aImagePart, int32_t aImageIndex);
 
     static inline Core::SortedMap<uint32_t, uint32_t> s_extraCharacters;
     static inline uint32_t s_dummyCharacterIndex{0};
