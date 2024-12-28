@@ -12,6 +12,7 @@ constexpr uint32_t DummyCharacterSlots = 2;
 constexpr Red::CName ManAverageTag = "ManAverage";
 constexpr Red::CName ManBigTag = "ManBig";
 constexpr Red::CName ManMassiveTag = "ManMassive";
+constexpr Red::CName CatTag = "Cat";
 }
 
 std::string_view App::PhotoModeExtension::GetName()
@@ -124,6 +125,12 @@ void App::PhotoModeExtension::ApplyTweaks()
                 if (visualTag == ManMassiveTag)
                 {
                     characterSource = 9;
+                    characterType = 4;
+                    break;
+                }
+                if (visualTag == CatTag)
+                {
+                    characterSource = 22;
                     characterType = 4;
                     break;
                 }
