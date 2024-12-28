@@ -9,6 +9,12 @@ constexpr auto ExtensionName = "PhotoMode";
 constexpr uint32_t CharacterSelectorAttribute = 63;
 constexpr uint32_t DummyCharacterSlots = 2;
 
+constexpr Red::TweakDBID WomanAverageID = "Character.Panam_Puppet_Photomode";
+constexpr Red::TweakDBID ManAverageID = "Character.Viktor_Puppet_Photomode";
+constexpr Red::TweakDBID ManBigID = "Character.Jackie_Puppet_Photomode";
+constexpr Red::TweakDBID ManMassiveID = "Character.AdamSmasher_Puppet_Photomode";
+constexpr Red::TweakDBID CatID = "Character.Nibbles_Puppet_Photomode";
+
 constexpr Red::CName ManAverageTag = "ManAverage";
 constexpr Red::CName ManBigTag = "ManBig";
 constexpr Red::CName ManMassiveTag = "ManMassive";
@@ -23,7 +29,8 @@ std::string_view App::PhotoModeExtension::GetName()
 bool App::PhotoModeExtension::Load()
 {
     HookAfter<Raw::PhotoModeSystem::Activate>(&OnActivatePhotoMode).OrThrow();
-    Hook<Raw::PhotoModeSystem::CollectPoses>(&OnCollectPoses).OrThrow();
+    Hook<Raw::PhotoModeSystem::RegisterPoses>(&OnRegisterPoses).OrThrow();
+    Hook<Raw::PhotoModeSystem::RegisterPropPoses1>(&OnRegisterPropPoses1).OrThrow();
     Hook<Raw::PhotoModeSystem::PreparePoses>(&OnPreparePoses).OrThrow();
     HookBefore<Raw::PhotoModeMenuController::SetupGridSelector>(&OnSetupGridSelector).OrThrow();
     Hook<Raw::PhotoModeMenuController::SetNpcImageCallback>(&OnSetNpcImage).OrThrow();
@@ -34,7 +41,8 @@ bool App::PhotoModeExtension::Load()
 bool App::PhotoModeExtension::Unload()
 {
     Unhook<Raw::PhotoModeSystem::Activate>();
-    Unhook<Raw::PhotoModeSystem::CollectPoses>();
+    Unhook<Raw::PhotoModeSystem::RegisterPoses>();
+    Unhook<Raw::PhotoModeSystem::RegisterPropPoses1>();
     Unhook<Raw::PhotoModeSystem::PreparePoses>();
     Unhook<Raw::PhotoModeMenuController::SetupGridSelector>();
     Unhook<Raw::PhotoModeMenuController::SetNpcImageCallback>();
@@ -58,6 +66,11 @@ void App::PhotoModeExtension::ApplyTweaks()
     auto collisionRadiusList = Red::GetFlat<Red::DynArray<float>>("photo_mode.general.collisionRadiusForPhotoModePuppet");
     auto collisionHeightList = Red::GetFlat<Red::DynArray<float>>("photo_mode.general.collisionHeightForPhotoModePuppet");
 
+    for (uint32_t characterIndex = 0; characterIndex < puppetList.size; ++characterIndex)
+    {
+        s_characterIndexMap[puppetList[characterIndex].c_str()] = characterIndex;
+    }
+
     for (const auto& character : Red::GetRecords<Red::gamedataCharacter_Record>())
     {
         auto characterID = character->recordID;
@@ -66,21 +79,8 @@ void App::PhotoModeExtension::ApplyTweaks()
         if (persistentName != "PhotomodePuppet")
             continue;
 
-        {
-            auto exists = false;
-
-            for (const auto& puppetID : puppetList)
-            {
-                if (characterID == puppetID.c_str())
-                {
-                    exists = true;
-                    break;
-                }
-            }
-
-            if (exists)
-                continue;
-        }
+        if (s_characterIndexMap.contains(characterID))
+            continue;
 
         if (!s_dummyCharacterIndex)
         {
@@ -105,38 +105,40 @@ void App::PhotoModeExtension::ApplyTweaks()
 
         {
             uint32_t characterIndex = puppetList.size;
-            uint32_t characterSource = 0;
-            uint32_t characterType = 1;
+            uint32_t characterSource = s_characterIndexMap[WomanAverageID];
+            uint32_t characterType = 4;
 
             auto visualTags = Red::GetFlat<Red::DynArray<Red::TweakDBID>>({characterID, ".visualTags"});
             for (const auto& visualTag : visualTags)
             {
                 if (visualTag == ManAverageTag)
                 {
-                    characterType = 2;
+                    characterSource = s_characterIndexMap[ManAverageID];
+                    characterType = 4;
                     break;
                 }
                 if (visualTag == ManBigTag)
                 {
-                    characterSource = 8;
+                    characterSource = s_characterIndexMap[ManBigID];
                     characterType = 4;
                     break;
                 }
                 if (visualTag == ManMassiveTag)
                 {
-                    characterSource = 9;
+                    characterSource = s_characterIndexMap[ManMassiveID];
                     characterType = 4;
                     break;
                 }
                 if (visualTag == CatTag)
                 {
-                    characterSource = 22;
+                    characterSource = s_characterIndexMap[CatID];
                     characterType = 4;
                     break;
                 }
             }
 
             s_extraCharacters[characterIndex] = {characterSource, characterType};
+            s_characterIndexMap[characterID] = characterIndex;
         }
 
         auto characterStr = Red::ToStringDebug(characterID);
@@ -171,30 +173,36 @@ void App::PhotoModeExtension::OnActivatePhotoMode(Red::gamePhotoModeSystem* aSys
 {
     auto& characterList = Raw::PhotoModeSystem::CharacterList::Ref(aSystem);
 
+    if (!characterList.size)
+        return;
+
     for (const auto& [characterIndex, characterSource] : s_extraCharacters)
     {
         Red::DynArray<void*> placeholder;
-        Raw::PhotoModeSystem::AddCharacter(aSystem, characterSource.index, characterList, characterSource.type,
-                                           placeholder, placeholder);
-
-        characterList.Back().characterIndex = characterIndex;
+        Raw::PhotoModeSystem::AddCharacter(aSystem, characterIndex, characterList, 4, placeholder, placeholder);
     }
 }
 
-void App::PhotoModeExtension::OnCollectPoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t a3,
-                                             uint64_t a4)
+void App::PhotoModeExtension::OnRegisterPoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex,
+                                              uint32_t aPoseType)
 {
-    auto extracCharacter = s_extraCharacters.find(aCharacterIndex);
-    if (extracCharacter != s_extraCharacters.end())
+    if (!s_extraCharacters.contains(aCharacterIndex))
     {
-        aCharacterIndex = extracCharacter->second.index;
+        Raw::PhotoModeSystem::RegisterPoses(aSystem, aCharacterIndex, aPoseType);
     }
-
-    Raw::PhotoModeSystem::CollectPoses(aSystem, aCharacterIndex, a3, a4);
 }
 
-void App::PhotoModeExtension::OnPreparePoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t* a3,
-                                             uint32_t* a4)
+void App::PhotoModeExtension::OnRegisterPropPoses1(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex,
+                                                   uint64_t a3)
+{
+    if (!s_extraCharacters.contains(aCharacterIndex))
+    {
+        Raw::PhotoModeSystem::RegisterPropPoses1(aSystem, aCharacterIndex, a3);
+    }
+}
+
+void App::PhotoModeExtension::OnPreparePoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t a3,
+                                             uint64_t a4)
 {
     auto extracCharacter = s_extraCharacters.find(aCharacterIndex);
     if (extracCharacter != s_extraCharacters.end())

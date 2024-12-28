@@ -23,8 +23,9 @@ private:
     };
 
     static void OnActivatePhotoMode(Red::gamePhotoModeSystem* aSystem);
-    static void OnCollectPoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t a3, uint64_t a4);
-    static void OnPreparePoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t* a3, uint32_t* a4);
+    static void OnRegisterPoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t aPoseType);
+    static void OnRegisterPropPoses1(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint64_t a3);
+    static void OnPreparePoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t a3, uint64_t a4);
     static void OnSetupGridSelector(Red::gameuiPhotoModeMenuController* aController,
                                     Red::CName aEventName, uint8_t& a3, uint32_t& aAttribute,
                                     Red::DynArray<Red::gameuiPhotoModeOptionGridButtonData>& aGridData,
@@ -33,6 +34,7 @@ private:
                               Red::CName aImagePart, int32_t aImageIndex);
 
     static inline Core::SortedMap<uint32_t, CharacterDataSource> s_extraCharacters;
+    static inline Core::SortedMap<Red::TweakDBID, uint32_t> s_characterIndexMap;
     static inline uint32_t s_dummyCharacterIndex{0};
 };
 }

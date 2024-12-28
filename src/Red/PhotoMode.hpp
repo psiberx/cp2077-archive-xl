@@ -29,17 +29,29 @@ constexpr auto AddCharacter = Core::RawFunc<
                           const Red::DynArray<void*>& a5,
                           const Red::DynArray<void*>& a6)>();
 
+constexpr auto RegisterPoses = Core::RawFunc<
+    /* addr = */ Red::AddressLib::PhotoModeSystem_RegisterPoses,
+    /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t aPoseType)>();
+
+constexpr auto RegisterPropPoses1 = Core::RawFunc<
+    /* addr = */ Red::AddressLib::PhotoModeSystem_RegisterPropPoses1,
+    /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint64_t a3)>();
+
+constexpr auto RegisterPropPoses2 = Core::RawFunc<
+    /* addr = */ Red::AddressLib::PhotoModeSystem_RegisterPropPoses2,
+    /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint64_t a3)>();
+
 constexpr auto PrepareAttributes = Core::RawFunc<
     /* addr = */ Red::AddressLib::PhotoModeSystem_PrepareAttributes,
     /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, uint32_t a2,
                           Red::PhotoModeCharacter* aCharacter, uint64_t a4)>();
 
-constexpr auto CollectPoses = Core::RawFunc<
-    /* addr = */ Red::AddressLib::PhotoModeSystem_CollectPoses,
-    /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t a3, uint64_t a4)>();
-
 constexpr auto PreparePoses = Core::RawFunc<
     /* addr = */ Red::AddressLib::PhotoModeSystem_PreparePoses,
+    /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t a3, uint64_t a4)>();
+
+constexpr auto PrepareCamera = Core::RawFunc<
+    /* addr = */ Red::AddressLib::PhotoModeSystem_PrepareCamera,
     /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t* a3, uint32_t* a4)>();
 }
 
