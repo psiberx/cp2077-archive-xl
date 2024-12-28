@@ -1,6 +1,5 @@
 #include "Extension.hpp"
 #include "App/Extensions/ResourceMeta/Extension.hpp"
-#include "Red/PhotoMode.hpp"
 #include "Red/TweakDB.hpp"
 
 namespace
@@ -9,6 +8,10 @@ constexpr auto ExtensionName = "PhotoMode";
 
 constexpr uint32_t CharacterSelectorAttribute = 63;
 constexpr uint32_t DummyCharacterSlots = 2;
+
+constexpr Red::CName ManAverageTag = "ManAverage";
+constexpr Red::CName ManBigTag = "ManBig";
+constexpr Red::CName ManMassiveTag = "ManMassive";
 }
 
 std::string_view App::PhotoModeExtension::GetName()
@@ -18,7 +21,9 @@ std::string_view App::PhotoModeExtension::GetName()
 
 bool App::PhotoModeExtension::Load()
 {
-    HookAfter<Raw::PhotoModeSystem::Activate>(&PhotoModeExtension::OnActivatePhotoMode).OrThrow();
+    HookAfter<Raw::PhotoModeSystem::Activate>(&OnActivatePhotoMode).OrThrow();
+    Hook<Raw::PhotoModeSystem::CollectPoses>(&OnCollectPoses).OrThrow();
+    Hook<Raw::PhotoModeSystem::PreparePoses>(&OnPreparePoses).OrThrow();
     HookBefore<Raw::PhotoModeMenuController::SetupGridSelector>(&OnSetupGridSelector).OrThrow();
     Hook<Raw::PhotoModeMenuController::SetNpcImageCallback>(&OnSetNpcImage).OrThrow();
 
@@ -28,6 +33,8 @@ bool App::PhotoModeExtension::Load()
 bool App::PhotoModeExtension::Unload()
 {
     Unhook<Raw::PhotoModeSystem::Activate>();
+    Unhook<Raw::PhotoModeSystem::CollectPoses>();
+    Unhook<Raw::PhotoModeSystem::PreparePoses>();
     Unhook<Raw::PhotoModeMenuController::SetupGridSelector>();
     Unhook<Raw::PhotoModeMenuController::SetNpcImageCallback>();
 
@@ -95,20 +102,35 @@ void App::PhotoModeExtension::ApplyTweaks()
             }
         }
 
-        auto characterIndex = puppetList.size;
-
-        auto poseType = 1;
-        auto genders = Red::GetFlat<Red::DynArray<Red::TweakDBID>>({characterID, ".genders"});
-        if (genders.size > 0)
         {
-            auto firstGender = Red::GetFlat<Red::TweakDBID>({genders[0], ".gender"});
-            if (firstGender == "Gender.Male")
-            {
-                poseType = 2;
-            }
-        }
+            uint32_t characterIndex = puppetList.size;
+            uint32_t characterSource = 0;
+            uint32_t characterType = 1;
 
-        s_extraCharacters[characterIndex] = poseType;
+            auto visualTags = Red::GetFlat<Red::DynArray<Red::TweakDBID>>({characterID, ".visualTags"});
+            for (const auto& visualTag : visualTags)
+            {
+                if (visualTag == ManAverageTag)
+                {
+                    characterType = 2;
+                    break;
+                }
+                if (visualTag == ManBigTag)
+                {
+                    characterSource = 8;
+                    characterType = 4;
+                    break;
+                }
+                if (visualTag == ManMassiveTag)
+                {
+                    characterSource = 9;
+                    characterType = 4;
+                    break;
+                }
+            }
+
+            s_extraCharacters[characterIndex] = {characterSource, characterType};
+        }
 
         auto characterStr = Red::ToStringDebug(characterID);
         auto iconStr = std::string{characterStr.c_str()} + ".icon";
@@ -142,12 +164,38 @@ void App::PhotoModeExtension::OnActivatePhotoMode(Red::gamePhotoModeSystem* aSys
 {
     auto& characterList = Raw::PhotoModeSystem::CharacterList::Ref(aSystem);
 
-    for (const auto& [characterIndex, poseType] : s_extraCharacters)
+    for (const auto& [characterIndex, characterSource] : s_extraCharacters)
     {
         Red::DynArray<void*> placeholder;
-        Raw::PhotoModeSystem::AddCharacter(aSystem, 0, characterList, poseType, placeholder, placeholder);
+        Raw::PhotoModeSystem::AddCharacter(aSystem, characterSource.index, characterList, characterSource.type,
+                                           placeholder, placeholder);
+
         characterList.Back().characterIndex = characterIndex;
     }
+}
+
+void App::PhotoModeExtension::OnCollectPoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t a3,
+                                             uint64_t a4)
+{
+    auto extracCharacter = s_extraCharacters.find(aCharacterIndex);
+    if (extracCharacter != s_extraCharacters.end())
+    {
+        aCharacterIndex = extracCharacter->second.index;
+    }
+
+    Raw::PhotoModeSystem::CollectPoses(aSystem, aCharacterIndex, a3, a4);
+}
+
+void App::PhotoModeExtension::OnPreparePoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t* a3,
+                                             uint32_t* a4)
+{
+    auto extracCharacter = s_extraCharacters.find(aCharacterIndex);
+    if (extracCharacter != s_extraCharacters.end())
+    {
+        aCharacterIndex = extracCharacter->second.index;
+    }
+
+    Raw::PhotoModeSystem::PreparePoses(aSystem, aCharacterIndex, a3, a4);
 }
 
 void App::PhotoModeExtension::OnSetupGridSelector(Red::gameuiPhotoModeMenuController* aController,

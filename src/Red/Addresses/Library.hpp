@@ -147,6 +147,9 @@ constexpr uint32_t PhotoModeMenuController_SetupGridSelector = 3755427483;
 constexpr uint32_t PhotoModeMenuController_SetNpcImageCallback = 3051761678;
 
 constexpr uint32_t PhotoModeSystem_Activate = 2593396187;
+constexpr uint32_t PhotoModeSystem_PrepareAttributes = 3893174133;
+constexpr uint32_t PhotoModeSystem_CollectPoses = 1533423999;
+constexpr uint32_t PhotoModeSystem_PreparePoses = 1972968407;
 constexpr uint32_t PhotoModeSystem_RegisterCharacter = 3267708234;
 constexpr uint32_t PhotoModeSystem_ProcessAttribute = 2433030483;
 

@@ -28,6 +28,19 @@ constexpr auto AddCharacter = Core::RawFunc<
                           uint32_t aPoseType,
                           const Red::DynArray<void*>& a5,
                           const Red::DynArray<void*>& a6)>();
+
+constexpr auto PrepareAttributes = Core::RawFunc<
+    /* addr = */ Red::AddressLib::PhotoModeSystem_PrepareAttributes,
+    /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, uint32_t a2,
+                          Red::PhotoModeCharacter* aCharacter, uint64_t a4)>();
+
+constexpr auto CollectPoses = Core::RawFunc<
+    /* addr = */ Red::AddressLib::PhotoModeSystem_CollectPoses,
+    /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t a3, uint64_t a4)>();
+
+constexpr auto PreparePoses = Core::RawFunc<
+    /* addr = */ Red::AddressLib::PhotoModeSystem_PreparePoses,
+    /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t* a3, uint32_t* a4)>();
 }
 
 namespace Raw::PhotoModeMenuController

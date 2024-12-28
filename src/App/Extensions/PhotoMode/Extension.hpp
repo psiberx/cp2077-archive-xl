@@ -2,6 +2,7 @@
 
 #include "App/Extensions/ExtensionBase.hpp"
 #include "App/Extensions/PhotoMode/Config.hpp"
+#include "Red/PhotoMode.hpp"
 
 namespace App
 {
@@ -15,7 +16,15 @@ public:
     void ApplyTweaks() override;
 
 private:
-    void OnActivatePhotoMode(Red::gamePhotoModeSystem* aSystem);
+    struct CharacterDataSource
+    {
+        uint32_t index;
+        uint32_t type;
+    };
+
+    static void OnActivatePhotoMode(Red::gamePhotoModeSystem* aSystem);
+    static void OnCollectPoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t a3, uint64_t a4);
+    static void OnPreparePoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t* a3, uint32_t* a4);
     static void OnSetupGridSelector(Red::gameuiPhotoModeMenuController* aController,
                                     Red::CName aEventName, uint8_t& a3, uint32_t& aAttribute,
                                     Red::DynArray<Red::gameuiPhotoModeOptionGridButtonData>& aGridData,
@@ -23,7 +32,7 @@ private:
     static void OnSetNpcImage(void* aCallback, uint32_t aCharacterIndex, Red::ResourcePath aAtlasPath,
                               Red::CName aImagePart, int32_t aImageIndex);
 
-    static inline Core::SortedMap<uint32_t, uint32_t> s_extraCharacters;
+    static inline Core::SortedMap<uint32_t, CharacterDataSource> s_extraCharacters;
     static inline uint32_t s_dummyCharacterIndex{0};
 };
 }
