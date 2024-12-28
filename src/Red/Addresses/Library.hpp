@@ -152,9 +152,10 @@ constexpr uint32_t PhotoModeSystem_RegisterCharacter = 3267708234;
 constexpr uint32_t PhotoModeSystem_RegisterPoses = 3714525185;
 constexpr uint32_t PhotoModeSystem_RegisterWeaponPoses = 788083328;
 constexpr uint32_t PhotoModeSystem_RegisterClothingItems = 1375351833;
-constexpr uint32_t PhotoModeSystem_PrepareAttributes = 3893174133;
+constexpr uint32_t PhotoModeSystem_UpdatePoses = 3893174133;
+constexpr uint32_t PhotoModeSystem_PrepareCategories = 1220162374;
 constexpr uint32_t PhotoModeSystem_PreparePoses = 1533423999;
-constexpr uint32_t PhotoModeSystem_PreparePoseCategories = 1972968407;
+constexpr uint32_t PhotoModeSystem_PrepareCameras = 1972968407;
 
 constexpr uint32_t QuestLoader_ProcessPhaseResource = 790570700;
 

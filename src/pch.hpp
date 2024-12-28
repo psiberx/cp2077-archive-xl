@@ -81,6 +81,7 @@
 #include <RED4ext/Scripting/Natives/Generated/game/ScriptableSystem.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/TPPRepresentationComponent.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/data/Character_Record.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/data/ItemType.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/data/ItemsFactoryAppearanceSuffixBase_Record.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/mappins/IMappinVolume.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/AppearanceInfo.hpp>

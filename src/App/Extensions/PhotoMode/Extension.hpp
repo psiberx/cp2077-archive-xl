@@ -26,8 +26,10 @@ private:
     static void OnRegisterPoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t aPoseType);
     static void OnRegisterWeaponPoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex,
                                       Red::DynArray<Red::gamedataItemType>& aItemTypes);
-    static void OnPreparePoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t a3, uint64_t a4);
-    static void OnPreparePoseCategories(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t* a3,
+    static void OnPrepareCategories(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint64_t a3);
+    static void OnPreparePoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t aCategoryIndex,
+                               uint64_t a4);
+    static void OnPrepareCameras(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t* a3,
                                         uint32_t* a4);
     static void OnSetupGridSelector(Red::gameuiPhotoModeMenuController* aController, Red::CName aEventName, uint8_t& a3,
                                     uint32_t& aAttribute,
