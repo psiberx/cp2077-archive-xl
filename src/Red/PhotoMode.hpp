@@ -20,26 +20,28 @@ constexpr auto Activate = Core::RawFunc<
     /* addr = */ Red::AddressLib::PhotoModeSystem_Activate,
     /* type = */ bool (*)(Red::gamePhotoModeSystem* aSystem)>();
 
-constexpr auto AddCharacter = Core::RawFunc<
+constexpr auto RegisterCharacter = Core::RawFunc<
     /* addr = */ Red::AddressLib::PhotoModeSystem_RegisterCharacter,
     /* type = */ bool (*)(Red::gamePhotoModeSystem* aSystem,
                           uint32_t aCharacterIndex,
-                          const Red::DynArray<Red::PhotoModeCharacter>& aCharacterList,
-                          uint32_t aPoseType,
-                          const Red::DynArray<void*>& a5,
-                          const Red::DynArray<void*>& a6)>();
+                          Red::DynArray<Red::PhotoModeCharacter>& aCharacterList,
+                          uint32_t aCharacterType,
+                          Red::DynArray<Red::gamedataItemType>& aItemTypes,
+                          Red::DynArray<Red::Handle<Red::gameItemObject>>& aClothingItems)>();
 
 constexpr auto RegisterPoses = Core::RawFunc<
     /* addr = */ Red::AddressLib::PhotoModeSystem_RegisterPoses,
     /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t aPoseType)>();
 
-constexpr auto RegisterPropPoses1 = Core::RawFunc<
-    /* addr = */ Red::AddressLib::PhotoModeSystem_RegisterPropPoses1,
-    /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint64_t a3)>();
+constexpr auto RegisterWeaponPoses = Core::RawFunc<
+    /* addr = */ Red::AddressLib::PhotoModeSystem_RegisterWeaponPoses,
+    /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex,
+                          Red::DynArray<Red::gamedataItemType>& aItemTypes)>();
 
-constexpr auto RegisterPropPoses2 = Core::RawFunc<
-    /* addr = */ Red::AddressLib::PhotoModeSystem_RegisterPropPoses2,
-    /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint64_t a3)>();
+constexpr auto RegisterClothingItems = Core::RawFunc<
+    /* addr = */ Red::AddressLib::PhotoModeSystem_RegisterClothingItems,
+    /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex,
+                          Red::DynArray<Red::Handle<Red::gameItemObject>>& aClothingItems)>();
 
 constexpr auto PrepareAttributes = Core::RawFunc<
     /* addr = */ Red::AddressLib::PhotoModeSystem_PrepareAttributes,
@@ -50,8 +52,8 @@ constexpr auto PreparePoses = Core::RawFunc<
     /* addr = */ Red::AddressLib::PhotoModeSystem_PreparePoses,
     /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t a3, uint64_t a4)>();
 
-constexpr auto PrepareCamera = Core::RawFunc<
-    /* addr = */ Red::AddressLib::PhotoModeSystem_PrepareCamera,
+constexpr auto PreparePoseCategories = Core::RawFunc<
+    /* addr = */ Red::AddressLib::PhotoModeSystem_PreparePoseCategories,
     /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t* a3, uint32_t* a4)>();
 }
 
