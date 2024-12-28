@@ -20,7 +20,14 @@ bool App::InkSpawnerExtension::Load()
 {
     HookOnceAfter<Raw::CBaseEngine::InitEngine>(+[]() {
         if (Red::GetType<"Codeware">())
-            return;
+        {
+            bool isNewCodeware{false};
+            Red::CString newCodewareVersion{"1.14.0"};
+            Red::CallStatic("Codeware", "Require", isNewCodeware, newCodewareVersion);
+
+            if (isNewCodeware)
+                return;
+        }
 
         Hook<Raw::InkWidgetLibrary::SpawnFromLocal>(&OnSpawnLocal).OrThrow();
         Hook<Raw::InkWidgetLibrary::SpawnFromExternal>(&OnSpawnExternal).OrThrow();
