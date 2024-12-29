@@ -34,6 +34,7 @@ bool App::PhotoModeExtension::Load()
     Hook<Raw::PhotoModeSystem::PrepareCategories>(&OnPrepareCategories).OrThrow();
     Hook<Raw::PhotoModeSystem::PreparePoses>(&OnPreparePoses).OrThrow();
     Hook<Raw::PhotoModeSystem::PrepareCameras>(&OnPrepareCameras).OrThrow();
+    Hook<Raw::PhotoModeSystem::UpdatePoseDependents>(&OnUpdatePoseDependents).OrThrow();
     HookBefore<Raw::PhotoModeMenuController::SetupGridSelector>(&OnSetupGridSelector).OrThrow();
     Hook<Raw::PhotoModeMenuController::SetNpcImageCallback>(&OnSetNpcImage).OrThrow();
 
@@ -48,6 +49,7 @@ bool App::PhotoModeExtension::Unload()
     Unhook<Raw::PhotoModeSystem::PrepareCategories>();
     Unhook<Raw::PhotoModeSystem::PreparePoses>();
     Unhook<Raw::PhotoModeSystem::PrepareCameras>();
+    Unhook<Raw::PhotoModeSystem::UpdatePoseDependents>();
     Unhook<Raw::PhotoModeMenuController::SetupGridSelector>();
     Unhook<Raw::PhotoModeMenuController::SetNpcImageCallback>();
 
@@ -108,9 +110,9 @@ void App::PhotoModeExtension::ApplyTweaks()
         }
 
         {
-            uint32_t characterIndex = puppetList.size;
-            uint32_t characterSource = s_characterIndexMap[WomanAverageID];
-            uint32_t characterType = 4;
+            auto characterIndex = puppetList.size;
+            auto characterSource = s_characterIndexMap[WomanAverageID];
+            auto characterType = Red::PhotoModeCharacterType::NPC;
 
             auto visualTags = Red::GetFlat<Red::DynArray<Red::TweakDBID>>({characterID, ".visualTags"});
             for (const auto& visualTag : visualTags)
@@ -118,25 +120,21 @@ void App::PhotoModeExtension::ApplyTweaks()
                 if (visualTag == ManAverageTag)
                 {
                     characterSource = s_characterIndexMap[ManAverageID];
-                    characterType = 4;
                     break;
                 }
                 if (visualTag == ManBigTag)
                 {
                     characterSource = s_characterIndexMap[ManBigID];
-                    characterType = 4;
                     break;
                 }
                 if (visualTag == ManMassiveTag)
                 {
                     characterSource = s_characterIndexMap[ManMassiveID];
-                    characterType = 4;
                     break;
                 }
                 if (visualTag == CatTag)
                 {
                     characterSource = s_characterIndexMap[CatID];
-                    characterType = 4;
                     break;
                 }
             }
@@ -185,16 +183,17 @@ void App::PhotoModeExtension::OnActivatePhotoMode(Red::gamePhotoModeSystem* aSys
         Red::DynArray<Red::gamedataItemType> itemTypes;
         Red::DynArray<Red::Handle<Red::gameItemObject>> clothingItems;
 
-        Raw::PhotoModeSystem::RegisterCharacter(aSystem, characterIndex, characterList, 4, itemTypes, clothingItems);
+        Raw::PhotoModeSystem::RegisterCharacter(aSystem, characterIndex, characterList,
+                                                Red::PhotoModeCharacterType::NPC, itemTypes, clothingItems);
     }
 }
 
 void App::PhotoModeExtension::OnRegisterPoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex,
-                                              uint32_t aPoseType)
+                                              Red::PhotoModeCharacterType aCharacterType)
 {
     if (!s_extraCharacters.contains(aCharacterIndex))
     {
-        Raw::PhotoModeSystem::RegisterPoses(aSystem, aCharacterIndex, aPoseType);
+        Raw::PhotoModeSystem::RegisterPoses(aSystem, aCharacterIndex, aCharacterType);
     }
 }
 
@@ -242,8 +241,8 @@ void App::PhotoModeExtension::OnPreparePoses(Red::gamePhotoModeSystem* aSystem, 
     Raw::PhotoModeSystem::PreparePoses(aSystem, aCharacterIndex, aCategoryIndex, a4);
 }
 
-void App::PhotoModeExtension::OnPrepareCameras(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t* a3,
-                                              uint32_t* a4)
+void App::PhotoModeExtension::OnPrepareCameras(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex,
+                                               uint32_t* a3, uint32_t* a4)
 {
     auto extracCharacter = s_extraCharacters.find(aCharacterIndex);
     if (extracCharacter != s_extraCharacters.end())
@@ -252,6 +251,23 @@ void App::PhotoModeExtension::OnPrepareCameras(Red::gamePhotoModeSystem* aSystem
     }
 
     Raw::PhotoModeSystem::PrepareCameras(aSystem, aCharacterIndex, a3, a4);
+}
+
+void App::PhotoModeExtension::OnUpdatePoseDependents(Red::gamePhotoModeSystem* aSystem, uint32_t aCategoryIndex,
+                                                     uint32_t aPoseIndex, Red::PhotoModeCharacter* aCharacter)
+{
+    auto extracCharacter = s_extraCharacters.find(aCharacter->characterIndex);
+    if (extracCharacter != s_extraCharacters.end())
+    {
+        aCharacter->characterIndex = extracCharacter->second.index;
+    }
+
+    Raw::PhotoModeSystem::UpdatePoseDependents(aSystem, aCategoryIndex, aPoseIndex, aCharacter);
+
+    if (extracCharacter != s_extraCharacters.end())
+    {
+        aCharacter->characterIndex = extracCharacter->first;
+    }
 }
 
 void App::PhotoModeExtension::OnSetupGridSelector(Red::gameuiPhotoModeMenuController* aController,
