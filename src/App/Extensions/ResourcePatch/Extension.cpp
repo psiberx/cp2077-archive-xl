@@ -4,6 +4,7 @@
 #include "App/Extensions/ResourceMeta/Extension.hpp"
 #include "Red/EntityBuilder.hpp"
 #include "Red/Mesh.hpp"
+#include "Red/MorphTarget.hpp"
 #include "Red/ResourceDepot.hpp"
 
 namespace
@@ -22,9 +23,11 @@ bool App::ResourcePatchExtension::Load()
 {
     HookBefore<Raw::ResourceDepot::RequestResource>(&OnResourceRequest).OrThrow();
     HookBefore<Raw::ResourceSerializer::Deserialize>(&OnResourceDeserialize).OrThrow();
-    HookBefore<Raw::EntityTemplate::OnLoad>(&OnEntityTemplateLoad).OrThrow();
+    HookBefore<Raw::ResourceSerializer::OnDependenciesReady>(&OnResourceReady).OrThrow();
+    HookBefore<Raw::EntityTemplate::PostLoad>(&OnEntityTemplateLoad).OrThrow();
     HookBefore<Raw::AppearanceResource::OnLoad>(&OnAppearanceResourceLoad).OrThrow();
-    HookBefore<Raw::CMesh::OnLoad>(&OnMeshResourceLoad).OrThrow();
+    HookBefore<Raw::CMesh::PostLoad>(&OnMeshResourceLoad).OrThrow();
+    HookBefore<Raw::MorphTargetMesh::PostLoad>(&OnMorphTargetResourceLoad).OrThrow();
     HookBefore<Raw::EntityBuilder::ScheduleExtractComponentsJob>(&OnEntityPackageLoad).OrThrow();
     HookAfter<Raw::AppearanceDefinition::ExtractPartComponents>(&OnPartPackageExtract).OrThrow();
     HookAfter<Raw::GarmentAssembler::ExtractComponentsJob>(&OnGarmentPackageExtract).OrThrow();
@@ -36,9 +39,11 @@ bool App::ResourcePatchExtension::Unload()
 {
     Unhook<Raw::ResourceDepot::RequestResource>();
     Unhook<Raw::ResourceSerializer::Deserialize>();
-    Unhook<Raw::EntityTemplate::OnLoad>();
+    Unhook<Raw::ResourceSerializer::OnDependenciesReady>();
+    Unhook<Raw::EntityTemplate::PostLoad>();
     Unhook<Raw::AppearanceResource::OnLoad>();
-    Unhook<Raw::CMesh::OnLoad>();
+    Unhook<Raw::CMesh::PostLoad>();
+    Unhook<Raw::MorphTargetMesh::PostLoad>();
     Unhook<Raw::EntityBuilder::ScheduleExtractComponentsJob>();
     Unhook<Raw::AppearanceDefinition::ExtractPartComponents>();
     Unhook<Raw::GarmentAssembler::ExtractComponentsJob>();
@@ -162,11 +167,14 @@ void App::ResourcePatchExtension::OnResourceRequest(Red::ResourceDepot*, const u
 
 void App::ResourcePatchExtension::OnResourceDeserialize(void* aSerializer, uint64_t, uint64_t, Red::JobHandle& aJob,
                                                         Red::ResourceSerializerRequest& aRequest, uint64_t,
-                                                        Red::DynArray<Red::Handle<Red::ISerializable>>&, uint64_t)
+                                                        Red::DynArray<Red::Handle<Red::ISerializable>>& aResults,
+                                                        uint64_t)
 {
     const auto& patchList = GetPatchList(aRequest.path);
 
-    if (!patchList.empty())
+    if (patchList.empty())
+        return;
+
     {
         std::shared_lock _(s_tokenLock);
         for (const auto& patchPath : patchList)
@@ -175,6 +183,20 @@ void App::ResourcePatchExtension::OnResourceDeserialize(void* aSerializer, uint6
             if (patchToken)
             {
                 aJob.Join(patchToken->job);
+            }
+        }
+    }
+}
+
+void App::ResourcePatchExtension::OnResourceReady(Red::ResourceSerializer* aSerializer)
+{
+    if (aSerializer->serializables.size > 0)
+    {
+        for (const auto& serializable : aSerializer->serializables)
+        {
+            if (const auto& resource = Red::Cast<Red::CurveSet>(serializable))
+            {
+                OnCurveSetResourceLoad(resource);
             }
         }
     }
@@ -292,7 +314,7 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
     }
 }
 
-void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, void* a2)
+void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, Red::PostLoadParams* aParams)
 {
     const auto& fix = ResourceMetaExtension::GetResourceFix(aMesh->path);
 
@@ -356,6 +378,58 @@ void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, void* a2
     }
 
     MeshExtension::PrefetchMeshState(aMesh, fix.GetContext());
+}
+
+void App::ResourcePatchExtension::OnMorphTargetResourceLoad(Red::MorphTargetMesh* aMorphTarget,
+                                                            Red::PostLoadParams* aParams)
+{
+    const auto& patchList = GetPatchList(aMorphTarget->path);
+
+    if (patchList.empty())
+        return;
+
+    for (const auto& patchPath : patchList)
+    {
+        auto patchResource = GetPatchResource<Red::MorphTargetMesh>(patchPath);
+
+        if (!patchResource)
+            continue;
+
+        if (patchResource->baseMesh.path)
+        {
+            aMorphTarget->baseMesh = patchResource->baseMesh;
+        }
+
+        if (patchResource->baseMeshAppearance)
+        {
+            aMorphTarget->baseMeshAppearance = patchResource->baseMeshAppearance;
+        }
+
+        if (patchResource->baseTexture.path)
+        {
+            aMorphTarget->baseTexture = patchResource->baseTexture;
+        }
+
+        for (const auto& patchTarget : patchResource->targets)
+        {
+            auto isNewTarget = true;
+
+            for (auto& existingTarget : aMorphTarget->targets)
+            {
+                if (existingTarget.name == patchTarget.name)
+                {
+                    existingTarget = patchTarget;
+                    isNewTarget = false;
+                    break;
+                }
+            }
+
+            if (isNewTarget)
+            {
+                aMorphTarget->targets.EmplaceBack(patchTarget);
+            }
+        }
+    }
 }
 
 void App::ResourcePatchExtension::OnEntityPackageLoad(Red::JobQueue& aJobQueue, void*,
@@ -471,6 +545,54 @@ void App::ResourcePatchExtension::OnGarmentPackageExtract(Red::GarmentExtraction
     }
 
     aParams->partTemplate = originalEntityTemplate;
+}
+
+void App::ResourcePatchExtension::OnCurveSetResourceLoad(Red::CurveSet* aResource)
+{
+    const auto& patchList = GetPatchList(aResource->path);
+
+    if (patchList.empty())
+        return;
+
+    for (const auto& patchPath : patchList)
+    {
+        auto patchResource = GetPatchResource<Red::CurveSet>(patchPath);
+        if (patchResource)
+        {
+            for (const auto& patchEntry : patchResource->curves)
+            {
+                auto isNewEntry = true;
+
+                for (auto& existingEntry : aResource->curves)
+                {
+                    if (existingEntry.name == patchEntry.name)
+                    {
+                        isNewEntry = false;
+
+                        if (existingEntry.curve.valueType == patchEntry.curve.valueType)
+                        {
+                            auto curveSize = patchEntry.curve.GetSize();
+                            existingEntry.curve.Resize(curveSize);
+                            std::memcpy(existingEntry.curve.buffer.data, patchEntry.curve.buffer.data, curveSize);
+                        }
+
+                        break;
+                    }
+                }
+
+                if (isNewEntry)
+                {
+                    aResource->curves.EmplaceBack();
+                    auto& newEntry = aResource->curves.Back();
+                    newEntry.name = patchEntry.name;
+
+                    auto curveSize = patchEntry.curve.GetSize();
+                    newEntry.curve.Resize(curveSize);
+                    std::memcpy(newEntry.curve.buffer.data, patchEntry.curve.buffer.data, curveSize);
+                }
+            }
+        }
+    }
 }
 
 void App::ResourcePatchExtension::IncludeAppearanceParts(const Red::Handle<Red::AppearanceResource>& aResource,

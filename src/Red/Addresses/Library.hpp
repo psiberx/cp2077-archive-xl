@@ -63,7 +63,7 @@ constexpr uint32_t CharacterCustomizationSystem_InitializeMorphOption = 37767340
 constexpr uint32_t CharacterCustomizationSystem_InitializeSwitcherOption = 2229107513;
 constexpr uint32_t CharacterCustomizationSystem_InitializeOptionsFromState = 1168449474;
 
-constexpr uint32_t CMesh_OnLoad = 2272530537;
+constexpr uint32_t CMesh_PostLoad = 2272530537;
 constexpr uint32_t CMesh_GetAppearance = 773462733;
 constexpr uint32_t CMesh_FindAppearance = 3007126651;
 constexpr uint32_t CMesh_LoadMaterialsAsync = 701648326;
@@ -143,6 +143,10 @@ constexpr uint32_t MappinSystem_OnStreamingWorldLoaded = 140387944;
 
 constexpr uint32_t MeshAppearance_LoadMaterialSetupAsync = 1419388740;
 
+constexpr uint32_t MorphTargetMesh_PostLoad = 1523127443;
+
+constexpr uint32_t MorphTargetManager_ApplyMorphTarget = 633871992;
+
 constexpr uint32_t PhotoModeMenuController_SetupGridSelector = 3755427483;
 constexpr uint32_t PhotoModeMenuController_SetNpcImageCallback = 3051761678;
 
@@ -176,6 +180,8 @@ constexpr uint32_t ResourcePath_Create = 3998356057;
 
 constexpr uint32_t ResourceSerializer_Deserialize = 2901686778;
 constexpr uint32_t ResourceSerializer_PostLoad = 1350901460;
+constexpr uint32_t ResourceSerializer_OnDependenciesReady = 1185093671;
+constexpr uint32_t ResourceSerializer_OnResourceReady = 1147149338;
 
 constexpr uint32_t StreamingSector_OnReady = 3972601611;
 

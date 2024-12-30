@@ -13,9 +13,9 @@ namespace Raw::CMesh
 {
 using MaterialLock = Core::OffsetPtr<0x218, Red::SharedSpinLock>;
 
-constexpr auto OnLoad = Core::RawFunc<
-    /* addr = */ Red::AddressLib::CMesh_OnLoad,
-    /* type = */ void (*)(Red::CMesh* aResource, void* a2)>();
+constexpr auto PostLoad = Core::RawFunc<
+    /* addr = */ Red::AddressLib::CMesh_PostLoad,
+    /* type = */ void (*)(Red::CMesh* aResource, Red::PostLoadParams* a2)>();
 
 constexpr auto GetAppearance = Core::RawFunc<
     /* addr = */ Red::AddressLib::CMesh_GetAppearance,

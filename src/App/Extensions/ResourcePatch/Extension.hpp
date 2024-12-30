@@ -26,13 +26,16 @@ private:
     static void OnResourceDeserialize(void* aSerializer, uint64_t, uint64_t, Red::JobHandle& aJob,
                                       Red::ResourceSerializerRequest& aRequest, uint64_t,
                                       Red::DynArray<Red::Handle<Red::ISerializable>>&, uint64_t);
+    static void OnResourceReady(Red::ResourceSerializer* aSerializer);
     static void OnEntityTemplateLoad(Red::EntityTemplate* aTemplate, void*);
     static void OnAppearanceResourceLoad(Red::AppearanceResource* aResource);
-    static void OnMeshResourceLoad(Red::CMesh* aMesh, void*);
+    static void OnMeshResourceLoad(Red::CMesh* aMesh, Red::PostLoadParams* aParams);
+    static void OnMorphTargetResourceLoad(Red::MorphTargetMesh* aMorphTarget, Red::PostLoadParams* aParams);
     static void OnEntityPackageLoad(Red::JobQueue& aJobQueue, void*, Red::EntityBuilderJobParams* aParams);
     static void OnPartPackageExtract(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
                                      const Red::SharedPtr<Red::ResourceToken<Red::EntityTemplate>>& aPartToken);
     static void OnGarmentPackageExtract(Red::GarmentExtractionParams* aParams, const Red::JobGroup& aJobGroup);
+    static void OnCurveSetResourceLoad(Red::CurveSet* aResource);
 
     static void IncludeAppearanceParts(const Red::Handle<Red::AppearanceResource>& aResource,
                                        const Red::Handle<Red::AppearanceDefinition>& aDefinition,
