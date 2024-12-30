@@ -424,8 +424,8 @@ bool App::MeshExtension::ContainsUnresolvedMaterials(const Red::DynArray<Red::Ha
 }
 
 Red::Handle<Red::CMaterialInstance> App::MeshExtension::CloneMaterialInstance(
-    const Red::Handle<Red::CMaterialInstance>& aSourceInstance, const Core::SharedPtr<MeshState>& aMeshState, Red::CName aMaterialName,
-    Red::JobQueue& aJobQueue)
+    const Red::Handle<Red::CMaterialInstance>& aSourceInstance, const Core::SharedPtr<MeshState>& aMeshState,
+    Red::CName aMaterialName, Red::JobQueue& aJobQueue)
 {
     auto materialInstance = Red::MakeHandle<Red::CMaterialInstance>();
     materialInstance->baseMaterial = aSourceInstance->baseMaterial;
@@ -439,8 +439,6 @@ Red::Handle<Red::CMaterialInstance> App::MeshExtension::CloneMaterialInstance(
     }
 
     ExpandMaterialInstanceParams(materialInstance, aMeshState, aMaterialName, aJobQueue);
-
-    auto& baseReference = materialInstance->baseMaterial;
 
     if (ExpandResourceReference(materialInstance->baseMaterial, aMeshState, aMaterialName))
     {
@@ -456,25 +454,22 @@ Red::Handle<Red::CMaterialInstance> App::MeshExtension::CloneMaterialInstance(
     }
     else if (materialInstance->baseMaterial.path && !materialInstance->baseMaterial.token)
     {
-        materialInstance->baseMaterial.LoadAsync();
+        auto templateToken = Red::ResourceLoader::Get()->LoadAsync<Red::CMaterialInstance>(materialInstance->baseMaterial.path);
 
-        aJobQueue.Wait(baseReference.token->job);
-        aJobQueue.Dispatch([materialInstance, aMeshState, aMaterialName](const Red::JobGroup& aJobGroup) {
-            auto& baseReference = materialInstance->baseMaterial;
-            if (auto baseInstance = Red::Cast<Red::CMaterialInstance>(baseReference.token->resource))
-            {
-                Red::JobQueue jobQueue(aJobGroup);
+        aJobQueue.Wait(templateToken->job);
+        aJobQueue.Dispatch([materialInstance, templateToken, aMeshState, aMaterialName](const Red::JobGroup& aJobGroup) {
+            if (!templateToken->IsLoaded())
+                return;
 
-                auto cloneToken = Red::MakeShared<Red::ResourceToken<Red::IMaterial>>();
-                cloneToken->self = cloneToken;
-                cloneToken->resource = CloneMaterialInstance(baseInstance, aMeshState, aMaterialName, jobQueue);
-                cloneToken->path = baseInstance->path;
-                cloneToken->finished = 1;
+            Red::JobQueue jobQueue(aJobGroup);
 
-                baseReference.token = std::move(cloneToken);
+            auto cloneToken = Red::MakeShared<Red::ResourceToken<Red::IMaterial>>();
+            cloneToken->self = cloneToken;
+            cloneToken->resource = CloneMaterialInstance(templateToken->resource, aMeshState, aMaterialName, jobQueue);
+            cloneToken->path = templateToken->path;
+            cloneToken->finished = 1;
 
-                // ExpandMaterialInstanceParams(baseInstance, aMeshState, aMaterialName, jobQueue);
-            }
+            materialInstance->baseMaterial.token = std::move(cloneToken);
         });
     }
 

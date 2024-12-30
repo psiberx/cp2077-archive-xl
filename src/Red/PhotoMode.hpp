@@ -48,7 +48,7 @@ struct PhotoModeCharacter
     uint32_t unkB4;                                    // B4
     uint32_t unkB8;                                    // B8
     bool unkBC;                                        // BC needUpdate?
-    uint64_t lookAtCamera;                             // C0
+    CName lookAtCameraPreset;                          // C0
     uint64_t unkC8;                                    // C8
     uint64_t unkD0;                                    // D0
     uint8_t unkD8;                                     // D8
@@ -71,7 +71,7 @@ struct PhotoModeCharacter
 };
 RED4EXT_ASSERT_SIZE(PhotoModeCharacter, 0x120);
 RED4EXT_ASSERT_OFFSET(PhotoModeCharacter, characterIndex, 0x48);
-RED4EXT_ASSERT_OFFSET(PhotoModeCharacter, lookAtCamera, 0xC0);
+RED4EXT_ASSERT_OFFSET(PhotoModeCharacter, lookAtCameraPreset, 0xC0);
 }
 
 namespace Raw::PhotoModeSystem

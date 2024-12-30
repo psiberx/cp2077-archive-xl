@@ -52,6 +52,7 @@
 #include <RED4ext/Scripting/Natives/Generated/ent/ITransformBinding.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/MeshComponent.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/MorphTargetSkinnedMeshComponent.hpp>
+#include <RED4ext/Scripting/Natives/Generated/ent/SimpleColliderComponent.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/SkinnedClothComponent.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/SkinnedMeshComponent.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/SkinningBinding.hpp>
@@ -75,6 +76,7 @@
 #include <RED4ext/Scripting/Natives/Generated/game/JournalTree.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/MappinResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/PersistentState.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/PhotoModeAttachmentSlotsListener.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/PhotoModeSystem.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/PointOfInterestMappinResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/Puppet.hpp>
