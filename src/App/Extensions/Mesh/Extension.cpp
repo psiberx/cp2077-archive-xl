@@ -328,7 +328,7 @@ void App::MeshExtension::ProcessMeshResource(const Core::SharedPtr<MeshState>& a
         aMesh->materialEntries.EmplaceBack();
 
         auto materialInstance = materialName != templateName
-            ? CloneMaterialInstance(sourceInstance, aMeshState, materialName, jobQueue)
+            ? CloneMaterialInstance(sourceInstance, aMeshState, materialName, jobQueue, true)
             : sourceInstance;
 
         auto& materialEntry = aMesh->materialEntries.Back();
@@ -392,7 +392,7 @@ void App::MeshExtension::ProcessMeshResource(const Core::SharedPtr<MeshState>& a
             aMesh->materialEntries.EmplaceBack();
 
             auto materialInstance = deferred.materialName != deferred.templateName
-                ? CloneMaterialInstance(sourceInstance, aMeshState, deferred.materialName, jobQueue)
+                ? CloneMaterialInstance(sourceInstance, aMeshState, deferred.materialName, jobQueue, true)
                 : sourceInstance;
 
             auto& materialEntry = aMesh->materialEntries.Back();
@@ -425,7 +425,7 @@ bool App::MeshExtension::ContainsUnresolvedMaterials(const Red::DynArray<Red::Ha
 
 Red::Handle<Red::CMaterialInstance> App::MeshExtension::CloneMaterialInstance(
     const Red::Handle<Red::CMaterialInstance>& aSourceInstance, const Core::SharedPtr<MeshState>& aMeshState,
-    Red::CName aMaterialName, Red::JobQueue& aJobQueue)
+    Red::CName aMaterialName, Red::JobQueue& aJobQueue, bool aAppendExtraContextPatams)
 {
     auto materialInstance = Red::MakeHandle<Red::CMaterialInstance>();
     materialInstance->baseMaterial = aSourceInstance->baseMaterial;
@@ -436,6 +436,28 @@ Red::Handle<Red::CMaterialInstance> App::MeshExtension::CloneMaterialInstance(
     for (const auto& sourceParam : aSourceInstance->params)
     {
         materialInstance->params.PushBack(sourceParam);
+    }
+
+    if (aAppendExtraContextPatams)
+    {
+        for (const auto& [paramName, paramValue] : aMeshState->GetContextParams())
+        {
+            auto paramExists = false;
+
+            for (const auto& param : materialInstance->params)
+            {
+                if (param.name == paramName)
+                {
+                    paramExists = true;
+                    break;
+                }
+            }
+
+            if (!paramExists)
+            {
+                materialInstance->params.PushBack({paramName, paramValue});
+            }
+        }
     }
 
     ExpandMaterialInstanceParams(materialInstance, aMeshState, aMaterialName, aJobQueue);
@@ -477,8 +499,8 @@ Red::Handle<Red::CMaterialInstance> App::MeshExtension::CloneMaterialInstance(
 }
 
 void App::MeshExtension::ExpandMaterialInstanceParams(Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
-                                                           const Core::SharedPtr<MeshState>& aMeshState,
-                                                           Red::CName aMaterialName, Red::JobQueue& aJobQueue)
+                                                      const Core::SharedPtr<MeshState>& aMeshState,
+                                                      Red::CName aMaterialName, Red::JobQueue& aJobQueue)
 {
     for (auto i = static_cast<int32_t>(aMaterialInstance->params.size) - 1; i >= 0; --i)
     {
@@ -524,8 +546,8 @@ bool App::MeshExtension::ExpandResourceReference(Red::ResourceReference<T>& aRef
 }
 
 Red::ResourcePath App::MeshExtension::ExpandResourcePath(Red::ResourcePath aPath,
-                                                              const Core::SharedPtr<MeshState>& aState,
-                                                              Red::CName aMaterialName)
+                                                         const Core::SharedPtr<MeshState>& aState,
+                                                         Red::CName aMaterialName)
 {
     auto& controller = GarmentExtension::GetDynamicAppearanceController();
     auto pathStr = controller->GetPathString(aPath);
@@ -535,7 +557,7 @@ Red::ResourcePath App::MeshExtension::ExpandResourcePath(Red::ResourcePath aPath
         return aPath;
     }
 
-    auto result = controller->ProcessString(aState->GetContext(), {{MaterialAttr, aMaterialName}}, pathStr.data());
+    auto result = controller->ProcessString(aState->GetContextAttrs(), {{MaterialAttr, aMaterialName}}, pathStr.data());
 
     if (!result.valid)
     {
@@ -653,7 +675,8 @@ App::MeshExtension::MeshState::MeshState(Red::CMesh* aMesh)
 void App::MeshExtension::MeshState::MarkStatic()
 {
     dynamic = false;
-    context.clear();
+    contextParams.clear();
+    contextAttrs.clear();
     templates.clear();
 }
 
@@ -678,57 +701,73 @@ void App::MeshExtension::MeshState::FillContext(const Core::Map<Red::CName, std:
 
     for (const auto& [attrName, attrValue] : aContext)
     {
-        context.emplace(Red::CNamePool::Add(Str::SnakeCase(attrName.ToString()).data()), attrValue);
+        contextAttrs.emplace(Red::CNamePool::Add(Str::SnakeCase(attrName.ToString()).data()), attrValue);
     }
 }
 
-const App::DynamicAttributeList& App::MeshExtension::MeshState::GetContext()
+void App::MeshExtension::MeshState::EnsureContextFilled()
 {
-    if (contextToken)
+    if (!contextToken)
+        return;
+
+    EnsureResourceLoaded(contextToken);
+
+    if (!contextToken->IsLoaded())
     {
-        EnsureResourceLoaded(contextToken);
+        auto& controller = GarmentExtension::GetDynamicAppearanceController();
+        auto pathStr = controller->GetPathString(meshPath);
 
-        if (!contextToken->IsLoaded())
+        if (!pathStr.empty())
         {
-            auto& controller = GarmentExtension::GetDynamicAppearanceController();
-            auto pathStr = controller->GetPathString(meshPath);
-
-            if (!pathStr.empty())
-            {
-                LogWarning(R"(|{}| Can't load context for mesh \"{}\".)", ExtensionName, pathStr);
-            }
-            else
-            {
-                LogWarning(R"(|{}| Can't load context for mesh {}.)", ExtensionName, meshPath.hash);
-            }
-
-            contextToken.Reset();
-            return context;
+            LogWarning(R"(|{}| Can't load context for mesh \"{}\".)", ExtensionName, pathStr);
         }
-
-        auto& metaInstance = Red::Cast<Red::CMaterialInstance>(contextToken->resource);
-
-        if (!metaInstance)
+        else
         {
-            contextToken.Reset();
-            return context;
-        }
-
-        for (auto& param : metaInstance->params)
-        {
-            if (param.data.GetType()->GetType() == Red::ERTTIType::Name)
-            {
-                auto attrName = Red::CNamePool::Add(Str::SnakeCase(param.name.ToString()).data());
-                auto attrValue = *reinterpret_cast<Red::CName*>(param.data.GetDataPtr());
-
-                context.emplace(attrName, attrValue);
-            }
+            LogWarning(R"(|{}| Can't load context for mesh {}.)", ExtensionName, meshPath.hash);
         }
 
         contextToken.Reset();
+        return;
     }
 
-    return context;
+    auto& metaInstance = Red::Cast<Red::CMaterialInstance>(contextToken->resource);
+
+    if (!metaInstance)
+    {
+        contextToken.Reset();
+        return;
+    }
+
+    for (auto& param : metaInstance->params)
+    {
+        if (param.data.GetType()->GetType() == Red::ERTTIType::Name)
+        {
+            auto attrName = Red::CNamePool::Add(Str::SnakeCase(param.name.ToString()).data());
+            auto attrValue = *reinterpret_cast<Red::CName*>(param.data.GetDataPtr());
+
+            contextAttrs.emplace(attrName, attrValue);
+        }
+        else
+        {
+            contextParams[param.name] = param.data;
+        }
+    }
+
+    contextToken.Reset();
+}
+
+const Core::Map<Red::CName, Red::Variant>& App::MeshExtension::MeshState::GetContextParams()
+{
+    EnsureContextFilled();
+
+    return contextParams;
+}
+
+const App::DynamicAttributeList& App::MeshExtension::MeshState::GetContextAttrs()
+{
+    EnsureContextFilled();
+
+    return contextAttrs;
 }
 
 void App::MeshExtension::MeshState::FillMaterials(Red::CMesh* aMesh)

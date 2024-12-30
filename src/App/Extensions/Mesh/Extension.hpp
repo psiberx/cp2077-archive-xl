@@ -28,7 +28,9 @@ private:
 
         void PrefetchContext(Red::CMesh* aMesh);
         void FillContext(const Core::Map<Red::CName, std::string>& aContext);
-        const DynamicAttributeList& GetContext();
+        void EnsureContextFilled();
+        const Core::Map<Red::CName, Red::Variant>& GetContextParams();
+        const DynamicAttributeList& GetContextAttrs();
 
         void FillMaterials(Red::CMesh* aMesh);
         void RegisterMaterialEntry(Red::CName aMaterialName, int32_t aEntryIndex);
@@ -45,7 +47,8 @@ private:
         Red::SharedSpinLock sourceMutex;
         Red::JobHandle lastJob;
         Red::SharedPtr<Red::ResourceToken<Red::IMaterial>> contextToken;
-        DynamicAttributeList context;
+        Core::Map<Red::CName, Red::Variant> contextParams;
+        DynamicAttributeList contextAttrs;
         Core::Map<Red::CName, int32_t> templates;
         Core::Map<Red::CName, int32_t> materials;
         Core::Map<Red::CName, Red::WeakHandle<Red::CMesh>> sources;
@@ -77,7 +80,7 @@ private:
     static bool ContainsUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials);
     static Red::Handle<Red::CMaterialInstance> CloneMaterialInstance(
         const Red::Handle<Red::CMaterialInstance>& aSourceInstance, const Core::SharedPtr<MeshState>& aMeshState,
-        Red::CName aMaterialName, Red::JobQueue& aJobQueue);
+        Red::CName aMaterialName, Red::JobQueue& aJobQueue, bool aAppendExtraContextPatams = false);
     static void ExpandMaterialInstanceParams(Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
                                              const Core::SharedPtr<MeshState>& aMeshState, Red::CName aMaterialName,
                                              Red::JobQueue& aJobQueue);
