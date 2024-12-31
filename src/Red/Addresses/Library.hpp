@@ -30,6 +30,9 @@ constexpr uint32_t AttachmentSlots_InitializeSlots = 3224838039;
 constexpr uint32_t AttachmentSlots_IsSlotEmpty = 4231927464;
 constexpr uint32_t AttachmentSlots_IsSlotSpawning = 1283201918;
 
+constexpr uint32_t BufferReader_MakeType0 = 1299073554;
+constexpr uint32_t BufferReader_MakeType1 = 3578095989;
+
 constexpr uint32_t CNamePool_RegisterName = 627643257;
 constexpr uint32_t CNamePool_GetStringView = 2878476560;
 

@@ -1,6 +1,7 @@
 #include "Extension.hpp"
 #include "App/Extensions/ResourceMeta/Extension.hpp"
 #include "Red/AppearanceResource.hpp"
+#include "Red/Buffer.hpp"
 #include "Red/TweakDB.hpp"
 
 namespace
@@ -681,21 +682,9 @@ void App::CustomizationExtension::FixCustomizationAppearance(Red::AppearanceReso
             prop->SetValue(newDefinition.instance, prop->GetValuePtr<void>(sourceDefinition.instance));
         }
 
+        Red::BufferReader::Clone(newDefinition->compiledData.unk30, sourceDefinition->compiledData.unk30);
+
         newDefinition->name = aAppearanceName;
-
-        {
-            newDefinition->compiledData.unk30 = sourceDefinition->compiledData.unk30;
-            auto bufferToken = newDefinition->compiledData.LoadAsync();
-
-            Red::JobQueue jobQueue;
-            jobQueue.Wait(bufferToken->job);
-            jobQueue.Dispatch([newDefinition, sourceDefinition]() {
-                newDefinition->compiledData.unk30 = nullptr;
-            });
-
-            Raw::AppearanceDefinition::CompilationFlag::Ref(newDefinition) = true;
-            Raw::AppearanceDefinition::CompilationJob::Ref(newDefinition) = jobQueue.Capture();
-        }
 
         auto meshAppearance = Red::CNamePool::Add(meshAppearanceStr.data());
         for (auto& componentOverride : newDefinition->partsOverrides[0].componentsOverrides)
@@ -725,9 +714,6 @@ void App::CustomizationExtension::FixCustomizationComponents(const Red::Handle<R
                                                              Red::DynArray<Red::Handle<Red::ISerializable>>& aComponents)
 {
     if (!ResourceMetaExtension::IsInResourceList(ResourceMetaExtension::CustomizationApp, aResource->path))
-        return;
-
-    if (aDefinition->compiledData.unk30 && !IsFixedCustomizationAppearance(aDefinition))
         return;
 
     for (auto& override : aDefinition->partsOverrides[0].componentsOverrides)
