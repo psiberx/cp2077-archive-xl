@@ -571,9 +571,11 @@ void App::ResourcePatchExtension::OnCurveSetResourceLoad(Red::CurveSet* aResourc
 
                         if (existingEntry.curve.valueType == patchEntry.curve.valueType)
                         {
-                            auto curveSize = patchEntry.curve.GetSize();
-                            existingEntry.curve.Resize(curveSize);
-                            std::memcpy(existingEntry.curve.buffer.data, patchEntry.curve.buffer.data, curveSize);
+                            existingEntry.curve.interpolationType = patchEntry.curve.interpolationType;
+                            existingEntry.curve.linkType = patchEntry.curve.linkType;
+                            existingEntry.curve.Resize(patchEntry.curve.GetSize());
+                            std::memcpy(existingEntry.curve.buffer.data, patchEntry.curve.buffer.data,
+                                        patchEntry.curve.buffer.size);
                         }
 
                         break;
@@ -585,10 +587,12 @@ void App::ResourcePatchExtension::OnCurveSetResourceLoad(Red::CurveSet* aResourc
                     aResource->curves.EmplaceBack();
                     auto& newEntry = aResource->curves.Back();
                     newEntry.name = patchEntry.name;
-
-                    auto curveSize = patchEntry.curve.GetSize();
-                    newEntry.curve.Resize(curveSize);
-                    std::memcpy(newEntry.curve.buffer.data, patchEntry.curve.buffer.data, curveSize);
+                    newEntry.curve.name = patchEntry.curve.name;
+                    newEntry.curve.valueType = patchEntry.curve.valueType;
+                    newEntry.curve.interpolationType = patchEntry.curve.interpolationType;
+                    newEntry.curve.linkType = patchEntry.curve.linkType;
+                    newEntry.curve.Resize(patchEntry.curve.GetSize());
+                    std::memcpy(newEntry.curve.buffer.data, patchEntry.curve.buffer.data, patchEntry.curve.buffer.size);
                 }
             }
         }
