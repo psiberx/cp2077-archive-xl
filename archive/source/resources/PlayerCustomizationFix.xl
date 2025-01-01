@@ -37,7 +37,8 @@ resource:
         green_orange: green_orange@beard
         dark_purple: dark_purple@beard
         purple_blonde: purple_blonde@beard
-      context: {}
+      context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
     base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_big_beard.mesh:
       names:
         red_merlot: red_merlot@beard
@@ -75,7 +76,8 @@ resource:
         phoenix_fire: phoenix_fire@beard
         purple_blonde: purple_blonde@beard
         silver_rose: silver_rose@beard
-      context: {}
+      context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
     base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_big_beard_afro.mesh:
       names:
         red_merlot: red_merlot@beard
@@ -113,7 +115,8 @@ resource:
         green_orange: green_orange@beard
         dark_purple: dark_purple@beard
         purple_blonde: purple_blonde@beard
-      context: {}
+      context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
     base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_fu_manchu.mesh:
       names:
         red_merlot: red_merlot@beard
@@ -151,7 +154,8 @@ resource:
         green_orange: green_orange@beard
         dark_purple: dark_purple@beard
         purple_blonde: purple_blonde@beard
-      context: {}
+      context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
     base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_handlebar_stache.mesh:
       names:
         red_merlot: red_merlot@beard
@@ -189,7 +193,8 @@ resource:
         green_orange: green_orange@beard
         dark_purple: dark_purple@beard
         purple_blonde: purple_blonde@beard
-      context: {}
+      context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
     base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_jesse_beard.mesh:
       names:
         red_merlot: red_merlot@beard
@@ -227,7 +232,8 @@ resource:
         green_orange: green_orange@beard
         dark_purple: dark_purple@beard
         purple_blonde: purple_blonde@beard
-      context: {}
+      context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
     base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_logan.mesh:
       names:
         red_merlot: red_merlot@beard
@@ -265,7 +271,8 @@ resource:
         green_orange: green_orange@beard
         dark_purple: dark_purple@beard
         purple_blonde: purple_blonde@beard
-      context: {}
+      context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
     base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_maelstrom_full.mesh:
       names:
         red_merlot: red_merlot@beard
@@ -303,7 +310,8 @@ resource:
         green_orange: green_orange@beard
         dark_purple: dark_purple@beard
         purple_blonde: purple_blonde@beard
-      context: {}
+      context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
     base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_maelstrom_goatie.mesh:
       names:
         black_carbon_cards: black_carbon@beard
@@ -356,6 +364,8 @@ resource:
         dark_purple: dark_purple@beard
         purple_blonde: purple_blonde@beard
       context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\beards\textures\hb__maelstrom_goatie_cap.xbm
         CapMaskTexture: base\characters\common\hair\beards\textures\hb__stuble_cap_mask.xbm
     base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_patmc.mesh:
@@ -395,7 +405,8 @@ resource:
         green_orange: green_orange@beard
         dark_purple: dark_purple@beard
         purple_blonde: purple_blonde@beard
-      context: {}
+      context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
     base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_short_afro.mesh:
       names:
         red_merlot: red_merlot@beard
@@ -433,7 +444,8 @@ resource:
         green_orange: green_orange@beard
         dark_purple: dark_purple@beard
         purple_blonde: purple_blonde@beard
-      context: {}
+      context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
     base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_thick_beard_afro.mesh:
       names:
         red_merlot: red_merlot@beard
@@ -471,7 +483,8 @@ resource:
         green_orange: green_orange@beard
         dark_purple: dark_purple@beard
         purple_blonde: purple_blonde@beard
-      context: {}
+      context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
     base\characters\common\hair\hh_006_ma__demo\hh_006_ma__demo.mesh:
       names:
         phoenix_fire_cap: phoenix_fire@cap
@@ -530,8 +543,10 @@ resource:
         blonde_dishwater_cards: blonde_dishwater@dread
         green_toxic_cap: green_toxic@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_058_wa__voodoo_01\textures\hh_058_wa__voodoo_01_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_058_wa__voodoo_01\textures\hh_058_wa__voodoo_01_cap_mask.xbm
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
     base\characters\common\hair\hh_007_ma__demo\hh_007_ma__demo.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -594,6 +609,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_007_ma__demo\textures\hh_007_ma__demo_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_007_ma__demo\textures\hh_007_ma__demo_cap_mask.xbm
     base\characters\common\hair\hh_007_ma__demo\hh_007_pma__demo_cyberware_01.mesh:
@@ -658,9 +675,11 @@ resource:
         dark_purple_cap: dark_purple@cap01
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_007_ma__demo\textures\hh_007_ma__demo_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_007_ma__demo\textures\hh_007_ma__demo_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\hh_008_ma__demo\hh_008_ma__sk8t_or_die.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -739,6 +758,8 @@ resource:
         purple_blonde_cards: purple_blonde@short
         goblin_green_cap: goblin_green@cap
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_mask.xbm
     base\characters\common\hair\hh_008_ma__demo\hh_008_pma__sk8t_or_die_cyberware_01.mesh:
@@ -819,6 +840,8 @@ resource:
         goblin_green_cap: goblin_green@cap01
         green_toxic_cap: green_toxic@cap01
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_d02.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -859,7 +882,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_025_ma__pompadour\hh_025_ma__pompadour.mesh:
       names:
         phoenix_fire_cap: phoenix_fire@cap
@@ -927,8 +951,10 @@ resource:
         goblin_green_cap: green_toxic@cap
         green_toxic_cap: green_toxic@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_025_ma__pompadour\textures\hh_025_ma__pompadour_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_025_ma__pompadour\textures\hh_025_ma__pompadour_cap_masktga.xbm
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_025_ma__pompadour\hh_025_pma__pompadour_cyberware_01.mesh:
       names:
         phoenix_fire_cap: phoenix_fire@cap01
@@ -996,9 +1022,11 @@ resource:
         goblin_green_cap: green_toxic@cap01
         green_toxic_cap: green_toxic@cap01
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_025_ma__pompadour\textures\hh_025_ma__pompadour_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_025_ma__pompadour\textures\hh_025_ma__pompadour_cap_masktga.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_026_ma__rattail\hh_026_ma__rat_tail.mesh:
       names:
         black_carbon_cards: black_carbon@short
@@ -1068,6 +1096,8 @@ resource:
         purple_blonde_cards: purple_blonde@short
         goblin_green_cap: goblin_green@cap
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_026_ma__rattail\textures\hh_026_ma__rat_tail_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_026_ma__rattail\textures\hh_026_ma__rat_tail_cap_mask.xbm
     base\characters\common\hair\hh_026_ma__rattail\hh_026_pma__rat_tail_cyberware_01.mesh:
@@ -1139,6 +1169,8 @@ resource:
         purple_blonde_cards: purple_blonde@short
         goblin_green_cap: goblin_green@cap01
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_026_ma__rattail\textures\hh_026_ma__rat_tail_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_026_ma__rattail\textures\hh_026_ma__rat_tail_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -1205,6 +1237,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         goblin_green_cap: goblin_green@cap
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_027_ma__scavenger\textures\hh_027_ma__scavenger_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_027_ma__scavenger\textures\hh_027_ma__scavenger_cap_mask.xbm
     base\characters\common\hair\hh_028_wa__corpo_bun\hh_028_ma__corpo_bun.mesh:
@@ -1269,6 +1303,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         goblin_green_cap: goblin_green@cap
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_028_wa__corpo_bun\textures\hh_028_wa__corpo_bun_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_028_wa__corpo_bun\textures\hh_028_wa__corpo_bun_cap_mask.xbm
     base\characters\common\hair\hh_028_wa__corpo_bun\hh_028_pma__corpo_bun_cyberware_01.mesh:
@@ -1333,6 +1369,8 @@ resource:
         goblin_green_cap: goblin_green@cap01
         green_toxic_cap: green_toxic@cap01
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_028_wa__corpo_bun\textures\hh_028_wa__corpo_bun_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_028_wa__corpo_bun\textures\hh_028_wa__corpo_bun_cap_d02.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -1406,6 +1444,8 @@ resource:
         purple_blonde_cards: purple_blonde@short
         goblin_green_cap: goblin_green@cap
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_030_ma__punk_idol\textures\hh_030_ma__punk_idol_cap_mask.xbm
     base\characters\common\hair\hh_031_mb__morgan_blackhand\hh_031_ma__morgan_blackhand.mesh:
       names:
@@ -1469,6 +1509,8 @@ resource:
         purple_blonde_cards: purple_blonde@short
         goblin_green_cap: goblin_green@cap
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_031_mb__morgan_blackhand\textures\hh_031_ma__morgan_blackhand_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_d02.xbm
     base\characters\common\hair\hh_032_ma__ripper_doc\hh_032_ma__ripper_doc_common.mesh:
@@ -1564,6 +1606,8 @@ resource:
         green_orange_cap: green_orange@cap
         brown_liquorice_cap_blendable: undefined@cap
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_032_ma__ripper_doc\textures\hh_032_ma__ripper_doc_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_032_ma__ripper_doc\textures\hh_032_ma__ripper_doc_cap_d02.xbm
     base\characters\common\hair\hh_032_ma__ripper_doc\hh_032_pma__ripper_doc_cyberware_01.mesh:
@@ -1677,6 +1721,8 @@ resource:
         goblin_green_cap: goblin_green@cap
         phoenix_fire_cards_short: phoenix_fire@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_051_wa__judy\textures\hh_051_wa__judy_common_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_051_wa__judy\textures\hh_051_wa__judy_common_cap_d02.xbm
@@ -1743,6 +1789,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_035_ma__mohawk_tall\textures\hh_035_ma__mohawk_tall_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_035_ma__mohawk_tall\textures\hh_035_ma__mohawk_tall_cap_mask.xbm
     base\characters\common\hair\hh_035_ma__mohawk_tall\hh_035_pma__mohawk_tall_cyberware_01.mesh:
@@ -1808,6 +1856,8 @@ resource:
         goblin_green_cap: goblin_green@cap01
         green_toxic_cap: green_toxic@cap01
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_035_ma__mohawk_tall\textures\hh_035_ma__mohawk_tall_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_035_ma__mohawk_tall\textures\hh_035_ma__mohawk_tall_cap_d02.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -1873,6 +1923,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_mask.xbm
     base\characters\common\hair\hh_036_ma__high_tight\hh_036_pma__high_tight_cyberware_01.mesh:
@@ -1937,6 +1989,8 @@ resource:
         goblin_green_cap: goblin_green@cap01
         green_toxic_cap: green_toxic@cap01
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_d02.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -2002,6 +2056,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_mask.xbm
     base\characters\common\hair\hh_037_ma__gungho\hh_037_pma__gungho_cyberware_01.mesh:
@@ -2066,6 +2122,8 @@ resource:
         goblin_green_cap: goblin_green@cap01
         green_toxic_cap: green_toxic@cap01
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_d02.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -2129,6 +2187,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         goblin_green_cap: goblin_green@cap
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_039_wa__punk_shaved\textures\hh_039_wa__punk_shaved_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_039_wa__punk_shaved\textures\hh_039_wa__punk_shaved_mask.xbm
     base\characters\common\hair\hh_039_wa__punk_shaved\hh_039_pma__punk_shaved_cyberware_01.mesh:
@@ -2191,6 +2251,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         goblin_green_cap: goblin_green@cap01
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_039_wa__punk_shaved\textures\hh_039_wa__punk_shaved_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_039_wa__punk_shaved\textures\hh_039_wa__punk_shaved_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -2270,6 +2332,8 @@ resource:
         purple_blonde_cards_short: purple_blonde@long
         blond_platinum_cards: blonde_platinum@long
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_040_wa__pixie_bob\textures\hh_040_wa__pixie_bob_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_040_wa__pixie_bob\textures\hh_040_wa__pixie_bob_cap_mask.xbm
     base\characters\common\hair\hh_045_ma__short_spiked\hh_045_ma__short_spiked.mesh:
@@ -2336,6 +2400,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_045_ma__short_spiked\textures\hh_045_ma__short_spiked_player_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_045_ma__short_spiked\textures\hh_045_ma__short_spiked_player_cap_mask.xbm
     base\characters\common\hair\hh_045_ma__short_spiked\hh_045_pma__short_spiked_cyberware_01.mesh:
@@ -2401,6 +2467,8 @@ resource:
         dark_purple_cap: dark_purple@cap01
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_045_ma__short_spiked\textures\hh_045_ma__short_spiked_player_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_045_ma__short_spiked\textures\hh_045_ma__short_spiked_player_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -2465,6 +2533,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@long
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_047_wa__swirl_pomp\textures\hh_047_wa__swirl_pomp_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_047_wa__swirl_pomp\textures\hh_047_wa__swirl_pomp_cap_mask.xbm
     base\characters\common\hair\hh_047_wa__swirl_pomp\hh_047_pma__swirl_pomp_cyberware_01.mesh:
@@ -2528,6 +2598,8 @@ resource:
         dark_purple_cap: dark_purple@cap01
         purple_blonde_cards: purple_blonde@long
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_047_wa__swirl_pomp\textures\hh_047_wa__swirl_pomp_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_047_wa__swirl_pomp\textures\hh_047_wa__swirl_pomp_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -2569,7 +2641,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_049_ma__thiago\hh_049_ma__thiago_common.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -2631,6 +2704,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_089_ma__thompson\textures\hh_089_ma__thompson_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_089_ma__thompson\textures\hh_089_ma__thompson_cap_mask.xbm
     base\characters\common\hair\hh_051_wa__judy\hh_051_ma__judy_common.mesh:
@@ -2715,8 +2790,10 @@ resource:
         goblin_green_cap: goblin_green@cap
         green_toxic_cap: green_toxic@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_051_wa__judy\textures\hh_051_wa__judy_common_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_051_wa__judy\textures\hh_051_wa__judy_common_cap_mask.xbm
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\hh_051_wa__judy\hh_051_pma__judy_common_cyberware_01.mesh:
       names:
         phoenix_fire_cap: phoenix_fire@cap01
@@ -2799,9 +2876,11 @@ resource:
         goblin_green_cap: goblin_green@cap01
         green_toxic_cap: green_toxic@cap01
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_051_wa__judy\textures\hh_051_wa__judy_common_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_051_wa__judy\textures\hh_051_wa__judy_common_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\hh_053_ma__kerry_eurodyne\hh_053_ma__kerry_eurodyne_common.mesh:
       names:
         liliac_cards: liliac@short
@@ -2863,6 +2942,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_053_ma__kerry_eurodyne\textures\hh_053_ma__kerry_eurodyne_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_053_ma__kerry_eurodyne\textures\hh_053_ma__kerry_eurodyne_cap_mask.xbm
     base\characters\common\hair\hh_053_ma__kerry_eurodyne\hh_053_pma__kerry_eurodyne_common_cyberware_01.mesh:
@@ -2926,6 +3007,8 @@ resource:
         dark_purple_cap: dark_purple@cap01
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_053_ma__kerry_eurodyne\textures\hh_053_ma__kerry_eurodyne_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_053_ma__kerry_eurodyne\textures\hh_053_ma__kerry_eurodyne_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -2991,6 +3074,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_058_wa__voodoo_01\textures\hh_058_wa__voodoo_01_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_058_wa__voodoo_01\textures\hh_058_wa__voodoo_01_cap_mask.xbm
     base\characters\common\hair\hh_059_wa__voodoo_02\hh_059_ma__voodoo_02.mesh:
@@ -3055,6 +3140,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_mask.xbm
     base\characters\common\hair\hh_059_wa__voodoo_02\hh_059_pma__voodoo_02_cyberware_01.mesh:
@@ -3119,9 +3206,11 @@ resource:
         goblin_green_cap: goblin_green@cap01
         green_toxic_cap: green_toxic@cap01
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_d02.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
     base\characters\common\hair\hh_060_wa__voodoo_03\hh_060_ma__voodoo_03.mesh:
       names:
         red_merlot_cards: red_merlot@dread
@@ -3183,6 +3272,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_060_wa__voodoo_03\textures\hh_60_wa__voodoo_03_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_060_wa__voodoo_03\textures\hh_60_wa__voodoo_03_cap_mask.xbm
     base\characters\common\hair\hh_060_wa__voodoo_03\hh_060_pma__voodoo_03_cyberware_01.mesh:
@@ -3246,6 +3337,8 @@ resource:
         blonde_dishwater_cards: blonde_dishwater@dread
         green_toxic_cap: green_toxic@cap01
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_060_wa__voodoo_03\textures\hh_60_wa__voodoo_03_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_060_wa__voodoo_03\textures\hh_60_wa__voodoo_03_cap_d02.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -3286,7 +3379,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_062_ma__slick_back\hh_062_ma__slick_back.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -3347,6 +3441,8 @@ resource:
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_062_ma__slick_back\textures\hh_062_ma__slick_back_cap_mask.xbm
     base\characters\common\hair\hh_065_wa__afro_knots\hh_065_ma__afro_knots.mesh:
       names:
@@ -3408,6 +3504,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
     base\characters\common\hair\hh_065_wa__afro_knots\hh_065_pma__afro_knots_cyberware_01.mesh:
@@ -3470,6 +3568,8 @@ resource:
         dark_purple_cap: dark_purple@cap01
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -3568,8 +3668,12 @@ resource:
         green_orange_hair_cap: green_orange@cap
         dark_purple_hair_cards: dark_purple@short
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_068_wba__animals_03\textures\hh_068_wba__animals_03_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_068_wba__animals_03\textures\hh_068_wba__animals_03_cap_mask.xbm
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
     base\characters\common\hair\hh_073_ma__nomad_01\hh_073_ma__nomad_01.mesh:
       names:
         black_carbon_cards: black_carbon@short
@@ -3607,7 +3711,8 @@ resource:
         blue_sky_cards: blue_sky@short
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
-      context: {}
+      context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\hh_075_ma__peralez\hh_075_ma__peralez_common.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -3645,7 +3750,8 @@ resource:
         blue_sky_cards: blue_sky@short
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
-      context: {}
+      context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\hh_082_ma__afro_bun\hh_082_ma__afro_bun.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -3730,8 +3836,10 @@ resource:
         purple_blonde_cards: purple_blonde@curls
         green_orange_cards_shorts: green_orange@curls
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_082_ma__afro_bun\textures\hh_082_ma__demo_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_082_ma__afro_bun\textures\hh_082_ma__demo_cap_mask.xbm
+        BaseMaterialCurls: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
     base\characters\common\hair\hh_082_ma__afro_bun\hh_082_ma__afro_bun_bun.mesh:
       names:
         ginger_strawberry_cards: ginger_strawberry@curls
@@ -3769,7 +3877,8 @@ resource:
         blue_sky_cards: blue_sky@curls
         dark_purple_cards: dark_purple@curls
         purple_blonde_cards: purple_blonde@curls
-      context: {}
+      context:
+        BaseMaterialCurls: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
     base\characters\common\hair\hh_082_ma__afro_bun\hh_082_pma__afro_bun_cyberware_01.mesh:
       names:
         brown_medium_cards_shorts: brown_medium@curls
@@ -3854,6 +3963,8 @@ resource:
         green_toxic_cap: green_toxic@cap01
         green_orange_cards_shorts: green_orange@curls
       context:
+        BaseMaterialCurls: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_082_ma__afro_bun\textures\hh_082_ma__demo_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_082_ma__afro_bun\textures\hh_082_ma__demo_cap_d02.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -3915,6 +4026,8 @@ resource:
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_085_ma__takemura\textures\hh_085_ma__takemura_cap_d02_common.xbm
         CapMaskTexture: base\characters\common\hair\hh_085_ma__takemura\textures\hh_085_ma__takemura_cap_mask_common.xbm
     base\characters\common\hair\hh_089_ma__thompson\hh_089_ma__thompson_common.mesh:
@@ -3980,6 +4093,8 @@ resource:
         purple_blonde_cards: purple_blonde@short
         blonde_dishwater_cap_blendable: blonde_dishwater@cap
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_089_ma__thompson\textures\hh_089_ma__thompson_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_089_ma__thompson\textures\hh_089_ma__thompson_cap_mask.xbm
     base\characters\common\hair\hh_089_ma__thompson\hh_089_pma__thompson_common_cyberware_01.mesh:
@@ -4045,9 +4160,11 @@ resource:
         goblin_green_cap: goblin_green@cap01
         green_toxic_cap: green_toxic@cap01
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_089_ma__thompson\textures\hh_089_ma__thompson_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_089_ma__thompson\textures\hh_089_ma__thompson_cap_d02.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\hh_093_mba__sumo\hh_093_ma__sumo.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -4106,7 +4223,8 @@ resource:
         purple_blonde_cards_short: purple_blonde@long
         phoenix_fire_cards_short: phoenix_fire@long
         teal_ash_cards_short: teal_ash@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_093_mba__sumo\hh_093_ma__sumo_knot.mesh:
       names:
         black_carbon_cards: black_carbon@long
@@ -4144,7 +4262,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_094_ma__saul\hh_094_ma__saul_common.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -4206,7 +4325,9 @@ resource:
         dark_purple_cap: purple_blonde@cap
         purple_blonde_cards: purple_blonde@long
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_094_ma__saul\textures\hh_094_ma__saul_cap_mask.xbm
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_103_ma__maelstrom_spikes\hh_103_ma__common_spikes.mesh:
       names:
         liliac_cards: liliac@short
@@ -4261,7 +4382,8 @@ resource:
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
         purple_blonde_cards_short: purple_blonde@short
-      context: {}
+      context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\hh_112_ma__kicinski\hh_112_ma__kicinski_player.mesh:
       names:
         liliac_cards: liliac@short
@@ -4325,6 +4447,8 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_112_ma__kicinski\textures\hh_112_ma__kicinski_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_112_ma__kicinski\textures\hh_112_ma__kicinski_cap_mask.xbm
     base\characters\common\hair\hh_113_ma__iwinski\hh_113_ma__iwinski_common.mesh:
@@ -4402,7 +4526,8 @@ resource:
         citrus_yellow_cards2: citrus_yellow@short
         blue_sky_cards: blue_sky@short
         blue_sky_cards2: blue_sky@short
-      context: {}
+      context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\hh_120_ma__arasaka_bun\hh_120_ma__arasaka_bun_common_01.mesh:
       names:
         blue_steel_cards: blue_steel@long
@@ -4463,6 +4588,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         goblin_green_cap: goblin_green@cap
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_120_ma__arasaka_bun\textures\hh_120_01_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_120_ma__arasaka_bun\textures\hh_120_01_cap_mask.xbm
     base\characters\common\hair\hh_120_ma__arasaka_bun\hh_120_ma__arasaka_bun_knot_02.mesh:
@@ -4502,7 +4629,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_120_ma__arasaka_bun\hh_120_pma__arasaka_bun_01_cyberware_01.mesh:
       names:
         blue_steel_cards: blue_steel@long
@@ -4563,6 +4691,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         goblin_green_cap: goblin_green@cap01
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_120_ma__arasaka_bun\textures\hh_120_01_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_120_ma__arasaka_bun\textures\hh_120_01_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -4634,6 +4764,8 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_122_ma__roy\textures\hh_122_ma__roy_cap_mask.xbm
     base\characters\common\hair\hh_140_ma__short_afro\hh_140_ma__short_afro.mesh:
       names:
@@ -4706,8 +4838,10 @@ resource:
         purple_blonde_cards: purple_blonde@beard
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
     base\characters\common\hair\hh_140_ma__short_afro\hh_140_pma__short_afro_cyberware_01.mesh:
       names:
         black_salt_n_pepper_afro_cap: black_salt_n_pepper@cap01
@@ -4779,9 +4913,11 @@ resource:
         purple_blonde_cards: purple_blonde@beard
         green_orange_cap_afro: green_orange@cap01
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
     base\characters\common\hair\hh_141_ma__afro\hh_141_ma__afro.mesh:
       names:
         liliac_cards: liliac@beard
@@ -4845,6 +4981,8 @@ resource:
         purple_blonde_cards: purple_blonde@beard
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_141_ma__afro\textures\hh_141_ma__afro_buzz_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_141_ma__afro\textures\hh_141_ma__afro_buzz_cap_d02.xbm
     base\characters\common\hair\hh_142_ma__afrohawk\hh_142_pma__afrohawk.mesh:
@@ -4910,6 +5048,8 @@ resource:
         blonde_dishwater_cards: blonde_dishwater@curls
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCurls: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
     base\characters\common\hair\hh_142_ma__afrohawk\hh_142_pma__afrohawk_cyberware_01.mesh:
@@ -4975,6 +5115,8 @@ resource:
         purple_blonde_cards: purple_blonde@curls
         green_orange_cap_afro: green_orange@cap01
       context:
+        BaseMaterialCurls: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -5038,6 +5180,8 @@ resource:
         goblin_green_afro_cap: goblin_green@cap
         purple_blonde_cards: purple_blonde@beard
       context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_143_ma__flat_top\textures\hh_143_ma__flat_top_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_143_ma__flat_top\textures\hh_143_ma__flat_top_cap_d02.xbm
     base\characters\common\hair\hh_143_ma__flat_top\hh_143_pma__flat_top_cyberware_01.mesh:
@@ -5100,6 +5244,8 @@ resource:
         goblin_green_afro_cap: goblin_green@cap01
         purple_blonde_cards: purple_blonde@beard
       context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_143_ma__flat_top\textures\hh_143_ma__flat_top_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_143_ma__flat_top\textures\hh_143_ma__flat_top_cap_d02.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -5302,6 +5448,10 @@ resource:
         purple_blonde_bun_curls: purple_blonde@curls
         silver_rose_bun_beard: silver_rose@beard
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread.mi
+        BaseMaterialCurls: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_144_wa__afro_braid_bun\textures\hh_144_wa__afro_braid_bun_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_144_wa__afro_braid_bun\textures\hh_144_wa__afro_braid_bun_cap_mask.xbm
     base\characters\common\hair\hh_144_wa__afro_braid_bun\hh_144_pma__afro_braid_bun_cyberware_01.mesh:
@@ -5503,6 +5653,10 @@ resource:
         purple_blonde_bun_curls: purple_blonde@curls
         silver_rose_bun_beard: silver_rose@beard
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread.mi
+        BaseMaterialCurls: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_144_wa__afro_braid_bun\textures\hh_144_wa__afro_braid_bun_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_144_wa__afro_braid_bun\textures\hh_144_wa__afro_braid_bun_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -5606,8 +5760,11 @@ resource:
         blue_sky_cards_long: blue_sky@long
         blue_sky_cap: blue_sky@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_145_ma__v_short\textures\hh_145_ma__v_short_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_145_ma__v_short\textures\hh_145_ma__v_short_cap_mask.xbm
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\hh_145_ma__v_short\hh_145_pma__v_short.mesh:
       names:
         liliac_cards: liliac@short
@@ -5708,9 +5865,12 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_145_ma__v_short\textures\hh_145_ma__v_short_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_145_ma__v_short\textures\hh_145_ma__v_short_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_146_ma__dread_undercut\hh_146_ma__dread_undercut.mesh:
       names:
         black_carbon_cards_dreads: black_carbon@dread
@@ -5807,6 +5967,9 @@ resource:
         purple_blonde_cards_beards: purple_blonde@beard
         liliac_ombre_cards_beards: liliac_ombre@beard
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_146_ma__dread_undercut\textures\hh_146_ma__dread_undercut_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_146_ma__dread_undercut\textures\hh_146_ma__dread_undercut_cap_d02.xbm
     base\characters\common\hair\hh_146_ma__dread_undercut\hh_146_pma__dread_undercut_cyberware_01.mesh:
@@ -5905,6 +6068,9 @@ resource:
         purple_blonde_cards_beards: purple_blonde@beard
         liliac_ombre_cards_beards: liliac_ombre@beard
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_146_ma__dread_undercut\textures\hh_146_ma__dread_undercut_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_146_ma__dread_undercut\textures\hh_146_ma__dread_undercut_cap_d02.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -5982,6 +6148,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\hh_999_ma__buzz_cap\hh_999_pma__buzz_cap_cyberware_01.mesh:
@@ -6058,6 +6225,7 @@ resource:
         green_orange_cap_afro: green_orange@cap01
         green_toxic_cap: green_toxic@cap01
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -6098,7 +6266,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_003_wa_hat__beanie_hh_02\h1_003_ma_hat__beanie_hh_02.mesh:
       names:
         black_carbon_front: black_carbon@dread
@@ -6206,7 +6375,8 @@ resource:
         silver_rose_back: silver_rose@dread
         citrus_yellow_back: citrus_yellow@dread
         purple_blonde_back: purple_blonde@dread
-      context: {}
+      context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
     base\characters\common\hair\h1_003_wa_hat__beanie_hh_03\h1_003_ma_hat__beanie_hh_03.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -6267,6 +6437,8 @@ resource:
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_062_ma__slick_back\textures\hh_062_ma__slick_back_cap_mask.xbm
     base\characters\common\hair\h1_003_wa_hat__beanie_hh_04\h1_003_ma_hat__beanie_hh_04.mesh:
       names:
@@ -6342,6 +6514,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_011_ma_hat__baseball_back_hh_01\h1_011_ma_hat__baseball_back_hh_01.mesh:
@@ -6404,6 +6577,8 @@ resource:
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_062_ma__slick_back\textures\hh_062_ma__slick_back_cap_mask.xbm
     base\characters\common\hair\h1_011_ma_hat__baseball_back_hh_02\h1_011_ma_hat__baseball_back_hh_02.mesh:
       names:
@@ -6442,7 +6617,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_011_ma_hat__baseball_back_hh_03\h1_011_ma_hat__baseball_back_hh_03.mesh:
       names:
         liliac_cards: liliac@dread
@@ -6503,6 +6679,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
     base\characters\common\hair\h1_011_ma_hat__baseball_back_hh_04\h1_011_ma_hat__baseball_back_hh_04.mesh:
@@ -6579,6 +6757,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_011_ma_hat__baseball_hh_01\h1_011_ma_hat__baseball_hh_01.mesh:
@@ -6641,6 +6820,8 @@ resource:
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_062_ma__slick_back\textures\hh_062_ma__slick_back_cap_mask.xbm
     base\characters\common\hair\h1_011_ma_hat__baseball_hh_03\h1_011_ma_hat__baseball_hh_03.mesh:
       names:
@@ -6739,6 +6920,8 @@ resource:
         purple_blonde_bottom: purple_blonde@dread
         silver_rose_bottom: silver_rose@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_mask.xbm
     base\characters\common\hair\h1_011_ma_hat__baseball_hh_04\h1_011_ma_hat__baseball_hh_04.mesh:
@@ -6815,6 +6998,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_011_wa_hat__baseball_hh_02\h1_011_ma_hat__baseball_hh_02.mesh:
@@ -6855,7 +7039,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_012_wa_hat__googles_hh_01\h1_012_ma_hat__googles_hh_01.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -6910,6 +7095,8 @@ resource:
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_062_ma__slick_back\textures\hh_062_ma__slick_back_cap_mask.xbm
     base\characters\common\hair\h1_012_wa_hat__googles_hh_02\h1_012_ma_hat__googles_hh_02.mesh:
       names:
@@ -6948,7 +7135,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_012_wa_hat__googles_hh_03\h1_012_ma_hat__googles_hh_03.mesh:
       names:
         black_carbon_cards: black_carbon@dread
@@ -6986,7 +7174,8 @@ resource:
         blue_sky_cards: blue_sky@dread
         dark_purple_cards: dark_purple@dread
         purple_blonde_cards: purple_blonde@dread
-      context: {}
+      context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
     base\characters\common\hair\h1_012_wa_hat__googles_hh_04\h1_012_ma_hat__googles_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -7061,6 +7250,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_021_ma_hat__cowboy_sheriff_hh_01\h1_021_ma_hat__cowboy_sheriff_hh_01.mesh:
@@ -7100,7 +7290,8 @@ resource:
         blue_sky_cards: blue_sky@short
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
-      context: {}
+      context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\h1_021_ma_hat__cowboy_sheriff_hh_03\h1_021_ma_hat__cowboy_sheriff_hh_03.mesh:
       names:
         red_merlot_cards: red_merlot@dread
@@ -7161,6 +7352,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
     base\characters\common\hair\h1_021_ma_hat__cowboy_sheriff_hh_04\h1_021_ma_hat__cowboy_sheriff_hh_04.mesh:
@@ -7237,6 +7430,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_021_wa_hat__cowboy_sheriff_hh_02\h1_021_ma_hat__cowboy_sheriff_hh_02.mesh:
@@ -7276,7 +7470,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_024_ma_hat__scavenger_hh_01\h1_024_ma_hat__scavenger_hh_01.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -7314,7 +7509,8 @@ resource:
         blue_sky_cards: blue_sky@short
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
-      context: {}
+      context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\h1_024_ma_hat__scavenger_hh_03\h1_024_ma_hat__scavenger_hh_03.mesh:
       names:
         red_merlot_cards: red_merlot@dread
@@ -7376,6 +7572,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
     base\characters\common\hair\h1_024_ma_hat__scavenger_hh_04\h1_024_ma_hat__scavenger_hh_04.mesh:
@@ -7452,6 +7650,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_024_wa_hat__scavenger_hh_02\h1_024_ma_hat__scavenger_hh_02.mesh:
@@ -7491,7 +7690,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_032_ma_hat__asian_hh_01\h1_032_ma_hat__asian_hh_01.mesh:
       names:
         liliac_cards: liliac@long
@@ -7555,6 +7755,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         goblin_green_cap: goblin_green@cap
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_027_ma__scavenger\textures\hh_027_ma__scavenger_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_027_ma__scavenger\textures\hh_027_ma__scavenger_cap_mask.xbm
     base\characters\common\hair\h1_032_ma_hat__asian_hh_02\h1_032_ma_hat__asian_hh_02.mesh:
@@ -7616,6 +7818,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@long
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_084_wa__bun_chopsticks\textures\hh_084_wa__bun_chopsticks_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_084_wa__bun_chopsticks\textures\hh_084_wa__bun_chopsticks_cap_mask.xbm
     base\characters\common\hair\h1_032_ma_hat__asian_hh_02\h1_032_ma_hat__asian_hh_02_bun.mesh:
@@ -7655,7 +7859,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_032_ma_hat__asian_hh_03\h1_032_ma_hat__asian_hh_03.mesh:
       names:
         liliac_cards: liliac@dread
@@ -7717,6 +7922,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
     base\characters\common\hair\h1_032_ma_hat__asian_hh_04\h1_032_ma_hat__asian_hh_04.mesh:
@@ -7793,6 +8000,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_036_wa_hat__elegant_hh_01\h1_036_ma_hat__elegant_hh_01.mesh:
@@ -7855,6 +8063,8 @@ resource:
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_062_ma__slick_back\textures\hh_062_ma__slick_back_cap_mask.xbm
     base\characters\common\hair\h1_036_wa_hat__elegant_hh_02\h1_036_ma_hat__elegant_hh_02.mesh:
       names:
@@ -7920,6 +8130,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@long
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_044_wa__classic\textures\hh_044_wa__classic_cap_mask.xbm
     base\characters\common\hair\h1_036_wa_hat__elegant_hh_03\h1_036_ma_hat__elegant_hh_03.mesh:
       names:
@@ -7981,6 +8193,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
     base\characters\common\hair\h1_036_wa_hat__elegant_hh_04\h1_036_ma_hat__elegant_hh_04.mesh:
@@ -8057,6 +8271,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_045_ma_hat__farmer_hh_01\h1_045_ma_hat__farmer_hh_01.mesh:
@@ -8096,7 +8311,8 @@ resource:
         blue_sky_cards: blue_sky@short
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
-      context: {}
+      context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\h1_045_ma_hat__farmer_hh_02\h1_045_ma_hat__farmer_hh_02.mesh:
       names:
         liliac_cards: liliac@long
@@ -8134,7 +8350,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_045_ma_hat__farmer_hh_03\h1_045_ma_hat__farmer_hh_03.mesh:
       names:
         liliac_cards: liliac@dread
@@ -8197,6 +8414,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_mask.xbm
     base\characters\common\hair\h1_045_ma_hat__farmer_hh_04\h1_045_ma_hat__farmer_hh_04.mesh:
@@ -8273,6 +8492,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_051_ma_mask__headkerchief_hh_01\h1_051_ma_mask__headkerchief_hh_01.mesh:
@@ -8324,6 +8544,8 @@ resource:
         brown_medium_cap: brown_medium@cap
         brown_medium_cards: brown_medium@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_062_ma__slick_back\textures\hh_062_ma__slick_back_cap_mask.xbm
     base\characters\common\hair\h1_051_ma_mask__headkerchief_hh_02\h1_051_ma_mask__headkerchief_hh_02.mesh:
       names:
@@ -8394,7 +8616,8 @@ resource:
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
         silver_rose_cards_top: silver_rose@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_051_ma_mask__headkerchief_hh_03\h1_051_ma_mask__headkerchief_hh_03.mesh:
       names:
         liliac_cards: liliac@dread
@@ -8455,6 +8678,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
     base\characters\common\hair\h1_051_ma_mask__headkerchief_hh_04\h1_051_ma_mask__headkerchief_hh_04.mesh:
@@ -8531,6 +8756,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_060_ma_hat__bandana_kerry_01\h1_060_ma_hat__bandana_kerry_01.mesh:
@@ -8596,6 +8822,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_089_ma__thompson\textures\hh_089_ma__thompson_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_089_ma__thompson\textures\hh_089_ma__thompson_cap_mask.xbm
     base\characters\common\hair\h1_060_ma_hat__bandana_kerry_hh_02\h1_060_ma_hat__bandana_kerry_hh_02.mesh:
@@ -8658,6 +8886,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         goblin_green_cap: goblin_green@cap
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_083_wa__ponytail_01\textures\hh_083_wa__ponytail_01_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_083_wa__ponytail_01\textures\hh_083_wa__ponytail_01_cap_mask.xbm
     base\characters\common\hair\h1_060_ma_hat__bandana_kerry_hh_03\h1_060_ma_hat__bandana_kerry_hh_03.mesh:
@@ -8720,6 +8950,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
     base\characters\common\hair\h1_060_ma_hat__bandana_kerry_hh_04\h1_060_ma_hat__bandana_kerry_hh_04.mesh:
@@ -8796,6 +9028,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_063_ma_hat__military_hh_02\h1_063_ma_hat__military_hh_02.mesh:
@@ -8835,7 +9068,8 @@ resource:
         blue_sky_cards: blue_sky@short
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
-      context: {}
+      context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\h1_063_ma_hat__military_hh_04\h1_063_ma_hat__military_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -8910,6 +9144,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_063_wa_hat__military_hh_01\h1_063_ma_hat__military_hh_01.mesh:
@@ -8949,7 +9184,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_063_wa_hat__military_hh_03\h1_063_ma_hat__military_hh_03.mesh:
       names:
         red_merlot_cards: red_merlot@dread
@@ -9012,6 +9248,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_mask.xbm
     base\characters\common\hair\h1_065_ma_hat__guard_hh_01\h1_065_ma_hat__guard_hh_01.mesh:
@@ -9074,6 +9312,8 @@ resource:
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_062_ma__slick_back\textures\hh_062_ma__slick_back_cap_mask.xbm
     base\characters\common\hair\h1_065_ma_hat__guard_hh_02\h1_065_ma_hat__guard_hh_02.mesh:
       names:
@@ -9112,7 +9352,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_065_ma_hat__guard_hh_03\h1_065_ma_hat__guard_hh_03.mesh:
       names:
         red_merlot_cards: red_merlot@dread
@@ -9175,6 +9416,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_mask.xbm
     base\characters\common\hair\h1_065_ma_hat__guard_hh_04\h1_065_ma_hat__guard_hh_04.mesh:
@@ -9251,6 +9494,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_082_ma_hat__bandage_hh_01\h1_082_ma_hat__bandage_hh_01.mesh:
@@ -9349,6 +9593,9 @@ resource:
         blue_sky_cards_long: blue_sky@long
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_145_ma__v_short\textures\hh_145_ma__v_short_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_145_ma__v_short\textures\hh_145_ma__v_short_cap_mask.xbm
     base\characters\common\hair\h1_082_ma_hat__bandage_hh_02\h1_082_ma_hat__bandage_hh_02.mesh:
@@ -9384,7 +9631,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_082_ma_hat__bandage_hh_03\h1_082_ma_hat__bandage_hh_03.mesh:
       names:
         liliac_cards: liliac@dread
@@ -9447,6 +9695,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_mask.xbm
     base\characters\common\hair\h1_082_ma_hat__bandage_hh_04\h1_082_ma_hat__bandage_hh_04.mesh:
@@ -9523,6 +9773,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_ma__ponytail_base_01.mesh:
@@ -9585,6 +9836,8 @@ resource:
         phoenix_fire_cards: phoenix_fire@long
         dark_purple_cap: dark_purple@cap
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_083_wa__ponytail_01\textures\hh_083_wa__ponytail_01_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_083_wa__ponytail_01\textures\hh_083_wa__ponytail_01_cap_mask.xbm
     base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_ma__ponytail_braid_01.mesh:
@@ -9624,7 +9877,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_ma__ponytail_bulb_01.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -9662,7 +9916,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_ma__ponytail_straight_01.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -9700,7 +9955,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_01\h1_002_mask_ma__ikeuchi_hh_01.mesh:
       names:
         green_orange_cards: green_orange@short
@@ -9798,6 +10054,9 @@ resource:
         green_toxic_cap: green_toxic@cap
         blonde_golden_cards_long: blonde_golden@long
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_145_ma__v_short\textures\hh_145_ma__v_short_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_145_ma__v_short\textures\hh_145_ma__v_short_cap_d02.xbm
     ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_04\h1_002_mask_ma__ikeuchi_hh_04.mesh:
@@ -9874,6 +10133,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
         green_toxic_cap: green_toxic@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__cap_mask.xbm
     ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_03\h1_002_mask_ma__ikeuchi_hh_03.mesh:
@@ -9937,6 +10197,8 @@ resource:
         goblin_green_cap: goblin_green@cap
         green_toxic_cap: green_toxic@cap
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_058_wa__voodoo_01\textures\hh_058_wa__voodoo_01_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_058_wa__voodoo_01\textures\hh_058_wa__voodoo_01_cap_d02.xbm
     ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_01\h1_083_ma_hat__ushanka_hh_01.mesh:
@@ -9976,7 +10238,8 @@ resource:
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
         blonde_dishwater_cards: blonde_dishwater@short
-      context: {}
+      context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_02\h1_083_ma_hat__ushanka_hh_02.mesh:
       names:
         green_orange_cards: green_orange@long
@@ -10014,7 +10277,8 @@ resource:
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
         blonde_dishwater_cards: blonde_dishwater@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_03\h1_083_ma_hat__ushanka_hh_03.mesh:
       names:
         green_orange_cards: green_orange@dread
@@ -10075,6 +10339,8 @@ resource:
         blonde_dishwater_cards: blonde_dishwater@dread
         green_toxic_cap: green_toxic@cap
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
     ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_04\h1_083_ma_hat__ushanka_hh_04.mesh:
@@ -10151,6 +10417,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
         green_toxic_cap: green_toxic@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__cap_mask.xbm
     ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_01\h1_084_ma_hat__bucket_hat_hh_01.mesh:
@@ -10232,6 +10499,8 @@ resource:
         goblin_green_cap: goblin_green@cap
         green_toxic_cap: green_toxic@cap
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_047_wa__swirl_pomp\textures\hh_047_wa__swirl_pomp_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_047_wa__swirl_pomp\textures\hh_047_wa__swirl_pomp_cap_d02.xbm
     ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_02\h1_084_ma_hat__bucket_hat_hh_02.mesh:
@@ -10303,7 +10572,8 @@ resource:
         blonde_dishwater_cards: blonde_dishwater@long
         blond_platinum_cards: blonde_platinum@long
         silver_rose_cards_top: silver_rose@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_03\h1_084_ma_hat__bucket_hat_hh_03.mesh:
       names:
         green_orange_cards: green_orange@dread
@@ -10364,6 +10634,8 @@ resource:
         blonde_dishwater_cards: blonde_dishwater@dread
         green_toxic_cap: green_toxic@cap
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
     ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_04\h1_084_ma_hat__bucket_hat_hh_04.mesh:
@@ -10440,6 +10712,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
         green_toxic_cap: green_toxic@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__cap_mask.xbm
     base\characters\common\hair\hh_006_ma__demo\hh_006_pwa__demo_cyberware_01.mesh:
@@ -10500,8 +10773,10 @@ resource:
         blonde_dishwater_cards: blonde_dishwater@dread
         green_toxic_cap: green_toxic@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_058_wa__voodoo_01\textures\hh_058_wa__voodoo_01_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_058_wa__voodoo_01\textures\hh_058_wa__voodoo_01_cap_mask.xbm
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
     base\characters\common\hair\hh_006_ma__demo\hh_006_wa__demo.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -10560,8 +10835,10 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_058_wa__voodoo_01\textures\hh_058_wa__voodoo_01_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_058_wa__voodoo_01\textures\hh_058_wa__voodoo_01_cap_mask.xbm
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
     base\characters\common\hair\hh_008_ma__demo\hh_008_pwa__sk8t_or_die_cyberware_01.mesh:
       names:
         red_apple_cards: red_apple@short
@@ -10640,6 +10917,8 @@ resource:
         purple_blonde_cards: purple_blonde@short
         goblin_green_cap: goblin_green@cap01
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -10721,6 +11000,8 @@ resource:
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_mask.xbm
     base\characters\common\hair\hh_011_wa__demo\hh_011_wa__demo.mesh:
@@ -10760,7 +11041,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_029_wa__misty\hh_029_wa__misty_common.mesh:
       names:
         liliac_cards: liliac@long
@@ -10826,6 +11108,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         goblin_green_cap: goblin_green@cap
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_029_wa__misty\textures\hh_029_wa__misty_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_d02.xbm
     base\characters\common\hair\hh_033_wa__player\hh_033_pwa__player_cyberware_01.mesh:
@@ -10903,9 +11187,11 @@ resource:
         blonde_dishwater_cards: blonde_dishwater@long
         green_toxic_cap: green_toxic@cap01
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_033_wa__player\textures\hh_033_wa__player_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_033_wa__player\textures\hh_033_wa__player_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_033_wa__player\hh_033_wa__player.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -10981,8 +11267,10 @@ resource:
         purple_blonde_cards: purple_blonde@long
         phoenix_fire_cards_short: phoenix_fire@long
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_033_wa__player\textures\hh_033_wa__player_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_033_wa__player\textures\hh_033_wa__player_cap_mask.xbm
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_034_wa__militech_agent\hh_034_wa__militech_agent_common.mesh:
       names:
         liliac_cards: liliac@long
@@ -11045,6 +11333,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         goblin_green_cap: goblin_green@cap
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_034_wa__militech_agent\textures\hh_034_wa__militech_agent_cap_mask.xbm
     base\characters\common\hair\hh_035_ma__mohawk_tall\hh_035_pwa__mohawk_tall_cyberware_01.mesh:
       names:
@@ -11110,6 +11400,8 @@ resource:
         green_toxic_cap: green_toxic@cap01
         default: brown_medium@cap
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_035_ma__mohawk_tall\textures\hh_035_ma__mohawk_tall_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_035_ma__mohawk_tall\textures\hh_035_ma__mohawk_tall_cap_d02.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -11177,8 +11469,10 @@ resource:
         purple_blonde_cards: purple_blonde@short
         blonde_platinum_cap_blendable: blonde_platinum@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_035_ma__mohawk_tall\textures\hh_035_ma__mohawk_tall_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_035_ma__mohawk_tall\textures\hh_035_ma__mohawk_tall_cap_mask.xbm
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\hh_036_ma__high_tight\hh_036_pwa__high_tight_cyberware_01.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -11241,6 +11535,8 @@ resource:
         dark_purple_cap: dark_purple@cap01
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -11306,6 +11602,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_036_ma__high_tight\textures\hh_036_ma__high_tight_cap_mask.xbm
     base\characters\common\hair\hh_039_wa__punk_shaved\hh_039_pwa__punk_shaved_cyberware_01.mesh:
@@ -11368,6 +11666,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         goblin_green_cap: goblin_green@cap01
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_039_wa__punk_shaved\textures\hh_039_wa__punk_shaved_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_039_wa__punk_shaved\textures\hh_039_wa__punk_shaved_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -11431,6 +11731,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         goblin_green_cap: goblin_green@cap
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_039_wa__punk_shaved\textures\hh_039_wa__punk_shaved_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_039_wa__punk_shaved\textures\hh_039_wa__punk_shaved_mask.xbm
     base\characters\common\hair\hh_040_wa__pixie_bob\hh_040_wa__pixie_bob.mesh:
@@ -11509,6 +11811,8 @@ resource:
         phoenix_fire_cards_top: phoenix_fire@long
         blond_platinum_cards: blonde_platinum@long
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_040_wa__pixie_bob\textures\hh_040_wa__pixie_bob_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_040_wa__pixie_bob\textures\hh_040_wa__pixie_bob_cap_mask.xbm
     base\characters\common\hair\hh_041_wa__valentino\hh_041_pwa__valentino_cyberware_01.mesh:
@@ -11572,6 +11876,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         goblin_green_cap: goblin_green@cap01
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_054_wa__rogue_young\textures\hh_054_wa__rogue_young_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_054_wa__rogue_young\textures\hh_054_wa__rogue_young_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -11636,6 +11942,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         goblin_green_cap: goblin_green@cap
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_054_wa__rogue_young\textures\hh_054_wa__rogue_young_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_054_wa__rogue_young\textures\hh_054_wa__rogue_young_cap_mask.xbm
     base\characters\common\hair\hh_042_wa__topknots\hh_042_pwa__topknots_cyberware_01.mesh:
@@ -11705,6 +12013,8 @@ resource:
         dark_purple_cap: dark_purple@cap01
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_042_wa__topknots\textures\hh_042_wa__topknots_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_042_wa__topknots\textures\hh_042_wa__topknots_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -11775,6 +12085,8 @@ resource:
         green_orange_cap: green_orange@cap
         silver_rose_cap: silver_rose@cap
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_042_wa__topknots\textures\hh_042_wa__topknots_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_042_wa__topknots\textures\hh_042_wa__topknots_mask.xbm
     base\characters\common\hair\hh_044_wa__classic\hh_044_wa__classic.mesh:
@@ -11841,6 +12153,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@long
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_044_wa__classic\textures\hh_044_wa__classic_cap_mask.xbm
     base\characters\common\hair\hh_045_ma__short_spiked\hh_045_pwa__short_spiked_cyberware_01.mesh:
       names:
@@ -11905,6 +12219,8 @@ resource:
         goblin_green_cap: goblin_green@cap01
         green_toxic_cap: green_toxic@cap01
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_045_ma__short_spiked\textures\hh_045_ma__short_spiked_player_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_045_ma__short_spiked\textures\hh_045_ma__short_spiked_player_cap_d02.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -11972,6 +12288,8 @@ resource:
         red_merlot_cap_cyberspace: red_merlot@cap
         red_merlot_cap: red_merlot@cap
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_045_ma__short_spiked\textures\hh_045_ma__short_spiked_player_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_045_ma__short_spiked\textures\hh_045_ma__short_spiked_player_cap_mask.xbm
     base\characters\common\hair\hh_049_ma__thiago\hh_049_wa__thiago_common.mesh:
@@ -12035,6 +12353,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_089_ma__thompson\textures\hh_089_ma__thompson_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_089_ma__thompson\textures\hh_089_ma__thompson_cap_mask.xbm
     base\characters\common\hair\hh_051_wa__judy\hh_051_pwa__judy_common_cyberware_01.mesh:
@@ -12119,9 +12439,11 @@ resource:
         goblin_green_cap: goblin_green@cap01
         green_toxic_cap: green_toxic@cap01
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_051_wa__judy\textures\hh_051_wa__judy_common_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_051_wa__judy\textures\hh_051_wa__judy_common_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\hh_051_wa__judy\hh_051_wa__judy_common.mesh:
       names:
         red_apple_cards: red_apple@short
@@ -12205,6 +12527,8 @@ resource:
         phoenix_fire_cards_short: phoenix_fire@short
         blonde_dishwater_cap_blendable: blonde_dishwater@cap
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_051_wa__judy\textures\hh_051_wa__judy_common_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_051_wa__judy\textures\hh_051_wa__judy_common_cap_mask.xbm
     base\characters\common\hair\hh_054_wa__rogue_young\hh_054_pwa__rogue_young_cyberware_01.mesh:
@@ -12268,6 +12592,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         goblin_green_cap: goblin_green@cap01
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_054_wa__rogue_young\textures\hh_054_wa__rogue_young_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_054_wa__rogue_young\textures\hh_054_wa__rogue_young_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -12332,6 +12658,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         goblin_green_cap: goblin_green@cap
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_054_wa__rogue_young\textures\hh_054_wa__rogue_young_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_054_wa__rogue_young\textures\hh_054_wa__rogue_young_cap_mask.xbm
     base\characters\common\hair\hh_059_wa__voodoo_02\hh_059_pwa__voodoo_02_cyberware_01.mesh:
@@ -12396,6 +12724,8 @@ resource:
         dark_purple_cap: dark_purple@cap01
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -12461,6 +12791,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_mask.xbm
     base\characters\common\hair\hh_060_wa__voodoo_03\hh_060_pwa__voodoo_03_cyberware_01.mesh:
@@ -12524,6 +12856,8 @@ resource:
         dark_purple_cap: dark_purple@cap01
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_060_wa__voodoo_03\textures\hh_60_wa__voodoo_03_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_060_wa__voodoo_03\textures\hh_60_wa__voodoo_03_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -12588,6 +12922,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_060_wa__voodoo_03\textures\hh_60_wa__voodoo_03_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_060_wa__voodoo_03\textures\hh_60_wa__voodoo_03_cap_mask.xbm
     base\characters\common\hair\hh_063_wa_messy_bob\hh_063_wa__messy_bob.mesh:
@@ -12627,7 +12963,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_064_wa__bob_fringe\hh_064_wa__bob_fringe.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -12690,6 +13027,8 @@ resource:
         goblin_green_cap: goblin_green@cap
         red_apple_cards: red_apple@long
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_064_wa__bob_fringe\textures\hh_064_wa__bob_fringe_cap_mask.xbm
     base\characters\common\hair\hh_068_wba__animals_03\hh_068_wa__animals_03.mesh:
       names:
@@ -12786,8 +13125,12 @@ resource:
         silver_rose_hair_cards: silver_rose@short
         blue_sapphire_hair_cap: blue_sapphire@cap
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_068_wba__animals_03\textures\hh_068_wba__animals_03_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_068_wba__animals_03\textures\hh_068_wba__animals_03_cap_mask.xbm
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
     base\characters\common\hair\hh_077_wa__nomad_02\hh_077_wa__nomad_02.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -12825,7 +13168,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_078_wa__evelyn\hh_078_wa__evelyn_common.mesh:
       names:
         black_carbon_short: black_carbon@long
@@ -12897,7 +13241,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         purple_blonde_cards_short: purple_blonde@long
         blond_platinum_cards: blonde_platinum@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_079_wa__denny\hh_079_pwa__denny.mesh:
       names:
         liliac_cards: liliac@curls
@@ -12937,7 +13282,8 @@ resource:
         blue_sky_cards: blue_sky@curls
         dark_purple_cards: dark_purple@curls
         purple_blonde_cards: purple_blonde@curls
-      context: {}
+      context:
+        BaseMaterialCurls: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
     base\characters\common\hair\hh_081_wa__buns_02\hh_081_wa__buns_02.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -12977,7 +13323,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_082_ma__afro_bun\hh_082_pwa__afro_bun_cyberware_01.mesh:
       names:
         purple_ombre_cap: purple_ombre@cap01
@@ -13062,9 +13409,11 @@ resource:
         purple_blonde_cards: purple_blonde@curls
         green_orange_cards_shorts: green_orange@curls
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_082_ma__afro_bun\textures\hh_082_ma__demo_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_082_ma__afro_bun\textures\hh_082_ma__demo_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
+        BaseMaterialCurls: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
     base\characters\common\hair\hh_082_ma__afro_bun\hh_082_wa__afro_bun.mesh:
       names:
         purple_ombre_cap: purple_ombre@cap
@@ -13149,8 +13498,10 @@ resource:
         green_orange_cards_shorts: green_orange@curls
         blue_sapphire_cap: blue_sapphire@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_082_ma__afro_bun\textures\hh_082_ma__demo_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_082_ma__afro_bun\textures\hh_082_ma__demo_cap_mask.xbm
+        BaseMaterialCurls: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
     base\characters\common\hair\hh_082_ma__afro_bun\hh_082_wa__afro_bun_bun.mesh:
       names:
         ginger_strawberry_cards: ginger_strawberry@curls
@@ -13188,7 +13539,8 @@ resource:
         blue_sky_cards: blue_sky@curls
         dark_purple_cards: dark_purple@curls
         purple_blonde_cards: purple_blonde@curls
-      context: {}
+      context:
+        BaseMaterialCurls: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
     base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_wa__ponytail_base_01.mesh:
       names:
         black_carbon_cards: black_carbon@long
@@ -13249,6 +13601,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         goblin_green_cap: goblin_green@cap
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_083_wa__ponytail_01\textures\hh_083_wa__ponytail_01_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_083_wa__ponytail_01\textures\hh_083_wa__ponytail_01_cap_mask.xbm
     base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_wa__ponytail_braid_01.mesh:
@@ -13288,7 +13642,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_wa__ponytail_bulb_01.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -13326,7 +13681,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_wa__ponytail_straight_01.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -13364,7 +13720,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_085_ma__takemura\hh_085_wa__takemura_common.mesh:
       names:
         purple_ombre_cap: purple_ombre@cap
@@ -13423,8 +13780,10 @@ resource:
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_085_ma__takemura\textures\hh_085_ma__takemura_cap_d02_common.xbm
         CapMaskTexture: base\characters\common\hair\hh_085_ma__takemura\textures\hh_085_ma__takemura_cap_mask_common.xbm
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_088_wa__corpo_bob\hh_088_wa__corpo_bob.mesh:
       names:
         liliac_cards: liliac@long
@@ -13462,7 +13821,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_089_ma__thompson\hh_089_pwa__thompson_common_cyberware_01.mesh:
       names:
         gray_gunmetal_cap: gray_gunmetal@cap01
@@ -13526,9 +13886,11 @@ resource:
         purple_blonde_cards: purple_blonde@short
         default: brown_medium@cap01
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_089_ma__thompson\textures\hh_089_ma__thompson_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_089_ma__thompson\textures\hh_089_ma__thompson_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\hh_089_ma__thompson\hh_089_wa__thompson_common.mesh:
       names:
         gray_gunmetal_cap: gray_gunmetal@cap
@@ -13591,8 +13953,10 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_089_ma__thompson\textures\hh_089_ma__thompson_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_089_ma__thompson\textures\hh_089_ma__thompson_cap_mask.xbm
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\hh_090_wa__alt\hh_090_wa__alt_player.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -13661,6 +14025,8 @@ resource:
         pink_rose_cap: pink_rose@cap
         goblin_green_cap: green_toxic@cap
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_025_ma__pompadour\textures\hh_025_ma__pompadour_cap_masktga.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_025_ma__pompadour\textures\hh_025_ma__pompadour_cap_d02.xbm
     base\characters\common\hair\hh_091_wa__dakota\hh_091_wa__dakota.mesh:
@@ -13700,7 +14066,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_091_wa__dakota\hh_091_wa__dakota_braid.mesh:
       names:
         black_carbon_cards: black_carbon@long
@@ -13773,7 +14140,9 @@ resource:
         phoenix_fire_braid: phoenix_fire@braid
         purple_blonde_braid: purple_blonde@braid
         silver_rose_braid: silver_rose@braid
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialBraid: base\characters\common\hair\textures\hair_profiles\_master__braid_.mi
     base\characters\common\hair\hh_093_mba__sumo\hh_093_wa__sumo.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -13832,7 +14201,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         purple_blonde_cards_short: purple_blonde@long
         phoenix_fire_cards_short: phoenix_fire@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_093_mba__sumo\hh_093_wa__sumo_knot.mesh:
       names:
         black_carbon_cards: black_carbon@long
@@ -13870,7 +14240,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_103_ma__maelstrom_spikes\hh_103_wa__common_spikes.mesh:
       names:
         liliac_cards: liliac@short
@@ -13927,7 +14298,8 @@ resource:
         purple_blonde_cards_short: purple_blonde@short
         goblin_green_cards_short: goblin_green@short
         teal_ash_cards_short: teal_ash@short
-      context: {}
+      context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\hh_106_wa__ponytails\hh_106_wa__ponytails.mesh:
       names:
         liliac_cards: liliac@long
@@ -14011,6 +14383,8 @@ resource:
         silver_rose_cards_short: silver_rose@long
         teal_ash_cards_short: teal_ash@long
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_106_wa__ponytails\textures\hh_106_wa__ponytails_cap_mask.xbm
     base\characters\common\hair\hh_115_wa__alanah\hh_115_wa__alanah_common.mesh:
       names:
@@ -14081,7 +14455,8 @@ resource:
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
         silver_rose_cards_top: silver_rose@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_118_wa__gillean\hh_118_wa__gillean.mesh:
       names:
         blonde_platinum_cards_top: blonde_platinum@long
@@ -14151,7 +14526,8 @@ resource:
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
         silver_rose_cards_top: silver_rose@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\hh_121_wa__t_bug\hh_121_wa__t_bug_common.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -14218,6 +14594,8 @@ resource:
         blue_sky_cards: blue_sky@long
         blue_sky_cap: blue_sky@cap
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_121_wa__t_bug\textures\hh_121_wa__t_bug_cap_mask.xbm
     base\characters\common\hair\hh_140_ma__short_afro\hh_140_pwa__short_afro_cyberware_01.mesh:
       names:
@@ -14290,6 +14668,8 @@ resource:
         blonde_dishwater_cards: blonde_dishwater@beard
         green_orange_cap_afro: green_orange@cap01
       context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -14364,6 +14744,8 @@ resource:
         dark_purple_cards: dark_purple@beard
         purple_blonde_cards: purple_blonde@beard
       context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\hh_141_ma__afro\hh_141_wa__afro.mesh:
@@ -14429,6 +14811,8 @@ resource:
         brown_medium_cards: brown_medium@beard
         blue_sky_cards: blue_sky@beard
       context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_141_ma__afro\textures\hh_141_ma__afro_buzz_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_141_ma__afro\textures\hh_141_ma__afro_buzz_cap_d02.xbm
     base\characters\common\hair\hh_142_ma__afrohawk\hh_142_pwa__afrohawk.mesh:
@@ -14494,6 +14878,8 @@ resource:
         blonde_dishwater_cards: blonde_dishwater@curls
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCurls: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
     base\characters\common\hair\hh_142_ma__afrohawk\hh_142_pwa__afrohawk_cyberware_01.mesh:
@@ -14559,6 +14945,8 @@ resource:
         blonde_dishwater_cards: blonde_dishwater@curls
         green_orange_cap_afro: green_orange@cap01
       context:
+        BaseMaterialCurls: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -14622,6 +15010,8 @@ resource:
         purple_blonde_cards: purple_blonde@beard
         blonde_dishwater_cards: blonde_dishwater@beard
       context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_143_ma__flat_top\textures\hh_143_ma__flat_top_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_143_ma__flat_top\textures\hh_143_ma__flat_top_cap_d02.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -14685,6 +15075,8 @@ resource:
         citrus_yellow_afro_cap: citrus_yellow@cap
         blue_sky_cards: blue_sky@beard
       context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_143_ma__flat_top\textures\hh_143_ma__flat_top_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_143_ma__flat_top\textures\hh_143_ma__flat_top_cap_d02.xbm
     base\characters\common\hair\hh_144_wa__afro_braid_bun\hh_144_pwa__afro_braid_bun_cyberware_01.mesh:
@@ -14886,6 +15278,10 @@ resource:
         black_carbon_bun_dreads: black_carbon@dread
         green_toxic_cap: green_toxic@cap01
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread.mi
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard.mi
+        BaseMaterialCurls: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_144_wa__afro_braid_bun\textures\hh_144_wa__afro_braid_bun_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_144_wa__afro_braid_bun\textures\hh_144_wa__afro_braid_bun_cap_d02.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -15088,6 +15484,10 @@ resource:
         silver_rose_bun_beard: silver_rose@beard
         silver_rose_bun_curls: silver_rose@curls
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCurls: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_144_wa__afro_braid_bun\textures\hh_144_wa__afro_braid_bun_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_144_wa__afro_braid_bun\textures\hh_144_wa__afro_braid_bun_cap_mask.xbm
     base\characters\common\hair\hh_146_ma__dread_undercut\hh_146_pwa__dread_undercut_cyberware_01.mesh:
@@ -15186,6 +15586,9 @@ resource:
         purple_ombre_cards_dreads: purple_ombre@dread
         pink_magenta_cards_beards: pink_magenta@beard
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_146_ma__dread_undercut\textures\hh_146_ma__dread_undercut_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_146_ma__dread_undercut\textures\hh_146_ma__dread_undercut_cap_d02.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -15285,6 +15688,9 @@ resource:
         blue_sky_cards_beards: blue_sky@beard
         blue_sky_cap: blue_sky@cap
       context:
+        BaseMaterialBeard: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_146_ma__dread_undercut\textures\hh_146_ma__dread_undercut_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_146_ma__dread_undercut\textures\hh_146_ma__dread_undercut_cap_d02.xbm
     base\characters\common\hair\hh_151_wa__judy_variation02\hh_151_pwa__judy_variation02_cyberware_01.mesh:
@@ -15369,6 +15775,8 @@ resource:
         purple_blonde_cards_short: purple_blonde@short
         phoenix_fire_cards_short: phoenix_fire@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_051_wa__judy\textures\hh_051_wa__judy_common_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_051_wa__judy\textures\hh_051_wa__judy_common_cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -15454,6 +15862,8 @@ resource:
         purple_blonde_cards_short: purple_blonde@short
         phoenix_fire_cards_short: phoenix_fire@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_051_wa__judy\textures\hh_051_wa__judy_common_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_051_wa__judy\textures\hh_051_wa__judy_common_cap_mask.xbm
     base\characters\common\hair\hh_999_ma__buzz_cap\hh_999_pwa__buzz_cap_cyberware_01.mesh:
@@ -15531,6 +15941,7 @@ resource:
         silver_rose_cap_afro: silver_rose@cap01
         default: brown_medium@cap01
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__cap_mask.xbm
         CapSecondaryMaskTexture: base\characters\common\character_customisation_items\cyberware\face\textures\hh_cyberware_cap_mask_01.xbm
@@ -15608,6 +16019,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_003_wa_hat__beanie_hh_01\h1_003_wa_hat__beanie_hh_01.mesh:
@@ -15647,7 +16059,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_003_wa_hat__beanie_hh_02\h1_003_wa_hat__beanie_hh_02.mesh:
       names:
         liliac_front: liliac@dread
@@ -15755,7 +16168,8 @@ resource:
         silver_rose_front: silver_rose@dread
         silver_rose_side: silver_rose@dread
         silver_rose_back: silver_rose@dread
-      context: {}
+      context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
     base\characters\common\hair\h1_003_wa_hat__beanie_hh_03\h1_003_wa_hat__beanie_hh_03.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -15816,6 +16230,8 @@ resource:
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_062_ma__slick_back\textures\hh_062_ma__slick_back_cap_mask.xbm
     base\characters\common\hair\h1_003_wa_hat__beanie_hh_04\h1_003_wa_hat__beanie_hh_04.mesh:
       names:
@@ -15891,6 +16307,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_011_ma_hat__baseball_back_hh_01\h1_011_wa_hat__baseball_back_hh_01.mesh:
@@ -15953,6 +16370,8 @@ resource:
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_062_ma__slick_back\textures\hh_062_ma__slick_back_cap_mask.xbm
     base\characters\common\hair\h1_011_ma_hat__baseball_back_hh_02\h1_011_wa_hat__baseball_back_hh_02.mesh:
       names:
@@ -15991,7 +16410,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_011_ma_hat__baseball_back_hh_03\h1_011_wa_hat__baseball_back_hh_03.mesh:
       names:
         liliac_cards: liliac@dread
@@ -16052,6 +16472,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
     base\characters\common\hair\h1_011_ma_hat__baseball_back_hh_04\h1_011_wa_hat__baseball_back_hh_04.mesh:
@@ -16128,6 +16550,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_011_ma_hat__baseball_hh_01\h1_011_wa_hat__baseball_hh_01.mesh:
@@ -16190,6 +16613,8 @@ resource:
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_062_ma__slick_back\textures\hh_062_ma__slick_back_cap_mask.xbm
     base\characters\common\hair\h1_011_ma_hat__baseball_hh_03\h1_011_wa_hat__baseball_hh_03.mesh:
       names:
@@ -16288,6 +16713,8 @@ resource:
         phoenix_fire_bottom: phoenix_fire@dread
         green_orange_bottom: green_orange@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_mask.xbm
     base\characters\common\hair\h1_011_ma_hat__baseball_hh_04\h1_011_wa_hat__baseball_hh_04.mesh:
@@ -16364,6 +16791,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_011_wa_hat__baseball_hh_02\h1_011_wa_hat__baseball_hh_02.mesh:
@@ -16404,7 +16832,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_012_wa_hat__googles_hh_01\h1_012_wa_hat__googles_hh_01.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -16459,6 +16888,8 @@ resource:
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_062_ma__slick_back\textures\hh_062_ma__slick_back_cap_mask.xbm
     base\characters\common\hair\h1_012_wa_hat__googles_hh_02\h1_012_wa_hat__googles_hh_02.mesh:
       names:
@@ -16497,7 +16928,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_012_wa_hat__googles_hh_03\h1_012_wa_hat__googles_hh_03.mesh:
       names:
         red_merlot_cards: red_merlot@dread
@@ -16535,7 +16967,8 @@ resource:
         blue_sky_cards: blue_sky@dread
         dark_purple_cards: dark_purple@dread
         purple_blonde_cards: purple_blonde@dread
-      context: {}
+      context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
     base\characters\common\hair\h1_012_wa_hat__googles_hh_04\h1_012_wa_hat__googles_hh_04.mesh:
       names:
         red_merlot_cap: red_merlot@cap
@@ -16610,6 +17043,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_021_ma_hat__cowboy_sheriff_hh_01\h1_021_wa_hat__cowboy_sheriff_hh_01.mesh:
@@ -16649,7 +17083,8 @@ resource:
         blue_sky_cards: blue_sky@short
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
-      context: {}
+      context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\h1_021_ma_hat__cowboy_sheriff_hh_03\h1_021_wa_hat__cowboy_sheriff_hh_03.mesh:
       names:
         red_merlot_cards: red_merlot@dread
@@ -16710,6 +17145,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
     base\characters\common\hair\h1_021_ma_hat__cowboy_sheriff_hh_04\h1_021_wa_hat__cowboy_sheriff_hh_04.mesh:
@@ -16786,6 +17223,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_021_wa_hat__cowboy_sheriff_hh_02\h1_021_wa_hat__cowboy_sheriff_hh_02.mesh:
@@ -16825,7 +17263,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_024_ma_hat__scavenger_hh_01\h1_024_wa_hat__scavenger_hh_01.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -16863,7 +17302,8 @@ resource:
         blue_sky_cards: blue_sky@short
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
-      context: {}
+      context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\h1_024_ma_hat__scavenger_hh_03\h1_024_wa_hat__scavenger_hh_03.mesh:
       names:
         red_merlot_cards: red_merlot@dread
@@ -16925,6 +17365,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
     base\characters\common\hair\h1_024_ma_hat__scavenger_hh_04\h1_024_wa_hat__scavenger_hh_04.mesh:
@@ -17001,6 +17443,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_024_wa_hat__scavenger_hh_02\h1_024_wa_hat__scavenger_hh_02.mesh:
@@ -17040,7 +17483,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_032_ma_hat__asian_hh_01\h1_032_wa_hat__asian_hh_01.mesh:
       names:
         liliac_cards: liliac@long
@@ -17104,6 +17548,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         goblin_green_cap: goblin_green@cap
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_027_ma__scavenger\textures\hh_027_ma__scavenger_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_027_ma__scavenger\textures\hh_027_ma__scavenger_cap_mask.xbm
     base\characters\common\hair\h1_032_ma_hat__asian_hh_02\h1_032_wa_hat__asian_hh_02.mesh:
@@ -17165,6 +17611,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@long
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_084_wa__bun_chopsticks\textures\hh_084_wa__bun_chopsticks_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_084_wa__bun_chopsticks\textures\hh_084_wa__bun_chopsticks_cap_mask.xbm
     base\characters\common\hair\h1_032_ma_hat__asian_hh_02\h1_032_wa_hat__asian_hh_02_bun.mesh:
@@ -17204,7 +17652,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_032_ma_hat__asian_hh_03\h1_032_wa_hat__asian_hh_03.mesh:
       names:
         liliac_cards: liliac@dread
@@ -17266,6 +17715,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
     base\characters\common\hair\h1_032_ma_hat__asian_hh_04\h1_032_wa_hat__asian_hh_04.mesh:
@@ -17342,6 +17793,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_036_wa_hat__elegant_hh_01\h1_036_wa_hat__elegant_hh_01.mesh:
@@ -17404,6 +17856,8 @@ resource:
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_062_ma__slick_back\textures\hh_062_ma__slick_back_cap_mask.xbm
     base\characters\common\hair\h1_036_wa_hat__elegant_hh_02\h1_036_wa_hat__elegant_hh_02.mesh:
       names:
@@ -17469,6 +17923,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@long
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_044_wa__classic\textures\hh_044_wa__classic_cap_mask.xbm
     base\characters\common\hair\h1_036_wa_hat__elegant_hh_03\h1_036_wa_hat__elegant_hh_03.mesh:
       names:
@@ -17530,6 +17986,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
     base\characters\common\hair\h1_036_wa_hat__elegant_hh_04\h1_036_wa_hat__elegant_hh_04.mesh:
@@ -17606,6 +18064,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_045_ma_hat__farmer_hh_01\h1_045_wa_hat__farmer_hh_01.mesh:
@@ -17645,7 +18104,8 @@ resource:
         blue_sky_cards: blue_sky@short
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
-      context: {}
+      context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\h1_045_ma_hat__farmer_hh_02\h1_045_wa_hat__farmer_hh_02.mesh:
       names:
         liliac_cards: liliac@long
@@ -17683,7 +18143,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_045_ma_hat__farmer_hh_03\h1_045_wa_hat__farmer_hh_03.mesh:
       names:
         liliac_cards: liliac@dread
@@ -17746,6 +18207,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_mask.xbm
     base\characters\common\hair\h1_045_ma_hat__farmer_hh_04\h1_045_wa_hat__farmer_hh_04.mesh:
@@ -17822,6 +18285,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_051_ma_mask__headkerchief_hh_01\h1_051_wa_mask__headkerchief_hh_01.mesh:
@@ -17873,6 +18337,8 @@ resource:
         brown_medium_cap: brown_medium@cap
         brown_medium_cards: brown_medium@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_062_ma__slick_back\textures\hh_062_ma__slick_back_cap_mask.xbm
     base\characters\common\hair\h1_051_ma_mask__headkerchief_hh_02\h1_051_wa_mask__headkerchief_hh_02.mesh:
       names:
@@ -17943,7 +18409,8 @@ resource:
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
         silver_rose_cards_top: silver_rose@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_051_ma_mask__headkerchief_hh_03\h1_051_wa_mask__headkerchief_hh_03.mesh:
       names:
         liliac_cards: liliac@dread
@@ -18004,6 +18471,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
     base\characters\common\hair\h1_051_ma_mask__headkerchief_hh_04\h1_051_wa_mask__headkerchief_hh_04.mesh:
@@ -18080,6 +18549,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_060_ma_hat__bandana_kerry_01\h1_060_wa_hat__bandana_kerry_01.mesh:
@@ -18145,6 +18615,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_089_ma__thompson\textures\hh_089_ma__thompson_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_089_ma__thompson\textures\hh_089_ma__thompson_cap_mask.xbm
     base\characters\common\hair\h1_060_ma_hat__bandana_kerry_hh_02\h1_060_wa_hat__bandana_kerry_hh_02.mesh:
@@ -18207,6 +18679,8 @@ resource:
         purple_blonde_cards: purple_blonde@long
         goblin_green_cap: goblin_green@cap
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_083_wa__ponytail_01\textures\hh_083_wa__ponytail_01_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_083_wa__ponytail_01\textures\hh_083_wa__ponytail_01_cap_mask.xbm
     base\characters\common\hair\h1_060_ma_hat__bandana_kerry_hh_03\h1_060_wa_hat__bandana_kerry_hh_03.mesh:
@@ -18269,6 +18743,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
     base\characters\common\hair\h1_060_ma_hat__bandana_kerry_hh_04\h1_060_wa_hat__bandana_kerry_hh_04.mesh:
@@ -18345,6 +18821,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_063_ma_hat__military_hh_02\h1_063_wa_hat__military_hh_02.mesh:
@@ -18384,7 +18861,8 @@ resource:
         blue_sky_cards: blue_sky@short
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
-      context: {}
+      context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     base\characters\common\hair\h1_063_ma_hat__military_hh_04\h1_063_wa_hat__military_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -18459,6 +18937,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_063_wa_hat__military_hh_01\h1_063_wa_hat__military_hh_01.mesh:
@@ -18498,7 +18977,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_063_wa_hat__military_hh_03\h1_063_wa_hat__military_hh_03.mesh:
       names:
         red_merlot_cards: red_merlot@dread
@@ -18561,6 +19041,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_mask.xbm
     base\characters\common\hair\h1_065_ma_hat__guard_hh_01\h1_065_wa_hat__guard_hh_01.mesh:
@@ -18623,6 +19105,8 @@ resource:
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_062_ma__slick_back\textures\hh_062_ma__slick_back_cap_mask.xbm
     base\characters\common\hair\h1_065_ma_hat__guard_hh_02\h1_065_wa_hat__guard_hh_02.mesh:
       names:
@@ -18661,7 +19145,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_065_ma_hat__guard_hh_03\h1_065_wa_hat__guard_hh_03.mesh:
       names:
         red_merlot_cards: red_merlot@dread
@@ -18724,6 +19209,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_mask.xbm
     base\characters\common\hair\h1_065_ma_hat__guard_hh_04\h1_065_wa_hat__guard_hh_04.mesh:
@@ -18800,6 +19287,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     base\characters\common\hair\h1_082_ma_hat__bandage_hh_01\h1_082_wa_hat__bandage_hh_01.mesh:
@@ -18898,6 +19386,9 @@ resource:
         blue_sky_cards_long: blue_sky@long
         purple_blonde_cards: purple_blonde@short
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_145_ma__v_short\textures\hh_145_ma__v_short_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_145_ma__v_short\textures\hh_145_ma__v_short_cap_mask.xbm
     base\characters\common\hair\h1_082_ma_hat__bandage_hh_02\h1_082_wa_hat__bandage_hh_02.mesh:
@@ -18933,7 +19424,8 @@ resource:
         blue_sky_cards: blue_sky@long
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     base\characters\common\hair\h1_082_ma_hat__bandage_hh_03\h1_082_wa_hat__bandage_hh_03.mesh:
       names:
         liliac_cards: liliac@dread
@@ -18996,6 +19488,8 @@ resource:
         dark_purple_cap: dark_purple@cap
         purple_blonde_cards: purple_blonde@dread
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_059_wa__voodoo_02\textures\hh_059_wa__voodoo_02_cap_mask.xbm
     base\characters\common\hair\h1_082_ma_hat__bandage_hh_04\h1_082_wa_hat__bandage_hh_04.mesh:
@@ -19072,6 +19566,7 @@ resource:
         purple_blonde_cap: purple_blonde@cap
         green_orange_cap_afro: green_orange@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__afro_buzz_cap_mask.xbm
     ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_01\h1_002_mask_wa__ikeuchi_hh_01.mesh:
@@ -19171,6 +19666,9 @@ resource:
         green_toxic_cap: green_toxic@cap
         blonde_golden_cards_long: blonde_golden@long
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_145_ma__v_short\textures\hh_145_ma__v_short_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_145_ma__v_short\textures\hh_145_ma__v_short_cap_d02.xbm
     ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_03\h1_002_mask_wa__ikeuchi_hh_03.mesh:
@@ -19234,6 +19732,8 @@ resource:
         goblin_green_cap: goblin_green@cap
         green_toxic_cap: green_toxic@cap
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_058_wa__voodoo_01\textures\hh_058_wa__voodoo_01_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_058_wa__voodoo_01\textures\hh_058_wa__voodoo_01_cap_d02.xbm
     ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_04\h1_002_mask_wa__ikeuchi_hh_04.mesh:
@@ -19310,6 +19810,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
         green_toxic_cap: green_toxic@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__cap_mask.xbm
     ep1\characters\common\hair\h1_002_mask_wa__ikeuchi_hh_02\h1_002_mask_wa__ikeuchi_hh_02.mesh:
@@ -19372,6 +19873,8 @@ resource:
         goblin_green_cap: goblin_green@cap
         green_toxic_cap: green_toxic@cap
       context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_110_wa__wizzy\textures\hh_110_wa__wizzy_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_110_wa__wizzy\textures\hh_110_wa__wizzy_cap_d.xbm
     ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_01\h1_083_wa_hat__ushanka_hh_01.mesh:
@@ -19411,7 +19914,8 @@ resource:
         dark_purple_cards: dark_purple@short
         purple_blonde_cards: purple_blonde@short
         blonde_dishwater_cards: blonde_dishwater@short
-      context: {}
+      context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
     ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_02\h1_083_wa_hat__ushanka_hh_02.mesh:
       names:
         green_orange_cards: green_orange@long
@@ -19449,7 +19953,8 @@ resource:
         dark_purple_cards: dark_purple@long
         purple_blonde_cards: purple_blonde@long
         blonde_dishwater_cards: blonde_dishwater@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_03\h1_083_wa_hat__ushanka_hh_03.mesh:
       names:
         green_orange_cards: green_orange@dread
@@ -19510,6 +20015,8 @@ resource:
         blonde_dishwater_cards: blonde_dishwater@dread
         green_toxic_cap: green_toxic@cap
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
     ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_04\h1_083_wa_hat__ushanka_hh_04.mesh:
@@ -19586,6 +20093,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
         green_toxic_cap: green_toxic@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__cap_mask.xbm
     ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_01\h1_084_wa_hat__bucket_hat_hh_01.mesh:
@@ -19667,6 +20175,8 @@ resource:
         goblin_green_cap: goblin_green@cap
         green_toxic_cap: green_toxic@cap
       context:
+        BaseMaterialShort: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_047_wa__swirl_pomp\textures\hh_047_wa__swirl_pomp_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_047_wa__swirl_pomp\textures\hh_047_wa__swirl_pomp_cap_d02.xbm
     ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_02\h1_084_wa_hat__bucket_hat_hh_02.mesh:
@@ -19738,7 +20248,8 @@ resource:
         blonde_dishwater_cards: blonde_dishwater@long
         blond_platinum_cards: blonde_platinum@long
         silver_rose_cards_top: silver_rose@long
-      context: {}
+      context:
+        BaseMaterialLong: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
     ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_03\h1_084_wa_hat__bucket_hat_hh_03.mesh:
       names:
         green_orange_cards: green_orange@dread
@@ -19799,6 +20310,8 @@ resource:
         blonde_dishwater_cards: blonde_dishwater@dread
         green_toxic_cap: green_toxic@cap
       context:
+        BaseMaterialDread: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapMaskTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_mask.xbm
         CapDiffuseTexture: base\characters\common\hair\hh_065_wa__afro_knots\textures\hh_065_wa__afro_knots_cap_d02.xbm
     ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_04\h1_084_wa_hat__bucket_hat_hh_04.mesh:
@@ -19875,5 +20388,6 @@ resource:
         green_orange_cap_afro: green_orange@cap
         green_toxic_cap: green_toxic@cap
       context:
+        BaseMaterialCap: base\materials\mesh_decal_gradientmap_recolor.mt
         CapDiffuseTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__cap_d02.xbm
         CapMaskTexture: base\characters\common\hair\hh_999_ma__buzz_cap\textures\hh_999_ma__cap_mask.xbm

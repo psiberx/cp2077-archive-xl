@@ -179,6 +179,10 @@ if (generateExtensionJson) {
   wkit.SaveToResources('PlayerCustomizationFix.xl', wkit.JsonToYaml(JSON.stringify({resource: {fix: extensionData}})))
 }
 
+function capitalize(str) {
+  return str.substring(0, 1).toUpperCase() + str.substring(1)
+}
+
 function collectMaterialData(materialInstance, materialData, contextParams) {
   if (materialInstance.hasOwnProperty('baseMaterial') && materialInstance['baseMaterial']) {
     let basePath = materialInstance['baseMaterial']['DepotPath'].toString()
@@ -189,8 +193,9 @@ function collectMaterialData(materialInstance, materialData, contextParams) {
 
       let masterPathMatch = basePath.match(/^base\\characters\\common\\hair\\textures\\hair_profiles\\_master__([a-z]+)(?:_bright)?_?\.mi$/)
       if (masterPathMatch) {
-        materialData['template'] = '@' + masterPathMatch[1]
         materialData['master'] = basePath
+        materialData['template'] = '@' + masterPathMatch[1]
+        contextParams['BaseMaterial' + capitalize(masterPathMatch[1])] = basePath
       }
     }
   }
@@ -209,8 +214,9 @@ function collectMaterialData(materialInstance, materialData, contextParams) {
       if (materialParam.hasOwnProperty('DiffuseTexture')) {
         let texturePath = materialParam['DiffuseTexture']['DepotPath'].toString()
         if (texturePath && !texturePath.match(/^engine\\textures\\editor\\/)) {
-          contextParams['CapDiffuseTexture'] = texturePath
           materialData['template'] = '@cap'
+          contextParams['BaseMaterialCap'] = 'base\\materials\\mesh_decal_gradientmap_recolor.mt'
+          contextParams['CapDiffuseTexture'] = texturePath
         }
         continue
       }
@@ -218,8 +224,9 @@ function collectMaterialData(materialInstance, materialData, contextParams) {
       if (materialParam.hasOwnProperty('MaskTexture')) {
         let texturePath = materialParam['MaskTexture']['DepotPath'].toString()
         if (texturePath && !texturePath.match(/^engine\\textures\\editor\\/)) {
-          contextParams['CapMaskTexture'] = texturePath
           materialData['template'] = '@cap'
+          contextParams['BaseMaterialCap'] = 'base\\materials\\mesh_decal_gradientmap_recolor.mt'
+          contextParams['CapMaskTexture'] = texturePath
         }
         continue
       }
@@ -227,8 +234,9 @@ function collectMaterialData(materialInstance, materialData, contextParams) {
       if (materialParam.hasOwnProperty('SecondaryMask')) {
         let texturePath = materialParam['SecondaryMask']['DepotPath'].toString()
         if (texturePath && !texturePath.match(/^engine\\textures\\editor\\/)) {
-          contextParams['CapSecondaryMaskTexture'] = texturePath
           materialData['template'] = '@cap01'
+          contextParams['BaseMaterialCap'] = 'base\\materials\\mesh_decal_gradientmap_recolor.mt'
+          contextParams['CapSecondaryMaskTexture'] = texturePath
         }
         continue
       }
