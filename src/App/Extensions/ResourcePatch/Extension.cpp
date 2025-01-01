@@ -410,6 +410,21 @@ void App::ResourcePatchExtension::OnMorphTargetResourceLoad(Red::MorphTargetMesh
             aMorphTarget->baseTexture = patchResource->baseTexture;
         }
 
+        if (patchResource->baseTextureParamName)
+        {
+            aMorphTarget->baseTextureParamName = patchResource->baseTextureParamName;
+        }
+
+        if (patchResource->blob)
+        {
+            aMorphTarget->blob = patchResource->blob;
+        }
+
+        if (patchResource->boundingBox.Max.X > patchResource->boundingBox.Min.X)
+        {
+            aMorphTarget->boundingBox = patchResource->boundingBox;
+        }
+
         for (const auto& patchTarget : patchResource->targets)
         {
             auto isNewTarget = true;
