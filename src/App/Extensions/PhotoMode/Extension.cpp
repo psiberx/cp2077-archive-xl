@@ -77,9 +77,11 @@ void App::PhotoModeExtension::ApplyTweaks()
         s_characterIndexMap[puppetList[characterIndex].c_str()] = characterIndex;
     }
 
-    for (const auto& character : Red::GetRecords<Red::gamedataCharacter_Record>())
+    Core::SortedMap<std::string, Red::Handle<Red::gamedataCharacter_Record>> addedCharacterRecords;
+
+    for (const auto& characterRecord : Red::GetRecords<Red::gamedataCharacter_Record>())
     {
-        auto characterID = character->recordID;
+        auto characterID = characterRecord->recordID;
         auto persistentName = Red::GetFlat<Red::CName>({characterID, ".persistentName"});
 
         if (persistentName != "PhotomodePuppet")
@@ -88,66 +90,74 @@ void App::PhotoModeExtension::ApplyTweaks()
         if (s_characterIndexMap.contains(characterID))
             continue;
 
-        if (!s_dummyCharacterIndex)
-        {
-            s_dummyCharacterIndex = puppetList.size;
-
-            auto dummyName = "PhotoModeNpcs.DoNotTouch";
-            Red::CreateRecord(dummyName, "PhotoModeSticker");
-
-            for (auto i = DummyCharacterSlots; i > 0; --i)
-            {
-                iconList.PushBack(dummyName);
-                puppetList.PushBack("");
-                nameList.PushBack("");
-                factList.PushBack("");
-                enabledList.PushBack(false);
-                customizationList.PushBack(false);
-                expressionList.PushBack(false);
-                collisionRadiusList.PushBack(0.0);
-                collisionHeightList.PushBack(0.0);
-            }
-        }
-
-        {
-            auto characterIndex = puppetList.size;
-            auto characterSource = s_characterIndexMap[WomanAverageID];
-            auto characterType = Red::PhotoModeCharacterType::NPC;
-
-            auto visualTags = Red::GetFlat<Red::DynArray<Red::TweakDBID>>({characterID, ".visualTags"});
-            for (const auto& visualTag : visualTags)
-            {
-                if (visualTag == ManAverageTag)
-                {
-                    characterSource = s_characterIndexMap[ManAverageID];
-                    break;
-                }
-                if (visualTag == ManBigTag)
-                {
-                    characterSource = s_characterIndexMap[ManBigID];
-                    break;
-                }
-                if (visualTag == ManMassiveTag)
-                {
-                    characterSource = s_characterIndexMap[ManMassiveID];
-                    break;
-                }
-                if (visualTag == CatTag)
-                {
-                    characterSource = s_characterIndexMap[CatID];
-                    break;
-                }
-            }
-
-            s_extraCharacters[characterIndex] = {characterSource, characterType};
-            s_characterIndexMap[characterID] = characterIndex;
-        }
-
         auto characterStr = Red::ToStringDebug(characterID);
-        auto iconStr = std::string{characterStr.c_str()} + ".icon";
+
+        addedCharacterRecords[characterStr.c_str()] = characterRecord;
+    }
+
+    if (addedCharacterRecords.empty())
+        return;
+
+    {
+        s_dummyCharacterIndex = puppetList.size;
+
+        auto dummyName = "PhotoModeNpcs.DoNotTouch";
+        Red::CreateRecord(dummyName, "PhotoModeSticker");
+
+        for (auto i = DummyCharacterSlots; i > 0; --i)
+        {
+            iconList.PushBack(dummyName);
+            puppetList.PushBack("");
+            nameList.PushBack("");
+            factList.PushBack("");
+            enabledList.PushBack(false);
+            customizationList.PushBack(false);
+            expressionList.PushBack(false);
+            collisionRadiusList.PushBack(0.0);
+            collisionHeightList.PushBack(0.0);
+        }
+    }
+
+    for (const auto& [characterStr, characterRecord] : addedCharacterRecords)
+    {
+        auto characterID = characterRecord->recordID;
+        auto persistentName = Red::GetFlat<Red::CName>({characterID, ".persistentName"});
+
+        auto characterIndex = puppetList.size;
+        auto characterSource = s_characterIndexMap[WomanAverageID];
+        auto characterType = Red::PhotoModeCharacterType::NPC;
+
+        auto visualTags = Red::GetFlat<Red::DynArray<Red::TweakDBID>>({characterID, ".visualTags"});
+        for (const auto& visualTag : visualTags)
+        {
+            if (visualTag == ManAverageTag)
+            {
+                characterSource = s_characterIndexMap[ManAverageID];
+                break;
+            }
+            if (visualTag == ManBigTag)
+            {
+                characterSource = s_characterIndexMap[ManBigID];
+                break;
+            }
+            if (visualTag == ManMassiveTag)
+            {
+                characterSource = s_characterIndexMap[ManMassiveID];
+                break;
+            }
+            if (visualTag == CatTag)
+            {
+                characterSource = s_characterIndexMap[CatID];
+                break;
+            }
+        }
+
+        s_extraCharacters[characterIndex] = {characterSource, characterType};
+        s_characterIndexMap[characterID] = characterIndex;
 
         auto displayName = Red::GetFlat<Red::gamedataLocKeyWrapper>({characterID, ".displayName"});
         auto nameStr = std::string{"LocKey#"} + std::to_string(displayName.primaryKey);
+        auto iconStr = characterStr + ".icon";
 
         iconList.PushBack(iconStr);
         puppetList.PushBack(characterStr);
