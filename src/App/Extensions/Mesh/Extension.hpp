@@ -29,7 +29,7 @@ private:
         void PrefetchContext(Red::CMesh* aMesh);
         void FillContext(const Core::Map<Red::CName, std::string>& aContext);
         void EnsureContextFilled();
-        const Core::Map<Red::CName, Red::Variant>& GetContextParams();
+        const Red::DynArray<Red::MaterialParameterInstance>& GetContextParams();
         const DynamicAttributeList& GetContextAttrs();
 
         void FillMaterials(Red::CMesh* aMesh);
@@ -47,7 +47,7 @@ private:
         Red::SharedSpinLock sourceMutex;
         Red::JobHandle lastJob;
         Red::SharedPtr<Red::ResourceToken<Red::IMaterial>> contextToken;
-        Core::Map<Red::CName, Red::Variant> contextParams;
+        Red::DynArray<Red::MaterialParameterInstance> contextParams;
         DynamicAttributeList contextAttrs;
         Core::Map<Red::CName, int32_t> templates;
         Core::Map<Red::CName, int32_t> materials;

@@ -440,22 +440,18 @@ Red::Handle<Red::CMaterialInstance> App::MeshExtension::CloneMaterialInstance(
 
     if (aAppendExtraContextPatams)
     {
-        for (const auto& [paramName, paramValue] : aMeshState->GetContextParams())
+        for (const auto& contextParam : aMeshState->GetContextParams())
         {
-            auto paramExists = false;
-
-            for (const auto& param : materialInstance->params)
+            for (auto& materialParam : materialInstance->params)
             {
-                if (param.name == paramName)
+                if (materialParam.name == contextParam.name)
                 {
-                    paramExists = true;
+                    if (materialParam.data.GetType() == contextParam.data.GetType())
+                    {
+                        materialParam.data = contextParam.data;
+                    }
                     break;
                 }
-            }
-
-            if (!paramExists)
-            {
-                materialInstance->params.PushBack({paramName, paramValue});
             }
         }
     }
@@ -675,7 +671,7 @@ App::MeshExtension::MeshState::MeshState(Red::CMesh* aMesh)
 void App::MeshExtension::MeshState::MarkStatic()
 {
     dynamic = false;
-    contextParams.clear();
+    contextParams.Clear();
     contextAttrs.clear();
     templates.clear();
 }
@@ -730,33 +726,31 @@ void App::MeshExtension::MeshState::EnsureContextFilled()
         return;
     }
 
-    auto& metaInstance = Red::Cast<Red::CMaterialInstance>(contextToken->resource);
+    auto& contextInstance = Red::Cast<Red::CMaterialInstance>(contextToken->resource);
 
-    if (!metaInstance)
+    if (!contextInstance)
     {
         contextToken.Reset();
         return;
     }
 
-    for (auto& param : metaInstance->params)
+    contextParams = std::move(contextInstance->params);
+
+    for (const auto& contextParam : contextParams)
     {
-        if (param.data.GetType()->GetType() == Red::ERTTIType::Name)
+        if (contextParam.data.GetType()->GetType() == Red::ERTTIType::Name)
         {
-            auto attrName = Red::CNamePool::Add(Str::SnakeCase(param.name.ToString()).data());
-            auto attrValue = *reinterpret_cast<Red::CName*>(param.data.GetDataPtr());
+            auto attrName = Red::CNamePool::Add(Str::SnakeCase(contextParam.name.ToString()).data());
+            auto attrValue = *reinterpret_cast<Red::CName*>(contextParam.data.GetDataPtr());
 
             contextAttrs.emplace(attrName, attrValue);
-        }
-        else
-        {
-            contextParams[param.name] = param.data;
         }
     }
 
     contextToken.Reset();
 }
 
-const Core::Map<Red::CName, Red::Variant>& App::MeshExtension::MeshState::GetContextParams()
+const Red::DynArray<Red::MaterialParameterInstance>& App::MeshExtension::MeshState::GetContextParams()
 {
     EnsureContextFilled();
 
