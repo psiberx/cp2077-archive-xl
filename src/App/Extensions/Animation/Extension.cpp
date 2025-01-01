@@ -78,7 +78,7 @@ void App::AnimationExtension::Configure()
                 {
                     if (!invalidPaths.contains(targetPath))
                     {
-                        LogWarning("|{}| Entity \"{}\" doesn't exist. Skipped.", ExtensionName, m_paths[targetPath]);
+                        // LogWarning("|{}| Entity \"{}\" doesn't exist. Skipped.", ExtensionName, m_paths[targetPath]);
                         invalidPaths.insert(targetPath);
                     }
                     continue;
