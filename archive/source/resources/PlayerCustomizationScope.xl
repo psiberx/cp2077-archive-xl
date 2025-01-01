@@ -1,24 +1,30 @@
 resource:
   scope:
-    ##### Customization ######
     player_customization.app:
-      - player_ma_lashes.app
-      - player_ma_brows.app
       - player_ma_beard.app
+      - player_ma_brows.app
       - player_ma_hair.app
-      - player_wa_lashes.app
+      - player_ma_lashes.app
       - player_wa_brows.app
       - player_wa_hair.app
-    ##### Customization ## Lashes #####
+      - player_wa_lashes.app
+
+    ### Lashes M ###
+
     player_ma_lashes.app:
       - base\characters\head\player_base_heads\appearances\head\hel_pma_lashes.app
     player_ma_lashes.mesh:
       - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\he_000_pma_c__basehead.mesh
+
+    ### Lashes F ###
+
     player_wa_lashes.app:
       - base\characters\head\player_base_heads\appearances\head\hel_pwa_lashes.app
     player_wa_lashes.mesh:
       - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\he_000_pwa_c__basehead.mesh
-    ##### Customization ## Brows #####
+
+    ### Brows M ###
+
     player_ma_brows.app:
       - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_01.app
       - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows_02.app
@@ -47,6 +53,9 @@ resource:
       - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__11.mesh
       - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__12.mesh
       - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__13.mesh
+
+    ### Brows F ###
+
     player_wa_brows.app:
       - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_01.app
       - base\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows_02.app
@@ -75,7 +84,9 @@ resource:
       - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__11.mesh
       - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__12.mesh
       - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__13.mesh
-    ##### Customization ## Beard #####
+
+    ### Beard M ###
+
     player_ma_beard.app:
       - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__big_beard.app
       - base\characters\head\player_base_heads\appearances\facial_hairs\hb_000_pma__big_beard__chin.app
@@ -147,7 +158,9 @@ resource:
       - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_patmc.mesh
       - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_short_afro.mesh
       - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_thick_beard_afro.mesh
-    ##### Customization ## Hair #####
+
+    ### Hair M ###
+
     player_ma_hair.app:
       - player_ma_hair_cw_00.app
       - player_ma_hair_cw_01.app
@@ -374,8 +387,8 @@ resource:
       - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_ma__ponytail_bulb_01.mesh
       - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_ma__ponytail_straight_01.mesh
       - ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_01\h1_002_mask_ma__ikeuchi_hh_01.mesh
-      - ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_04\h1_002_mask_ma__ikeuchi_hh_04.mesh
       - ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_03\h1_002_mask_ma__ikeuchi_hh_03.mesh
+      - ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_04\h1_002_mask_ma__ikeuchi_hh_04.mesh
       - ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_01\h1_083_ma_hat__ushanka_hh_01.mesh
       - ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_02\h1_083_ma_hat__ushanka_hh_02.mesh
       - ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_03\h1_083_ma_hat__ushanka_hh_03.mesh
@@ -384,6 +397,9 @@ resource:
       - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_02\h1_084_ma_hat__bucket_hat_hh_02.mesh
       - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_03\h1_084_ma_hat__bucket_hat_hh_03.mesh
       - ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_04\h1_084_ma_hat__bucket_hat_hh_04.mesh
+
+    ### Hair F ###
+
     player_wa_hair.app:
       - player_wa_hair_cw_00.app
       - player_wa_hair_cw_01.app
