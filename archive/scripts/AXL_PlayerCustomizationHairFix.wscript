@@ -195,7 +195,7 @@ function collectMaterialData(materialInstance, materialData, contextParams) {
       if (masterPathMatch) {
         materialData['master'] = basePath
         materialData['template'] = '@' + masterPathMatch[1]
-        contextParams['BaseMaterial' + capitalize(masterPathMatch[1])] = basePath
+        contextParams[capitalize(masterPathMatch[1]) + 'BaseMaterial'] = basePath
       }
     }
   }
@@ -215,7 +215,7 @@ function collectMaterialData(materialInstance, materialData, contextParams) {
         let texturePath = materialParam['DiffuseTexture']['DepotPath'].toString()
         if (texturePath && !texturePath.match(/^engine\\textures\\editor\\/)) {
           materialData['template'] = '@cap'
-          contextParams['BaseMaterialCap'] = 'base\\materials\\mesh_decal_gradientmap_recolor.mt'
+          contextParams['CapBaseMaterial'] = 'base\\materials\\mesh_decal_gradientmap_recolor.mt'
           contextParams['CapDiffuseTexture'] = texturePath
         }
         continue
@@ -225,7 +225,7 @@ function collectMaterialData(materialInstance, materialData, contextParams) {
         let texturePath = materialParam['MaskTexture']['DepotPath'].toString()
         if (texturePath && !texturePath.match(/^engine\\textures\\editor\\/)) {
           materialData['template'] = '@cap'
-          contextParams['BaseMaterialCap'] = 'base\\materials\\mesh_decal_gradientmap_recolor.mt'
+          contextParams['CapBaseMaterial'] = 'base\\materials\\mesh_decal_gradientmap_recolor.mt'
           contextParams['CapMaskTexture'] = texturePath
         }
         continue
@@ -235,7 +235,7 @@ function collectMaterialData(materialInstance, materialData, contextParams) {
         let texturePath = materialParam['SecondaryMask']['DepotPath'].toString()
         if (texturePath && !texturePath.match(/^engine\\textures\\editor\\/)) {
           materialData['template'] = '@cap01'
-          contextParams['BaseMaterialCap'] = 'base\\materials\\mesh_decal_gradientmap_recolor.mt'
+          contextParams['CapBaseMaterial'] = 'base\\materials\\mesh_decal_gradientmap_recolor.mt'
           contextParams['CapSecondaryMaskTexture'] = texturePath
         }
         continue
