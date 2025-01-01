@@ -31,7 +31,7 @@ App::Application::Application(HMODULE aHandle, const RED4ext::Sdk* aSdk)
     Register<App::PhotoModeNpcPatch>();
     Register<App::ResourcePathRegistry>();
     Register<App::ArchiveService>(Env::GameDir(), Env::ArchiveDir());
-    Register<App::ExtensionService>();
+    Register<App::ExtensionService>(Env::ArchiveDir());
 }
 
 void App::Application::OnStarting()

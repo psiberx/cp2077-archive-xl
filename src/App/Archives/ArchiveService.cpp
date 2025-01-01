@@ -3,11 +3,12 @@
 
 App::ArchiveService::ArchiveService(std::filesystem::path aGameDir, std::filesystem::path aBundleDir)
     : m_gameDir(std::move(aGameDir))
+    , m_bundleDir(std::move(aBundleDir))
     , m_loaded(false)
 {
-    if (!aBundleDir.empty())
+    if (!m_bundleDir.empty())
     {
-        RegisterDirectory(std::move(aBundleDir));
+        RegisterDirectory(m_bundleDir);
     }
 }
 
@@ -27,10 +28,10 @@ void App::ArchiveService::OnInitializeArchives(Red::ResourceDepot* aDepot)
 
     m_loaded = true;
 
+    LogInfo("Loading archives...");
+
     if (m_dirs.empty() && m_archives.empty())
         return;
-
-    LogInfo("Loading archives...");
 
     Core::Vector<std::filesystem::path> loadedArchives;
     Red::DynArray<Red::ResourcePath> loadedResources;
@@ -55,7 +56,11 @@ void App::ArchiveService::OnInitializeArchives(Red::ResourceDepot* aDepot)
             if (entry.is_regular_file() && entry.path().extension() == L".archive")
             {
                 archivePaths.PushBack(entry.path().string());
-                loadedArchives.push_back(entry.path());
+
+                if (archiveDir != m_bundleDir)
+                {
+                    loadedArchives.push_back(entry.path());
+                }
             }
         }
 

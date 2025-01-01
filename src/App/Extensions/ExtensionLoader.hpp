@@ -8,7 +8,7 @@ namespace App
 class ExtensionLoader : public Core::LoggingAgent
 {
 public:
-    ExtensionLoader(std::filesystem::path aConfigDir, std::wstring aConfigExt);
+    ExtensionLoader(std::filesystem::path aBundleDir, std::wstring aConfigExt);
 
     template<class T, typename... Args>
     requires std::is_base_of_v<Extension, T>
@@ -34,7 +34,7 @@ private:
 
     Core::Vector<Core::SharedPtr<Extension>> m_modules;
     Core::Vector<Core::SharedPtr<ConfigurableExtension>> m_configurables;
-    std::filesystem::path m_bundleConfigDir;
+    std::filesystem::path m_bundleDir;
     std::wstring m_customConfigExt;
     bool m_loaded;
 };

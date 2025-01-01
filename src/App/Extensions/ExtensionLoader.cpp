@@ -1,8 +1,8 @@
 #include "ExtensionLoader.hpp"
 #include "App/Utils/Str.hpp"
 
-App::ExtensionLoader::ExtensionLoader(std::filesystem::path aConfigDir, std::wstring aConfigExt)
-    : m_bundleConfigDir(std::move(aConfigDir))
+App::ExtensionLoader::ExtensionLoader(std::filesystem::path aBundleDir, std::wstring aConfigExt)
+    : m_bundleDir(std::move(aBundleDir))
     , m_customConfigExt(std::move(aConfigExt))
     , m_loaded(false)
 {
@@ -45,9 +45,12 @@ void App::ExtensionLoader::Configure()
             }
         }
 
-        if (!m_bundleConfigDir.empty())
+        if (!m_bundleDir.empty())
         {
-            configDirs.emplace_back(m_bundleConfigDir);
+            if (std::find(configDirs.begin(), configDirs.end(), m_bundleDir) == configDirs.end())
+            {
+                configDirs.emplace_back(m_bundleDir);
+            }
         }
 
         bool foundAny = false;
@@ -66,7 +69,7 @@ void App::ExtensionLoader::Configure()
             {
                 if (entry.is_regular_file() && entry.path().extension() == m_customConfigExt)
                 {
-                    successAll &= AddConfig(entry.path(), configDir, configDir == m_bundleConfigDir);
+                    successAll &= AddConfig(entry.path(), configDir, configDir == m_bundleDir);
                     foundAny = true;
                 }
             }

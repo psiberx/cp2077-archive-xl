@@ -21,14 +21,14 @@
 #include "Red/ResourceLoader.hpp"
 #include "Red/TweakDB.hpp"
 
-App::ExtensionService::ExtensionService(std::filesystem::path aBundlePath)
-    : m_bundlePath(std::move(aBundlePath))
+App::ExtensionService::ExtensionService(std::filesystem::path aBundleDir)
+    : m_bundleDir(std::move(aBundleDir))
 {
 }
 
 void App::ExtensionService::OnBootstrap()
 {
-    m_loader = Core::MakeUnique<ExtensionLoader>(m_bundlePath, L".xl");
+    m_loader = Core::MakeUnique<ExtensionLoader>(m_bundleDir, L".xl");
 
     m_loader->Add<ResourceMetaExtension>();
     m_loader->Add<ResourceLinkExtension>();

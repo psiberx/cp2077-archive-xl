@@ -27,6 +27,7 @@ protected:
 
     Core::Vector<std::filesystem::path> m_archives;
     Core::Vector<std::filesystem::path> m_dirs;
+    std::filesystem::path m_bundleDir;
     std::filesystem::path m_gameDir;
     bool m_loaded;
 };
