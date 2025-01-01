@@ -12,7 +12,18 @@ void App::PhotoModeNpcPatch::OnBootstrap()
     auto it = std::search(std::begin(code), std::end(code), std::begin(op), std::end(op));
     if (it != std::end(code))
     {
-        *(it + sizeof(op) - 1) = 0xFF;
+        auto last = it + sizeof(op) - 1;
+
+        *(last) = 0xFF;
+
+        if (*(last + 1) == 0x0F && *(last + 2) == 0x87)
+        {
+            for (auto i = 1; i <= 6; ++i)
+            {
+                *(last + i) = 0x90;
+            }
+        }
+
         success = true;
     }
 
