@@ -92,6 +92,10 @@ constexpr auto RegisterCharacter = Core::RawFunc<
                           Red::DynArray<Red::gamedataItemType>& aItemTypes,
                           Red::DynArray<Red::Handle<Red::gameItemObject>>& aClothingItems)>();
 
+constexpr auto ValidateCharacter = Core::RawFunc<
+    /* addr = */ Red::AddressLib::PhotoModeSystem_ValidateCharacter,
+    /* type = */ bool (*)(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex)>();
+
 constexpr auto RegisterPoses = Core::RawFunc<
     /* addr = */ Red::AddressLib::PhotoModeSystem_RegisterPoses,
     /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex,

@@ -156,6 +156,7 @@ constexpr uint32_t PhotoModeMenuController_SetNpcImageCallback = 3051761678;
 constexpr uint32_t PhotoModeSystem_Activate = 2593396187;
 constexpr uint32_t PhotoModeSystem_ProcessAttribute = 2433030483;
 constexpr uint32_t PhotoModeSystem_RegisterCharacter = 3267708234;
+constexpr uint32_t PhotoModeSystem_ValidateCharacter = 3842776524;
 constexpr uint32_t PhotoModeSystem_RegisterPoses = 3714525185;
 constexpr uint32_t PhotoModeSystem_RegisterWeaponPoses = 788083328;
 constexpr uint32_t PhotoModeSystem_RegisterClothingItems = 1375351833;

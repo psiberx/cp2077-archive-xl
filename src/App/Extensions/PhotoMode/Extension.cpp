@@ -7,7 +7,7 @@ namespace
 constexpr auto ExtensionName = "PhotoMode";
 
 constexpr uint32_t CharacterSelectorAttribute = 63;
-constexpr uint32_t DummyCharacterSlots = 2;
+constexpr uint32_t DummyCharacterSlots = 1;
 
 constexpr Red::TweakDBID WomanAverageID = "Character.Panam_Puppet_Photomode";
 constexpr Red::TweakDBID ManAverageID = "Character.Viktor_Puppet_Photomode";
@@ -29,6 +29,7 @@ std::string_view App::PhotoModeExtension::GetName()
 bool App::PhotoModeExtension::Load()
 {
     HookAfter<Raw::PhotoModeSystem::Activate>(&OnActivatePhotoMode).OrThrow();
+    Hook<Raw::PhotoModeSystem::ValidateCharacter>(&OnValidateCharacter).OrThrow();
     Hook<Raw::PhotoModeSystem::RegisterPoses>(&OnRegisterPoses).OrThrow();
     Hook<Raw::PhotoModeSystem::RegisterWeaponPoses>(&OnRegisterWeaponPoses).OrThrow();
     Hook<Raw::PhotoModeSystem::PrepareCategories>(&OnPrepareCategories).OrThrow();
@@ -44,6 +45,7 @@ bool App::PhotoModeExtension::Load()
 bool App::PhotoModeExtension::Unload()
 {
     Unhook<Raw::PhotoModeSystem::Activate>();
+    Unhook<Raw::PhotoModeSystem::ValidateCharacter>();
     Unhook<Raw::PhotoModeSystem::RegisterPoses>();
     Unhook<Raw::PhotoModeSystem::RegisterWeaponPoses>();
     Unhook<Raw::PhotoModeSystem::PrepareCategories>();
@@ -196,6 +198,17 @@ void App::PhotoModeExtension::OnActivatePhotoMode(Red::gamePhotoModeSystem* aSys
         Raw::PhotoModeSystem::RegisterCharacter(aSystem, characterIndex, characterList,
                                                 Red::PhotoModeCharacterType::NPC, itemTypes, clothingItems);
     }
+}
+
+bool App::PhotoModeExtension::OnValidateCharacter(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex)
+{
+    auto extracCharacter = s_extraCharacters.find(aCharacterIndex);
+    if (extracCharacter != s_extraCharacters.end())
+    {
+        aCharacterIndex = extracCharacter->second.index;
+    }
+
+    return Raw::PhotoModeSystem::ValidateCharacter(aSystem, aCharacterIndex);
 }
 
 void App::PhotoModeExtension::OnRegisterPoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex,

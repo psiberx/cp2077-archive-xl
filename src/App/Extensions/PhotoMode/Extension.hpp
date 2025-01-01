@@ -23,6 +23,7 @@ private:
     };
 
     static void OnActivatePhotoMode(Red::gamePhotoModeSystem* aSystem);
+    static bool OnValidateCharacter(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex);
     static void OnRegisterPoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex,
                                 Red::PhotoModeCharacterType aCharacterType);
     static void OnRegisterWeaponPoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex,
