@@ -159,7 +159,12 @@ void App::ResourcePatchExtension::OnResourceRequest(Red::ResourceDepot*, const u
         {
             if (!s_tokens.contains(patchPath))
             {
-                s_tokens[patchPath] = Red::ResourceLoader::Get()->LoadAsync(patchPath);
+                Red::ResourceRequest patchRequest;
+                patchRequest.path = patchPath;
+                patchRequest.disablePreInitialization = true;
+                patchRequest.disablePostLoad = true;
+
+                s_tokens[patchPath] = Red::ResourceLoader::Get()->LoadAsync(patchRequest);
             }
         }
     }
