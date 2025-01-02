@@ -42,6 +42,8 @@ private:
     static void OnSetNpcImage(void* aCallback, uint32_t aCharacterIndex, Red::ResourcePath aAtlasPath,
                               Red::CName aImagePart, int32_t aImageIndex);
 
+    static void FillWeaponTypes(Red::DynArray<Red::gamedataItemType>& aItemTypes);
+
     static inline Core::SortedMap<uint32_t, CharacterSource> s_extraCharacters;
     static inline Core::SortedMap<Red::TweakDBID, uint32_t> s_characterIndexMap;
     static inline uint32_t s_dummyCharacterIndex{0};

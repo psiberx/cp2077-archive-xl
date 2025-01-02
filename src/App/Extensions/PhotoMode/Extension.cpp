@@ -195,6 +195,8 @@ void App::PhotoModeExtension::OnActivatePhotoMode(Red::gamePhotoModeSystem* aSys
         Red::DynArray<Red::gamedataItemType> itemTypes;
         Red::DynArray<Red::Handle<Red::gameItemObject>> clothingItems;
 
+        FillWeaponTypes(itemTypes);
+
         Raw::PhotoModeSystem::RegisterCharacter(aSystem, characterIndex, characterList,
                                                 Red::PhotoModeCharacterType::NPC, itemTypes, clothingItems);
     }
@@ -223,21 +225,18 @@ void App::PhotoModeExtension::OnRegisterPoses(Red::gamePhotoModeSystem* aSystem,
 void App::PhotoModeExtension::OnRegisterWeaponPoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex,
                                                     Red::DynArray<Red::gamedataItemType>& aItemTypes)
 {
-    if (!s_extraCharacters.contains(aCharacterIndex))
+    auto extracCharacter = s_extraCharacters.find(aCharacterIndex);
+    if (extracCharacter != s_extraCharacters.end())
     {
-        if (aItemTypes.size == 0)
-        {
-            auto itemTypeCount = static_cast<uint32_t>(Red::gamedataItemType::Count);
-            aItemTypes.Reserve(itemTypeCount);
-
-            for (auto itemType = 0; itemType < itemTypeCount; ++itemType)
-            {
-                aItemTypes.PushBack(static_cast<Red::gamedataItemType>(itemType));
-            }
-        }
-
-        Raw::PhotoModeSystem::RegisterWeaponPoses(aSystem, aCharacterIndex, aItemTypes);
+        aCharacterIndex = extracCharacter->second.index;
     }
+
+    if (aItemTypes.size == 0)
+    {
+        FillWeaponTypes(aItemTypes);
+    }
+
+    Raw::PhotoModeSystem::RegisterWeaponPoses(aSystem, aCharacterIndex, aItemTypes);
 }
 
 void App::PhotoModeExtension::OnPrepareCategories(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex,
@@ -318,4 +317,15 @@ void App::PhotoModeExtension::OnSetNpcImage(void* aCallback, uint32_t aCharacter
     }
 
     Raw::PhotoModeMenuController::SetNpcImageCallback(aCallback, aCharacterIndex, aAtlasPath, aImagePart, aImageIndex);
+}
+
+void App::PhotoModeExtension::FillWeaponTypes(Red::DynArray<Red::gamedataItemType>& aItemTypes)
+{
+    auto itemTypeCount = static_cast<uint32_t>(Red::gamedataItemType::Count);
+    aItemTypes.Reserve(itemTypeCount);
+
+    for (auto itemType = 0; itemType < itemTypeCount; ++itemType)
+    {
+        aItemTypes.PushBack(static_cast<Red::gamedataItemType>(itemType));
+    }
 }
