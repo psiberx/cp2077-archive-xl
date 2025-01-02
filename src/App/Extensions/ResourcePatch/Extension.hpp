@@ -66,6 +66,11 @@ private:
     static void MergeResources(Red::DynArray<Red::SharedPtr<Red::ResourceToken<>>>& aResultResources,
                                Red::DynArray<Red::SharedPtr<Red::ResourceToken<>>>& aPatchResources);
 
+    inline static Red::Handle<Red::rendRenderMeshBlob> CopyRenderBlob(
+        const Red::Handle<Red::rendRenderMeshBlob>& aSourceBlob);
+    inline static Red::Handle<Red::rendRenderMorphTargetMeshBlob> CopyRenderBlob(
+        const Red::Handle<Red::rendRenderMorphTargetMeshBlob>& aSourceBlob);
+
     static const Core::Set<Red::ResourcePath>& GetPatchList(Red::ResourcePath aTargetPath);
     template<typename T = Red::CResource>
     static Red::Handle<T> GetPatchResource(Red::ResourcePath aPatchPath);
@@ -75,10 +80,8 @@ private:
 
     inline static Core::Map<Red::ResourcePath, Core::Set<Red::ResourcePath>> s_patches;
     inline static Core::Map<Red::ResourcePath, std::string> s_paths;
-
     inline static Red::SharedSpinLock s_tokenLock;
     inline static Core::Map<Red::ResourcePath, Red::SharedPtr<Red::ResourceToken<>>> s_tokens;
-
     inline static Red::SharedSpinLock s_definitionLock;
     inline static Core::Map<Red::ResourcePath, DefinitionMap> s_definitions;
 };

@@ -2,6 +2,7 @@
 #include "App/Extensions/Customization/Extension.hpp"
 #include "App/Extensions/Mesh/Extension.hpp"
 #include "App/Extensions/ResourceMeta/Extension.hpp"
+#include "Red/Buffer.hpp"
 #include "Red/EntityBuilder.hpp"
 #include "Red/Mesh.hpp"
 #include "Red/MorphTarget.hpp"
@@ -346,39 +347,68 @@ void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, Red::Pos
         {
             auto patchMesh = GetPatchResource<Red::CMesh>(patchPath);
 
-            if (!patchMesh || patchMesh->appearances.size == 0)
+            if (!patchMesh)
                 continue;
 
-            auto patchName = MeshExtension::RegisterMeshSource(aMesh, patchMesh);
-
-            for (const auto& patchAppearance : patchMesh->appearances)
+            if (patchMesh->appearances.size != 0)
             {
-                auto cloneAppearance = Red::MakeHandle<Red::meshMeshAppearance>();
-                cloneAppearance->name = patchAppearance->name;
-                cloneAppearance->chunkMaterials = patchAppearance->chunkMaterials;
+                auto patchName = MeshExtension::RegisterMeshSource(aMesh, patchMesh);
 
-                cloneAppearance->tags.Clear();
-                cloneAppearance->tags.PushBack(patchName);
-
-                auto isNewAppearance = true;
-
-                for (auto& existingAppearance : aMesh->appearances)
+                for (const auto& patchAppearance : patchMesh->appearances)
                 {
-                    if (existingAppearance->name == cloneAppearance->name)
+                    auto cloneAppearance = Red::MakeHandle<Red::meshMeshAppearance>();
+                    cloneAppearance->name = patchAppearance->name;
+                    cloneAppearance->chunkMaterials = patchAppearance->chunkMaterials;
+
+                    cloneAppearance->tags.Clear();
+                    cloneAppearance->tags.PushBack(patchName);
+
+                    auto isNewAppearance = true;
+
+                    for (auto& existingAppearance : aMesh->appearances)
                     {
-                        existingAppearance = cloneAppearance;
-                        isNewAppearance = false;
-                        break;
+                        if (existingAppearance->name == cloneAppearance->name)
+                        {
+                            existingAppearance = cloneAppearance;
+                            isNewAppearance = false;
+                            break;
+                        }
+                    }
+
+                    if (isNewAppearance)
+                    {
+                        aMesh->appearances.EmplaceBack(cloneAppearance);
                     }
                 }
 
-                if (isNewAppearance)
-                {
-                    aMesh->appearances.EmplaceBack(cloneAppearance);
-                }
+                aMesh->forceLoadAllAppearances = false;
             }
 
-            aMesh->forceLoadAllAppearances = false;
+            if (patchMesh->renderResourceBlob && !aMesh->renderResourceBlob)
+            {
+                if (auto& renderBlob = Red::Cast<Red::rendRenderMeshBlob>(patchMesh->renderResourceBlob))
+                {
+                    aMesh->renderResourceBlob = CopyRenderBlob(renderBlob);
+                }
+
+                aMesh->parameters = patchMesh->parameters;
+                aMesh->boneNames = patchMesh->boneNames;
+                aMesh->boneRigMatrices = patchMesh->boneRigMatrices;
+                aMesh->boneVertexEpsilons = patchMesh->boneVertexEpsilons;
+                aMesh->lodBoneMask = patchMesh->lodBoneMask;
+                aMesh->lodLevelInfo = patchMesh->lodLevelInfo;
+                aMesh->floatTrackNames = patchMesh->floatTrackNames;
+                aMesh->boundingBox = patchMesh->boundingBox;
+                aMesh->surfaceAreaPerAxis = patchMesh->surfaceAreaPerAxis;
+                aMesh->objectType = patchMesh->objectType;
+                aMesh->castGlobalShadowsCachedInCook = patchMesh->castGlobalShadowsCachedInCook;
+                aMesh->castLocalShadowsCachedInCook = patchMesh->castLocalShadowsCachedInCook;
+                aMesh->useRayTracingShadowLODBias = patchMesh->useRayTracingShadowLODBias;
+                aMesh->castsRayTracedShadowsFromOriginalGeometry = patchMesh->castsRayTracedShadowsFromOriginalGeometry;
+                aMesh->isShadowMesh = patchMesh->isShadowMesh;
+                aMesh->isPlayerShadowMesh = patchMesh->isPlayerShadowMesh;
+                aMesh->constrainAutoHideDistanceToTerrainHeightMap = patchMesh->constrainAutoHideDistanceToTerrainHeightMap;
+            }
         }
     }
 
@@ -422,7 +452,10 @@ void App::ResourcePatchExtension::OnMorphTargetResourceLoad(Red::MorphTargetMesh
 
         if (patchResource->blob)
         {
-            aMorphTarget->blob = patchResource->blob;
+            if (auto& renderBlob = Red::Cast<Red::rendRenderMorphTargetMeshBlob>(patchResource->blob))
+            {
+                aMorphTarget->blob = CopyRenderBlob(renderBlob);
+            }
         }
 
         if (patchResource->boundingBox.Max.X > patchResource->boundingBox.Min.X)
@@ -830,6 +863,35 @@ void App::ResourcePatchExtension::MergeResources(Red::DynArray<Red::SharedPtr<Re
     {
         aResultResources.PushBack(patchResource);
     }
+}
+
+Red::Handle<Red::rendRenderMeshBlob> App::ResourcePatchExtension::CopyRenderBlob(
+    const Red::Handle<Red::rendRenderMeshBlob>& aSourceBlob)
+{
+    auto cloneBlob = Red::MakeHandle<Red::rendRenderMeshBlob>();
+    cloneBlob->header = aSourceBlob->header;
+
+    Red::CopyBuffer(cloneBlob->renderBuffer, aSourceBlob->renderBuffer);
+
+    return cloneBlob;
+}
+
+Red::Handle<Red::rendRenderMorphTargetMeshBlob> App::ResourcePatchExtension::CopyRenderBlob(
+    const Red::Handle<Red::rendRenderMorphTargetMeshBlob>& aSourceBlob)
+{
+    auto cloneBlob = Red::MakeHandle<Red::rendRenderMorphTargetMeshBlob>();
+    cloneBlob->header = aSourceBlob->header;
+
+    Red::CopyBuffer(cloneBlob->diffsBuffer, aSourceBlob->diffsBuffer);
+    Red::CopyBuffer(cloneBlob->mappingBuffer, aSourceBlob->mappingBuffer);
+    Red::CopyBuffer(cloneBlob->textureDiffsBuffer, aSourceBlob->textureDiffsBuffer);
+
+    if (auto& baseBlob = Red::Cast<Red::rendRenderMeshBlob>(aSourceBlob->baseBlob))
+    {
+        cloneBlob->baseBlob = CopyRenderBlob(baseBlob);
+    }
+
+    return cloneBlob;
 }
 
 const Core::Set<Red::ResourcePath>& App::ResourcePatchExtension::GetPatchList(Red::ResourcePath aTargetPath)

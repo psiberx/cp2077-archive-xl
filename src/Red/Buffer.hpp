@@ -36,3 +36,23 @@ struct BufferReader
     }
 };
 }
+
+namespace Red
+{
+inline void CopyBuffer(DataBuffer& aDst, const DataBuffer& aSrc)
+{
+    if (aSrc.buffer.data)
+    {
+        aDst.buffer.Initialize(aSrc.buffer.GetAllocator(), aSrc.buffer.size, aSrc.buffer.alignment);
+        std::memcpy(aDst.buffer.data, aSrc.buffer.data, aSrc.buffer.size);
+    }
+}
+
+inline void CopyBuffer(DeferredDataBuffer& aDst, const DeferredDataBuffer& aSrc)
+{
+    if (aSrc.unk30)
+    {
+        Red::BufferReader::Clone(aDst.unk30, aSrc.unk30);
+    }
+}
+}
