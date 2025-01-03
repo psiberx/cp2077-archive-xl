@@ -39,6 +39,7 @@ bool App::PhotoModeExtension::Load()
     HookBefore<Raw::PhotoModeMenuController::SetupGridSelector>(&OnSetupGridSelector).OrThrow();
     Hook<Raw::PhotoModeMenuController::SetNpcImageCallback>(&OnSetNpcImage).OrThrow();
     HookAfter<Raw::PhotoModeSystem::CalculateSpawnTransform>(&OnCalculateSpawnTransform).OrThrow();
+    HookAfter<Raw::PhotoModeSystem::SpawnCharacter>(&OnSpawnCharacter).OrThrow();
     Hook<Raw::PhotoModeSystem::ApplyPuppetTransforms>(&OnApplyPuppetTransforms).OrThrow();
     HookAfter<Raw::PhotoModeSystem::SetRelativePosition>(&OnSetRelativePosition).OrThrow();
     Hook<Raw::PhotoModeSystem::SyncRelativePosition>(&OnSyncRelativePosition).OrThrow();
@@ -57,6 +58,7 @@ bool App::PhotoModeExtension::Unload()
     Unhook<Raw::PhotoModeSystem::PrepareCameras>();
     Unhook<Raw::PhotoModeSystem::UpdatePoseDependents>();
     Unhook<Raw::PhotoModeSystem::CalculateSpawnTransform>();
+    Unhook<Raw::PhotoModeSystem::SpawnCharacter>();
     Unhook<Raw::PhotoModeSystem::ApplyPuppetTransforms>();
     Unhook<Raw::PhotoModeSystem::SetRelativePosition>();
     Unhook<Raw::PhotoModeSystem::SyncRelativePosition>();
@@ -362,6 +364,42 @@ void App::PhotoModeExtension::OnCalculateSpawnTransform(Red::gamePhotoModeSystem
     }
 
     aSpawnTransform = aInitialTransform;
+}
+
+void App::PhotoModeExtension::OnSpawnCharacter(Red::gamePhotoModeSystem* aSystem, Red::PhotoModeCharacter* aCharacter,
+                                               uint32_t a3, const Red::Transform& aSpawnTransform, uint64_t a5)
+{
+    if (aCharacter->characterType != Red::PhotoModeCharacterType::NPC)
+        return;
+
+    auto slot = Raw::PhotoModeSystem::SpawningSlot::Ref(aSystem);
+    auto right = 0.0f;
+    auto forward = 0.0f;
+
+    switch (slot)
+    {
+    case 0:
+    {
+        right = -0.75;
+        break;
+    }
+    case 1:
+    {
+        right = 0.75;
+        break;
+    }
+    default:
+    {
+        forward = 0.75;
+        break;
+    }
+    }
+
+    aCharacter->relativeOffsetRight = right;
+    aCharacter->relativeOffsetForward = forward;
+    aCharacter->updateTransform = true;
+
+    FixRelativePosition(aCharacter);
 }
 
 void App::PhotoModeExtension::OnApplyPuppetTransforms(Red::gamePhotoModeSystem* aSystem,

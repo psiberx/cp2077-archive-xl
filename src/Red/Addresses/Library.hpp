@@ -166,6 +166,7 @@ constexpr uint32_t PhotoModeSystem_PrepareCategories = 1220162374;
 constexpr uint32_t PhotoModeSystem_PreparePoses = 1533423999;
 constexpr uint32_t PhotoModeSystem_PrepareCameras = 1972968407;
 constexpr uint32_t PhotoModeSystem_CalculateSpawnTransform = 3621919187;
+constexpr uint32_t PhotoModeSystem_SpawnCharacter = 3345561227;
 constexpr uint32_t PhotoModeSystem_ApplyPuppetTransforms = 2694650124;
 constexpr uint32_t PhotoModeSystem_SetRelativePosition = 3157463382;
 constexpr uint32_t PhotoModeSystem_SyncRelativePosition = 4175827669;

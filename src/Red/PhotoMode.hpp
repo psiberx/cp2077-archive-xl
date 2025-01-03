@@ -139,6 +139,11 @@ constexpr auto CalculateSpawnTransform = Core::RawFunc<
     /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, Red::Transform& aSpawnTransform,
                           const Red::Transform& aInitialTransform, uint64_t* a4, bool a5)>();
 
+constexpr auto SpawnCharacter = Core::RawFunc<
+    /* addr = */ Red::AddressLib::PhotoModeSystem_SpawnCharacter,
+    /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, Red::PhotoModeCharacter* aCharacter,
+                          uint32_t a3, const Red::Transform& aSpawnTransform, uint64_t a5)>();
+
 constexpr auto ApplyPuppetTransforms = Core::RawFunc<
     /* addr = */ Red::AddressLib::PhotoModeSystem_ApplyPuppetTransforms,
     /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, Red::DynArray<Red::PhotoModeCharacter>& aCharacterList,
