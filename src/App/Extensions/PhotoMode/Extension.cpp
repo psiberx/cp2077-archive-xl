@@ -340,29 +340,6 @@ void App::PhotoModeExtension::OnCalculateSpawnTransform(Red::gamePhotoModeSystem
                                                         Red::Transform& aSpawnTransform,
                                                         const Red::Transform& aInitialTransform, uint64_t* a4, bool a5)
 {
-    auto slot = Raw::PhotoModeSystem::SpawningSlot::Ref(aSystem);
-    auto right = 0.0f;
-    auto forward = 0.0f;
-
-    switch (slot)
-    {
-    case 0:
-    {
-        right = 0.5;
-        break;
-    }
-    case 1:
-    {
-        right = -0.5;
-        break;
-    }
-    default:
-    {
-        forward = 0.5;
-        break;
-    }
-    }
-
     aSpawnTransform = aInitialTransform;
 }
 
