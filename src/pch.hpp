@@ -9,6 +9,7 @@
 #include <future>
 #include <map>
 #include <memory>
+#include <numbers>
 #include <ranges>
 #include <set>
 #include <source_location>

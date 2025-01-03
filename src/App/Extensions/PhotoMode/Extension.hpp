@@ -12,7 +12,6 @@ public:
     std::string_view GetName() override;
     bool Load() override;
     bool Unload() override;
-    void Configure() override;
     void ApplyTweaks() override;
 
 private:
@@ -28,6 +27,7 @@ private:
                                 Red::PhotoModeCharacterType aCharacterType);
     static void OnRegisterWeaponPoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex,
                                       Red::DynArray<Red::gamedataItemType>& aItemTypes);
+    static void FillWeaponTypes(Red::DynArray<Red::gamedataItemType>& aItemTypes);
     static void OnPrepareCategories(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint64_t a3);
     static void OnPreparePoses(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex, uint32_t aCategoryIndex,
                                uint64_t a4);
@@ -41,8 +41,15 @@ private:
                                     uint32_t& aElementsCount, uint32_t& aElementsInRow);
     static void OnSetNpcImage(void* aCallback, uint32_t aCharacterIndex, Red::ResourcePath aAtlasPath,
                               Red::CName aImagePart, int32_t aImageIndex);
+    static void OnCalculateSpawnTransform(Red::gamePhotoModeSystem* aSystem, Red::Transform& aSpawnTransform,
+                                          const Red::Transform& aInitialTransform, uint64_t* a4, bool a5);
+    static void OnApplyPuppetTransforms(Red::gamePhotoModeSystem* aSystem,
+                                        Red::DynArray<Red::PhotoModeCharacter>& aCharacterList,
+                                        uint8_t aCharacterGroup);
+    static void OnSetRelativePosition(Red::gamePhotoModeSystem* aSystem, uint8_t a2, uint8_t aCharacterGroup);
+    static void FixRelativePosition(Red::PhotoModeCharacter* aCharacter);
+    static void OnSyncRelativePosition(Red::gamePhotoModeSystem* aSystem);
 
-    static void FillWeaponTypes(Red::DynArray<Red::gamedataItemType>& aItemTypes);
 
     static inline Core::SortedMap<uint32_t, CharacterSource> s_extraCharacters;
     static inline Core::SortedMap<Red::TweakDBID, uint32_t> s_characterIndexMap;

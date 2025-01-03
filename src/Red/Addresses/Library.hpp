@@ -165,6 +165,11 @@ constexpr uint32_t PhotoModeSystem_UpdatePoseDependents = 231086722;
 constexpr uint32_t PhotoModeSystem_PrepareCategories = 1220162374;
 constexpr uint32_t PhotoModeSystem_PreparePoses = 1533423999;
 constexpr uint32_t PhotoModeSystem_PrepareCameras = 1972968407;
+constexpr uint32_t PhotoModeSystem_CalculateSpawnTransform = 3621919187;
+constexpr uint32_t PhotoModeSystem_ApplyPuppetTransforms = 2694650124;
+constexpr uint32_t PhotoModeSystem_SetRelativePosition = 3157463382;
+constexpr uint32_t PhotoModeSystem_SyncRelativePosition = 4175827669;
+constexpr uint32_t PhotoModeSystem_SetAttributeValue = 815536999;
 
 constexpr uint32_t QuestLoader_ProcessPhaseResource = 790570700;
 

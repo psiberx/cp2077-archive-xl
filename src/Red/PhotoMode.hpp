@@ -32,10 +32,11 @@ struct PhotoModeCharacter
     uint8_t unk63;                                     // 63
     uint64_t unk68;                                    // 68
     uint64_t unk70;                                    // 70
-    uint64_t unk78;                                    // 78
-    uint32_t unk80;                                    // 80
-    uint16_t unk84;                                    // 84
+    Vector3 relativePosition;                          // 78
+    bool updateTransform;                              // 84
+    bool unk85;                                        // 85
     uint8_t unk86;                                     // 86
+    uint8_t unk87;                                     // 87
     uint64_t unk88;                                    // 88
     uint64_t unk90;                                    // 90
     uint32_t unk98;                                    // 98
@@ -47,27 +48,23 @@ struct PhotoModeCharacter
     uint32_t unkB0;                                    // B0
     uint32_t unkB4;                                    // B4
     uint32_t unkB8;                                    // B8
-    bool unkBC;                                        // BC needUpdate?
+    bool unkBC;                                        // BC
     CName lookAtCameraPreset;                          // C0
     uint64_t unkC8;                                    // C8
     uint64_t unkD0;                                    // D0
     uint8_t unkD8;                                     // D8
-    float unkDC;                                       // DC spawned?
+    float spawnedState;                                // DC
     uint32_t unkE0;                                    // E0
     uint32_t unkE4;                                    // E4
     uint32_t unkE8;                                    // E8
     uint32_t unkEC;                                    // EC
     uint32_t unkF0;                                    // F0
-    uint32_t unkF4;                                    // F4
-    uint32_t unkF8;                                    // F8
-    uint32_t unkFC;                                    // FC
-    uint32_t unk100;                                   // 100
-    uint32_t unk104;                                   // 104
-    uint32_t unk108;                                   // 108
-    uint32_t unk10C;                                   // 10C
-    uint32_t unk114;                                   // 114
-    uint32_t unk118;                                   // 118
-    uint32_t unk11C;                                   // 11C
+    float relativeRotation;                            // F4
+    float relativeOffsetRight;                         // F8
+    float relativeOffsetForward;                       // FC
+    Quaternion spawnOrientation;                       // 100
+    Vector3 spawnPosition;                             // 110
+    uint32_t state;                                    // 11C
 };
 RED4EXT_ASSERT_SIZE(PhotoModeCharacter, 0x120);
 RED4EXT_ASSERT_OFFSET(PhotoModeCharacter, characterIndex, 0x48);
@@ -76,8 +73,11 @@ RED4EXT_ASSERT_OFFSET(PhotoModeCharacter, lookAtCameraPreset, 0xC0);
 
 namespace Raw::PhotoModeSystem
 {
+using Player = Core::OffsetPtr<0x140, Red::PhotoModeCharacter*>;
 using CharacterList = Core::OffsetPtr<0x180, Red::DynArray<Red::PhotoModeCharacter>>;
-using SpawnedList = Core::OffsetPtr<0x1D0, Red::DynArray<Red::PhotoModeCharacter*>>;
+using SpawnList = Core::OffsetPtr<0x1D0, Red::PhotoModeCharacter*[3]>;
+using SpawningSlot = Core::OffsetPtr<0x3A0, uint32_t>;
+using SelectedSlot = Core::OffsetPtr<0x39C, uint32_t>;
 
 constexpr auto Activate = Core::RawFunc<
     /* addr = */ Red::AddressLib::PhotoModeSystem_Activate,
@@ -133,6 +133,28 @@ constexpr auto UpdatePoseDependents = Core::RawFunc<
     /* addr = */ Red::AddressLib::PhotoModeSystem_UpdatePoseDependents,
     /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, uint32_t aCategoryIndex, uint32_t aPoseIndex,
                           Red::PhotoModeCharacter* aCharacter)>();
+
+constexpr auto CalculateSpawnTransform = Core::RawFunc<
+    /* addr = */ Red::AddressLib::PhotoModeSystem_CalculateSpawnTransform,
+    /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, Red::Transform& aSpawnTransform,
+                          const Red::Transform& aInitialTransform, uint64_t* a4, bool a5)>();
+
+constexpr auto ApplyPuppetTransforms = Core::RawFunc<
+    /* addr = */ Red::AddressLib::PhotoModeSystem_ApplyPuppetTransforms,
+    /* type = */ void (*)(Red::gamePhotoModeSystem* aSystem, Red::DynArray<Red::PhotoModeCharacter>& aCharacterList,
+                          uint8_t aCharacterGroup)>();
+
+constexpr auto SetRelativePosition = Core::RawFunc<
+    /* addr = */ Red::AddressLib::PhotoModeSystem_SetRelativePosition,
+    /* type = */ void (*)(Red::gamePhotoModeSystem *aSystem, uint8_t a2, uint8_t aCharacterGroup)>();
+
+constexpr auto SyncRelativePosition = Core::RawFunc<
+    /* addr = */ Red::AddressLib::PhotoModeSystem_SyncRelativePosition,
+    /* type = */ void (*)(Red::gamePhotoModeSystem *aSystem)>();
+
+constexpr auto SetAttributeValue = Core::RawFunc<
+    /* addr = */ Red::AddressLib::PhotoModeSystem_SetAttributeValue,
+    /* type = */ void (*)(Red::gamePhotoModeSystem *aSystem, uint32_t aAttribute, float aValue, bool aApply)>();
 }
 
 namespace Raw::PhotoModeMenuController

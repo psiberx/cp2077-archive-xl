@@ -38,6 +38,10 @@ bool App::PhotoModeExtension::Load()
     Hook<Raw::PhotoModeSystem::UpdatePoseDependents>(&OnUpdatePoseDependents).OrThrow();
     HookBefore<Raw::PhotoModeMenuController::SetupGridSelector>(&OnSetupGridSelector).OrThrow();
     Hook<Raw::PhotoModeMenuController::SetNpcImageCallback>(&OnSetNpcImage).OrThrow();
+    HookAfter<Raw::PhotoModeSystem::CalculateSpawnTransform>(&OnCalculateSpawnTransform).OrThrow();
+    Hook<Raw::PhotoModeSystem::ApplyPuppetTransforms>(&OnApplyPuppetTransforms).OrThrow();
+    HookAfter<Raw::PhotoModeSystem::SetRelativePosition>(&OnSetRelativePosition).OrThrow();
+    Hook<Raw::PhotoModeSystem::SyncRelativePosition>(&OnSyncRelativePosition).OrThrow();
 
     return true;
 }
@@ -52,14 +56,14 @@ bool App::PhotoModeExtension::Unload()
     Unhook<Raw::PhotoModeSystem::PreparePoses>();
     Unhook<Raw::PhotoModeSystem::PrepareCameras>();
     Unhook<Raw::PhotoModeSystem::UpdatePoseDependents>();
+    Unhook<Raw::PhotoModeSystem::CalculateSpawnTransform>();
+    Unhook<Raw::PhotoModeSystem::ApplyPuppetTransforms>();
+    Unhook<Raw::PhotoModeSystem::SetRelativePosition>();
+    Unhook<Raw::PhotoModeSystem::SyncRelativePosition>();
     Unhook<Raw::PhotoModeMenuController::SetupGridSelector>();
     Unhook<Raw::PhotoModeMenuController::SetNpcImageCallback>();
 
     return true;
-}
-
-void App::PhotoModeExtension::Configure()
-{
 }
 
 void App::PhotoModeExtension::ApplyTweaks()
@@ -202,6 +206,17 @@ void App::PhotoModeExtension::OnActivatePhotoMode(Red::gamePhotoModeSystem* aSys
     }
 }
 
+void App::PhotoModeExtension::FillWeaponTypes(Red::DynArray<Red::gamedataItemType>& aItemTypes)
+{
+    auto itemTypeCount = static_cast<uint32_t>(Red::gamedataItemType::Count);
+    aItemTypes.Reserve(itemTypeCount);
+
+    for (auto itemType = 0; itemType < itemTypeCount; ++itemType)
+    {
+        aItemTypes.PushBack(static_cast<Red::gamedataItemType>(itemType));
+    }
+}
+
 bool App::PhotoModeExtension::OnValidateCharacter(Red::gamePhotoModeSystem* aSystem, uint32_t aCharacterIndex)
 {
     auto extracCharacter = s_extraCharacters.find(aCharacterIndex);
@@ -319,13 +334,114 @@ void App::PhotoModeExtension::OnSetNpcImage(void* aCallback, uint32_t aCharacter
     Raw::PhotoModeMenuController::SetNpcImageCallback(aCallback, aCharacterIndex, aAtlasPath, aImagePart, aImageIndex);
 }
 
-void App::PhotoModeExtension::FillWeaponTypes(Red::DynArray<Red::gamedataItemType>& aItemTypes)
+void App::PhotoModeExtension::OnCalculateSpawnTransform(Red::gamePhotoModeSystem* aSystem,
+                                                        Red::Transform& aSpawnTransform,
+                                                        const Red::Transform& aInitialTransform, uint64_t* a4, bool a5)
 {
-    auto itemTypeCount = static_cast<uint32_t>(Red::gamedataItemType::Count);
-    aItemTypes.Reserve(itemTypeCount);
+    auto slot = Raw::PhotoModeSystem::SpawningSlot::Ref(aSystem);
+    auto right = 0.0f;
+    auto forward = 0.0f;
 
-    for (auto itemType = 0; itemType < itemTypeCount; ++itemType)
+    switch (slot)
     {
-        aItemTypes.PushBack(static_cast<Red::gamedataItemType>(itemType));
+    case 0:
+    {
+        right = 0.5;
+        break;
     }
+    case 1:
+    {
+        right = -0.5;
+        break;
+    }
+    default:
+    {
+        forward = 0.5;
+        break;
+    }
+    }
+
+    aSpawnTransform = aInitialTransform;
+}
+
+void App::PhotoModeExtension::OnApplyPuppetTransforms(Red::gamePhotoModeSystem* aSystem,
+                                                      Red::DynArray<Red::PhotoModeCharacter>& aCharacterList,
+                                                      uint8_t aCharacterGroup)
+{
+    if (aCharacterGroup == 0)
+    {
+        Raw::PhotoModeSystem::ApplyPuppetTransforms(aSystem, aCharacterList, aCharacterGroup);
+        return;
+    }
+
+    Core::Vector<Red::PhotoModeCharacter*> updateList;
+
+    for (auto& character : aCharacterList)
+    {
+        if (character.puppet && character.puppet->transformComponent && character.updateTransform)
+        {
+            updateList.emplace_back(&character);
+        }
+    }
+
+    Raw::PhotoModeSystem::ApplyPuppetTransforms(aSystem, aCharacterList, aCharacterGroup);
+
+    for (auto& character : updateList)
+    {
+        if (character->puppet && character->puppet->transformComponent && !character->updateTransform)
+        {
+            auto& base = character->spawnOrientation;
+            auto angle = character->relativeRotation * (std::numbers::pi_v<float> / 180.0f);
+            auto rot = Red::Quaternion{0, 0, std::sinf(angle * 0.5f), std::cosf(angle * 0.5f)};
+
+            auto& orientation = character->puppet->transformComponent->localTransform.Orientation;
+            orientation.i = (rot.r * base.i) + (rot.i * base.r) + (rot.j * base.k) - (rot.k * base.j);
+            orientation.j = (rot.r * base.j) + (rot.j * base.r) + (rot.k * base.i) - (rot.i * base.k);
+            orientation.k = (rot.r * base.k) + (rot.k * base.r) + (rot.i * base.j) - (rot.j * base.i);
+            orientation.r = (rot.r * base.r) - (rot.i * base.i) - (rot.j * base.j) - (rot.k * base.k);
+        }
+    }
+}
+
+void App::PhotoModeExtension::OnSetRelativePosition(Red::gamePhotoModeSystem* aSystem, uint8_t a2,
+                                                    uint8_t aCharacterGroup)
+{
+    if (aCharacterGroup == 0)
+    {
+        auto* player = Raw::PhotoModeSystem::Player::Ptr(aSystem);
+        if (player && player->puppet && player->puppet->transformComponent && player->updateTransform)
+        {
+            FixRelativePosition(player);
+        }
+    }
+    else
+    {
+        auto& characterList = Raw::PhotoModeSystem::CharacterList::Ref(aSystem);
+        for (auto& character : characterList)
+        {
+            if (character.puppet && character.puppet->transformComponent && character.updateTransform)
+            {
+                FixRelativePosition(&character);
+            }
+        }
+    }
+}
+
+void App::PhotoModeExtension::FixRelativePosition(Red::PhotoModeCharacter* aCharacter)
+{
+    auto& rot = aCharacter->spawnOrientation;
+    auto pos = Red::Vector4{-aCharacter->relativeOffsetRight,
+                            aCharacter->relativeOffsetForward,
+                            aCharacter->relativePosition.Z,
+                            0.0};
+
+    Red::CallStatic("Quaternion", "Transform", pos, rot, pos);
+
+    aCharacter->relativePosition.X = pos.X;
+    aCharacter->relativePosition.Y = pos.Y;
+    aCharacter->relativePosition.Z = pos.Z;
+}
+
+void App::PhotoModeExtension::OnSyncRelativePosition(Red::gamePhotoModeSystem* aSystem)
+{
 }
