@@ -242,6 +242,11 @@ void App::ResourcePatchExtension::OnEntityTemplateLoad(Red::EntityTemplate* aTem
             }
         }
 
+        for (const auto& dependency : patchTemplate->resolvedDependencies)
+        {
+            aTemplate->resolvedDependencies.PushBack(dependency);
+        }
+
         if (patchTemplate->visualTagsSchema)
         {
             if (!aTemplate->visualTagsSchema)
@@ -297,6 +302,11 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
                         for (const auto& partOverride : patchDefinition->partsOverrides)
                         {
                             existingDefinition->partsOverrides.PushBack(partOverride);
+                        }
+
+                        for (const auto& dependency : patchDefinition->resolvedDependencies)
+                        {
+                            existingDefinition->resolvedDependencies.PushBack(dependency);
                         }
 
                         existingDefinition->visualTags.Add(patchDefinition->visualTags);
