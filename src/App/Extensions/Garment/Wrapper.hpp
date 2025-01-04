@@ -28,7 +28,8 @@ public:
     bool SetResourcePath(Red::ResourcePath aPath) const;
 
     bool LoadResource(bool aRefresh, bool aWait) const;
-    [[nodiscard]] Red::SharedPtr<Red::ResourceToken<Red::CMesh>> LoadResourceToken(bool aWait = false) const;
+    [[nodiscard]] Red::SharedPtr<Red::ResourceToken<>> LoadResourceToken(bool aWait = false) const;
+    [[nodiscard]] Red::SharedPtr<Red::ResourceToken<Red::CMesh>> LoadMeshToken(bool aWait = false) const;
 
     [[nodiscard]] Red::CName GetAppearanceName() const;
     bool SetAppearanceName(Red::CName aAppearance) const;

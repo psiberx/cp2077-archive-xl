@@ -573,7 +573,7 @@ uintptr_t App::GarmentExtension::OnProcessGarment(Red::SharedPtr<Red::GarmentPro
 void App::GarmentExtension::OnProcessGarmentMesh(Raw::GarmentAssembler::ProcessMesh aCallback,
                                                  Red::GarmentProcessingContext* aProcessor, uint32_t aIndex,
                                                  const Red::Handle<Red::EntityTemplate>& aPartTemplate,
-                                                 const Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,
+                                                 const Red::SharedPtr<Red::ResourceToken<>>& aMeshToken,
                                                  const Red::Handle<Red::IComponent>& aComponent,
                                                  const Red::JobGroup& aJobGroup)
 {

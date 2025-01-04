@@ -118,7 +118,7 @@ constexpr auto ExtractComponentsJob = Core::RawFunc<
 using ProcessMesh = void (*)(Red::GarmentProcessingContext* aProcessor,
                              uint32_t aIndex,
                              const Red::Handle<Red::EntityTemplate>& aPartTemplate,
-                             const Red::SharedPtr<Red::ResourceToken<Red::CMesh>>& aMeshToken,
+                             const Red::SharedPtr<Red::ResourceToken<>>& aMeshToken,
                              const Red::Handle<Red::IComponent>& aComponent,
                              const Red::JobGroup& aJobGroup);
 
