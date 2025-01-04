@@ -1,9 +1,0 @@
-[[UNRESOLVED_MEMBER]]
-id = "CODEWARE_11202"
-span_starts_with = "scrollArea.useInternalMask"
-message = "Install Codeware 1.12.2 or higher"
-
-[[UNRESOLVED_MEMBER]]
-id = "CODEWARE_11202"
-span_starts_with = "scrollController.ScrollArea"
-message = "Install Codeware 1.12.2 or higher"
