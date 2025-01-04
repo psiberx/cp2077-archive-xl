@@ -7,7 +7,7 @@ namespace
 constexpr auto ExtensionName = "PhotoMode";
 
 constexpr uint32_t CharacterSelectorAttribute = 63;
-constexpr uint32_t DummyCharacterSlots = 1;
+constexpr uint32_t DummyCharacterSlots = 2;
 
 constexpr Red::TweakDBID WomanAverageID = "Character.Panam_Puppet_Photomode";
 constexpr Red::TweakDBID ManAverageID = "Character.Viktor_Puppet_Photomode";
