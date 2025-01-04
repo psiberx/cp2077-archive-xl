@@ -11,6 +11,7 @@ constexpr auto ContextMaterialName = Red::CName("@context");
 constexpr auto DefaultTemplateName = Red::CName("@material");
 constexpr auto DefaultAppearanceName = Red::CName("default");
 constexpr auto MaterialAttr = Red::CName("material");
+constexpr auto ExpansionSourceAttr = Red::CName("appearance_expansion_source");
 }
 
 std::string_view App::MeshExtension::GetName()
@@ -73,7 +74,9 @@ void App::MeshExtension::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& 
 
     if (aOut->chunkMaterials.size == 0)
     {
-        auto sourceAppearance = aMesh->appearances[0];
+        auto sourceIndex = meshState->GetExpansionSourceIndex(aMesh);
+        auto sourceAppearance = aMesh->appearances[sourceIndex];
+
         if (sourceAppearance && sourceAppearance != aOut)
         {
             const auto appearanceNameStr = std::string{aOut->name.ToString()};
@@ -262,8 +265,7 @@ void App::MeshExtension::ProcessMeshResource(const Core::SharedPtr<MeshState>& a
 
             if (sourceIndex < 0)
             {
-                LogError(R"(|{}| Material template "{}" for entry "{}" not found.)",
-                         ExtensionName, templateName.ToString(), chunkName.ToString());
+                LogError(R"(|{}| Material for entry "{}" cannot be resoled.)", ExtensionName, chunkName.ToString());
                 continue;
             }
         }
@@ -658,6 +660,7 @@ bool App::MeshExtension::OnPreloadAppearances(Red::CMesh* aMesh)
 App::MeshExtension::MeshState::MeshState(Red::CMesh* aMesh)
     : dynamic(true)
     , meshPath(aMesh->path)
+    , expansionSourceIndex(-1)
 {
     FillMaterials(aMesh);
 
@@ -701,6 +704,17 @@ void App::MeshExtension::MeshState::FillContext(const Core::Map<Red::CName, std:
     for (const auto& [attrName, attrValue] : aContext)
     {
         contextAttrs.emplace(Red::CNamePool::Add(Str::SnakeCase(attrName.ToString()).data()), attrValue);
+    }
+
+    ResolveContextProperties();
+}
+
+void App::MeshExtension::MeshState::ResolveContextProperties()
+{
+    auto expansionSourceStr = GetContextAttr(ExpansionSourceAttr);
+    if (!expansionSourceStr.empty())
+    {
+        expansionSource = {expansionSourceStr.data(), expansionSourceStr.size()};
     }
 }
 
@@ -751,6 +765,8 @@ void App::MeshExtension::MeshState::EnsureContextFilled()
     }
 
     contextToken.Reset();
+
+    ResolveContextProperties();
 }
 
 const Red::DynArray<Red::MaterialParameterInstance>& App::MeshExtension::MeshState::GetContextParams()
@@ -765,6 +781,48 @@ const App::DynamicAttributeList& App::MeshExtension::MeshState::GetContextAttrs(
     EnsureContextFilled();
 
     return contextAttrs;
+}
+
+std::string_view App::MeshExtension::MeshState::GetContextAttr(Red::CName aAttr)
+{
+    EnsureContextFilled();
+
+    const auto& it = contextAttrs.find(aAttr);
+
+    if (it == contextAttrs.end())
+        return {};
+
+    return it.value().value;
+}
+
+Red::CName App::MeshExtension::MeshState::GetExpansionSource()
+{
+    EnsureContextFilled();
+
+    return expansionSource;
+}
+
+int32_t App::MeshExtension::MeshState::GetExpansionSourceIndex(Red::CMesh* aMesh)
+{
+    if (expansionSourceIndex < 0)
+    {
+        expansionSourceIndex = 0;
+
+        auto sourceName = GetExpansionSource();
+        if (sourceName)
+        {
+            for (auto i = 0; i < aMesh->appearances.size; ++i)
+            {
+                if (aMesh->appearances[i]->name == sourceName)
+                {
+                    expansionSourceIndex = i;
+                    break;
+                }
+            }
+        }
+    }
+
+    return expansionSourceIndex;
 }
 
 void App::MeshExtension::MeshState::FillMaterials(Red::CMesh* aMesh)

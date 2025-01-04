@@ -12,6 +12,7 @@ resource:
       context:
         LashesBaseMaterial: base\characters\common\character_customisation_items\eyelashes\source\eyelashes__default.mi
         LashesStrandAlpha: base\characters\common\hair\textures\hb1_brow_beard_lashes\hb1_01__lash_single_d.xbm
+        AppearanceExpansionSource: blonde_platinum
       names: &MaterialFix
         eyelashes__black_carbon: black_carbon@lashes
         eyelashes__black_salt_n_pepper: black_salt_n_pepper@lashes
@@ -52,6 +53,7 @@ resource:
       context:
         LashesBaseMaterial: base\characters\common\character_customisation_items\eyelashes\source\eyelashes__default.mi
         LashesStrandAlpha: base\characters\common\eyes\textures\eyelashes_ma_01_lod1.xbm
+        AppearanceExpansionSource: blonde_platinum
       names: *MaterialFix
   patch:
     archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\he_000_pwa_c__basehead_patch.mesh:

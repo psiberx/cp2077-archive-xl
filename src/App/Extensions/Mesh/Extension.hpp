@@ -28,9 +28,14 @@ private:
 
         void PrefetchContext(Red::CMesh* aMesh);
         void FillContext(const Core::Map<Red::CName, std::string>& aContext);
+        void ResolveContextProperties();
         void EnsureContextFilled();
         const Red::DynArray<Red::MaterialParameterInstance>& GetContextParams();
         const DynamicAttributeList& GetContextAttrs();
+        std::string_view GetContextAttr(Red::CName aAttr);
+
+        Red::CName GetExpansionSource();
+        int32_t GetExpansionSourceIndex(Red::CMesh* aMesh);
 
         void FillMaterials(Red::CMesh* aMesh);
         void RegisterMaterialEntry(Red::CName aMaterialName, int32_t aEntryIndex);
@@ -49,6 +54,8 @@ private:
         Red::SharedPtr<Red::ResourceToken<Red::IMaterial>> contextToken;
         Red::DynArray<Red::MaterialParameterInstance> contextParams;
         DynamicAttributeList contextAttrs;
+        Red::CName expansionSource;
+        int32_t expansionSourceIndex;
         Core::Map<Red::CName, int32_t> templates;
         Core::Map<Red::CName, int32_t> materials;
         Core::Map<Red::CName, Red::WeakHandle<Red::CMesh>> sources;
