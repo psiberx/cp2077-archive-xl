@@ -1,0 +1,60 @@
+resource:
+  fix:
+    base\gameplay\gui\fullscreen\main_menu\female_cco.inkcharcustomization: &AppearanceFixF
+      paths:
+        base\characters\head\player_base_heads\appearances\head\hel_000__basehead.app: archive_xl\characters\head\player_base_heads\appearances\head\hel_pwa_lashes.app
+    base\gameplay\gui\fullscreen\main_menu\male_cco.inkcharcustomization: &AppearanceFixM
+      paths:
+        base\characters\head\player_base_heads\appearances\head\hel_000__basehead.app: archive_xl\characters\head\player_base_heads\appearances\head\hel_pma_lashes.app
+    ep1\gameplay\gui\fullscreen\main_menu\female_cco_ep1.inkcharcustomization: *AppearanceFixF
+    ep1\gameplay\gui\fullscreen\main_menu\male_cco_ep1.inkcharcustomization: *AppearanceFixM
+    base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\he_000_pwa_c__basehead.mesh:
+      context:
+        LashesBaseMaterial: base\characters\common\character_customisation_items\eyelashes\source\eyelashes__default.mi
+        LashesStrandAlpha: base\characters\common\hair\textures\hb1_brow_beard_lashes\hb1_01__lash_single_d.xbm
+      names: &MaterialFix
+        eyelashes__black_carbon: black_carbon@lashes
+        eyelashes__black_salt_n_pepper: black_salt_n_pepper@lashes
+        eyelashes__blonde_dishwater: blonde_dishwater@lashes
+        eyelashes__blonde_golden: blonde_golden@lashes
+        eyelashes__blonde_platinum: blonde_platinum@lashes
+        eyelashes__blue_red_ombre: blue_red_ombre@lashes
+        eyelashes__blue_sapphire: blue_sapphire@lashes
+        eyelashes__blue_sky: blue_sky@lashes
+        eyelashes__blue_steel: blue_steel@lashes
+        eyelashes__brown_liquorice: brown_liquorice@lashes
+        eyelashes__brown_medium: brown_medium@lashes
+        eyelashes__brown_ombre: brown_ombre@lashes
+        eyelashes__citrus_yellow: citrus_yellow@lashes
+        eyelashes__cold_white: cold_white@lashes
+        eyelashes__cyberpunk_yellow: cyberpunk_yellow@lashes
+        eyelashes__dark_purple: dark_purple@lashes
+        eyelashes__ginger_copper: ginger_copper@lashes
+        eyelashes__ginger_strawberry: ginger_strawberry@lashes
+        eyelashes__goblin_green: goblin_green@lashes
+        eyelashes__gray_gunmetal: gray_gunmetal@lashes
+        eyelashes__green_orange: green_orange@lashes
+        eyelashes__green_toxic: green_toxic@lashes
+        eyelashes__liliac: liliac@lashes
+        eyelashes__liliac_ombre: liliac_ombre@lashes
+        eyelashes__mermaid_aquamarine: mermaid_aquamarine@lashes
+        eyelashes__phoenix_fire: phoenix_fire@lashes
+        eyelashes__pink_magenta: pink_magenta@lashes
+        eyelashes__pink_rose: pink_rose@lashes
+        eyelashes__purple_blonde: purple_blonde@lashes
+        eyelashes__purple_ombre: purple_ombre@lashes
+        eyelashes__red_apple: red_apple@lashes
+        eyelashes__red_merlot: red_merlot@lashes
+        eyelashes__silver_rose: silver_rose@lashes
+        eyelashes__teal_ash: teal_ash@lashes
+        eyelashes__teal_ombre: teal_ombre@lashes
+    base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\he_000_pma_c__basehead.mesh:
+      context:
+        LashesBaseMaterial: base\characters\common\character_customisation_items\eyelashes\source\eyelashes__default.mi
+        LashesStrandAlpha: base\characters\common\eyes\textures\eyelashes_ma_01_lod1.xbm
+      names: *MaterialFix
+  patch:
+    archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\he_000_pwa_c__basehead_patch.mesh:
+      - player_wa_lashes.mesh
+    archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\he_000_pma_c__basehead_patch.mesh:
+      - player_ma_lashes.mesh

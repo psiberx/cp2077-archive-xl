@@ -1,0 +1,438 @@
+{
+  "Header": {
+    "WolvenKitVersion": "8.15.1-nightly.2024-12-22",
+    "WKitJsonVersion": "0.0.9",
+    "GameVersion": 2200,
+    "ExportedDateTime": "2025-01-04T09:08:09.6007294Z",
+    "DataType": "CR2W"
+  },
+  "Data": {
+    "Version": 195,
+    "BuildVersion": 0,
+    "RootChunk": {
+      "$type": "appearanceAppearanceResource",
+      "alternateAppearanceMapping": [],
+      "alternateAppearanceSettingName": {
+        "$type": "CName",
+        "$storage": "string",
+        "$value": "None"
+      },
+      "alternateAppearanceSuffixes": [],
+      "appearances": [
+        {
+          "HandleId": "0",
+          "Data": {
+            "$type": "appearanceAppearanceDefinition",
+            "censorFlags": 0,
+            "compiledData": {
+              "BufferId": "0",
+              "Flags": 0,
+              "Type": "WolvenKit.RED4.Archive.Buffer.RedPackage, WolvenKit.RED4, Version=8.15.1.0, Culture=neutral, PublicKeyToken=null",
+              "Data": {
+                "Version": 4,
+                "Sections": 7,
+                "CruidIndex": -1,
+                "CruidDict": {
+                  "0": "2213008539708637184"
+                },
+                "Chunks": [
+                  {
+                    "$type": "entMorphTargetSkinnedMeshComponent",
+                    "acceptDismemberment": 1,
+                    "autoHideDistance": 50,
+                    "castLocalShadows": "Always",
+                    "castShadows": "Always",
+                    "chunkMask": "9223372036854775807",
+                    "forceLODLevel": -1,
+                    "id": "2213008539708637184",
+                    "isEnabled": 1,
+                    "isReplicable": 0,
+                    "localTransform": {
+                      "$type": "WorldTransform",
+                      "Orientation": {
+                        "$type": "Quaternion",
+                        "i": 0,
+                        "j": 0,
+                        "k": 0,
+                        "r": 1
+                      },
+                      "Position": {
+                        "$type": "WorldPosition",
+                        "x": {
+                          "$type": "FixedPoint",
+                          "Bits": 0
+                        },
+                        "y": {
+                          "$type": "FixedPoint",
+                          "Bits": 0
+                        },
+                        "z": {
+                          "$type": "FixedPoint",
+                          "Bits": 0
+                        }
+                      }
+                    },
+                    "meshAppearance": {
+                      "$type": "CName",
+                      "$storage": "string",
+                      "$value": "blonde_platinum"
+                    },
+                    "morphResource": {
+                      "DepotPath": {
+                        "$type": "ResourcePath",
+                        "$storage": "string",
+                        "$value": "archive_xl\\characters\\head\\player_base_heads\\player_man_average\\heb_pma_brows__01.morphtarget"
+                      },
+                      "Flags": "Default"
+                    },
+                    "name": {
+                      "$type": "CName",
+                      "$storage": "string",
+                      "$value": "heb_000_pma__basehead_morph"
+                    },
+                    "parentTransform": {
+                      "HandleId": "1",
+                      "Data": {
+                        "$type": "entHardTransformBinding",
+                        "bindName": {
+                          "$type": "CName",
+                          "$storage": "string",
+                          "$value": "root"
+                        },
+                        "enabled": 1,
+                        "enableMask": {
+                          "$type": "entTagMask",
+                          "excludedTags": {
+                            "$type": "redTagList",
+                            "tags": [
+                              {
+                                "$type": "CName",
+                                "$storage": "string",
+                                "$value": "NoBinding"
+                              }
+                            ]
+                          },
+                          "hardTags": {
+                            "$type": "redTagList",
+                            "tags": []
+                          },
+                          "softTags": {
+                            "$type": "redTagList",
+                            "tags": []
+                          }
+                        },
+                        "slotName": {
+                          "$type": "CName",
+                          "$storage": "string",
+                          "$value": "None"
+                        }
+                      }
+                    },
+                    "renderingPlaneAnimationParam": {
+                      "$type": "CName",
+                      "$storage": "string",
+                      "$value": "None"
+                    },
+                    "renderSceneLayerMask": "Default",
+                    "skinning": {
+                      "HandleId": "2",
+                      "Data": {
+                        "$type": "entSkinningBinding",
+                        "bindName": {
+                          "$type": "CName",
+                          "$storage": "string",
+                          "$value": "root"
+                        },
+                        "enabled": 1,
+                        "enableMask": {
+                          "$type": "entTagMask",
+                          "excludedTags": {
+                            "$type": "redTagList",
+                            "tags": [
+                              {
+                                "$type": "CName",
+                                "$storage": "string",
+                                "$value": "NoBinding"
+                              }
+                            ]
+                          },
+                          "hardTags": {
+                            "$type": "redTagList",
+                            "tags": []
+                          },
+                          "softTags": {
+                            "$type": "redTagList",
+                            "tags": []
+                          }
+                        }
+                      }
+                    },
+                    "tags": {
+                      "$type": "redTagList",
+                      "tags": []
+                    },
+                    "useSkinningLOD": 0,
+                    "version": 1,
+                    "visibilityAnimationParam": {
+                      "$type": "CName",
+                      "$storage": "string",
+                      "$value": "None"
+                    }
+                  }
+                ]
+              }
+            },
+            "components": [
+              {
+                "$type": "entMorphTargetSkinnedMeshComponent",
+                "acceptDismemberment": 1,
+                "autoHideDistance": 50,
+                "castLocalShadows": "Always",
+                "castShadows": "Always",
+                "chunkMask": "9223372036854775807",
+                "forceLODLevel": -1,
+                "id": "2213008539708637184",
+                "isEnabled": 1,
+                "isReplicable": 0,
+                "localTransform": {
+                  "$type": "WorldTransform",
+                  "Orientation": {
+                    "$type": "Quaternion",
+                    "i": 0,
+                    "j": 0,
+                    "k": 0,
+                    "r": 1
+                  },
+                  "Position": {
+                    "$type": "WorldPosition",
+                    "x": {
+                      "$type": "FixedPoint",
+                      "Bits": 0
+                    },
+                    "y": {
+                      "$type": "FixedPoint",
+                      "Bits": 0
+                    },
+                    "z": {
+                      "$type": "FixedPoint",
+                      "Bits": 0
+                    }
+                  }
+                },
+                "meshAppearance": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "blonde_platinum"
+                },
+                "morphResource": {
+                  "DepotPath": {
+                    "$type": "ResourcePath",
+                    "$storage": "string",
+                    "$value": "archive_xl\\characters\\head\\player_base_heads\\player_man_average\\heb_pma_brows__01.morphtarget"
+                  },
+                  "Flags": "Default"
+                },
+                "name": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "heb_000_pma__basehead_morph"
+                },
+                "parentTransform": {
+                  "HandleRefId": "1"
+                },
+                "renderingPlaneAnimationParam": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "None"
+                },
+                "renderSceneLayerMask": "Default",
+                "skinning": {
+                  "HandleRefId": "2"
+                },
+                "tags": {
+                  "$type": "redTagList",
+                  "tags": []
+                },
+                "useSkinningLOD": 0,
+                "version": 1,
+                "visibilityAnimationParam": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "None"
+                }
+              }
+            ],
+            "cookedDataPathOverride": {
+              "DepotPath": {
+                "$type": "ResourcePath",
+                "$storage": "uint64",
+                "$value": "0"
+              },
+              "Flags": "Soft"
+            },
+            "forcedLodDistance": 0,
+            "hitRepresentationOverrides": [],
+            "inheritedVisualTags": {
+              "$type": "redTagList",
+              "tags": []
+            },
+            "looseDependencies": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "01_blonde_platinum"
+            },
+            "parametersBuffer": {
+              "$type": "entEntityParametersBuffer",
+              "parameterBuffers": []
+            },
+            "parentAppearance": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "None"
+            },
+            "partsMasks": [
+              []
+            ],
+            "partsOverrides": [
+              {
+                "$type": "appearanceAppearancePartOverrides",
+                "componentsOverrides": [
+                  {
+                    "$type": "appearancePartComponentOverrides",
+                    "acceptDismemberment": 1,
+                    "chunkMask": "9223372036854775807",
+                    "componentName": {
+                      "$type": "CName",
+                      "$storage": "string",
+                      "$value": "heb_000_pma__basehead_morph"
+                    },
+                    "initialTransform": {
+                      "$type": "Transform",
+                      "orientation": {
+                        "$type": "Quaternion",
+                        "i": 0,
+                        "j": 0,
+                        "k": 0,
+                        "r": 1
+                      },
+                      "position": {
+                        "$type": "Vector4",
+                        "W": 0,
+                        "X": 0,
+                        "Y": 0,
+                        "Z": 0
+                      }
+                    },
+                    "meshAppearance": {
+                      "$type": "CName",
+                      "$storage": "string",
+                      "$value": "blonde_platinum"
+                    },
+                    "useCustomTransform": 0,
+                    "visualScale": {
+                      "$type": "Vector3",
+                      "X": 0,
+                      "Y": 0,
+                      "Z": 0
+                    }
+                  }
+                ],
+                "partResource": {
+                  "DepotPath": {
+                    "$type": "ResourcePath",
+                    "$storage": "string",
+                    "$value": "archive_xl\\characters\\head\\player_base_heads\\player_man_average\\heb_pma_brows__01.ent"
+                  },
+                  "Flags": "Soft"
+                }
+              }
+            ],
+            "partsValues": [],
+            "proxyMesh": {
+              "DepotPath": {
+                "$type": "ResourcePath",
+                "$storage": "uint64",
+                "$value": "0"
+              },
+              "Flags": "Soft"
+            },
+            "proxyMeshAppearance": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "None"
+            },
+            "resolvedDependencies": [
+              {
+                "DepotPath": {
+                  "$type": "ResourcePath",
+                  "$storage": "string",
+                  "$value": "archive_xl\\characters\\head\\player_base_heads\\player_man_average\\heb_pma_brows__01.morphtarget"
+                },
+                "Flags": "Soft"
+              }
+            ],
+            "visualTags": {
+              "$type": "redTagList",
+              "tags": [
+                {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "Male"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "baseEntity": {
+        "DepotPath": {
+          "$type": "ResourcePath",
+          "$storage": "uint64",
+          "$value": "0"
+        },
+        "Flags": "Soft"
+      },
+      "baseEntityType": {
+        "$type": "CName",
+        "$storage": "string",
+        "$value": "None"
+      },
+      "baseType": {
+        "$type": "CName",
+        "$storage": "string",
+        "$value": "None"
+      },
+      "censorshipMapping": [],
+      "commonCookData": {
+        "DepotPath": {
+          "$type": "ResourcePath",
+          "$storage": "uint64",
+          "$value": "0"
+        },
+        "Flags": "Soft"
+      },
+      "cookingPlatform": "PLATFORM_PC",
+      "DismEffects": [],
+      "DismWoundConfig": {
+        "$type": "entdismembermentWoundsConfigSet",
+        "Configs": []
+      },
+      "forceCompileProxy": 0,
+      "generatePlayerBlockingCollisionForProxy": 0,
+      "partType": {
+        "$type": "CName",
+        "$storage": "string",
+        "$value": "None"
+      },
+      "preset": {
+        "$type": "CName",
+        "$storage": "string",
+        "$value": "None"
+      },
+      "proxyPolyCount": 1400,
+      "Wounds": []
+    },
+    "EmbeddedFiles": []
+  }
+}

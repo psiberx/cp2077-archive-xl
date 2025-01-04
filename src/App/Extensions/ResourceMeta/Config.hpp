@@ -17,6 +17,17 @@ struct ResourceFix
         return it != names.end() ? it.value() : aName;
     }
 
+    [[nodiscard]] inline bool DefinesPathMappings() const
+    {
+        return !paths.empty();
+    }
+
+    [[nodiscard]] inline Red::ResourcePath GetMappedPath(Red::ResourcePath aPath) const
+    {
+        const auto& it = paths.find(aPath);
+        return it != paths.end() ? it.value() : aPath;
+    }
+
     [[nodiscard]] inline bool DefinesContext() const
     {
         return !context.empty();
@@ -27,7 +38,26 @@ struct ResourceFix
         return context;
     }
 
+    void Merge(const ResourceFix& aOther)
+    {
+        for (const auto& [oldName, newName] : aOther.names)
+        {
+            names[oldName] = newName;
+        }
+
+        for (const auto& [oldPath, newPath] : aOther.paths)
+        {
+            paths[oldPath] = newPath;
+        }
+
+        for (const auto& [param, value] : aOther.context)
+        {
+            context[param] = value;
+        }
+    }
+
     Core::Map<Red::CName, Red::CName> names;
+    Core::Map<Red::ResourcePath, Red::ResourcePath> paths;
     Core::Map<Red::CName, std::string> context;
 };
 

@@ -3,7 +3,7 @@
 /.vscode
 /.xmake
 /archive/packed
-/archive/source/raw/**/*.json
+/archive/source/archive
 /archive/*.xml
 /archive/*.zip
 /archive/custom_refs.txt

@@ -1,0 +1,3474 @@
+{
+  "Header": {
+    "WolvenKitVersion": "8.15.1-nightly.2024-12-22",
+    "WKitJsonVersion": "0.0.9",
+    "GameVersion": 2200,
+    "ExportedDateTime": "2025-01-02T11:50:32.4134649Z",
+    "DataType": "CR2W"
+  },
+  "Data": {
+    "Version": 195,
+    "BuildVersion": 21392,
+    "RootChunk": {
+      "$type": "CMesh",
+      "appearances": [],
+      "boneNames": [
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "Head"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_brows_rowA_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_brows_rowA_0_twk_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_brows_rowA_1_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_brows_rowA_2_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_brows_rowA_3_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_brows_rowB_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_brows_rowB_1_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_brows_rowB_2_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_brows_rowB_3_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_brows_rowC_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_brows_rowC_1_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_check_rowA_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_check_rowA_1_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_check_rowB_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_check_rowC_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_check_rowD_1_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_lid_corner_inside_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_lid_up_rowD_4_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_lid_up_rowA_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_lid_up_rowA_3_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_lid_up_rowB_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_lid_up_rowB_1_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_lid_up_rowB_2_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_lid_up_rowC_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_lid_up_rowC_1_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_lid_up_rowC_2_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_lid_up_rowC_3_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_lid_up_rowD_1_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_lid_up_rowD_2_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_lid_up_rowD_3_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_nose_rowA_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_nose_rowA_1_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_nose_rowA_2_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_nose_rowA_3_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "mid_J_eye_brows_rowB_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "mid_J_eye_brows_rowC_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "mid_J_eye_nose_rowA_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_brows_rowA_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_brows_rowA_0_twk_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_brows_rowA_1_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_brows_rowA_2_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_brows_rowA_3_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_brows_rowB_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_brows_rowB_1_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_brows_rowB_2_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_brows_rowB_3_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_brows_rowC_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_brows_rowC_1_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_check_rowA_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_check_rowA_1_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_check_rowB_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_check_rowC_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_check_rowD_1_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_lid_corner_inside_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_lid_up_rowD_4_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_lid_up_rowA_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_lid_up_rowA_3_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_lid_up_rowB_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_lid_up_rowB_1_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_lid_up_rowB_2_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_lid_up_rowC_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_lid_up_rowC_1_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_lid_up_rowC_2_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_lid_up_rowC_3_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_lid_up_rowD_1_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_lid_up_rowD_2_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_lid_up_rowD_3_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_nose_rowA_0_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_nose_rowA_1_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_nose_rowA_2_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_nose_rowA_3_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "l_J_eye_brows_rowC_2_JNT"
+        },
+        {
+          "$type": "CName",
+          "$storage": "string",
+          "$value": "r_J_eye_brows_rowC_2_JNT"
+        }
+      ],
+      "boneRigMatrices": [
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.63971543,
+            "Y": -0.0403320864,
+            "Z": 6.6518794E-07
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683286E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14459037E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.70425963,
+            "Y": 0.0706979036,
+            "Z": 0.0128006646
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683571E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458948E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.70021963,
+            "Y": 0.0718479156,
+            "Z": 0.00426066527
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683286E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458659E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.70657969,
+            "Y": 0.0667179078,
+            "Z": 0.0285606645
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.2968334E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458815E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.70727968,
+            "Y": 0.062677905,
+            "Z": 0.0386806652
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683215E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14459392E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.70550966,
+            "Y": 0.0555479117,
+            "Z": 0.0471406691
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683331E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.1445857E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.71646965,
+            "Y": 0.0712879077,
+            "Z": 0.0121206651
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.2968334E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.1445937E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.72078955,
+            "Y": 0.0657579154,
+            "Z": 0.029670665
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683384E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458903E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.72175956,
+            "Y": 0.058877904,
+            "Z": 0.0397706628
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683215E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458859E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.71946967,
+            "Y": 0.0481279083,
+            "Z": 0.0494806655
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683366E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458815E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.72848964,
+            "Y": 0.0669979081,
+            "Z": 0.0220706649
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683144E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.1445937E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.73454964,
+            "Y": 0.0550079159,
+            "Z": 0.0389106646
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683313E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458881E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69864976,
+            "Y": 0.0148279089,
+            "Z": 0.0634706691
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683242E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458815E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.71146965,
+            "Y": 0.0228079129,
+            "Z": 0.0611206666
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683286E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458815E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69177961,
+            "Y": 0.0400279127,
+            "Z": 0.0551106669
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.2968326E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458815E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.68375957,
+            "Y": 0.0399479084,
+            "Z": 0.0559406653
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683269E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458815E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.6687696,
+            "Y": 0.0223879088,
+            "Z": 0.0623606667
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683206E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458815E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.68819952,
+            "Y": 0.0570279099,
+            "Z": 0.0144306645
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683215E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458903E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69372964,
+            "Y": 0.0469079092,
+            "Z": 0.0504406691
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683242E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458815E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69055963,
+            "Y": 0.0571879074,
+            "Z": 0.0215506647
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683331E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458815E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69124961,
+            "Y": 0.0535079092,
+            "Z": 0.0420706645
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683393E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14459481E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69911969,
+            "Y": 0.0610279068,
+            "Z": 0.0252606645
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683251E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14459414E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69945967,
+            "Y": 0.059777908,
+            "Z": 0.036010664
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683242E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458659E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69573975,
+            "Y": 0.054747913,
+            "Z": 0.0432106666
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.2968342E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458437E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69536972,
+            "Y": 0.0596579053,
+            "Z": 0.0179106649
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683304E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458526E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69973969,
+            "Y": 0.0620979108,
+            "Z": 0.0256206654
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683269E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.1445857E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69971967,
+            "Y": 0.0606279075,
+            "Z": 0.0368306637
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683375E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458637E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69638956,
+            "Y": 0.0551479124,
+            "Z": 0.0445206687
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683357E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458903E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.70111966,
+            "Y": 0.063647911,
+            "Z": 0.0261806641
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.296831E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458903E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.70188963,
+            "Y": 0.0619479083,
+            "Z": 0.0376006626
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683304E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14459059E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69894969,
+            "Y": 0.0555979162,
+            "Z": 0.0466306694
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683286E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458592E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69807959,
+            "Y": 0.0650479123,
+            "Z": 0.0142206652
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683313E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458748E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69315958,
+            "Y": 0.0640679076,
+            "Z": 0.00980066508
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683286E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458881E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.68845963,
+            "Y": 0.06376791,
+            "Z": 0.0083306646
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683286E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14459059E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.68172967,
+            "Y": 0.0646379068,
+            "Z": 0.00843066536
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683286E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458948E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.71335959,
+            "Y": 0.0723779127,
+            "Z": 6.6518794E-07
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683286E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458837E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.73222959,
+            "Y": 0.0696879104,
+            "Z": 6.6518794E-07
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683286E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458504E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.68810976,
+            "Y": 0.0710379109,
+            "Z": -0.000269334821
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683286E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458992E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.7043196,
+            "Y": 0.0706479028,
+            "Z": -0.0128193339
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683615E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14459148E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.7001797,
+            "Y": 0.0718179122,
+            "Z": -0.00454933476
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683286E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458792E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.70722961,
+            "Y": 0.0667279139,
+            "Z": -0.0283993334
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683331E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.1445917E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.70831966,
+            "Y": 0.0627179146,
+            "Z": -0.0385093354
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683393E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14459392E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.70643961,
+            "Y": 0.0555479117,
+            "Z": -0.0469893292
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683286E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458592E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.71649957,
+            "Y": 0.071277909,
+            "Z": -0.0120493351
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683571E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14459148E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.72118974,
+            "Y": 0.0658079162,
+            "Z": -0.029389333
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683304E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458437E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.72245967,
+            "Y": 0.0590479076,
+            "Z": -0.0395693332
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683295E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14459059E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.72005963,
+            "Y": 0.0482479073,
+            "Z": -0.0494393297
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683224E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458815E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.72861969,
+            "Y": 0.0670879036,
+            "Z": -0.021759335
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683277E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458548E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.73495972,
+            "Y": 0.0553079098,
+            "Z": -0.0386793353
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683313E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.1445857E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69865966,
+            "Y": 0.0148379132,
+            "Z": -0.0634793341
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683349E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458815E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.71148968,
+            "Y": 0.0228279103,
+            "Z": -0.0611493289
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683233E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458815E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69206965,
+            "Y": 0.040057905,
+            "Z": -0.0550593324
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683322E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458815E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.68390977,
+            "Y": 0.0399579145,
+            "Z": -0.0558993332
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683277E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458815E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.66875958,
+            "Y": 0.0223879088,
+            "Z": -0.0623693317
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.2968326E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458815E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.68825972,
+            "Y": 0.0570879057,
+            "Z": -0.0147193344
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683384E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14459281E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69403958,
+            "Y": 0.0470079109,
+            "Z": -0.0503893308
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683375E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458815E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69079971,
+            "Y": 0.0569279082,
+            "Z": -0.0214093346
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683206E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458881E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69125962,
+            "Y": 0.0531479046,
+            "Z": -0.0424593315
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683313E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458992E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69973969,
+            "Y": 0.0611879155,
+            "Z": -0.0249893349
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683109E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14459037E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.70061958,
+            "Y": 0.0597179122,
+            "Z": -0.0362593345
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683446E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458992E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69639969,
+            "Y": 0.0546079129,
+            "Z": -0.0432893299
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683269E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458881E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69545972,
+            "Y": 0.0596679114,
+            "Z": -0.0178093351
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683233E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14457793E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.70062971,
+            "Y": 0.062167909,
+            "Z": -0.0252893344
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683224E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458481E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.70102966,
+            "Y": 0.0605879091,
+            "Z": -0.0370593332
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683313E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458326E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69724977,
+            "Y": 0.0550979115,
+            "Z": -0.0446593314
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683313E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458615E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.7021296,
+            "Y": 0.063677907,
+            "Z": -0.0258893333
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683384E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14459481E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.70322967,
+            "Y": 0.0618779063,
+            "Z": -0.037489336
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683313E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458948E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.6999197,
+            "Y": 0.0554979108,
+            "Z": -0.0465293303
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683322E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458837E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69811964,
+            "Y": 0.0650179088,
+            "Z": -0.0142093347
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683189E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458615E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.69315958,
+            "Y": 0.0640379116,
+            "Z": -0.00992933474
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683286E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458881E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.68843961,
+            "Y": 0.0637379065,
+            "Z": -0.00850933511
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683286E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458615E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.68173957,
+            "Y": 0.0647479147,
+            "Z": -0.00874933507
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683286E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458948E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.73352957,
+            "Y": 0.0396479107,
+            "Z": 0.0506506674
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683366E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458815E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        },
+        {
+          "$type": "Matrix",
+          "W": {
+            "$type": "Vector4",
+            "W": 1,
+            "X": -1.73393965,
+            "Y": 0.0399779119,
+            "Z": -0.0508193299
+          },
+          "X": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": -1.29683384E-08,
+            "Y": -1.2047733E-06,
+            "Z": 1
+          },
+          "Y": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 3.14458815E-09,
+            "Y": -1,
+            "Z": -1.2047733E-06
+          },
+          "Z": {
+            "$type": "Vector4",
+            "W": 0,
+            "X": 1,
+            "Y": 3.14457238E-09,
+            "Z": 1.29683322E-08
+          }
+        }
+      ],
+      "boneVertexEpsilons": [0.113931827,0.0198031608,0.0189464036,0.0234858021,0.024026148,0.0314302631,0.0240996145,0.0254371837,0.0260077994,0.0303693041,0.0211263597,0.0228774063,0.0399392657,0.0305107161,0.0222123452,0.0140063241,0.0278019495,0.0104516996,0.0162970051,0.0100135766,0.00973811466,0.00853967015,0.0060239383,0.0129652061,0.011631975,0.0157799702,0.01687764,0.0174021479,0.0179482885,0.0193629432,0.0239222758,0.0193805657,0.0157425441,0.0166818462,0.0145717748,0.0180998538,0.0266978759,0.0226901937,0.0199457016,0.0190138351,0.0236412305,0.0241940282,0.0319401473,0.0241637398,0.0253402181,0.0264726039,0.0309349243,0.0211676005,0.0224768184,0.0399670228,0.0303505585,0.0225391462,0.0138830189,0.0276355408,0.0104122851,0.0166645255,0.00987303164,0.00914934929,0.00877906755,0.00624090992,0.0128112184,0.0115748774,0.015972415,0.0169697665,0.0172043648,0.0180696137,0.0194814317,0.0236943588,0.0196629241,0.015838949,0.0167021696,0.0145233367,0,0
+      ],
+      "boundingBox": {
+        "$type": "Box",
+        "Max": {
+          "$type": "Vector4",
+          "W": 1,
+          "X": 0.178984389,
+          "Y": 0.119151123,
+          "Z": 1.74215817
+        },
+        "Min": {
+          "$type": "Vector4",
+          "W": 1,
+          "X": -0.178877428,
+          "Y": -0.0171025023,
+          "Z": 1.66623807
+        }
+      },
+      "castGlobalShadowsCachedInCook": 1,
+      "castLocalShadowsCachedInCook": 1,
+      "castsRayTracedShadowsFromOriginalGeometry": 1,
+      "consoleBias": 0,
+      "constrainAutoHideDistanceToTerrainHeightMap": 0,
+      "cookingPlatform": "PLATFORM_PC",
+      "externalMaterials": [],
+      "floatTrackNames": [],
+      "forceLoadAllAppearances": 0,
+      "geometryHash": "11792957834957235916",
+      "inplaceResources": [],
+      "isPlayerShadowMesh": 0,
+      "isShadowMesh": 0,
+      "localMaterialBuffer": {
+        "$type": "meshMeshMaterialBuffer",
+        "materials": null,
+        "rawData": null,
+        "rawDataHeaders": []
+      },
+      "localMaterialInstances": [],
+      "lodBoneMask": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0
+      ],
+      "lodLevelInfo": [0
+      ],
+      "materialEntries": [],
+      "objectType": "ROT_Character",
+      "parameters": [],
+      "preloadExternalMaterials": [],
+      "preloadLocalMaterialInstances": [],
+      "renderResourceBlob": {
+        "HandleId": "0",
+        "Data": {
+          "$type": "rendRenderMeshBlob",
+          "header": {
+            "$type": "rendRenderMeshBlobHeader",
+            "bonePositions": [
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -7.35043329E-07,
+                "Y": -0.0403320827,
+                "Z": 1.63971543
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0128006013,
+                "Y": 0.070697926,
+                "Z": 1.70425963
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.00426060054,
+                "Y": 0.0718479306,
+                "Z": 1.70021963
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0285606068,
+                "Y": 0.0667179525,
+                "Z": 1.70657969
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.038680613,
+                "Y": 0.0626779571,
+                "Z": 1.70727968
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0471406244,
+                "Y": 0.0555479713,
+                "Z": 1.70550966
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0121206017,
+                "Y": 0.07128793,
+                "Z": 1.71646965
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0296706073,
+                "Y": 0.0657579601,
+                "Z": 1.72078955
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0397706144,
+                "Y": 0.0588779561,
+                "Z": 1.72175956
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0494806282,
+                "Y": 0.0481279716,
+                "Z": 1.71946967
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0220706072,
+                "Y": 0.0669979453,
+                "Z": 1.72848964
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0389106199,
+                "Y": 0.0550079681,
+                "Z": 1.73454964
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0634706765,
+                "Y": 0.0148279909,
+                "Z": 1.69864976
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0611206628,
+                "Y": 0.022807993,
+                "Z": 1.71146965
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0551106408,
+                "Y": 0.0400279835,
+                "Z": 1.69177961
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0559406392,
+                "Y": 0.0399479792,
+                "Z": 1.68375957
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.062360663,
+                "Y": 0.0223879889,
+                "Z": 1.6687696
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0144306179,
+                "Y": 0.0570279323,
+                "Z": 1.68819952
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0504406355,
+                "Y": 0.0469079725,
+                "Z": 1.69372964
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0215506181,
+                "Y": 0.0571879372,
+                "Z": 1.69055963
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0420706235,
+                "Y": 0.0535079651,
+                "Z": 1.69124961
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0252606124,
+                "Y": 0.0610279404,
+                "Z": 1.69911969
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0360106155,
+                "Y": 0.0597779565,
+                "Z": 1.69945967
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0432106219,
+                "Y": 0.0547479689,
+                "Z": 1.69573975
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0179106146,
+                "Y": 0.0596579313,
+                "Z": 1.69536972
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0256206132,
+                "Y": 0.0620979443,
+                "Z": 1.69973969
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0368306115,
+                "Y": 0.0606279559,
+                "Z": 1.69971967
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.044520624,
+                "Y": 0.0551479682,
+                "Z": 1.69638956
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0261806101,
+                "Y": 0.0636479482,
+                "Z": 1.70111966
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0376006104,
+                "Y": 0.0619479567,
+                "Z": 1.70188963
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0466306247,
+                "Y": 0.0555979759,
+                "Z": 1.69894969
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0142206084,
+                "Y": 0.0650479347,
+                "Z": 1.69807959
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.00980061013,
+                "Y": 0.06406793,
+                "Z": 1.69315958
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.00833060965,
+                "Y": 0.0637679249,
+                "Z": 1.68845963
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.00843060948,
+                "Y": 0.0646379218,
+                "Z": 1.68172967
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -6.00208352E-07,
+                "Y": 0.0723779202,
+                "Z": 1.71335959
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -6.03693934E-07,
+                "Y": 0.0696879178,
+                "Z": 1.73222959
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.000269398501,
+                "Y": 0.0710379183,
+                "Z": 1.68810976
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0128193973,
+                "Y": 0.0706478953,
+                "Z": 1.7043196
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.00454939902,
+                "Y": 0.0718179122,
+                "Z": 1.7001797
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0283993911,
+                "Y": 0.0667278841,
+                "Z": 1.70722961
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0385093875,
+                "Y": 0.0627178773,
+                "Z": 1.70831966
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0469893739,
+                "Y": 0.0555478595,
+                "Z": 1.70643961
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0120493984,
+                "Y": 0.0712779015,
+                "Z": 1.71649957
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0293893907,
+                "Y": 0.0658078864,
+                "Z": 1.72118974
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0395693816,
+                "Y": 0.0590478629,
+                "Z": 1.72245967
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0494393669,
+                "Y": 0.0482478514,
+                "Z": 1.72005963
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0217593927,
+                "Y": 0.0670878813,
+                "Z": 1.72861969
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.03867938,
+                "Y": 0.0553078651,
+                "Z": 1.73495972
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0634793267,
+                "Y": 0.0148378424,
+                "Z": 1.69865966
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0611493327,
+                "Y": 0.0228278413,
+                "Z": 1.71148968
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0550593585,
+                "Y": 0.0400578417,
+                "Z": 1.69206965
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0558993593,
+                "Y": 0.0399578512,
+                "Z": 1.68390977
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0623693354,
+                "Y": 0.0223878399,
+                "Z": 1.66875958
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.014719381,
+                "Y": 0.0570878908,
+                "Z": 1.68825972
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0503893644,
+                "Y": 0.047007855,
+                "Z": 1.69403958
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0214093812,
+                "Y": 0.0569278859,
+                "Z": 1.69079971
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0424593724,
+                "Y": 0.0531478561,
+                "Z": 1.69125962
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.024989387,
+                "Y": 0.0611878894,
+                "Z": 1.69973969
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.036259383,
+                "Y": 0.0597178712,
+                "Z": 1.70061958
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0432893746,
+                "Y": 0.0546078645,
+                "Z": 1.69639969
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0178093854,
+                "Y": 0.0596678928,
+                "Z": 1.69545972
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0252893865,
+                "Y": 0.0621678829,
+                "Z": 1.70062971
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0370593853,
+                "Y": 0.0605878681,
+                "Z": 1.70102966
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0446593761,
+                "Y": 0.0550978631,
+                "Z": 1.69724977
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0258893874,
+                "Y": 0.0636778846,
+                "Z": 1.7021296
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0374893881,
+                "Y": 0.0618778653,
+                "Z": 1.70322967
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.046529375,
+                "Y": 0.0554978587,
+                "Z": 1.6999197
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.0142093906,
+                "Y": 0.0650179014,
+                "Z": 1.69811964
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.00992938969,
+                "Y": 0.0640379041,
+                "Z": 1.69315958
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.00850939006,
+                "Y": 0.0637379065,
+                "Z": 1.68843961
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.00874939095,
+                "Y": 0.0647479147,
+                "Z": 1.68173957
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": -0.0506506413,
+                "Y": 0.0396479741,
+                "Z": 1.73352957
+              },
+              {
+                "$type": "Vector4",
+                "W": 1,
+                "X": 0.050819356,
+                "Y": 0.039977856,
+                "Z": 1.73393965
+              }
+            ],
+            "customData": [],
+            "customDataElemStride": 0,
+            "dataProcessing": 1,
+            "indexBufferOffset": 17408,
+            "indexBufferSize": 3984,
+            "opacityMicromaps": [],
+            "quantizationOffset": {
+              "$type": "Vector4",
+              "W": 1,
+              "X": 5.34802675E-05,
+              "Y": 0.0510243103,
+              "Z": 1.70419812
+            },
+            "quantizationScale": {
+              "$type": "Vector4",
+              "W": 0,
+              "X": 0.178930908,
+              "Y": 0.0681268126,
+              "Z": 0.0379600525
+            },
+            "renderChunkInfos": [
+              {
+                "$type": "rendChunk",
+                "baseRenderMask": 0,
+                "chunkIndices": {
+                  "$type": "rendIndexBufferChunk",
+                  "pe": "IBCT_IndexUShort",
+                  "teOffset": 0
+                },
+                "chunkVertices": {
+                  "$type": "rendVertexBufferChunk",
+                  "byteOffsets": {
+                    "Elements": [0,9360,10928,14048,0
+                    ]
+                  },
+                  "vertexLayout": {
+                    "$type": "GpuWrapApiVertexLayoutDesc",
+                    "elements": {
+                      "Elements": [
+                        {
+                          "$type": "GpuWrapApiVertexPackingPackingElement",
+                          "streamIndex": 0,
+                          "streamType": "ST_PerVertex",
+                          "type": "PT_Short4N",
+                          "usage": "PS_Position",
+                          "usageIndex": 0
+                        },
+                        {
+                          "$type": "GpuWrapApiVertexPackingPackingElement",
+                          "streamIndex": 0,
+                          "streamType": "ST_PerVertex",
+                          "type": "PT_UByte4",
+                          "usage": "PS_SkinIndices",
+                          "usageIndex": 0
+                        },
+                        {
+                          "$type": "GpuWrapApiVertexPackingPackingElement",
+                          "streamIndex": 0,
+                          "streamType": "ST_PerVertex",
+                          "type": "PT_UByte4",
+                          "usage": "PS_SkinIndices",
+                          "usageIndex": 1
+                        },
+                        {
+                          "$type": "GpuWrapApiVertexPackingPackingElement",
+                          "streamIndex": 0,
+                          "streamType": "ST_PerVertex",
+                          "type": "PT_UByte4N",
+                          "usage": "PS_SkinWeights",
+                          "usageIndex": 0
+                        },
+                        {
+                          "$type": "GpuWrapApiVertexPackingPackingElement",
+                          "streamIndex": 0,
+                          "streamType": "ST_PerVertex",
+                          "type": "PT_UByte4N",
+                          "usage": "PS_SkinWeights",
+                          "usageIndex": 1
+                        },
+                        {
+                          "$type": "GpuWrapApiVertexPackingPackingElement",
+                          "streamIndex": 1,
+                          "streamType": "ST_PerVertex",
+                          "type": "PT_Float16_2",
+                          "usage": "PS_TexCoord",
+                          "usageIndex": 0
+                        },
+                        {
+                          "$type": "GpuWrapApiVertexPackingPackingElement",
+                          "streamIndex": 2,
+                          "streamType": "ST_PerVertex",
+                          "type": "PT_Dec4",
+                          "usage": "PS_Normal",
+                          "usageIndex": 0
+                        },
+                        {
+                          "$type": "GpuWrapApiVertexPackingPackingElement",
+                          "streamIndex": 2,
+                          "streamType": "ST_PerVertex",
+                          "type": "PT_Dec4",
+                          "usage": "PS_Tangent",
+                          "usageIndex": 0
+                        },
+                        {
+                          "$type": "GpuWrapApiVertexPackingPackingElement",
+                          "streamIndex": 3,
+                          "streamType": "ST_PerVertex",
+                          "type": "PT_Color",
+                          "usage": "PS_Color",
+                          "usageIndex": 0
+                        },
+                        {
+                          "$type": "GpuWrapApiVertexPackingPackingElement",
+                          "streamIndex": 3,
+                          "streamType": "ST_PerVertex",
+                          "type": "PT_Float16_2",
+                          "usage": "PS_TexCoord",
+                          "usageIndex": 1
+                        },
+                        {
+                          "$type": "GpuWrapApiVertexPackingPackingElement",
+                          "streamIndex": 7,
+                          "streamType": "ST_PerInstance",
+                          "type": "PT_Float4",
+                          "usage": "PS_InstanceTransform",
+                          "usageIndex": 0
+                        },
+                        {
+                          "$type": "GpuWrapApiVertexPackingPackingElement",
+                          "streamIndex": 7,
+                          "streamType": "ST_PerInstance",
+                          "type": "PT_Float4",
+                          "usage": "PS_InstanceTransform",
+                          "usageIndex": 1
+                        },
+                        {
+                          "$type": "GpuWrapApiVertexPackingPackingElement",
+                          "streamIndex": 7,
+                          "streamType": "ST_PerInstance",
+                          "type": "PT_Float4",
+                          "usage": "PS_InstanceTransform",
+                          "usageIndex": 2
+                        },
+                        {
+                          "$type": "GpuWrapApiVertexPackingPackingElement",
+                          "streamIndex": 7,
+                          "streamType": "ST_PerInstance",
+                          "type": "PT_UInt4",
+                          "usage": "PS_InstanceSkinningData",
+                          "usageIndex": 0
+                        },
+                        {
+                          "$type": "GpuWrapApiVertexPackingPackingElement",
+                          "streamIndex": 0,
+                          "streamType": "ST_Invalid",
+                          "type": "PT_Invalid",
+                          "usage": "PS_Invalid",
+                          "usageIndex": 0
+                        }
+                      ]
+                    },
+                    "hash": 3139477226,
+                    "slotMask": 143,
+                    "slotStrides": {
+                      "Elements": [24,4,8,8,0,0,0,64
+                      ]
+                    }
+                  }
+                },
+                "lodMask": 1,
+                "materialId": [],
+                "mergedRenderMask": 0,
+                "numIndices": 1992,
+                "numVertices": 390,
+                "renderMask": "MCF_RenderInScene, MCF_RenderInShadows",
+                "vertexFactory": 4
+              }
+            ],
+            "renderChunks": [],
+            "renderLODs": [0
+            ],
+            "speedTreeWind": [],
+            "topology": [
+              {
+                "$type": "rendTopologyData",
+                "data": [],
+                "dataStride": 0,
+                "metadata": [],
+                "metadataStride": 0
+              }
+            ],
+            "topologyData": [],
+            "topologyDataStride": 0,
+            "topologyMetadata": [],
+            "topologyMetadataStride": 0,
+            "version": 20,
+            "vertexBufferSize": 17168
+          },
+          "renderBuffer": {
+            "BufferId": "0",
+            "Flags": 4063232,
+            "Bytes": "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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAEAAAAAAEQAAgCtAAEAAgACAEQAQwBDAK0AAgBBAEMARABAAK0AQwBAAEMAQQBAAJcArQBBAEQAQgAAAEUARABCAEQARQARAEUAAAA5AEEAQgAcAEAAQQAcAEEAOQAaAEAAHAAaAJcAQAAcABsAGgA5ADgAHAAcADgAGwA5AEIAfgA5AH0AOAB+AH0AOQB+AEIAigBCAEUAigB+AFwAfQCKAEUAjQARAI0ARQCKAFsAfgBbAFwAfgCNAIsAigCLAFsAigBbAIsAXQBaAFsAXQBcAFsAWgBdAIsAjABRAFwAWgCLAI4AjACOAIsAjQCMAI4AjwBPAFwAUQBPAH0AXABOAE8AUQB8AH0ATwBQAE8ATgBQAHwATwBVAFAATgB8ADgAfQBTAFAAVQA6ADgAfABSAFMAVQB7AHwAUABQAFMAewB8AHsAOgBUAFMAUgBmAFQAUgB7AFMAegBUAHoAUwB7AHoAOwA6AHsAOwB5AHoAVABnAFQAZgBUAGcAeQBZAGcAZgA6ABsAOABXAGcAWQBWAFcAWQB5AGcAeABnAFcAeABYAFcAVgBoAFgAVgB4AFcAdwBYAHcAVwBpAFgAaABNAGkAaAB2AHcAWABYAGkAdgBLAGkATQBKAEsATQB2AGkAdQBpAEsAdQBMAEsASgBJAEwASgB1AEsAcwBLAEwAcwBHAEwASQBGAEcASQBzAEwAdABMAEcAdABIAEcARgBqAEgARgB0AEcAcgBIAHIARwBrAEgAagBlAGsAagBxAHIASABIAGsAcQBkAGsAZQBhAGQAZQBxAGsAcABrAGQAcABfAGQAYQBeAF8AYQBwAGQAbwBkAF8AbwBgAF8AXgBiAGAAXgBjAGAAYgBgAG4AXwBvAF8AbgBgAGMAbABsAG4AYABsAGMAbQBsAG0AiACIAG0AiQBuAGwAhwCHAGwAiABvAG4AhgCGAG4AhwCFAG8AhgBwAG8AhQCIAIkAKwArAIkALgCHAIgALAAsAIgAKwCGAIcAMQAxAIcALAA2AIYAMQCFAIYANgArAC4ALQAtAC4ALwAsACsAKgAqACsALQAxACwAMAAwACwAKgA3ADEAMAA2ADEANwAtAC8AkQCRAC8AogAqAC0AkgCSAC0AkQAqAKcAMACSAKcAKgCqADAApwA3ADAAqgCRAKIAkwCTAKIAowCSAJEAkACQAJEAkwCSAKYApwCQAKYAkgCrAKcApgCqAKcAqwCjAKEAkwCkAKEAowChAKQAuQC5AKQAugC4AKEAuQChAKAAkwCgAKEAuACTAKAAkAC4ALsAoACgAKUAkACgALsApQCQAKUApgC+AKUAuwCsAKYApQCsAKUAvgCrAKYArAC+ALcArACsALcAnwCsAJ8AqwC3ALYAnwCrAJ8AlACfALYAngCfAJ4AlAC9AJ4AtgCrAJQAqgCpAJ4AvQCvAKkAvQCUAJ4AFwCeAKkAFwCqAJQAlQCqAJUANwCVAJQAGAAYAJQAFwA3AJUAFAAUADYANwAYABMAlQCVABMAFAASADYAFAAUABMAEgASAIUANgAYABUAEwASABMAFQCEAIUAEgASABUAhACEAHAAhQBxAHAAhACEAIMAcQCEABUAgwBxAIMAcgAWABUAGAAWAIMAFQAYABcAFgCCAHIAgwCCAIMAFgB0AHIAggAWABcAGQAWABkAggCCAIEAdACCABkAgQB0AIEAcwA1ABkAFwAXAKkANQA0AIEAGQA0ABkANQCAAHMAgQCAAIEANAB1AHMAgACpAJ0ANQCdAKkArwCvAK4AnQA1AJ0AIAA1ACAANACdAK4AnACdAJwAIAC8AJwArgA0ACAAHgA0AB4AgAAgAJwAHwAgAB8AHgCoAJwAvACcAKgAHwCoALwAmgCaALwAsAAfAKgAMwCoAJoAMwAeAB8AIQAzACEAHwCAAB4AfwAeACEAfwCAAH8AdQB1AH8AdgB/AD8AdgB/ACEAPwB2AD8AdwAyACEAMwAyAD8AIQA+AHcAPwA+AD8AMgB4AHcAPgAjADIAMwAzAJoAIwAkAD4AMgAkADIAIwA9AHgAPgA9AD4AJAB5AHgAPQAkACMAIgAkACIAPQA9ADwAeQA9ACIAPAB5ADwAegA7AHoAPAA7ADwAKQApADwAIgApADoAOwAiACMAJQAlACkAIgCaACUAIwAnADoAKQAnABsAOgAmACkAJQAmACcAKQCbACUAmgCbACYAJQCaALAAmwCbALAAsQCxAJgAmwCYACYAmwCyAJgAsQAoACcAJgCYACgAJgAnACgAGwCYALIAmQCZACgAmACZALIAswAbACgAHQCZAB0AKAAaABsAHQCzAJYAmQCWAB0AmQAdAJYAGgC0AJYAswAaAJYAlwCWALQAlwDAALQAwQC1ALQAwACXALQAtQDCALUAwAC/AJcAtQC/ALUAwgCtAJcAvwDCAAkAvwC/AAEArQC/AAkAAQAIAAEACQADAAEACAAAAAEAAwAAAAMAEQADAAgADwARAAMADwAPAAgAEAARAA8ADQANAI0AEQANAI4AjQAPABAADAANAA8ADAAMABAADgAGAI4ADQANAAwABgCOAAYAjwCPAAYABAAGAAwABQAMAA4ABQAGAAUABAAFAA4ACgAEAAUABwAFAAoABwAHAAoACwDFAMQAwwDDAHABxQDEAMUABwEHAcUABgHFAHABBgEIAcQABwEHAQYBBAEIAQcBBQEFAQcBBAEEAQYBAwEGAXABAwEFAQQB/AAEAQMB3wD8AAQB3wBwAd4AAwHfAAMB3gD8AN8A+wBBAQUB/ADfAN4A3QD7AN8A3QBaAd4AcAFAAfwA+wBBAfwAQAGCAVoBcAFNAQUBQQFNAQgBBQGCAXABwwDMAIIBwwCFAYIBzADMAMMAywCFAXcBggF3AVoBggGDAXcBhQGDAXgBdwGEAXgBgwF3AVkBWgF4AVkBdwFZAd4AWgF4AXYBWQHgAN4AWQFZAXYBXAFZAVwB4AB1AVwBdgHdAN4A4ABbAVwBdQF0AVsBdQHgAFwB7ABbAewAXAHgAOwA3QBeAVsBdAF0AXMBXgHpAOwAWwFeAekAWwHdAOwA6gDpAOoA7ADqAP0A3QDdAP0A+wDrAOoA6QDrAP0A6gDnAOkAXgHnAOsA6QBeAXMBXQFeAV0B5wB/AV0BcwE/AfsA/QBAAfsAPwHlAOsA5wDnAF0B5gDnAOYA5QBrAV0BfwFdAWsB5gB/AV8BawFxAV8BfwHmAGsB9gBxAWABXwFyAWABcQHhAGsBXwH2AGsB4QDjAF8BYAHhAF8B4wByAWwBYAGAAWwBcgHjAGAB+AD4AGABbAGAAWEBbAF5AWEBgAH4AGwB2QDZAGwBYQFhAXkBYgFiAXkBegFXAWEBYgHZAGEBVwFiAXoBbwFvAXoBgQFuAWIBbwFXAWIBbgFvAYEBaAFoAYEBfgFuAW8BaQFpAW8BaAFuAW0BVwFqAW4BaQFtAW4BagF+AWMBaAF7AWMBfgFpAWgBUwFTAWgBYwFpAVYBagFTAVYBaQF7AWQBYwF8AWQBewF8AWcBZAF9AWcBfAFmAWQBZwFVAWMBZAFVAWQBZgFTAWMBVQFmAWUBVQFVAVQBUwFVAWUBVAFTAVQBVgHyAFQBZQHvAFQB8gDvAFYBVAHyAPEA7wDtAFYB7wBWAe0AagHvAPEA7gDvAO4A7QBMAe4A8QBqAe0A8wDzAG0BagHtAO4A8ADtAPAA8wBLAe4ATAFLAfAA7gAwAUsBTAEvAUsBMAEwASYBLwFKAfAASwEvAUoBSwHzAPAA9ABKAfQA8ADzAPQA+gD6AG0B8wAvASYBIwEmASUBIwEjASUBIgEvASMBMQExAUoBLwEjASIBIQExASMBIQEhASIBJAExAUkBSgFJAfQASgExASEBMgEyAUkBMQEhASQBJwEyASEBJwEnASQBKAFJAfkA9AD6APQA+QAyAUgBSQFIAfkASQEyAScBMwEzAUgBMgEnASgBLgEzAScBLgEuASgBLQEuAS0BCwELAS0BCgEzAS4BNAE0AS4BCwEzAUcBSAE0AUcBMwFHAdYASAFIAdYA+QALAQoBCQEJAQoBDAE0AQsBNQE1AQsBCQFHATQBRgFGATQBNQHWAEcB2ADYAEcBRgEJAQwBDwEPAQwBDgE1AQkBNwE3AQkBDwE1AUUBRgE3AUUBNQFGAdoA2ABFAdoARgEPAQ4BDQENAQ4BEAE3AQ8BNgE2AQ8BDQFFATcBRAFEATcBNgHaAEUB3ADcAEUBRAHZANoA3ADcAPgA2QDbANoA2QDbANgA2gDZAFcB2wD3APgA3ABEAfcA3AD4APcA4wDVANgA2wDVANYA2ADbAFcBWAHbAFgB1QBXAW0BWAH6AFgBbQHVAFgB1wDXAFgB+gDXANYA1QD6APkA1wDXAPkA1gDjAPcA4gDjAOIA4QD3AEMB4gBDAfcARAE2AUMBRAHhAOIA5ADhAOQA9gDiAEMBQgHiAEIB5AA4AUMBNgE4AUIBQwE2AQ0BOAH2AOQA9QD2APUA5gDkAEIBAgECAfUA5AA5AUIBOAE5AQIBQgE4AQ0BLAE4ASwBOQENARABLAEsARABKwEsASsBGwE5ASwBGwEbASsBGgE6AQIBOQE5ARsBOgEbARoBGQE6ARsBGQEZARoBHAE6AQEBAgEBAfUAAgE6ARkBOwE7AQEBOgEZARwBKgE7ARkBKgEqARwBKQEBAegA9QDmAPUA6ADlAOYA6AAAAegAAQHoAAAB5QA7AQABAQEqASkBFwE7ASoBPAE8AQABOwE8ASoBFwEXASkBFgEAATwB/wDlAAAB/wA8ARcBPQH/ADwBPQEXARYBFQE9ARcBFQEVARYBGAH/AP4A5QA9Af4A/wDlAP4A6wD+AP0A6wA+Af4APQE+Af0A/gA9ARUBPgE/Af0APgEVARgBEwE+ARUBEwE+ARMBPwETARgBEgE/ARMBEQETARIBEQE/AREBQAERARIBFAFAAREBHwERARQBHwFAAR8BQQEfARQBHgFBAR8BHQEfAR4BHQFBAR0BTQEdAR4BIAEdASABTgFNAR0BTgFOASABTwFNAU4BUAFQAQgBTQFOAU8BUQFQAU4BUQFRAU8BUgFQAdQACAHUAMQACAFQAVEB0ADQANQAUAFRAVIByQDQAFEByQDJAFIByADEANQAxgDDAMQAxgDLAMMAxgDGANQA0gDGANIAywDQANIA1ADLANIA0wDPANIA0ADPANMA0gDQAMkAzwDRANMAzwDPAMkAxwDPAMcA0QDJAMgAxwDRAMcAzQDHAMgAygDHAMoAzQDNAMoAzgA="
+          }
+        }
+      },
+      "resourceVersion": 3,
+      "saveDateTime": "1048576",
+      "surfaceAreaPerAxis": {
+        "$type": "Vector3",
+        "X": 0.000698656426,
+        "Y": 0.00164183846,
+        "Z": 0.000563014357
+      },
+      "useRayTracingShadowLODBias": 0
+    },
+    "EmbeddedFiles": []
+  }
+}

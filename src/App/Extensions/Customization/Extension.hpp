@@ -100,6 +100,8 @@ private:
 
     void ResetCustomResources();
 
+    void FixCustomizationOptions(Red::ResourcePath aTargetPath, Red::DynArray<CustomizationOption>& aTargetOptions);
+
     CustomizationResourceToken m_baseMaleResource;
     CustomizationResourceToken m_baseFemaleResource;
     Core::Vector<CustomizationResourceToken> m_customMaleResources;

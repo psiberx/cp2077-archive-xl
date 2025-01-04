@@ -77,7 +77,7 @@ void App::CustomizationExtension::Reload()
 }
 
 void App::CustomizationExtension::OnActivateSystem(App::CustomizationSystem* aSystem, App::CustomizationPuppet& aPuppet,
-                                                bool aIsMale, uintptr_t a4)
+                                                   bool aIsMale, uintptr_t a4)
 {
     m_customizationActive = true;
 }
@@ -94,10 +94,10 @@ void App::CustomizationExtension::OnPrepareResource(App::CustomizationSystem* aS
 }
 
 void App::CustomizationExtension::OnInitAppOption(App::CustomizationSystem* aSystem,
-                                               App::CustomizationPart aPartType,
-                                               App::CustomizationStateOption& aOption,
-                                               Red::SortedUniqueArray<Red::CName>& aStateOptions,
-                                               Red::Map<Red::CName, App::CustomizationStateOption>& aUiSlots)
+                                                  App::CustomizationPart aPartType,
+                                                  App::CustomizationStateOption& aOption,
+                                                  Red::SortedUniqueArray<Red::CName>& aStateOptions,
+                                                  Red::Map<Red::CName, App::CustomizationStateOption>& aUiSlots)
 {
     bool found = aStateOptions.Find(aOption->info->name) != aStateOptions.end();
 
@@ -111,9 +111,9 @@ void App::CustomizationExtension::OnInitAppOption(App::CustomizationSystem* aSys
 }
 
 void App::CustomizationExtension::OnInitMorphOption(App::CustomizationSystem* aSystem,
-                                                 App::CustomizationStateOption& aOption,
-                                                 Red::SortedUniqueArray<Red::CName>& aStateOptions,
-                                                 Red::Map<Red::CName, App::CustomizationStateOption>& aUiSlots)
+                                                    App::CustomizationStateOption& aOption,
+                                                    Red::SortedUniqueArray<Red::CName>& aStateOptions,
+                                                    Red::Map<Red::CName, App::CustomizationStateOption>& aUiSlots)
 {
     bool found = aStateOptions.Find(aOption->info->name) != aStateOptions.end();
 
@@ -127,11 +127,10 @@ void App::CustomizationExtension::OnInitMorphOption(App::CustomizationSystem* aS
 }
 
 void App::CustomizationExtension::OnInitSwitcherOption(App::CustomizationSystem* aSystem,
-                                                    App::CustomizationPart aPartType,
-                                                    App::CustomizationStateOption& aOption,
-                                                    int32_t aCurrentIndex,
-                                                    uint64_t a5,
-                                                    Red::Map<Red::CName, App::CustomizationStateOption>& aUiSlots)
+                                                       App::CustomizationPart aPartType,
+                                                       App::CustomizationStateOption& aOption,
+                                                       int32_t aCurrentIndex, uint64_t a5,
+                                                       Red::Map<Red::CName, App::CustomizationStateOption>& aUiSlots)
 {
     if (!aOption->isActive && !aOption->info->hidden && aOption->info->enabled)
     {
@@ -143,8 +142,8 @@ void App::CustomizationExtension::OnInitSwitcherOption(App::CustomizationSystem*
 }
 
 void App::CustomizationExtension::OnGetAppearances(Red::gameuiICharacterCustomizationState* aState,
-                                                       Red::CName aGroupName, bool aIsFPP,
-                                                       Red::DynArray<Red::AppearanceDescriptor>& aAppearances)
+                                                   Red::CName aGroupName, bool aIsFPP,
+                                                   Red::DynArray<Red::AppearanceDescriptor>& aAppearances)
 {
     for (auto& app : aAppearances)
     {
@@ -153,8 +152,7 @@ void App::CustomizationExtension::OnGetAppearances(Red::gameuiICharacterCustomiz
 }
 
 void App::CustomizationExtension::OnChangeAppearance(App::AppearanceChangerSystem& aSystem,
-                                                  Red::AppearanceChangeRequest* aRequest,
-                                                  uintptr_t a3)
+                                                     Red::AppearanceChangeRequest* aRequest, uintptr_t a3)
 {
     if (/*m_customizationActive &&*/ !m_customAppOverrides.empty())
     {
@@ -170,11 +168,10 @@ void App::CustomizationExtension::OnChangeAppearance(App::AppearanceChangerSyste
 }
 
 void App::CustomizationExtension::OnChangeAppearances(App::AppearanceChangerSystem& aSystem,
-                                                  App::CustomizationPuppet& aPuppet,
-                                                  Red::Range<Red::AppearanceDescriptor>& aOldApp,
-                                                  Red::Range<Red::AppearanceDescriptor>& aNewApp,
-                                                  uintptr_t a5,
-                                                  uint8_t a6)
+                                                      App::CustomizationPuppet& aPuppet,
+                                                      Red::Range<Red::AppearanceDescriptor>& aOldApp,
+                                                      Red::Range<Red::AppearanceDescriptor>& aNewApp,
+                                                      uintptr_t a5, uint8_t a6)
 {
     if (/*m_customizationActive &&*/ !m_customAppOverrides.empty())
     {
@@ -217,7 +214,7 @@ bool App::CustomizationExtension::IsCustomEntryName(Red::CName aName, const Red:
 }
 
 void App::CustomizationExtension::RegisterAppOverride(Red::ResourcePath aResource, Red::ResourcePath aOverride,
-                                                   Red::CName aAppearance)
+                                                      Red::CName aAppearance)
 {
     m_customAppOverrides.insert({Red::AppearanceDescriptor{aResource, aAppearance},
                                  Red::AppearanceDescriptor{aOverride, aAppearance}});
@@ -242,17 +239,13 @@ void App::CustomizationExtension::PrefetchCustomResources()
 }
 
 void App::CustomizationExtension::PrefetchCustomResources(Core::Vector<CustomizationResourceToken>& aResources,
-                                                       const Core::Vector<std::string>& aPaths)
+                                                          const Core::Vector<std::string>& aPaths)
 {
     auto loader = Red::ResourceLoader::Get();
 
     for (const auto& path : aPaths)
     {
         auto token = loader->LoadAsync<CustomizationResource>(path.c_str());
-        // token->OnLoaded([path](CustomizationResource& aResource) {
-        //     LogInfo("OnLoaded {}", path);
-        // });
-
         aResources.emplace_back(token);
     }
 }
@@ -274,7 +267,7 @@ void App::CustomizationExtension::MergeCustomEntries(App::CustomizationSystem* a
 }
 
 void App::CustomizationExtension::MergeCustomEntries(CustomizationResourceToken& aTargetResource,
-                                                  Core::Vector<CustomizationResourceToken>& aSourceResources)
+                                                     Core::Vector<CustomizationResourceToken>& aSourceResources)
 {
     if (!aTargetResource.instance->finished)
     {
@@ -287,6 +280,10 @@ void App::CustomizationExtension::MergeCustomEntries(CustomizationResourceToken&
     }
 
     auto& gameData = aTargetResource->Get();
+
+    FixCustomizationOptions(aTargetResource->path, gameData->armsCustomizationOptions);
+    FixCustomizationOptions(aTargetResource->path, gameData->bodyCustomizationOptions);
+    FixCustomizationOptions(aTargetResource->path, gameData->headCustomizationOptions);
 
     for (const auto& customResource : aSourceResources)
     {
@@ -318,7 +315,7 @@ void App::CustomizationExtension::MergeCustomEntries(CustomizationResourceToken&
 }
 
 void App::CustomizationExtension::MergeCustomGroups(Red::DynArray<CustomizationGroup>& aTargetGroups,
-                                                 Red::DynArray<CustomizationGroup>& aSourceGroups)
+                                                    Red::DynArray<CustomizationGroup>& aSourceGroups)
 {
     for (const auto& sourceGroup : aSourceGroups)
     {
@@ -338,8 +335,8 @@ void App::CustomizationExtension::MergeCustomGroups(Red::DynArray<CustomizationG
 }
 
 void App::CustomizationExtension::MergeCustomOptions(Red::DynArray<CustomizationOption>& aTargetOptions,
-                                                  Red::DynArray<CustomizationOption>& aSourceOptions,
-                                                  bool aSlotsAndLinks)
+                                                     Red::DynArray<CustomizationOption>& aSourceOptions,
+                                                     bool aSlotsAndLinks)
 {
     for (auto sourceOption : aSourceOptions)
     {
@@ -621,6 +618,34 @@ void App::CustomizationExtension::ResetCustomResources()
     m_customFemaleResources.clear();
 }
 
+void App::CustomizationExtension::FixCustomizationOptions(Red::ResourcePath aTargetPath,
+                                                          Red::DynArray<CustomizationOption>& aTargetOptions)
+{
+    const auto& fix = ResourceMetaExtension::GetResourceFix(aTargetPath);
+
+    if (fix.DefinesPathMappings())
+    {
+        for (auto& targetOption : aTargetOptions)
+        {
+            if (auto& appInfoOption = Red::Cast<Red::game::ui::AppearanceInfo>(targetOption))
+            {
+                auto originalPath = appInfoOption->resource.path;
+                auto mappedPath = fix.GetMappedPath(originalPath);
+
+                if (mappedPath != originalPath)
+                {
+                    appInfoOption->resource.path = mappedPath;
+
+                    for (const auto& definition : appInfoOption->definitions)
+                    {
+                        RegisterAppOverride(originalPath, mappedPath, definition.name);
+                    }
+                }
+            }
+        }
+    }
+}
+
 void App::CustomizationExtension::FixCustomizationAppearance(Red::AppearanceResource* aResource,
                                                              Red::Handle<Red::AppearanceDefinition>* aDefinition,
                                                              Red::CName aAppearanceName)
@@ -651,17 +676,32 @@ void App::CustomizationExtension::FixCustomizationAppearance(Red::AppearanceReso
         auto delimiterPos = meshAppearanceStr.find("__");
         if (delimiterPos != std::string_view::npos)
         {
-            for (auto sourceIndex = 0; sourceIndex < aResource->appearances.size; ++sourceIndex)
+            if (aResource->appearances.size == 1)
             {
-                auto sourceNameStr = std::string_view{aResource->appearances[sourceIndex]->name.ToString()};
-                if (sourceNameStr.compare(0, delimiterPos, meshAppearanceStr, 0, delimiterPos) == 0)
+                sourceDefinition = aResource->appearances[0];
+            }
+            else
+            {
+                for (auto sourceIndex = 0; sourceIndex < aResource->appearances.size; ++sourceIndex)
                 {
-                    sourceDefinition = aResource->appearances[sourceIndex];
-                    break;
+                    auto sourceNameStr = std::string_view{aResource->appearances[sourceIndex]->name.ToString()};
+                    if (sourceNameStr.compare(0, delimiterPos, meshAppearanceStr, 0, delimiterPos) == 0)
+                    {
+                        sourceDefinition = aResource->appearances[sourceIndex];
+                        break;
+                    }
                 }
             }
 
             meshAppearanceStr.remove_prefix(delimiterPos + 2);
+
+            if (meshAppearanceStr.size() < 5)
+                return;
+
+            if (meshAppearanceStr[2] == '_' && std::isdigit(meshAppearanceStr[0]))
+            {
+                meshAppearanceStr.remove_prefix(3);
+            }
         }
     }
 

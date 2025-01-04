@@ -70,9 +70,13 @@ void App::ResourceMetaConfig::LoadFixes(const YAML::Node& aNode)
             continue;
 
         const auto& namesNode = definitionNode["names"];
+        const auto& pathsNode = definitionNode["paths"];
         const auto& contextNode = definitionNode["context"];
 
         if (namesNode.IsDefined() && !namesNode.IsMap())
+            continue;
+
+        if (pathsNode.IsDefined() && !pathsNode.IsMap())
             continue;
 
         if (contextNode.IsDefined() && !contextNode.IsMap())
@@ -81,8 +85,6 @@ void App::ResourceMetaConfig::LoadFixes(const YAML::Node& aNode)
         const auto& targetPathStr = entryNode.first.Scalar();
         const auto& targetPath = Red::ResourcePath(targetPathStr.data());
 
-        ResourceFix fixData;
-
         if (namesNode.IsDefined())
         {
             for (const auto& nameNode : namesNode)
@@ -90,7 +92,21 @@ void App::ResourceMetaConfig::LoadFixes(const YAML::Node& aNode)
                 auto oldName = Red::CNamePool::Add(nameNode.first.Scalar().data());
                 auto newName = Red::CNamePool::Add(nameNode.second.Scalar().data());
 
-                fixData.names[oldName] = newName;
+                fixes[targetPath].names[oldName] = newName;
+            }
+        }
+
+        if (pathsNode.IsDefined())
+        {
+            for (const auto& pathNode : pathsNode)
+            {
+                auto oldPath = Red::ResourcePath(pathNode.first.Scalar().data());
+                auto newPath = Red::ResourcePath(pathNode.second.Scalar().data());
+
+                fixes[targetPath].paths[oldPath] = newPath;
+
+                paths[oldPath] = pathNode.first.Scalar();
+                paths[newPath] = pathNode.second.Scalar();
             }
         }
 
@@ -101,14 +117,10 @@ void App::ResourceMetaConfig::LoadFixes(const YAML::Node& aNode)
                 auto paramName = Red::CNamePool::Add(paramNode.first.Scalar().data());
                 const auto& paramValue = paramNode.second.Scalar();
 
-                fixData.context[paramName] = paramValue;
+                fixes[targetPath].context[paramName] = paramValue;
             }
         }
 
-        if (!fixData.names.empty() || !fixData.context.empty())
-        {
-            fixes[targetPath] = std::move(fixData);
-            paths[targetPath] = targetPathStr;
-        }
+        paths[targetPath] = targetPathStr;
     }
 }

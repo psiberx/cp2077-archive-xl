@@ -33,7 +33,7 @@ void App::ResourceMetaExtension::Configure()
 
         for (auto [targetPath, targetFix] : config.fixes)
         {
-            s_fixes[targetPath] = std::move(targetFix);
+            s_fixes[targetPath].Merge(targetFix);
             s_paths[targetPath] = config.paths[targetPath];
         }
     }
@@ -96,11 +96,10 @@ const App::ResourceFix& App::ResourceMetaExtension::GetResourceFix(Red::Resource
 
 std::string_view App::ResourceMetaExtension::GetPathString(Red::ResourcePath aTargetPath)
 {
-    static const std::string_view s_null;
     const auto& it = s_paths.find(aTargetPath);
 
     if (it == s_paths.end())
-        return s_null;
+        return {};
 
     return it.value();
 }

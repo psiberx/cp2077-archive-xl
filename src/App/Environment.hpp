@@ -9,9 +9,9 @@ inline std::filesystem::path GameDir()
     return Core::Runtime::GetRootDir();
 }
 
-inline std::filesystem::path ArchiveDir()
+inline std::filesystem::path BundleDir()
 {
-    return Core::Runtime::GetModuleDir() / L"Archive";
+    return Core::Runtime::GetModuleDir() / L"Bundle";
 }
 
 inline std::filesystem::path ScriptsDir()
@@ -21,7 +21,7 @@ inline std::filesystem::path ScriptsDir()
 
 inline std::filesystem::path LegacyBundleDir()
 {
-    return Core::Runtime::GetModuleDir() / L"Bundle";
+    return Core::Runtime::GetModuleDir() / L"Archive";
 }
 
 inline std::filesystem::path LegacyScriptsDir()

@@ -1,0 +1,89 @@
+resource:
+  scope:
+    player_customization.app:
+      - player_ma_brows.app
+      - player_wa_brows.app
+    player_ma_brows.app:
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__01.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__02.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__03.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__04.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__05.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__06.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__07.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__08.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__09.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__10.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__11.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__12.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__13.app
+    player_ma_brows.morphtarget:
+      - archive_xl\characters\head\player_base_heads\player_man_average\heb_pma_brows__01.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_man_average\heb_pma_brows__02.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_man_average\heb_pma_brows__03.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_man_average\heb_pma_brows__04.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_man_average\heb_pma_brows__05.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_man_average\heb_pma_brows__06.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_man_average\heb_pma_brows__07.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_man_average\heb_pma_brows__08.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_man_average\heb_pma_brows__09.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_man_average\heb_pma_brows__10.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_man_average\heb_pma_brows__11.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_man_average\heb_pma_brows__12.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_man_average\heb_pma_brows__13.morphtarget
+    player_ma_brows.mesh:
+      - archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__01.mesh
+      - archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__02.mesh
+      - archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__03.mesh
+      - archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__04.mesh
+      - archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__05.mesh
+      - archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__06.mesh
+      - archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__07.mesh
+      - archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__08.mesh
+      - archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__09.mesh
+      - archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__10.mesh
+      - archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__11.mesh
+      - archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__12.mesh
+      - archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows__13.mesh
+    player_wa_brows.app:
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__01.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__02.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__03.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__04.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__05.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__06.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__07.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__08.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__09.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__10.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__11.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__12.app
+      - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__13.app
+    player_wa_brows.morphtarget:
+      - archive_xl\characters\head\player_base_heads\player_female_average\heb_pwa_brows__01.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_female_average\heb_pwa_brows__02.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_female_average\heb_pwa_brows__03.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_female_average\heb_pwa_brows__04.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_female_average\heb_pwa_brows__05.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_female_average\heb_pwa_brows__06.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_female_average\heb_pwa_brows__07.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_female_average\heb_pwa_brows__08.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_female_average\heb_pwa_brows__09.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_female_average\heb_pwa_brows__10.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_female_average\heb_pwa_brows__11.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_female_average\heb_pwa_brows__12.morphtarget
+      - archive_xl\characters\head\player_base_heads\player_female_average\heb_pwa_brows__13.morphtarget
+    player_wa_brows.mesh:
+      - archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__01.mesh
+      - archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__02.mesh
+      - archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__03.mesh
+      - archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__04.mesh
+      - archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__05.mesh
+      - archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__06.mesh
+      - archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__07.mesh
+      - archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__08.mesh
+      - archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__09.mesh
+      - archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__10.mesh
+      - archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__11.mesh
+      - archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__12.mesh
+      - archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows__13.mesh

@@ -1,0 +1,43 @@
+resource:
+  fix:
+    base\gameplay\gui\fullscreen\main_menu\female_cco.inkcharcustomization: &AppearanceFixF
+      paths:
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_01.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__01.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_02.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__02.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_03.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__03.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_04.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__04.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_05.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__05.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_06.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__06.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_07.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__07.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_08.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__08.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_09.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__09.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_10.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__10.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_11.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__11.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_12.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__12.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_13.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pwa_brows__13.app
+    base\gameplay\gui\fullscreen\main_menu\male_cco.inkcharcustomization: &AppearanceFixM
+      paths:
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_01.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__01.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_02.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__02.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_03.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__03.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_04.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__04.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_05.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__05.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_06.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__06.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_07.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__07.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_08.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__08.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_09.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__09.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_10.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__10.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_11.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__11.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_12.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__12.app
+        base\characters\head\player_base_heads\appearances\head\eyebrows\heb_000__basehead_13.app: archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_pma_brows__13.app
+    ep1\gameplay\gui\fullscreen\main_menu\female_cco_ep1.inkcharcustomization: *AppearanceFixF
+    ep1\gameplay\gui\fullscreen\main_menu\male_cco_ep1.inkcharcustomization: *AppearanceFixM
+  patch:
+    archive_xl\characters\head\player_base_heads\player_female_average\heb_pwa_brows_patch.morphtarget:
+      - player_wa_brows.morphtarget
+    archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows_patch.mesh:
+      - player_wa_brows.mesh
+    archive_xl\characters\head\player_base_heads\player_man_average\heb_pma_brows_patch.morphtarget:
+      - player_ma_brows.morphtarget
+    archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows_patch.mesh:
+      - player_ma_brows.mesh
