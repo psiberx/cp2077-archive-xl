@@ -269,12 +269,18 @@ inline bool CallFunction(CBaseFunction* aFunc, Args&&... aArgs)
 template<typename... Args>
 inline bool CallVirtual(IScriptable* aContext, CClass* aType, CName aFunc, Args&&... aArgs)
 {
+    if (!aContext)
+        return false;
+
     return Detail::CallFunctionWithArgs(nullptr, GetMemberFunction(aType, aFunc), aContext, std::forward<Args>(aArgs)...);
 }
 
 template<typename... Args>
 inline bool CallVirtual(IScriptable* aContext, CName aFunc, Args&&... aArgs)
 {
+    if (!aContext)
+        return false;
+
     return Detail::CallFunctionWithArgs(nullptr, GetMemberFunction(aContext->GetType(), aFunc), aContext, std::forward<Args>(aArgs)...);
 }
 
