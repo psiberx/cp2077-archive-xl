@@ -615,6 +615,9 @@ void App::MeshExtension::PrefetchMeshState(Red::CMesh* aMesh, const Core::Map<Re
 
 Red::CName App::MeshExtension::RegisterMeshSource(Red::CMesh* aMesh, Red::CMesh* aSourceMesh)
 {
+    if (!aSourceMesh || !aSourceMesh->materialEntries.size)
+        return {};
+
     auto meshState = AcquireMeshState(aMesh);
     return meshState->RegisterSource(aSourceMesh);
 }

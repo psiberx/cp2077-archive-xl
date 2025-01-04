@@ -352,7 +352,7 @@ void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, Red::Pos
 
             if (patchMesh->appearances.size != 0)
             {
-                auto patchName = MeshExtension::RegisterMeshSource(aMesh, patchMesh);
+                auto sourceTag = MeshExtension::RegisterMeshSource(aMesh, patchMesh);
 
                 for (const auto& patchAppearance : patchMesh->appearances)
                 {
@@ -360,8 +360,11 @@ void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, Red::Pos
                     cloneAppearance->name = patchAppearance->name;
                     cloneAppearance->chunkMaterials = patchAppearance->chunkMaterials;
 
-                    cloneAppearance->tags.Clear();
-                    cloneAppearance->tags.PushBack(patchName);
+                    if (sourceTag)
+                    {
+                        cloneAppearance->tags.Clear();
+                        cloneAppearance->tags.PushBack(sourceTag);
+                    }
 
                     auto isNewAppearance = true;
 
