@@ -907,6 +907,14 @@
             "values": [
               {
                 "$type": "CName",
+                "BrowsBaseMaterial": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "base\\materials\\mesh_decal_double_diffuse.mt"
+                }
+              },
+              {
+                "$type": "CName",
                 "BrowsSecondaryDiffuseAlpha": {
                   "$type": "CName",
                   "$storage": "string",
