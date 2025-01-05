@@ -1,10 +1,11 @@
 import * as Logger from 'Logger.wscript'
-import { CName } from 'TypeHelper.wscript'
+import { CName, ResourcePath } from 'TypeHelper.wscript'
 import * as TypeHelper from 'TypeHelper.wscript'
 
 const logInfo = false
 const logWarnings = true
 const generateExtensionYaml = true
+const generateBaseMaterials = true
 const generateFixedResources = false
 
 const scopes = [
@@ -159,6 +160,40 @@ function generateMeshFix(scopePath, outputPath) {
       wkit.SaveToProject(meshPath, wkit.JsonToCR2W(meshJson))
     }
 
+    if (generateBaseMaterials) {
+      if (contextParams.hasOwnProperty('CapBaseMaterial')) {
+        let baseMaterialPath = meshPath.replace(/^.+\\([^\\]+)\.mesh$/, 'archive_xl\\characters\\common\\hair\\textures\\hair_profiles\\$1_cap.mi')
+        let baseMaterialJson = wkit.LoadRawJsonFromProject('archive_xl\\characters\\common\\hair\\textures\\hair_profiles\\base_material.mi.json', 'json')
+        let baseMaterialRaw = TypeHelper.JsonParse(baseMaterialJson)
+
+        baseMaterialRaw['Data']['RootChunk']['baseMaterial']['DepotPath'] = new ResourcePath(contextParams['CapBaseMaterial'])
+        delete contextParams['CapBaseMaterial']
+
+        let baseMaterialParams = baseMaterialRaw['Data']['RootChunk']['values']
+        for (let paramName in contextParams) {
+          if (paramName.startsWith('Cap')) {
+            baseMaterialParams.push({
+              '$type': 'rRef:ITexture',
+              [paramName.replace(/^Cap/, '')]: {
+                'DepotPath': {
+                  '$type': 'ResourcePath',
+                  '$storage': 'string',
+                  '$value': contextParams[paramName]
+                },
+                'Flags': 'Default'
+              }
+            })
+            delete contextParams[paramName]
+          }
+        }
+
+        contextParams['CapBaseMaterial'] = baseMaterialPath
+
+        baseMaterialJson = TypeHelper.JsonStringify(baseMaterialRaw)
+        wkit.SaveToProject(baseMaterialPath, wkit.JsonToCR2W(baseMaterialJson))
+      }
+    }
+
     if (generateExtensionYaml) {
       const nameMappings = {}
       for (const materialName in materialMappings) {
@@ -242,7 +277,7 @@ function collectMaterialData(materialInstance, materialData, contextParams) {
         if (texturePath && !texturePath.match(/^engine\\textures\\editor\\/)) {
           materialData['template'] = '@cap01'
           contextParams['CapBaseMaterial'] = 'base\\materials\\mesh_decal_gradientmap_recolor.mt'
-          contextParams['CapSecondaryMaskTexture'] = texturePath
+          contextParams['CapSecondaryMask'] = texturePath
         }
         continue
       }

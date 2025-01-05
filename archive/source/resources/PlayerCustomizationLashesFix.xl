@@ -10,8 +10,7 @@ resource:
     ep1\gameplay\gui\fullscreen\main_menu\male_cco_ep1.inkcharcustomization: *AppearanceFixM
     base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\he_000_pwa_c__basehead.mesh:
       context:
-        LashesBaseMaterial: base\characters\common\character_customisation_items\eyelashes\source\eyelashes__default.mi
-        LashesStrandAlpha: base\characters\common\hair\textures\hb1_brow_beard_lashes\hb1_01__lash_single_d.xbm
+        LashesBaseMaterial: archive_xl\characters\common\eyes\hel_pwa.mi
         AppearanceExpansionSource: blonde_platinum
       names: &MaterialFix
         eyelashes__black_carbon: black_carbon@lashes
@@ -51,8 +50,7 @@ resource:
         eyelashes__teal_ombre: teal_ombre@lashes
     base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\he_000_pma_c__basehead.mesh:
       context:
-        LashesBaseMaterial: base\characters\common\character_customisation_items\eyelashes\source\eyelashes__default.mi
-        LashesStrandAlpha: base\characters\common\eyes\textures\eyelashes_ma_01_lod1.xbm
+        LashesBaseMaterial: archive_xl\characters\common\eyes\hel_pma.mi
         AppearanceExpansionSource: blonde_platinum
       names: *MaterialFix
   patch:

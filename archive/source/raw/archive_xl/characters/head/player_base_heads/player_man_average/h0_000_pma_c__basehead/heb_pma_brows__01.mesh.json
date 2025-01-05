@@ -910,31 +910,7 @@
                 "BrowsBaseMaterial": {
                   "$type": "CName",
                   "$storage": "string",
-                  "$value": "base\\materials\\mesh_decal_double_diffuse.mt"
-                }
-              },
-              {
-                "$type": "CName",
-                "BrowsSecondaryDiffuseAlpha": {
-                  "$type": "CName",
-                  "$storage": "string",
-                  "$value": "base\\characters\\common\\character_customisation_items\\eyebrows\\textures\\heb_wa__base_ds01.xbm"
-                }
-              },
-              {
-                "$type": "CName",
-                "BrowsDiffuseTexture": {
-                  "$type": "CName",
-                  "$storage": "string",
-                  "$value": "base\\characters\\common\\character_customisation_items\\eyebrows\\textures\\heb__base_d01.xbm"
-                }
-              },
-              {
-                "$type": "CName",
-                "BrowsNormalTexture": {
-                  "$type": "CName",
-                  "$storage": "string",
-                  "$value": "base\\characters\\common\\character_customisation_items\\eyebrows\\textures\\heb__base_n01.xbm"
+                  "$value": "archive_xl\\characters\\common\\eyes\\heb_brows__01.mi"
                 }
               }
             ]

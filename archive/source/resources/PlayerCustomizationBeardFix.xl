@@ -365,9 +365,7 @@ resource:
         purple_blonde: purple_blonde@beard
       context:
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
-        CapBaseMaterial: base\materials\mesh_decal_gradientmap_recolor.mt
-        CapDiffuseTexture: base\characters\common\hair\beards\textures\hb__maelstrom_goatie_cap.xbm
-        CapMaskTexture: base\characters\common\hair\beards\textures\hb__stuble_cap_mask.xbm
+        CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hb_000_pma_c__basehead_maelstrom_goatie_cap.mi
     base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_patmc.mesh:
       names:
         red_merlot: red_merlot@beard

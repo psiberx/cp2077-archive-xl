@@ -2,6 +2,8 @@ import * as Logger from 'Logger.wscript'
 import * as TypeHelper from 'TypeHelper.wscript'
 
 const resources = [
+  'archive_xl\\characters\\common\\eyes\\hel_pwa.mi.json',
+  'archive_xl\\characters\\common\\eyes\\hel_pma.mi.json',
   'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\hel_pwa_lashes.app.json',
   'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\hel_pma_lashes.app.json',
   'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\heb_pwa_brows_patch.morphtarget.json',
@@ -25,7 +27,7 @@ const templates = [
   },
   {
     path: 'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\h0_000_pwa_c__basehead\\heb_pwa_brows__01.mesh.json',
-    patterns: [/(?<=heb_pwa_brows__)(\d+)/g, /(?<=_d|_ds|_n?)(\d+)(?=\.xbm)/g],
+    patterns: [/(?<=heb_pwa_brows__)(\d+)/g, /(?<=heb_brows__)(\d+)(?=\.mi)/g],
     range: [1, 13],
   },
   {
@@ -40,7 +42,12 @@ const templates = [
   },
   {
     path: 'archive_xl\\characters\\head\\player_base_heads\\player_man_average\\h0_000_pma_c__basehead\\heb_pma_brows__01.mesh.json',
-    patterns: [/(?<=heb_pma_brows__)(\d+)/g, /(?<=_d|_ds|_n?)(\d+)(?=\.xbm)/g],
+    patterns: [/(?<=heb_pma_brows__)(\d+)/g, /(?<=heb_brows__)(\d+)(?=\.mi)/g],
+    range: [1, 13],
+  },
+  {
+    path: 'archive_xl\\characters\\common\\eyes\\heb_brows__01.mi.json',
+    patterns: [/(?<=heb_brows__)(\d+)/g, /(?<=_d|_ds|_n?)(\d+)(?=\.xbm)/g],
     range: [1, 13],
   },
 ]

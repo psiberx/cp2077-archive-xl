@@ -1,0 +1,47 @@
+{
+  "Header": {
+    "WolvenKitVersion": "8.15.1-nightly.2024-12-22",
+    "WKitJsonVersion": "0.0.9",
+    "GameVersion": 2200,
+    "ExportedDateTime": "2025-01-05T02:46:11.0092071Z",
+    "DataType": "CR2W"
+  },
+  "Data": {
+    "Version": 195,
+    "BuildVersion": 0,
+    "RootChunk": {
+      "$type": "CMaterialInstance",
+      "audioTag": {
+        "$type": "CName",
+        "$storage": "string",
+        "$value": "None"
+      },
+      "baseMaterial": {
+        "DepotPath": {
+          "$type": "ResourcePath",
+          "$storage": "string",
+          "$value": "base\\characters\\common\\character_customisation_items\\eyelashes\\source\\eyelashes__default.mi"
+        },
+        "Flags": "Default"
+      },
+      "cookingPlatform": "PLATFORM_PC",
+      "enableMask": 0,
+      "metadata": null,
+      "resourceVersion": 4,
+      "values": [
+        {
+          "$type": "rRef:ITexture",
+          "Strand_Alpha": {
+            "DepotPath": {
+              "$type": "ResourcePath",
+              "$storage": "string",
+              "$value": "base\\characters\\common\\eyes\\textures\\eyelashes_ma_01_lod1.xbm"
+            },
+            "Flags": "Default"
+          }
+        }
+      ]
+    },
+    "EmbeddedFiles": []
+  }
+}
