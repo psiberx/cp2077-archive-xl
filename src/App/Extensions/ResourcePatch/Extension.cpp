@@ -739,10 +739,21 @@ void App::ResourcePatchExtension::PatchPackageResults(const Red::Handle<Red::Ent
         if (!patchTemplate)
             continue;
 
+        auto& patchBuffer = patchTemplate->compiledData;
+
+        if (!patchBuffer.buffer.size)
+            continue;
+
         auto& patchHeader = patchTemplate->compiledDataHeader;
 
         if (patchHeader.IsEmpty())
-            continue;
+        {
+            auto patchReader = Red::ObjectPackageReader(patchBuffer);
+            patchReader.ReadHeader(patchHeader);
+
+            if (patchHeader.IsEmpty())
+                continue;
+        }
 
         auto patchExtractor = Red::ObjectPackageExtractor(patchHeader);
         patchExtractor.disablePostLoad = aDisablePostLoad;
