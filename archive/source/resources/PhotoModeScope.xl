@@ -1,6 +1,7 @@
 resource:
   scope:
     photomode_wa.ent:
+      - base\characters\entities\player\photo_mode\player_wa_photomode.ent
       - base\characters\entities\player\photo_mode\alt_cunningham\alt_photomode.ent
       - base\characters\entities\player\photo_mode\blue_moon\bmuc_photomode.ent
       - base\characters\entities\player\photo_mode\evelyn_parker\evelyn_photomode.ent
@@ -9,7 +10,6 @@ resource:
       - base\characters\entities\player\photo_mode\lizzy_wizzy\lizzy_photomode.ent
       - base\characters\entities\player\photo_mode\meredith_stout\meredith_photomode.ent
       - base\characters\entities\player\photo_mode\panam_palmer\panam_photomode.ent
-      - base\characters\entities\player\photo_mode\player_wa_photomode.ent
       - base\characters\entities\player\photo_mode\purple_force\pfuc_photomode.ent
       - base\characters\entities\player\photo_mode\red_menace\rmuc_photomode.ent
       - base\characters\entities\player\photo_mode\rogue_amendiares\old_rogue_photomode.ent
@@ -18,11 +18,12 @@ resource:
       - ep1\characters\entities\player\photo_mode\player_wa_photomode_ep1.ent
       - ep1\characters\entities\player\photo_mode\songbird\songbird_photomode.ent
     photomode_ma.ent:
+      - base\characters\entities\player\photo_mode\player_ma_photomode.ent
+      - base\characters\entities\player\photo_mode\johnny_photomode.ent
       - base\characters\entities\player\photo_mode\altjohnny_silverhand\altjohnny_photomode.ent
       - base\characters\entities\player\photo_mode\goro_takemura\goro_photomode.ent
       - base\characters\entities\player\photo_mode\johnny_silverhand\johnny_photomode_entity.ent
       - base\characters\entities\player\photo_mode\kerry_eurodyne\kerry_photomode.ent
-      - base\characters\entities\player\photo_mode\player_ma_photomode.ent
       - base\characters\entities\player\photo_mode\viktor_vektor\viktor_photomode.ent
       - ep1\characters\entities\player\photo_mode\player_ma_photomode_ep1.ent
     photomode_mb.ent:
