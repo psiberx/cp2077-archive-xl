@@ -462,7 +462,7 @@ void App::ResourcePatchExtension::OnMorphTargetResourceLoad(Red::MorphTargetMesh
             aMorphTarget->baseTextureParamName = patchResource->baseTextureParamName;
         }
 
-        if (patchResource->blob)
+        if (patchResource->blob && !aMorphTarget->blob)
         {
             if (auto& renderBlob = Red::Cast<Red::rendRenderMorphTargetMeshBlob>(patchResource->blob))
             {
