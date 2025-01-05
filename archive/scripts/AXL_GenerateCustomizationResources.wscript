@@ -64,6 +64,7 @@ const templates = [
   {
     path: 'archive_xl\\characters\\common\\eyes\\heb_brows__01.mi.json',
     patterns: [
+      [/(?<=heb_brows__)(\d+)(?=\.mi)/g],
       [/(?<=_d|_ds|_n?)(\d+)(?=\.xbm)/g, (n) => n >= 9 ? n + 3 : n],
     ],
     range: [1, 13],
