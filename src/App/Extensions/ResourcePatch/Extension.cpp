@@ -402,25 +402,24 @@ void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, Red::Pos
                 if (auto& renderBlob = Red::Cast<Red::rendRenderMeshBlob>(patchMesh->renderResourceBlob))
                 {
                     aMesh->renderResourceBlob = CopyRenderBlob(renderBlob);
+                    // aMesh->parameters = patchMesh->parameters;
+                    aMesh->boneNames = patchMesh->boneNames;
+                    aMesh->boneRigMatrices = patchMesh->boneRigMatrices;
+                    aMesh->boneVertexEpsilons = patchMesh->boneVertexEpsilons;
+                    aMesh->lodBoneMask = patchMesh->lodBoneMask;
+                    aMesh->lodLevelInfo = patchMesh->lodLevelInfo;
+                    aMesh->floatTrackNames = patchMesh->floatTrackNames;
+                    aMesh->boundingBox = patchMesh->boundingBox;
+                    aMesh->surfaceAreaPerAxis = patchMesh->surfaceAreaPerAxis;
+                    aMesh->objectType = patchMesh->objectType;
+                    aMesh->castGlobalShadowsCachedInCook = patchMesh->castGlobalShadowsCachedInCook;
+                    aMesh->castLocalShadowsCachedInCook = patchMesh->castLocalShadowsCachedInCook;
+                    aMesh->useRayTracingShadowLODBias = patchMesh->useRayTracingShadowLODBias;
+                    aMesh->castsRayTracedShadowsFromOriginalGeometry = patchMesh->castsRayTracedShadowsFromOriginalGeometry;
+                    aMesh->isShadowMesh = patchMesh->isShadowMesh;
+                    aMesh->isPlayerShadowMesh = patchMesh->isPlayerShadowMesh;
+                    aMesh->constrainAutoHideDistanceToTerrainHeightMap = patchMesh->constrainAutoHideDistanceToTerrainHeightMap;
                 }
-
-                aMesh->parameters = patchMesh->parameters;
-                aMesh->boneNames = patchMesh->boneNames;
-                aMesh->boneRigMatrices = patchMesh->boneRigMatrices;
-                aMesh->boneVertexEpsilons = patchMesh->boneVertexEpsilons;
-                aMesh->lodBoneMask = patchMesh->lodBoneMask;
-                aMesh->lodLevelInfo = patchMesh->lodLevelInfo;
-                aMesh->floatTrackNames = patchMesh->floatTrackNames;
-                aMesh->boundingBox = patchMesh->boundingBox;
-                aMesh->surfaceAreaPerAxis = patchMesh->surfaceAreaPerAxis;
-                aMesh->objectType = patchMesh->objectType;
-                aMesh->castGlobalShadowsCachedInCook = patchMesh->castGlobalShadowsCachedInCook;
-                aMesh->castLocalShadowsCachedInCook = patchMesh->castLocalShadowsCachedInCook;
-                aMesh->useRayTracingShadowLODBias = patchMesh->useRayTracingShadowLODBias;
-                aMesh->castsRayTracedShadowsFromOriginalGeometry = patchMesh->castsRayTracedShadowsFromOriginalGeometry;
-                aMesh->isShadowMesh = patchMesh->isShadowMesh;
-                aMesh->isPlayerShadowMesh = patchMesh->isPlayerShadowMesh;
-                aMesh->constrainAutoHideDistanceToTerrainHeightMap = patchMesh->constrainAutoHideDistanceToTerrainHeightMap;
             }
         }
     }
