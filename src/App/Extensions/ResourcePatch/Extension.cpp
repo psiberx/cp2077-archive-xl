@@ -28,7 +28,7 @@ bool App::ResourcePatchExtension::Load()
     HookBefore<Raw::EntityTemplate::PostLoad>(&OnEntityTemplateLoad).OrThrow();
     HookBefore<Raw::AppearanceResource::OnLoad>(&OnAppearanceResourceLoad).OrThrow();
     HookBefore<Raw::CMesh::PostLoad>(&OnMeshResourceLoad).OrThrow();
-    HookBefore<Raw::MorphTargetMesh::PostLoad>(&OnMorphTargetResourceLoad).OrThrow();
+    Hook<Raw::MorphTargetMesh::PostLoad>(&OnMorphTargetResourceLoad).OrThrow();
     HookBefore<Raw::EntityBuilder::ScheduleExtractComponentsJob>(&OnEntityPackageLoad).OrThrow();
     HookAfter<Raw::AppearanceDefinition::ExtractPartComponents>(&OnPartPackageExtract).OrThrow();
     HookAfter<Raw::GarmentAssembler::ExtractComponentsJob>(&OnGarmentPackageExtract).OrThrow();
@@ -160,12 +160,13 @@ void App::ResourcePatchExtension::OnResourceRequest(Red::ResourceDepot*, const u
         {
             if (!s_tokens.contains(patchPath))
             {
-                Red::ResourceRequest patchRequest;
-                patchRequest.path = patchPath;
-                patchRequest.disablePreInitialization = true;
-                patchRequest.disablePostLoad = true;
+                // Red::ResourceRequest patchRequest;
+                // patchRequest.path = patchPath;
+                // patchRequest.disablePreInitialization = true;
+                // patchRequest.disablePostLoad = true;
+                // s_tokens[patchPath] = Red::ResourceLoader::Get()->LoadAsync(patchRequest);
 
-                s_tokens[patchPath] = Red::ResourceLoader::Get()->LoadAsync(patchRequest);
+                s_tokens[patchPath] = Red::ResourceLoader::Get()->LoadAsync(patchPath);
             }
         }
     }
@@ -435,10 +436,10 @@ void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, Red::Pos
 void App::ResourcePatchExtension::OnMorphTargetResourceLoad(Red::MorphTargetMesh* aMorphTarget,
                                                             Red::PostLoadParams* aParams)
 {
-    const auto& patchList = GetPatchList(aMorphTarget->path);
-
-    if (patchList.empty())
+    if (IsPatchResource(aMorphTarget->path))
         return;
+
+    const auto& patchList = GetPatchList(aMorphTarget->path);
 
     for (const auto& patchPath : patchList)
     {
@@ -500,6 +501,8 @@ void App::ResourcePatchExtension::OnMorphTargetResourceLoad(Red::MorphTargetMesh
             }
         }
     }
+
+    Raw::MorphTargetMesh::PostLoad(aMorphTarget, aParams);
 }
 
 void App::ResourcePatchExtension::OnEntityPackageLoad(Red::JobQueue& aJobQueue, void*,
@@ -752,11 +755,13 @@ void App::ResourcePatchExtension::PatchPackageResults(const Red::Handle<Red::Ent
 
         if (patchHeader.IsEmpty())
         {
-            auto patchReader = Red::ObjectPackageReader(patchBuffer);
-            patchReader.ReadHeader(patchHeader);
+            // auto patchReader = Red::ObjectPackageReader(patchBuffer);
+            // patchReader.ReadHeader(patchHeader);
+            //
+            // if (patchHeader.IsEmpty())
+            //     continue;
 
-            if (patchHeader.IsEmpty())
-                continue;
+            continue;
         }
 
         auto patchExtractor = Red::ObjectPackageExtractor(patchHeader);
@@ -920,6 +925,12 @@ Red::Handle<Red::rendRenderMorphTargetMeshBlob> App::ResourcePatchExtension::Cop
     }
 
     return cloneBlob;
+}
+
+bool App::ResourcePatchExtension::IsPatchResource(Red::ResourcePath aPath)
+{
+    std::shared_lock _(s_tokenLock);
+    return s_tokens.contains(aPath);
 }
 
 const Core::Set<Red::ResourcePath>& App::ResourcePatchExtension::GetPatchList(Red::ResourcePath aTargetPath)

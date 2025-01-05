@@ -71,6 +71,7 @@ private:
     inline static Red::Handle<Red::rendRenderMorphTargetMeshBlob> CopyRenderBlob(
         const Red::Handle<Red::rendRenderMorphTargetMeshBlob>& aSourceBlob);
 
+    static bool IsPatchResource(Red::ResourcePath aPath);
     static const Core::Set<Red::ResourcePath>& GetPatchList(Red::ResourcePath aTargetPath);
     template<typename T = Red::CResource>
     static Red::Handle<T> GetPatchResource(Red::ResourcePath aPatchPath);
