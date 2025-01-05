@@ -17,37 +17,55 @@ const resources = [
 const templates = [
   {
     path: 'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\eyebrows\\heb_pwa_brows__01.app.json',
-    patterns: [/(?<=heb_pwa_brows__)(\d+)/g],
+    patterns: [
+      [/(?<=heb_pwa_brows__)(\d+)/g],
+    ],
     range: [1, 13],
   },
   {
     path: 'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\heb_pwa_brows__01.morphtarget.json',
-    patterns: [/(?<=heb_pwa_brows__)(\d+)/g],
+    patterns: [
+      [/(?<=heb_pwa_brows__)(\d+)/g],
+    ],
     range: [1, 13],
   },
   {
     path: 'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\h0_000_pwa_c__basehead\\heb_pwa_brows__01.mesh.json',
-    patterns: [/(?<=heb_pwa_brows__)(\d+)/g, /(?<=heb_brows__)(\d+)(?=\.mi)/g, /(?<=_d|_ds|_n?)(\d+)(?=\.xbm)/g],
+    patterns: [
+      [/(?<=heb_pwa_brows__)(\d+)/g],
+      [/(?<=heb_brows__)(\d+)(?=\.mi)/g],
+      [/(?<=_d|_ds|_n?)(\d+)(?=\.xbm)/g, (n) => n >= 9 ? n + 3 : n],
+    ],
     range: [1, 13],
   },
   {
     path: 'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\eyebrows\\heb_pma_brows__01.app.json',
-    patterns: [/(?<=heb_pma_brows__)(\d+)/g],
+    patterns: [
+      [/(?<=heb_pma_brows__)(\d+)/g],
+    ],
     range: [1, 13],
   },
   {
     path: 'archive_xl\\characters\\head\\player_base_heads\\player_man_average\\heb_pma_brows__01.morphtarget.json',
-    patterns: [/(?<=heb_pma_brows__)(\d+)/g],
+    patterns: [
+      [/(?<=heb_pma_brows__)(\d+)/g],
+    ],
     range: [1, 13],
   },
   {
     path: 'archive_xl\\characters\\head\\player_base_heads\\player_man_average\\h0_000_pma_c__basehead\\heb_pma_brows__01.mesh.json',
-    patterns: [/(?<=heb_pma_brows__)(\d+)/g, /(?<=heb_brows__)(\d+)(?=\.mi)/g, /(?<=_d|_ds|_n?)(\d+)(?=\.xbm)/g],
+    patterns: [
+      [/(?<=heb_pma_brows__)(\d+)/g],
+      [/(?<=heb_brows__)(\d+)(?=\.mi)/g],
+      [/(?<=_d|_ds|_n?)(\d+)(?=\.xbm)/g, (n) => n >= 9 ? n + 3 : n],
+    ],
     range: [1, 13],
   },
   {
     path: 'archive_xl\\characters\\common\\eyes\\heb_brows__01.mi.json',
-    patterns: [/(?<=heb_brows__)(\d+)/g, /(?<=_d|_ds|_n?)(\d+)(?=\.xbm)/g],
+    patterns: [
+      [/(?<=_d|_ds|_n?)(\d+)(?=\.xbm)/g, (n) => n >= 9 ? n + 3 : n],
+    ],
     range: [1, 13],
   },
 ]
@@ -69,8 +87,12 @@ for (let template of templates) {
       let resourceJson = template.json
 
       for (let pattern of template.patterns) {
-        resourcePath = resourcePath.replaceAll(pattern, resourceNumber)
-        resourceJson = resourceJson.replaceAll(pattern, resourceNumber)
+        let replacement = pattern.length > 1
+          ? pattern[1](i).toString().padStart(2, '0')
+          : resourceNumber
+
+        resourcePath = resourcePath.replaceAll(pattern[0], replacement)
+        resourceJson = resourceJson.replaceAll(pattern[0], replacement)
       }
 
       wkit.SaveToProject(resourcePath, wkit.JsonToCR2W(resourceJson))
