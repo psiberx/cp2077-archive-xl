@@ -327,6 +327,11 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
                 newAppearances.insert(patchDefinition->name);
             }
         }
+
+        for (const auto& censorship : patchResource->censorshipMapping)
+        {
+            aResource->censorshipMapping.PushBack(censorship);
+        }
     }
 }
 
