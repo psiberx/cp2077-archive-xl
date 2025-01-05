@@ -12,7 +12,7 @@ Red::CName App::ComponentPrefixResolver::GetPrefix(Red::CName aComponentName)
         const auto nameStr = aComponentName.ToString();
 
         size_t prefixEnd = 2;
-        constexpr size_t prefixMaxLen = 4;
+        constexpr size_t prefixMaxLen = 6;
         while (prefixEnd < prefixMaxLen && nameStr[prefixEnd] && nameStr[prefixEnd] != '_')
             ++prefixEnd;
 

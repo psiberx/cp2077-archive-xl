@@ -12,7 +12,7 @@ App::OverrideTagManager::OverrideTagManager() noexcept
                   {"hx_", Hide()},
                   {"i1_", Hide()}, // accessories
                   {"beard", Hide()},
-                  {"beard_shadow", Hide()},
+                  {"beard_", Hide()},
                   {"MorphTargetSkinnedMesh3637", Hide()},
                   {"MorphTargetSkinnedMesh6675", Hide()},
                   {"MorphTargetSkinnedMesh7243", Hide()},
