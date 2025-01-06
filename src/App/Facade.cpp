@@ -2,6 +2,7 @@
 #include "App/Archives/ArchiveService.hpp"
 #include "App/Extensions/ExtensionService.hpp"
 #include "App/Extensions/Garment/Extension.hpp"
+#include "App/Extensions/PhotoMode/Extension.hpp"
 #include "App/Extensions/PuppetState/Extension.hpp"
 #include "Core/Facades/Container.hpp"
 
@@ -28,6 +29,16 @@ void App::Facade::EnableGarmentOffsets()
 void App::Facade::DisableGarmentOffsets()
 {
     GarmentExtension::DisableGarmentOffsets();
+}
+
+void App::Facade::EnablePhotoModeAlternativeControls()
+{
+    PhotoModeExtension::EnableAlternativeControls();
+}
+
+void App::Facade::DisablePhotoModeAlternativeControls()
+{
+    PhotoModeExtension::DisableAlternativeControls();
 }
 
 void App::Facade::Reload()

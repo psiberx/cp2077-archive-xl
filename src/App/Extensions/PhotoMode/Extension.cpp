@@ -343,13 +343,16 @@ void App::PhotoModeExtension::OnCalculateSpawnTransform(Red::gamePhotoModeSystem
                                                         Red::Transform& aSpawnTransform,
                                                         const Red::Transform& aInitialTransform, uint64_t* a4, bool a5)
 {
+    if (!s_alternativeControlEnabled)
+        return;
+
     aSpawnTransform = aInitialTransform;
 }
 
 void App::PhotoModeExtension::OnSpawnCharacter(Red::gamePhotoModeSystem* aSystem, Red::PhotoModeCharacter* aCharacter,
                                                uint32_t a3, const Red::Transform& aSpawnTransform, uint64_t a5)
 {
-    if (aCharacter->characterType != Red::PhotoModeCharacterType::NPC)
+    if (!s_alternativeControlEnabled || aCharacter->characterType != Red::PhotoModeCharacterType::NPC)
         return;
 
     auto slot = Raw::PhotoModeSystem::SpawningSlot::Ref(aSystem);
@@ -386,7 +389,7 @@ void App::PhotoModeExtension::OnApplyPuppetTransforms(Red::gamePhotoModeSystem* 
                                                       Red::DynArray<Red::PhotoModeCharacter>& aCharacterList,
                                                       uint8_t aCharacterGroup)
 {
-    if (aCharacterGroup == 0)
+    if (!s_alternativeControlEnabled || aCharacterGroup == 0)
     {
         Raw::PhotoModeSystem::ApplyPuppetTransforms(aSystem, aCharacterList, aCharacterGroup);
         return;
@@ -424,6 +427,9 @@ void App::PhotoModeExtension::OnApplyPuppetTransforms(Red::gamePhotoModeSystem* 
 void App::PhotoModeExtension::OnSetRelativePosition(Red::gamePhotoModeSystem* aSystem, uint8_t a2,
                                                     uint8_t aCharacterGroup)
 {
+    if (!s_alternativeControlEnabled)
+        return;
+
     if (aCharacterGroup == 0)
     {
         auto* player = Raw::PhotoModeSystem::Player::Ptr(aSystem);
@@ -462,4 +468,18 @@ void App::PhotoModeExtension::FixRelativePosition(Red::PhotoModeCharacter* aChar
 
 void App::PhotoModeExtension::OnSyncRelativePosition(Red::gamePhotoModeSystem* aSystem)
 {
+    if (!s_alternativeControlEnabled)
+    {
+        Raw::PhotoModeSystem::SyncRelativePosition(aSystem);
+    }
+}
+
+void App::PhotoModeExtension::EnableAlternativeControls()
+{
+    s_alternativeControlEnabled = true;
+}
+
+void App::PhotoModeExtension::DisableAlternativeControls()
+{
+    s_alternativeControlEnabled = false;
 }

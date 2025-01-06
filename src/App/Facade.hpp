@@ -12,6 +12,8 @@ public:
     static Red::CName GetBodyType(const Red::WeakHandle<Red::GameObject>& aPuppet);
     static void EnableGarmentOffsets();
     static void DisableGarmentOffsets();
+    static void EnablePhotoModeAlternativeControls();
+    static void DisablePhotoModeAlternativeControls();
     static void Reload();
     static bool Require(Red::CString& aVersion);
     static Red::CString GetVersion();
@@ -27,6 +29,8 @@ RTTI_DEFINE_CLASS(App::Facade, App::Project::Name, {
     RTTI_METHOD(GetBodyType);
     RTTI_METHOD(EnableGarmentOffsets);
     RTTI_METHOD(DisableGarmentOffsets);
+    RTTI_METHOD(EnablePhotoModeAlternativeControls);
+    RTTI_METHOD(DisablePhotoModeAlternativeControls);
     RTTI_METHOD(Reload);
     RTTI_METHOD(Require);
     RTTI_METHOD(GetVersion, "Version");

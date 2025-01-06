@@ -14,6 +14,9 @@ public:
     bool Unload() override;
     void ApplyTweaks() override;
 
+    static void EnableAlternativeControls();
+    static void DisableAlternativeControls();
+
 private:
     struct CharacterSource
     {
@@ -56,5 +59,6 @@ private:
     static inline Core::SortedMap<uint32_t, CharacterSource> s_extraCharacters;
     static inline Core::SortedMap<Red::TweakDBID, uint32_t> s_characterIndexMap;
     static inline uint32_t s_dummyCharacterIndex{0};
+    static inline bool s_alternativeControlEnabled{false};
 };
 }
