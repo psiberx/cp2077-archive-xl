@@ -36,6 +36,7 @@ private:
                                      const Red::SharedPtr<Red::ResourceToken<Red::EntityTemplate>>& aPartToken);
     static void OnGarmentPackageExtract(Red::GarmentExtractionParams* aParams, const Red::JobGroup& aJobGroup);
     static void OnCurveSetResourceLoad(Red::CurveSet* aResource);
+    static void OnDeviceResourceLoad(Red::gameDeviceResource* aResource);
 
     static void IncludeAppearanceParts(const Red::Handle<Red::AppearanceResource>& aResource,
                                        const Red::Handle<Red::AppearanceDefinition>& aDefinition,

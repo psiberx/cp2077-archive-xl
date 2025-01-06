@@ -204,6 +204,13 @@ void App::ResourcePatchExtension::OnResourceReady(Red::ResourceSerializer* aSeri
             if (const auto& resource = Red::Cast<Red::CurveSet>(serializable))
             {
                 OnCurveSetResourceLoad(resource);
+                continue;
+            }
+
+            if (const auto& resource = Red::Cast<Red::gameDeviceResource>(serializable))
+            {
+                OnDeviceResourceLoad(resource);
+                continue;
             }
         }
     }
@@ -688,45 +695,71 @@ void App::ResourcePatchExtension::OnCurveSetResourceLoad(Red::CurveSet* aResourc
     for (const auto& patchPath : patchList)
     {
         auto patchResource = GetPatchResource<Red::CurveSet>(patchPath);
-        if (patchResource)
+
+        if (!patchResource)
+            continue;
+
+        for (const auto& patchEntry : patchResource->curves)
         {
-            for (const auto& patchEntry : patchResource->curves)
+            auto isNewEntry = true;
+
+            for (auto& existingEntry : aResource->curves)
             {
-                auto isNewEntry = true;
-
-                for (auto& existingEntry : aResource->curves)
+                if (existingEntry.name == patchEntry.name)
                 {
-                    if (existingEntry.name == patchEntry.name)
+                    isNewEntry = false;
+
+                    if (existingEntry.curve.valueType == patchEntry.curve.valueType)
                     {
-                        isNewEntry = false;
-
-                        if (existingEntry.curve.valueType == patchEntry.curve.valueType)
-                        {
-                            existingEntry.curve.interpolationType = patchEntry.curve.interpolationType;
-                            existingEntry.curve.linkType = patchEntry.curve.linkType;
-                            existingEntry.curve.Resize(patchEntry.curve.GetSize());
-                            std::memcpy(existingEntry.curve.buffer.data, patchEntry.curve.buffer.data,
-                                        patchEntry.curve.buffer.size);
-                        }
-
-                        break;
+                        existingEntry.curve.interpolationType = patchEntry.curve.interpolationType;
+                        existingEntry.curve.linkType = patchEntry.curve.linkType;
+                        existingEntry.curve.Resize(patchEntry.curve.GetSize());
+                        std::memcpy(existingEntry.curve.buffer.data, patchEntry.curve.buffer.data,
+                                    patchEntry.curve.buffer.size);
                     }
-                }
 
-                if (isNewEntry)
-                {
-                    aResource->curves.EmplaceBack();
-                    auto& newEntry = aResource->curves.Back();
-                    newEntry.name = patchEntry.name;
-                    newEntry.curve.name = patchEntry.curve.name;
-                    newEntry.curve.valueType = patchEntry.curve.valueType;
-                    newEntry.curve.interpolationType = patchEntry.curve.interpolationType;
-                    newEntry.curve.linkType = patchEntry.curve.linkType;
-                    newEntry.curve.Resize(patchEntry.curve.GetSize());
-                    std::memcpy(newEntry.curve.buffer.data, patchEntry.curve.buffer.data, patchEntry.curve.buffer.size);
+                    break;
                 }
             }
+
+            if (isNewEntry)
+            {
+                aResource->curves.EmplaceBack();
+                auto& newEntry = aResource->curves.Back();
+                newEntry.name = patchEntry.name;
+                newEntry.curve.name = patchEntry.curve.name;
+                newEntry.curve.valueType = patchEntry.curve.valueType;
+                newEntry.curve.interpolationType = patchEntry.curve.interpolationType;
+                newEntry.curve.linkType = patchEntry.curve.linkType;
+                newEntry.curve.Resize(patchEntry.curve.GetSize());
+                std::memcpy(newEntry.curve.buffer.data, patchEntry.curve.buffer.data, patchEntry.curve.buffer.size);
+            }
         }
+    }
+}
+
+void App::ResourcePatchExtension::OnDeviceResourceLoad(Red::gameDeviceResource* aResource)
+{
+    const auto& patchList = GetPatchList(aResource->path);
+
+    if (patchList.empty())
+        return;
+
+    auto deviceMap = std::bit_cast<Red::HashMap<uint64_t, Red::gameCookedDeviceData>*>(&aResource->data->unk30);
+
+    for (const auto& patchPath : patchList)
+    {
+        auto patchResource = GetPatchResource<Red::gameDeviceResource>(patchPath);
+
+        if (!patchResource)
+            continue;
+
+        auto patchMap = std::bit_cast<Red::HashMap<uint64_t, Red::gameCookedDeviceData>*>(&patchResource->data->unk30);
+
+        patchMap->ForEach([&deviceMap](const uint64_t& aKey, const Red::gameCookedDeviceData& aData)
+                          {
+                              deviceMap->InsertOrAssign(aKey, aData);
+                          });
     }
 }
 

@@ -65,6 +65,9 @@
 #include <RED4ext/Scripting/Natives/Generated/ent/dismemberment/WoundResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/AppearanceNameVisualTagsPreset.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/AttachmentSlots.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/CookedDeviceData.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/DeviceResource.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/DeviceResourceData.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/HitShapeUserData.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/IGameSystem.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/IHitShape.hpp>
