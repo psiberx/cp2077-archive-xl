@@ -68,6 +68,18 @@ std::string App::ResourcePathRegistry::ResolvePath(Red::ResourcePath aPath)
     return it.value();
 }
 
+std::string App::ResourcePathRegistry::ResolvePathOrHash(Red::ResourcePath aPath)
+{
+    auto str = ResolvePath(aPath);
+
+    if (str.empty())
+    {
+        str = std::to_string(aPath.hash);
+    }
+
+    return str;
+}
+
 void App::ResourcePathRegistry::RegisterPath(Red::ResourcePath aPath, const std::string& aPathStr)
 {
     if (!aPath)

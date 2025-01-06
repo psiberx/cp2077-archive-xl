@@ -216,14 +216,17 @@ void App::ResourcePatchExtension::OnEntityTemplateLoad(Red::EntityTemplate* aTem
     if (patchList.empty())
         return;
 
+    auto depot = Red::ResourceDepot::Get();
+    auto pathRegistry = ResourcePathRegistry::Get();
+
     for (const auto& patchPath : patchList)
     {
-        auto patchTemplate = GetPatchResource<Red::EntityTemplate>(patchPath);
+        auto patchResource = GetPatchResource<Red::EntityTemplate>(patchPath);
 
-        if (!patchTemplate)
+        if (!patchResource)
             continue;
 
-        for (const auto& patchAppearance : patchTemplate->appearances)
+        for (const auto& patchAppearance : patchResource->appearances)
         {
             auto isNewAppearance = true;
 
@@ -243,19 +246,36 @@ void App::ResourcePatchExtension::OnEntityTemplateLoad(Red::EntityTemplate* aTem
             }
         }
 
-        for (const auto& dependency : patchTemplate->resolvedDependencies)
+        for (const auto& dependency : patchResource->resolvedDependencies)
         {
-            aTemplate->resolvedDependencies.PushBack(dependency);
+            if (!depot->ResourceExists(dependency.path))
+            {
+                LogError(R"(|{}| Patch resource "{}" refers to non-existent resource "{}".)",
+                         ExtensionName, s_paths[patchResource->path],
+                         pathRegistry->ResolvePathOrHash(dependency.path));
+                continue;
+            }
+
+            auto isNewDependency =
+                std::none_of(aTemplate->resolvedDependencies.begin(), aTemplate->resolvedDependencies.end(),
+                             [&dependency](const Red::RaRef<Red::CResource>& aDependency) {
+                                 return aDependency.path == dependency.path;
+                             });
+
+            if (isNewDependency)
+            {
+                aTemplate->resolvedDependencies.PushBack(dependency);
+            }
         }
 
-        if (patchTemplate->visualTagsSchema)
+        if (patchResource->visualTagsSchema)
         {
             if (!aTemplate->visualTagsSchema)
             {
                 aTemplate->visualTagsSchema = {};
             }
 
-            aTemplate->visualTagsSchema->visualTags.Add(patchTemplate->visualTagsSchema->visualTags);
+            aTemplate->visualTagsSchema->visualTags.Add(patchResource->visualTagsSchema->visualTags);
         }
     }
 }
@@ -266,6 +286,9 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
 
     if (patchList.empty())
         return;
+
+    auto depot = Red::ResourceDepot::Get();
+    auto pathRegistry = ResourcePathRegistry::Get();
 
     Core::Set<Red::CName> newAppearances;
 
@@ -282,44 +305,79 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
 
             for (auto& existingDefinition : aResource->appearances)
             {
-                if (existingDefinition->name == patchDefinition->name)
+                if (existingDefinition->name != patchDefinition->name)
+                    continue;
+
+                if (!newAppearances.contains(patchDefinition->name))
                 {
-                    if (!newAppearances.contains(patchDefinition->name))
                     {
+                        std::unique_lock _(s_definitionLock);
+                        if (!s_definitions[patchPath].contains(patchDefinition->name))
                         {
-                            std::unique_lock _(s_definitionLock);
-                            if (!s_definitions[patchPath].contains(patchDefinition->name))
-                            {
-                                auto patchBufferToken = patchDefinition->compiledData.LoadAsync();
-                                s_definitions[patchPath][patchDefinition->name] = {patchDefinition, patchBufferToken};
-                            }
+                            auto patchBufferToken = patchDefinition->compiledData.LoadAsync();
+                            s_definitions[patchPath][patchDefinition->name] = {patchDefinition, patchBufferToken};
+                        }
+                    }
+
+                    for (const auto& partValue : patchDefinition->partsValues)
+                    {
+                        if (!depot->ResourceExists(partValue.resource.path))
+                        {
+                            LogError(R"(|{}| Patch resource "{}" refers to non-existent resource "{}".)",
+                                     ExtensionName, s_paths[patchResource->path],
+                                     pathRegistry->ResolvePathOrHash(partValue.resource.path));
+                            continue;
                         }
 
-                        for (const auto& partValue : patchDefinition->partsValues)
+                        auto isNewPart =
+                            std::none_of(existingDefinition->partsValues.begin(), existingDefinition->partsValues.end(),
+                                         [&partValue](const Red::appearanceAppearancePart& aExistingPart) {
+                                             return aExistingPart.resource.path == partValue.resource.path;
+                                         });
+
+                        if (isNewPart)
                         {
                             existingDefinition->partsValues.PushBack(partValue);
                         }
+                    }
 
-                        for (const auto& partOverride : patchDefinition->partsOverrides)
+                    for (const auto& partOverride : patchDefinition->partsOverrides)
+                    {
+                        existingDefinition->partsOverrides.PushBack(partOverride);
+                    }
+
+                    for (const auto& dependency : patchDefinition->resolvedDependencies)
+                    {
+                        if (!depot->ResourceExists(dependency.path))
                         {
-                            existingDefinition->partsOverrides.PushBack(partOverride);
+                            LogError(R"(|{}| Patch resource "{}" refers to non-existent resource "{}".)",
+                                     ExtensionName, s_paths[patchResource->path],
+                                     pathRegistry->ResolvePathOrHash(dependency.path));
+                            continue;
                         }
 
-                        for (const auto& dependency : patchDefinition->resolvedDependencies)
+                        auto isNewDependency =
+                            std::none_of(existingDefinition->resolvedDependencies.begin(),
+                                         existingDefinition->resolvedDependencies.end(),
+                                         [&dependency](const Red::RaRef<Red::CResource>& aDependency) {
+                                             return aDependency.path == dependency.path;
+                                         });
+
+                        if (isNewDependency)
                         {
                             existingDefinition->resolvedDependencies.PushBack(dependency);
                         }
-
-                        existingDefinition->visualTags.Add(patchDefinition->visualTags);
-                    }
-                    else
-                    {
-                        existingDefinition = patchDefinition;
                     }
 
-                    isNewAppearance = false;
-                    break;
+                    existingDefinition->visualTags.Add(patchDefinition->visualTags);
                 }
+                else
+                {
+                    existingDefinition = patchDefinition;
+                }
+
+                isNewAppearance = false;
+                break;
             }
 
             if (isNewAppearance)
