@@ -37,6 +37,8 @@ private:
     static void OnGarmentPackageExtract(Red::GarmentExtractionParams* aParams, const Red::JobGroup& aJobGroup);
     static void OnCurveSetResourceLoad(Red::CurveSet* aResource);
     static void OnDeviceResourceLoad(Red::gameDeviceResource* aResource);
+    static void OnSetPersistentStateData(Red::gamePersistencySystem* aSystem, Red::DataBuffer& aData, uint64_t a3,
+                                         uint32_t a4);
 
     static void IncludeAppearanceParts(const Red::Handle<Red::AppearanceResource>& aResource,
                                        const Red::Handle<Red::AppearanceDefinition>& aDefinition,

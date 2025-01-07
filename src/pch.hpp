@@ -79,7 +79,9 @@
 #include <RED4ext/Scripting/Natives/Generated/game/JournalRootFolderEntry.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/JournalTree.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/MappinResource.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/PersistencySystem.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/PersistentState.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/PersistentStateDataResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/PhotoModeAttachmentSlotsListener.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/PhotoModeSystem.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/PointOfInterestMappinResource.hpp>
@@ -137,6 +139,7 @@
 #include <RED4ext/Scripting/Natives/Generated/world/GlobalNodeID.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/Node.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/RuntimeSystemEntityAppearanceChanger.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/RuntimeSystemWorldStreaming.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/StreamingBlock.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/StreamingSector.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/StreamingWorld.hpp>

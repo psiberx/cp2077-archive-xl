@@ -6,7 +6,9 @@
 #include "Red/EntityBuilder.hpp"
 #include "Red/Mesh.hpp"
 #include "Red/MorphTarget.hpp"
+#include "Red/PersistencySystem.hpp"
 #include "Red/ResourceDepot.hpp"
+#include "Red/StreamingWorld.hpp"
 
 namespace
 {
@@ -32,6 +34,7 @@ bool App::ResourcePatchExtension::Load()
     HookBefore<Raw::EntityBuilder::ScheduleExtractComponentsJob>(&OnEntityPackageLoad).OrThrow();
     HookAfter<Raw::AppearanceDefinition::ExtractPartComponents>(&OnPartPackageExtract).OrThrow();
     HookAfter<Raw::GarmentAssembler::ExtractComponentsJob>(&OnGarmentPackageExtract).OrThrow();
+    HookAfter<Raw::PersistencySystem::SetPersistentStateData>(&OnSetPersistentStateData).OrThrow();
 
     return true;
 }
@@ -48,6 +51,7 @@ bool App::ResourcePatchExtension::Unload()
     Unhook<Raw::EntityBuilder::ScheduleExtractComponentsJob>();
     Unhook<Raw::AppearanceDefinition::ExtractPartComponents>();
     Unhook<Raw::GarmentAssembler::ExtractComponentsJob>();
+    Unhook<Raw::PersistencySystem::SetPersistentStateData>();
 
     return true;
 }
@@ -760,6 +764,28 @@ void App::ResourcePatchExtension::OnDeviceResourceLoad(Red::gameDeviceResource* 
                           {
                               deviceMap->InsertOrAssign(aKey, aData);
                           });
+    }
+}
+
+void App::ResourcePatchExtension::OnSetPersistentStateData(Red::gamePersistencySystem* aSystem, Red::DataBuffer& aData,
+                                                           uint64_t a3, uint32_t a4)
+{
+    auto streamingSystem = Red::GetRuntimeSystem<Red::worldRuntimeSystemWorldStreaming>();
+    auto& streamingWorld = Raw::RuntimeSystemWorldStreaming::StreamingWorld::Ref(streamingSystem);
+
+    const auto& patchList = GetPatchList(streamingWorld->persistentStateData.path);
+
+    if (patchList.empty())
+        return;
+
+    for (const auto& patchPath : patchList)
+    {
+        auto patchResource = GetPatchResource<Red::gamePersistentStateDataResource>(patchPath);
+
+        if (!patchResource)
+            continue;
+
+        Raw::PersistencySystem::SetPersistentStateData(aSystem, patchResource->buffer, a3, a4);
     }
 }
 

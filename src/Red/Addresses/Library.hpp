@@ -150,6 +150,8 @@ constexpr uint32_t MorphTargetMesh_PostLoad = 1523127443;
 
 constexpr uint32_t MorphTargetManager_ApplyMorphTarget = 633871992;
 
+constexpr uint32_t PersistencySystem_SetPersistentStateData = 546121377;
+
 constexpr uint32_t PhotoModeMenuController_SetupGridSelector = 3755427483;
 constexpr uint32_t PhotoModeMenuController_SetNpcImageCallback = 3051761678;
 
