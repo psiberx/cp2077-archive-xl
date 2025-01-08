@@ -37,8 +37,7 @@ private:
     static void OnGarmentPackageExtract(Red::GarmentExtractionParams* aParams, const Red::JobGroup& aJobGroup);
     static void OnCurveSetResourceLoad(Red::CurveSet* aResource);
     static void OnDeviceResourceLoad(Red::gameDeviceResource* aResource);
-    static void OnSetPersistentStateData(Red::gamePersistencySystem* aSystem, Red::DataBuffer& aData, uint64_t a3,
-                                         uint32_t a4);
+    static void OnSetPersistentStateData(uint64_t a1, Red::DataBuffer& aData, uint64_t a3, uint32_t a4);
 
     static void IncludeAppearanceParts(const Red::Handle<Red::AppearanceResource>& aResource,
                                        const Red::Handle<Red::AppearanceDefinition>& aDefinition,
@@ -74,8 +73,9 @@ private:
     inline static Red::Handle<Red::rendRenderMorphTargetMeshBlob> CopyRenderBlob(
         const Red::Handle<Red::rendRenderMorphTargetMeshBlob>& aSourceBlob);
 
-    static bool IsPatchResource(Red::ResourcePath aPath);
     static const Core::Set<Red::ResourcePath>& GetPatchList(Red::ResourcePath aTargetPath);
+    static void LoadPatchResource(Red::ResourcePath aPatchPath);
+    static bool IsPatchResource(Red::ResourcePath aPath);
     template<typename T = Red::CResource>
     static Red::Handle<T> GetPatchResource(Red::ResourcePath aPatchPath);
     template<typename T = Red::CResource>

@@ -157,22 +157,12 @@ void App::ResourcePatchExtension::OnResourceRequest(Red::ResourceDepot*, const u
 {
     const auto& patchList = GetPatchList(aPath);
 
-    if (!patchList.empty())
-    {
-        std::unique_lock _(s_tokenLock);
-        for (const auto& patchPath : patchList)
-        {
-            if (!s_tokens.contains(patchPath))
-            {
-                // Red::ResourceRequest patchRequest;
-                // patchRequest.path = patchPath;
-                // patchRequest.disablePreInitialization = true;
-                // patchRequest.disablePostLoad = true;
-                // s_tokens[patchPath] = Red::ResourceLoader::Get()->LoadAsync(patchRequest);
+    if (patchList.empty())
+        return;
 
-                s_tokens[patchPath] = Red::ResourceLoader::Get()->LoadAsync(patchPath);
-            }
-        }
+    for (const auto& patchPath : patchList)
+    {
+        LoadPatchResource(patchPath);
     }
 }
 
@@ -186,15 +176,12 @@ void App::ResourcePatchExtension::OnResourceDeserialize(void* aSerializer, uint6
     if (patchList.empty())
         return;
 
+    for (const auto& patchPath : patchList)
     {
-        std::shared_lock _(s_tokenLock);
-        for (const auto& patchPath : patchList)
+        auto patchToken = GetPatchToken(patchPath);
+        if (patchToken)
         {
-            auto patchToken = GetPatchToken(patchPath);
-            if (patchToken)
-            {
-                aJob.Join(patchToken->job);
-            }
+            aJob.Join(patchToken->job);
         }
     }
 }
@@ -767,8 +754,8 @@ void App::ResourcePatchExtension::OnDeviceResourceLoad(Red::gameDeviceResource* 
     }
 }
 
-void App::ResourcePatchExtension::OnSetPersistentStateData(Red::gamePersistencySystem* aSystem, Red::DataBuffer& aData,
-                                                           uint64_t a3, uint32_t a4)
+void App::ResourcePatchExtension::OnSetPersistentStateData(uint64_t a1, Red::DataBuffer& aData, uint64_t a3,
+                                                           uint32_t a4)
 {
     auto streamingSystem = Red::GetRuntimeSystem<Red::worldRuntimeSystemWorldStreaming>();
     auto& streamingWorld = Raw::RuntimeSystemWorldStreaming::StreamingWorld::Ref(streamingSystem);
@@ -785,7 +772,7 @@ void App::ResourcePatchExtension::OnSetPersistentStateData(Red::gamePersistencyS
         if (!patchResource)
             continue;
 
-        Raw::PersistencySystem::SetPersistentStateData(aSystem, patchResource->buffer, a3, a4);
+        Raw::PersistencySystem::SetPersistentStateData(a1, patchResource->buffer, a3, a4);
     }
 }
 
@@ -1044,12 +1031,6 @@ Red::Handle<Red::rendRenderMorphTargetMeshBlob> App::ResourcePatchExtension::Cop
     return cloneBlob;
 }
 
-bool App::ResourcePatchExtension::IsPatchResource(Red::ResourcePath aPath)
-{
-    std::shared_lock _(s_tokenLock);
-    return s_tokens.contains(aPath);
-}
-
 const Core::Set<Red::ResourcePath>& App::ResourcePatchExtension::GetPatchList(Red::ResourcePath aTargetPath)
 {
     static const Core::Set<Red::ResourcePath> s_null;
@@ -1062,10 +1043,34 @@ const Core::Set<Red::ResourcePath>& App::ResourcePatchExtension::GetPatchList(Re
     return patchIt.value();
 }
 
+void App::ResourcePatchExtension::LoadPatchResource(Red::ResourcePath aPatchPath)
+{
+    std::unique_lock _(s_tokenLock);
+
+    if (s_tokens.contains(aPatchPath))
+        return;
+
+    // Red::ResourceRequest patchRequest;
+    // patchRequest.path = aPatchPath;
+    // patchRequest.disablePreInitialization = true;
+    // patchRequest.disablePostLoad = true;
+    // s_tokens[aPatchPath] = Red::ResourceLoader::Get()->LoadAsync(patchRequest);
+
+    s_tokens[aPatchPath] = Red::ResourceLoader::Get()->LoadAsync(aPatchPath);
+}
+
+bool App::ResourcePatchExtension::IsPatchResource(Red::ResourcePath aPath)
+{
+    std::shared_lock _(s_tokenLock);
+
+    return s_tokens.contains(aPath);
+}
+
 template<typename T>
 Red::SharedPtr<Red::ResourceToken<T>> App::ResourcePatchExtension::GetPatchToken(Red::ResourcePath aPatchPath)
 {
     std::shared_lock _(s_tokenLock);
+
     auto& token = s_tokens[aPatchPath];
 
     if constexpr (!std::is_same_v<T, Red::CResource>)
