@@ -474,22 +474,34 @@ Red::Handle<Red::CMaterialInstance> App::MeshExtension::CloneMaterialInstance(
     }
     else if (materialInstance->baseMaterial.path && !materialInstance->baseMaterial.token)
     {
-        auto templateToken = Red::ResourceLoader::Get()->LoadAsync<Red::CMaterialInstance>(materialInstance->baseMaterial.path);
+        auto templateToken = Red::ResourceLoader::Get()->LoadAsync<Red::IMaterial>(materialInstance->baseMaterial.path);
 
         aJobQueue.Wait(templateToken->job);
         aJobQueue.Dispatch([materialInstance, templateToken, aMeshState, aMaterialName](const Red::JobGroup& aJobGroup) {
             if (!templateToken->IsLoaded())
+            {
+                auto pathRegistry = ResourcePathRegistry::Get();
+                auto templatePathStr = pathRegistry->ResolvePathOrHash(templateToken->path);
+                LogError("|{}| Base material \"{}\" failed to load.", ExtensionName, templatePathStr);
                 return;
+            }
 
-            Red::JobQueue jobQueue(aJobGroup);
+            if (auto baseInstance = Red::Cast<Red::CMaterialInstance>(templateToken->resource))
+            {
+                Red::JobQueue jobQueue(aJobGroup);
 
-            auto cloneToken = Red::MakeShared<Red::ResourceToken<Red::IMaterial>>();
-            cloneToken->self = cloneToken;
-            cloneToken->resource = CloneMaterialInstance(templateToken->resource, aMeshState, aMaterialName, jobQueue);
-            cloneToken->path = templateToken->path;
-            cloneToken->finished = 1;
+                auto cloneToken = Red::MakeShared<Red::ResourceToken<Red::IMaterial>>();
+                cloneToken->self = cloneToken;
+                cloneToken->resource = CloneMaterialInstance(baseInstance, aMeshState, aMaterialName, jobQueue);
+                cloneToken->path = templateToken->path;
+                cloneToken->finished = 1;
 
-            materialInstance->baseMaterial.token = std::move(cloneToken);
+                materialInstance->baseMaterial.token = std::move(cloneToken);
+            }
+            else
+            {
+                materialInstance->baseMaterial.token = templateToken;
+            }
         });
     }
 
