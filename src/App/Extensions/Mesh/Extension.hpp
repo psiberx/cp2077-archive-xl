@@ -62,45 +62,54 @@ private:
         Core::Map<Red::CName, Red::WeakHandle<Red::CMesh>> sources;
     };
 
-    struct DeferredMaterial
+    struct ChunkData
     {
-        int32_t chunkIndex;
-        Red::CName chunkName;
-        Red::CName materialName;
-        Red::CName templateName;
-        int32_t sourceIndex;
-        Red::SharedPtr<Red::ResourceToken<Red::IMaterial>> sourceToken;
+        Red::CName chunkName{};
+        Red::CName materialName{};
+        Red::CName templateName{};
+        int32_t sourceIndex{-1};
+        Red::SharedPtr<Red::ResourceToken<Red::IMaterial>> sourceToken{};
+        Red::Handle<Red::CMaterialInstance> sourceInstance{};
+        bool failed{false};
     };
 
-    static void OnFindAppearance(Red::Handle<Red::mesh::MeshAppearance>& aOut, Red::CMesh* aMesh, Red::CName aName);
+    struct DynamicContext
+    {
+        Core::SharedPtr<MeshState> targetState;
+        Core::SharedPtr<MeshState> sourceState;
+        Red::Handle<Red::CMesh> targetMesh;
+        Red::Handle<Red::CMesh> sourceMesh;
+        Red::DynArray<Red::CName> materialNames;
+        Red::SharedPtr<Red::DynArray<Red::Handle<Red::IMaterial>>> finalMaterials;
+        Core::Vector<Core::SharedPtr<ChunkData>> deferredMaterials{};
+    };
+
+    static void OnFindAppearance(Red::Handle<Red::mesh::MeshAppearance>& aAppearance, Red::CMesh* aMesh, Red::CName aName);
     static void* OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMaterialsToken& aToken,
                                  const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4);
     static void OnAddStubAppearance(Red::CMesh* aMesh);
     static bool OnPreloadAppearances(Red::CMesh* aMesh);
 
-    static void ProcessDynamicMaterials(const Core::SharedPtr<MeshState>& aMeshState,
-                                    const Red::Handle<Red::CMesh>& aMeshWeak,
-                                    const Core::SharedPtr<MeshState>& aSourceState,
-                                    const Red::Handle<Red::CMesh>& aSourceMeshWeak,
-                                    const Red::DynArray<Red::CName>& aMaterialNames,
-                                    const Red::SharedPtr<Red::DynArray<Red::Handle<Red::IMaterial>>>& aFinalMaterials,
-                                    const Red::JobGroup& aJobGroup);
-    static bool ContainsUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials);
+    static void ProcessDynamicMaterials(const Core::SharedPtr<DynamicContext>& aContext,
+                                        const Red::JobGroup& aJobGroup);
+    static void FinalizeDynamicMaterial(const Core::SharedPtr<DynamicContext>& aContext,
+                                        const Core::SharedPtr<ChunkData>& aChunk,
+                                        Red::JobQueue& aJobQueue);
+    static void FixFinalMaterialsIndexes(const Core::SharedPtr<DynamicContext>& aContext);
     static Red::Handle<Red::CMaterialInstance> CloneMaterialInstance(
-        const Red::Handle<Red::CMaterialInstance>& aSourceInstance, const Core::SharedPtr<MeshState>& aMeshState,
-        Red::CName aMaterialName, Red::JobQueue& aJobQueue, bool aAppendExtraContextPatams = false);
-    static void ExpandMaterialInstanceInheritance(Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
-                                                  const Red::Handle<Red::CMaterialInstance>& aSourceInstance,
-                                                  const Core::SharedPtr<MeshState>& aMeshState,
-                                                  Red::CName aMaterialName, Red::JobQueue& aJobQueue);
-    static void ExpandMaterialInstanceParams(Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
-                                             const Core::SharedPtr<MeshState>& aMeshState, Red::CName aMaterialName,
+        const Core::SharedPtr<DynamicContext>& aContext, const Core::SharedPtr<ChunkData>& aChunk,
+        const Red::Handle<Red::CMaterialInstance>& aSourceInstance, Red::JobQueue& aJobQueue);
+    static void ExpandMaterialInheritance(const Core::SharedPtr<DynamicContext>& aContext,
+                                                  const Core::SharedPtr<ChunkData>& aChunk,
+                                                  const Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
+                                                  Red::JobQueue& aJobQueue);
+    static void ExpandMaterialParams(const Core::SharedPtr<DynamicContext>& aContext,
+                                             const Core::SharedPtr<ChunkData>& aChunk,
+                                             const Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
                                              Red::JobQueue& aJobQueue);
-    template<typename T>
-    static bool ExpandResourceReference(Red::ResourceReference<T>& aRef, const Core::SharedPtr<MeshState>& aState,
-                                        Red::CName aMaterialName);
-    static Red::ResourcePath ExpandResourcePath(Red::ResourcePath aPath, const Core::SharedPtr<MeshState>& aState,
-                                                Red::CName aMaterialName);
+    static Red::ResourcePath ExpandResourcePath(Red::ResourcePath aPath, Red::CName aMaterialName,
+                                                const Core::SharedPtr<MeshState>& aState);
+    static bool ContainsUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials);
 
     static Core::SharedPtr<MeshState> AcquireMeshState(Red::CMesh* aMesh);
 

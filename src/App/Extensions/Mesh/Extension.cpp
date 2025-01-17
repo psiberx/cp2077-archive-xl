@@ -32,6 +32,7 @@ bool App::MeshExtension::Load()
     s_dummyMaterial = Red::MakeHandle<Red::CMaterialInstance>();
 
     Raw::MeshAppearance::Owner::Set(s_dummyAppearance.instance, s_dummyMesh.instance);
+    Red::CNamePool::Add("@material");
 
     s_resourcePathRegistry = Core::Resolve<ResourcePathRegistry>();
 
@@ -53,36 +54,36 @@ bool App::MeshExtension::Unload()
     return true;
 }
 
-void App::MeshExtension::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& aOut, Red::CMesh* aMesh,
+void App::MeshExtension::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& aAppearance, Red::CMesh* aMesh,
                                           Red::CName aName)
 {
-    if (!aOut)
+    if (!aAppearance)
         return;
 
-    if (!Raw::MeshAppearance::Owner::Ptr(aOut))
+    if (!Raw::MeshAppearance::Owner::Ptr(aAppearance))
     {
-        aOut = s_dummyAppearance;
+        aAppearance = s_dummyAppearance;
         return;
     }
 
-    if (!aOut->name || aMesh->appearances.size == 0)
+    if (!aAppearance->name || aMesh->appearances.size == 0)
         return;
 
-    if (aOut->chunkMaterials.size > 0 && aOut->tags.size == 0)
+    if (aAppearance->chunkMaterials.size > 0 && aAppearance->tags.size == 0)
         return;
 
     auto meshState = AcquireMeshState(aMesh);
 
     std::unique_lock _(meshState->meshMutex);
 
-    if (aOut->chunkMaterials.size == 0)
+    if (aAppearance->chunkMaterials.size == 0)
     {
         auto sourceIndex = meshState->GetExpansionSourceIndex(aMesh);
         auto sourceAppearance = aMesh->appearances[sourceIndex];
 
-        if (sourceAppearance && sourceAppearance != aOut)
+        if (sourceAppearance && sourceAppearance != aAppearance)
         {
-            const auto appearanceNameStr = std::string{aOut->name.ToString()};
+            const auto appearanceNameStr = std::string{aAppearance->name.ToString()};
             for (auto chunkMaterialName : sourceAppearance->chunkMaterials)
             {
                 auto chunkMaterialNameStr = std::string_view{chunkMaterialName.ToString()};
@@ -99,18 +100,30 @@ void App::MeshExtension::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& 
                 }
                 else if (chunkMaterialName == sourceAppearance->name)
                 {
-                    chunkMaterialName = aOut->name;
+                    chunkMaterialName = aAppearance->name;
                 }
 
-                aOut->chunkMaterials.PushBack(chunkMaterialName);
+                aAppearance->chunkMaterials.PushBack(chunkMaterialName);
             }
+
+            auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aMesh->path);
+
+            LogInfo(R"([{}] Appearance "{}" of "{}" has been expanded using "{}".)",
+                    ExtensionName, aAppearance->name.ToString(), meshPathStr, sourceAppearance->name.ToString());
+        }
+        else if (aAppearance->name != DefaultAppearanceName)
+        {
+            auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aMesh->path);
+
+            LogWarning(R"([{}] Appearance "{}" of "{}" has no chunk materials and cannot be expanded.)",
+                       ExtensionName, aAppearance->name.ToString(), meshPathStr);
         }
     }
 
-    if (aOut->chunkMaterials.size > 0 && aOut->tags.size == 1)
+    if (aAppearance->chunkMaterials.size > 0 && aAppearance->tags.size == 1)
     {
-        aOut->chunkMaterials.PushBack(aOut->tags[0]);
-        aOut->tags.Clear();
+        aAppearance->chunkMaterials.PushBack(aAppearance->tags[0]);
+        aAppearance->tags.Clear();
     }
 }
 
@@ -209,8 +222,9 @@ void* App::MeshExtension::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMate
             auto sourceMesh = sourceMeshWeak.Lock();
             if (targetMesh && sourceMesh)
             {
-                ProcessDynamicMaterials(targetMeshState, targetMesh, sourceMeshState, sourceMesh, materialNames,
-                                        finalMaterials, aJobGroup);
+                auto context = Core::MakeShared<DynamicContext>(targetMeshState, sourceMeshState, targetMesh,
+                                                                sourceMesh, materialNames, finalMaterials);
+                ProcessDynamicMaterials(context, aJobGroup);
             }
         });
 
@@ -222,45 +236,60 @@ void* App::MeshExtension::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMate
     return &aToken;
 }
 
-void App::MeshExtension::ProcessDynamicMaterials(
-    const Core::SharedPtr<MeshState>& aMeshState, const Red::Handle<Red::CMesh>& aMesh,
-    const Core::SharedPtr<MeshState>& aSourceState, const Red::Handle<Red::CMesh>& aSourceMesh,
-    const Red::DynArray<Red::CName>& aMaterialNames,
-    const Red::SharedPtr<Red::DynArray<Red::Handle<Red::IMaterial>>>& aFinalMaterials, const Red::JobGroup& aJobGroup)
+void App::MeshExtension::ProcessDynamicMaterials(const Core::SharedPtr<DynamicContext>& aContext,
+                                                 const Red::JobGroup& aJobGroup)
 {
     Red::JobQueue jobQueue(aJobGroup);
-    Core::Vector<DeferredMaterial> deferredMaterials(0);
 
-    std::scoped_lock _(aMeshState->meshMutex, aSourceState->sourceMutex);
+    std::scoped_lock _(aContext->targetState->meshMutex, aContext->sourceState->sourceMutex);
 
-    aMeshState->FillMaterials(aMesh);
+    aContext->targetState->FillMaterials(aContext->targetMesh);
 
-    if (aSourceState != aMeshState)
+    if (aContext->sourceState != aContext->targetState)
     {
-        aSourceState->FillMaterials(aSourceMesh);
+        aContext->sourceState->FillMaterials(aContext->sourceMesh);
     }
 
-    for (int32_t chunkIndex = 0; chunkIndex < aMaterialNames.size; ++chunkIndex)
+    for (int32_t chunkIndex = 0; chunkIndex < aContext->materialNames.size; ++chunkIndex)
     {
-        const auto& chunkName = aMaterialNames[chunkIndex];
+        const auto& chunkName = aContext->materialNames[chunkIndex];
 
-        if (aMeshState->HasMaterialEntry(chunkName))
+        if (aContext->targetState->HasMaterialEntry(chunkName))
             continue;
 
-        if (chunkName.hash == aSourceMesh->path.hash)
+        if (chunkName.hash == aContext->sourceMesh->path.hash)
         {
-            auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aMesh->path);
-            auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aSourceMesh->path);
-            LogError(R"([{}] Mesh "{}" is not registered as a source for "{}".)",
-                     ExtensionName, meshPathStr, sourcePathStr);
+            const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
+            const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
+
+            LogError(R"([{}] Unexpected behavior, mesh "{}" is not registered as a source for "{}".)",
+                     ExtensionName, sourcePathStr, meshPathStr);
             continue;
         }
 
-        auto materialName = chunkName;
-        auto templateName = chunkName;
-        auto sourceIndex = aSourceState->GetMaterialEntryIndex(chunkName);
+        // if (aContext->sourceState == aContext->targetState)
+        // {
+        //     const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
+        //
+        //     LogInfo(R"([{}] Resolving material "{}" for "{}"...)",
+        //             ExtensionName, chunkName.ToString(), meshPathStr);
+        // }
+        // else
+        // {
+        //     const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
+        //     const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
+        //
+        //     LogInfo(R"([{}] Resolving material "{}" for "{}" using source "{}"...)",
+        //             ExtensionName, chunkName.ToString(), meshPathStr, sourcePathStr);
+        // }
 
-        if (sourceIndex < 0)
+        auto chunk = Core::MakeShared<ChunkData>();
+        chunk->chunkName = chunkName;
+        chunk->materialName = chunkName;
+        chunk->templateName = chunkName;
+        chunk->sourceIndex = aContext->sourceState->GetMaterialEntryIndex(chunkName);
+
+        if (chunk->sourceIndex < 0)
         {
             auto chunkMaterialNameStr = std::string_view(chunkName.ToString());
             auto templateNamePos = chunkMaterialNameStr.find(SpecialMaterialMarker);
@@ -270,181 +299,229 @@ void App::MeshExtension::ProcessDynamicMaterials(
                                             chunkMaterialNameStr.size() - templateNamePos};
                 std::string materialNameStr{chunkMaterialNameStr.data(), templateNamePos};
 
-                templateName = Red::CNamePool::Add(templateNameStr.data());
-                materialName = Red::CNamePool::Add(materialNameStr.data());
+                chunk->templateName = Red::CNamePool::Add(templateNameStr.data());
+                chunk->materialName = Red::CNamePool::Add(materialNameStr.data());
             }
             else
             {
-                templateName = DefaultTemplateName;
+                chunk->templateName = DefaultTemplateName;
             }
 
-            sourceIndex = aSourceState->GetTemplateEntryIndex(templateName);
+            chunk->sourceIndex = aContext->sourceState->GetTemplateEntryIndex(chunk->templateName);
 
-            if (sourceIndex < 0)
+            if (chunk->sourceIndex < 0)
             {
-                LogError(R"([{}] Material for entry "{}" cannot be resoled.)", ExtensionName, chunkName.ToString());
+                const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
+
+                LogError(R"([{}] Material "{}" of "{}" is not defined and cannot be dynamically instantiated,"
+                         " material template "{}" doesn't exist.)",
+                         ExtensionName, chunkName.ToString(), sourcePathStr, chunk->templateName.ToString());
                 continue;
             }
         }
 
-        auto& sourceEntry = aSourceMesh->materialEntries[sourceIndex];
-        auto sourceInstance = Red::Cast<Red::CMaterialInstance>(sourceEntry.materialWeak.Lock());
+        auto& sourceEntry = aContext->sourceMesh->materialEntries[chunk->sourceIndex];
 
-        if (!sourceInstance)
+        chunk->sourceInstance = Red::Cast<Red::CMaterialInstance>(sourceEntry.materialWeak.Lock());
+
+        if (!chunk->sourceInstance)
         {
-            Red::SharedPtr<Red::ResourceToken<Red::IMaterial>> token;
-
             if (sourceEntry.isLocalInstance)
             {
-                Raw::MeshMaterialBuffer::LoadMaterialAsync(&aSourceMesh->localMaterialBuffer, token,
-                                                           aSourceMesh, sourceEntry.index, 0, 0);
-                if (!token)
+                Raw::MeshMaterialBuffer::LoadMaterialAsync(&aContext->sourceMesh->localMaterialBuffer,
+                                                           chunk->sourceToken, aContext->sourceMesh,
+                                                           sourceEntry.index, 0, 0);
+
+                if (!chunk->sourceToken || chunk->sourceToken->IsFailed())
                 {
-                    LogError("[{}] Material \"{}\" instance not found.", ExtensionName, templateName.ToString());
+                    const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
+
+                    LogError(R"([{}] Source material "{}" of "{}" failed to load: not found in buffer.)",
+                             ExtensionName, chunk->templateName.ToString(), sourcePathStr);
                     continue;
                 }
             }
             else
             {
-                auto& externalPath = aSourceMesh->externalMaterials[sourceEntry.index].path;
-                auto materialPath = ExpandResourcePath(externalPath, aMeshState, materialName);
+                auto externalPath = aContext->sourceMesh->externalMaterials[sourceEntry.index].path;
+                auto materialPath = ExpandResourcePath(externalPath, chunk->materialName, aContext->targetState);
 
                 if (!materialPath)
                 {
-                    //LogError("[{}] Material \"{}\" path cannot be resolved.", ExtensionName, templateName.ToString());
+                    const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
+                    const auto externalPathStr = s_resourcePathRegistry->ResolvePathOrHash(externalPath);
+
+                    LogError(R"([{}] Source material "{}" of "{}" failed to load: unresolvable external path "{}".)",
+                             ExtensionName, chunk->templateName.ToString(), sourcePathStr, externalPathStr);
                     continue;
                 }
 
-                token = Red::ResourceLoader::Get()->LoadAsync<Red::IMaterial>(materialPath);
+                chunk->sourceToken = Red::ResourceLoader::Get()->LoadAsync<Red::IMaterial>(materialPath);
+
+                if (!chunk->sourceToken || chunk->sourceToken->IsFailed())
+                {
+                    const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
+                    const auto externalPathStr = s_resourcePathRegistry->ResolvePathOrHash(materialPath);
+
+                    LogError(R"([{}] Source material "{}" of "{}" failed to load: invalid external path "{}".)",
+                             ExtensionName, chunk->templateName.ToString(), sourcePathStr, externalPathStr);
+                    continue;
+                }
             }
 
-            if (token->IsFailed())
+            if (!chunk->sourceToken->IsLoaded())
             {
-                LogError("[{}] Material \"{}\" instance failed to load.", ExtensionName, templateName.ToString());
+                aContext->deferredMaterials.push_back(chunk);
                 continue;
             }
 
-            if (!token->IsLoaded())
+            chunk->sourceInstance = Red::Cast<Red::CMaterialInstance>(chunk->sourceToken->resource);
+
+            if (!chunk->sourceInstance)
             {
-                deferredMaterials.push_back({chunkIndex, chunkName, materialName, templateName, sourceIndex, token});
+                const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
+
+                LogError(R"([{}] Source material "{}" of "{}" must be instance of {}, got {}.)", ExtensionName,
+                         chunk->templateName.ToString(), sourcePathStr, Red::CMaterialInstance::NAME,
+                         chunk->sourceToken->resource->GetType()->name.ToString());
                 continue;
             }
 
-            sourceInstance = Red::Cast<Red::CMaterialInstance>(token->resource);
-
-            if (!sourceInstance)
-            {
-                LogError("[{}] Material \"{}\" must be instance of {}.",
-                         ExtensionName, templateName.ToString(), Red::CMaterialInstance::NAME);
-                continue;
-            }
-
-            sourceEntry.material = sourceInstance;
-            sourceEntry.materialWeak = sourceInstance;
+            sourceEntry.material = chunk->sourceInstance;
+            sourceEntry.materialWeak = chunk->sourceInstance;
         }
 
-        aMeshState->materials[chunkName] = static_cast<int32_t>(aMesh->materialEntries.size);
-        aMesh->materialEntries.EmplaceBack();
-
-        auto materialInstance = materialName != templateName
-            ? CloneMaterialInstance(sourceInstance, aMeshState, materialName, jobQueue, true)
-            : sourceInstance;
-
-        auto& materialEntry = aMesh->materialEntries.Back();
-        materialEntry.name = chunkName;
-        materialEntry.material = materialInstance;
-        materialEntry.materialWeak = materialInstance;
-        materialEntry.isLocalInstance = true;
+        FinalizeDynamicMaterial(aContext, chunk, jobQueue);
     }
 
-    if (deferredMaterials.empty())
+    if (aContext->deferredMaterials.empty())
     {
-        for (int32_t chunkIndex = 0; chunkIndex < aMaterialNames.size; ++chunkIndex)
-        {
-            const auto& chunkName = aMaterialNames[chunkIndex];
-            auto materialIndex = aMeshState->GetMaterialEntryIndex(chunkName);
-            if (materialIndex >= 0)
-            {
-                (*aFinalMaterials)[chunkIndex] = aMesh->materialEntries[materialIndex].materialWeak;
-            }
-            else
-            {
-                (*aFinalMaterials)[chunkIndex] = {};
-            }
-        }
+        FixFinalMaterialsIndexes(aContext);
         return;
     }
 
-    for (auto& deferred : deferredMaterials)
+    for (auto& chunk : aContext->deferredMaterials)
     {
-        jobQueue.Wait(deferred.sourceToken->job);
+        jobQueue.Wait(chunk->sourceToken->job);
     }
 
-    jobQueue.Dispatch([aMesh, aMeshState, aSourceMesh, aSourceState, aMaterialNames, aFinalMaterials,
-                       deferredMaterials = std::move(deferredMaterials)](const Red::JobGroup& aJobGroup) {
-        std::scoped_lock _(aMeshState->meshMutex, aSourceState->sourceMutex);
+    jobQueue.Dispatch([aContext](const Red::JobGroup& aJobGroup) {
+        std::scoped_lock _(aContext->targetState->meshMutex, aContext->sourceState->sourceMutex);
 
         Red::JobQueue jobQueue(aJobGroup);
 
-        for (auto& deferred : deferredMaterials)
+        for (auto& chunk : aContext->deferredMaterials)
         {
-            if (deferred.sourceToken->IsFailed())
+            if (chunk->sourceToken->IsFailed())
             {
-                LogError("[{}] Material \"{}\" instance failed to load.", ExtensionName, deferred.templateName.ToString());
+                const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
+
+                if (chunk->sourceToken->path)
+                {
+                    const auto externalPathStr = s_resourcePathRegistry->ResolvePathOrHash(chunk->sourceToken->path);
+
+                    LogError(R"([{}] Source material "{}" of "{}" failed to load: invalid external path "{}".)",
+                             ExtensionName, chunk->templateName.ToString(), sourcePathStr, externalPathStr);
+                }
+                else
+                {
+                    LogError(R"([{}] Source material "{}" of "{}" failed to load: cannot read from buffer.)",
+                             ExtensionName, chunk->templateName.ToString(), sourcePathStr);
+                }
                 continue;
             }
 
-            auto sourceInstance = Red::Cast<Red::CMaterialInstance>(deferred.sourceToken->resource);
+            chunk->sourceInstance = Red::Cast<Red::CMaterialInstance>(chunk->sourceToken->resource);
 
-            if (!sourceInstance)
+            if (!chunk->sourceInstance)
             {
-                LogError("[{}] Material \"{}\" must be instance of {}.",
-                         ExtensionName, deferred.templateName.ToString(), Red::CMaterialInstance::NAME);
+                const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
+
+                LogError(R"([{}] Source material "{}" of "{}" must be instance of {}, got {}.)", ExtensionName,
+                         chunk->templateName.ToString(), sourcePathStr, Red::CMaterialInstance::NAME,
+                         chunk->sourceToken->resource->GetType()->name.ToString());
                 continue;
             }
 
-            auto& sourceEntry = aSourceMesh->materialEntries[deferred.sourceIndex];
-            sourceEntry.material = sourceInstance;
-            sourceEntry.materialWeak = sourceInstance;
+            auto& sourceEntry = aContext->sourceMesh->materialEntries[chunk->sourceIndex];
+            sourceEntry.material = chunk->sourceInstance;
+            sourceEntry.materialWeak = chunk->sourceInstance;
 
-            aMeshState->materials[deferred.chunkName] = static_cast<int32_t>(aMesh->materialEntries.size);
-            aMesh->materialEntries.EmplaceBack();
-
-            auto materialInstance = deferred.materialName != deferred.templateName
-                ? CloneMaterialInstance(sourceInstance, aMeshState, deferred.materialName, jobQueue, true)
-                : sourceInstance;
-
-            auto& materialEntry = aMesh->materialEntries.Back();
-            materialEntry.name = deferred.chunkName;
-            materialEntry.material = materialInstance;
-            materialEntry.materialWeak = materialInstance;
-            materialEntry.isLocalInstance = true;
+            FinalizeDynamicMaterial(aContext, chunk, jobQueue);
         }
 
-        for (int32_t chunkIndex = 0; chunkIndex < aMaterialNames.size; ++chunkIndex)
-        {
-            const auto& chunkName = aMaterialNames[chunkIndex];
-            auto materialIndex = aMeshState->GetMaterialEntryIndex(chunkName);
-            if (materialIndex >= 0)
-            {
-                (*aFinalMaterials)[chunkIndex] = aMesh->materialEntries[materialIndex].materialWeak;
-            }
-            else
-            {
-                (*aFinalMaterials)[chunkIndex] = {};
-            }
-        }
+        FixFinalMaterialsIndexes(aContext);
     });
 }
 
-bool App::MeshExtension::ContainsUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials)
+void App::MeshExtension::FinalizeDynamicMaterial(const Core::SharedPtr<DynamicContext>& aContext,
+                                                 const Core::SharedPtr<ChunkData>& aChunk, Red::JobQueue& aJobQueue)
 {
-    return std::ranges::any_of(aMaterials, [](const auto& aMaterial) { return !aMaterial; });
+    auto materialIndex = static_cast<int32_t>(aContext->targetMesh->materialEntries.size);
+    aContext->targetState->materials[aChunk->chunkName] = materialIndex;
+    aContext->targetMesh->materialEntries.EmplaceBack();
+
+    auto& materialEntry = aContext->targetMesh->materialEntries.Back();
+    materialEntry.name = aChunk->chunkName;
+    materialEntry.isLocalInstance = true;
+
+    if (aChunk->materialName == aChunk->templateName)
+    {
+        materialEntry.material = aChunk->sourceInstance;
+        materialEntry.materialWeak = aChunk->sourceInstance;
+
+        if (aContext->sourceState == aContext->targetState)
+        {
+            const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
+
+            LogInfo(R"([{}] Material "{}" of "{}" has been successfully instantiated.)",
+                    ExtensionName, aChunk->chunkName.ToString(), meshPathStr);
+        }
+        else
+        {
+            const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
+            const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
+
+            LogInfo(R"([{}] Material "{}" of "{}" has been successfully instantiated using source "{}".)",
+                    ExtensionName, aChunk->chunkName.ToString(), meshPathStr, sourcePathStr);
+        }
+    }
+    else
+    {
+        auto materialInstance = CloneMaterialInstance(aContext, aChunk, aChunk->sourceInstance, aJobQueue);
+
+        materialEntry.material = materialInstance;
+        materialEntry.materialWeak = materialInstance;
+
+        aJobQueue.Dispatch([aContext, aChunk, materialInstance]() {
+            if (aChunk->failed)
+            {
+                materialInstance->baseMaterial = {};
+                return;
+            }
+
+            if (aContext->sourceState == aContext->targetState)
+            {
+                const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
+
+                LogInfo(R"([{}] Material "{}" of "{}" has been successfully instantiated.)",
+                        ExtensionName, aChunk->chunkName.ToString(), meshPathStr);
+            }
+            else
+            {
+                const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
+                const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
+
+                LogInfo(R"([{}] Material "{}" of "{}" has been successfully instantiated using source "{}".)",
+                        ExtensionName, aChunk->chunkName.ToString(), meshPathStr, sourcePathStr);
+            }
+        });
+    }
 }
 
 Red::Handle<Red::CMaterialInstance> App::MeshExtension::CloneMaterialInstance(
-    const Red::Handle<Red::CMaterialInstance>& aSourceInstance, const Core::SharedPtr<MeshState>& aMeshState,
-    Red::CName aMaterialName, Red::JobQueue& aJobQueue, bool aAppendExtraContextPatams)
+    const Core::SharedPtr<DynamicContext>& aContext, const Core::SharedPtr<ChunkData>& aChunk,
+    const Red::Handle<Red::CMaterialInstance>& aSourceInstance, Red::JobQueue& aJobQueue)
 {
     auto materialInstance = Red::MakeHandle<Red::CMaterialInstance>();
     materialInstance->baseMaterial = aSourceInstance->baseMaterial;
@@ -457,9 +534,9 @@ Red::Handle<Red::CMaterialInstance> App::MeshExtension::CloneMaterialInstance(
         materialInstance->params.PushBack(sourceParam);
     }
 
-    if (aAppendExtraContextPatams)
+    if (aSourceInstance == aChunk->sourceInstance)
     {
-        for (const auto& contextParam : aMeshState->GetContextParams())
+        for (const auto& contextParam : aContext->targetState->GetContextParams())
         {
             for (auto& materialParam : materialInstance->params)
             {
@@ -475,106 +552,267 @@ Red::Handle<Red::CMaterialInstance> App::MeshExtension::CloneMaterialInstance(
         }
     }
 
-    ExpandMaterialInstanceParams(materialInstance, aMeshState, aMaterialName, aJobQueue);
-
-    if (ExpandResourceReference(materialInstance->baseMaterial, aMeshState, aMaterialName))
-    {
-        aJobQueue.Wait(materialInstance->baseMaterial.token->job);
-        aJobQueue.Dispatch([materialInstance, aMeshState, aMaterialName](const Red::JobGroup& aJobGroup) {
-            auto& baseReference = materialInstance->baseMaterial;
-            if (auto baseInstance = Red::Cast<Red::CMaterialInstance>(baseReference.token->resource))
-            {
-                Red::JobQueue jobQueue(aJobGroup);
-                ExpandMaterialInstanceParams(baseInstance, aMeshState, aMaterialName, jobQueue);
-            }
-        });
-    }
-    else if (materialInstance->baseMaterial.path && !materialInstance->baseMaterial.token)
-    {
-        auto templateToken = Red::ResourceLoader::Get()->LoadAsync<Red::IMaterial>(materialInstance->baseMaterial.path);
-
-        aJobQueue.Wait(templateToken->job);
-        aJobQueue.Dispatch([materialInstance, templateToken, aMeshState, aMaterialName](const Red::JobGroup& aJobGroup) {
-            if (!templateToken->IsLoaded())
-            {
-                auto pathRegistry = ResourcePathRegistry::Get();
-                auto templatePathStr = pathRegistry->ResolvePathOrHash(templateToken->path);
-                LogError("|{}| Base material \"{}\" failed to load.", ExtensionName, templatePathStr);
-                return;
-            }
-
-            if (auto baseInstance = Red::Cast<Red::CMaterialInstance>(templateToken->resource))
-            {
-                Red::JobQueue jobQueue(aJobGroup);
-
-                auto cloneToken = Red::MakeShared<Red::ResourceToken<Red::IMaterial>>();
-                cloneToken->self = cloneToken;
-                cloneToken->resource = CloneMaterialInstance(baseInstance, aMeshState, aMaterialName, jobQueue);
-                cloneToken->path = templateToken->path;
-                cloneToken->finished = 1;
-
-                materialInstance->baseMaterial.token = std::move(cloneToken);
-            }
-            else
-            {
-                materialInstance->baseMaterial.token = templateToken;
-            }
-        });
-    }
+    ExpandMaterialParams(aContext, aChunk, materialInstance, aJobQueue);
+    ExpandMaterialInheritance(aContext, aChunk, materialInstance, aJobQueue);
 
     return materialInstance;
 }
 
-void App::MeshExtension::ExpandMaterialInstanceParams(Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
-                                                      const Core::SharedPtr<MeshState>& aMeshState,
-                                                      Red::CName aMaterialName, Red::JobQueue& aJobQueue)
+void App::MeshExtension::ExpandMaterialParams(const Core::SharedPtr<DynamicContext>& aContext,
+                                              const Core::SharedPtr<ChunkData>& aChunk,
+                                              const Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
+                                              Red::JobQueue& aJobQueue)
 {
     for (auto i = static_cast<int32_t>(aMaterialInstance->params.size) - 1; i >= 0; --i)
     {
-        const auto& materialParam = aMaterialInstance->params[i];
+        const auto& param = aMaterialInstance->params[i];
 
-        if (materialParam.data.GetType()->GetType() == Red::ERTTIType::ResourceReference)
+        if (param.data.GetType()->GetType() != Red::ERTTIType::ResourceReference)
+            continue;
+
+        auto& reference = *reinterpret_cast<Red::ResourceReference<>*>(param.data.GetDataPtr());
+
+        if (reference.token)
         {
-            auto materialParamData = materialParam.data.GetDataPtr();
-            auto& materialReference = *reinterpret_cast<Red::ResourceReference<>*>(materialParamData);
+            if (reference.token->IsFailed())
+            {
+                const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
 
-            if (ExpandResourceReference(materialReference, aMeshState, aMaterialName))
-            {
-                aJobQueue.Wait(materialReference.token->job);
+                if (aMaterialInstance->path)
+                {
+                    const auto materialPathStr = s_resourcePathRegistry->ResolvePathOrHash(aMaterialInstance->path);
+
+                    LogError(R"([{}] Material "{}" of "{}" failed to instantiate: invalid reference for param "{}" in "{}".)",
+                             ExtensionName, aChunk->chunkName.ToString(), meshPathStr, param.name.ToString(), materialPathStr);
+                }
+                else
+                {
+                    LogError(R"([{}] Material "{}" of "{}" failed to instantiate: invalid reference for param "{}".)",
+                             ExtensionName, aChunk->chunkName.ToString(), meshPathStr, param.name.ToString());
+                }
+
+                aChunk->failed = true;
             }
-            else if (!materialReference.path)
-            {
-                aMaterialInstance->params.RemoveAt(i);
-            }
+            continue;
         }
+
+        auto referencePath = ExpandResourcePath(reference.path, aChunk->materialName, aContext->targetState);
+
+        if (!referencePath)
+        {
+            const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
+            const auto paramPathStr = s_resourcePathRegistry->ResolvePathOrHash(reference.path);
+
+            if (aMaterialInstance->path)
+            {
+                const auto materialPathStr = s_resourcePathRegistry->ResolvePathOrHash(aMaterialInstance->path);
+
+                LogError(R"([{}] Material "{}" of "{}" failed to instantiate: unresolvable path "{}" for param "{}" in "{}".)",
+                         ExtensionName, aChunk->chunkName.ToString(), meshPathStr, paramPathStr, param.name.ToString(), materialPathStr);
+            }
+            else
+            {
+                LogError(R"([{}] Material "{}" of "{}" failed to instantiate: unresolvable path "{}" for param "{}".)",
+                         ExtensionName, aChunk->chunkName.ToString(), meshPathStr, paramPathStr, param.name.ToString());
+            }
+
+            aChunk->failed = true;
+            continue;
+        }
+
+        reference.path = referencePath;
+        reference.LoadAsync();
+
+        if (!reference.token || reference.token->IsFailed())
+        {
+            const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
+            const auto paramPathStr = s_resourcePathRegistry->ResolvePathOrHash(referencePath);
+
+            if (aMaterialInstance->path)
+            {
+                const auto materialPathStr = s_resourcePathRegistry->ResolvePathOrHash(aMaterialInstance->path);
+
+                LogError(R"([{}] Material "{}" of "{}" failed to instantiate: invalid path "{}" for param "{}" in "{}".)",
+                         ExtensionName, aChunk->chunkName.ToString(), meshPathStr, paramPathStr, param.name.ToString(), materialPathStr);
+            }
+            else
+            {
+                LogError(R"([{}] Material "{}" of "{}" failed to instantiate: invalid path "{}" for param "{}".)",
+                         ExtensionName, aChunk->chunkName.ToString(), meshPathStr, paramPathStr, param.name.ToString());
+            }
+
+            aChunk->failed = true;
+            continue;
+        }
+
+        aJobQueue.Wait(reference.token->job);
     }
 }
 
-template<typename T>
-bool App::MeshExtension::ExpandResourceReference(Red::ResourceReference<T>& aReference,
-                                                      const Core::SharedPtr<MeshState>& aState,
-                                                      Red::CName aMaterialName)
+void App::MeshExtension::ExpandMaterialInheritance(const Core::SharedPtr<DynamicContext>& aContext,
+                                                   const Core::SharedPtr<ChunkData>& aChunk,
+                                                   const Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
+                                                   Red::JobQueue& aJobQueue)
 {
-    if (aReference.token)
-        return false;
+    auto& baseReference = aMaterialInstance->baseMaterial;
 
-    auto path = ExpandResourcePath(aReference.path, aState, aMaterialName);
+    if (!baseReference.path)
+    {
+        const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
 
-    if (path == aReference.path)
-        return false;
+        if (aMaterialInstance->path)
+        {
+            const auto materialPathStr = s_resourcePathRegistry->ResolvePathOrHash(aMaterialInstance->path);
 
-    aReference.path = path;
+            LogError(R"([{}] Material "{}" of "{}" failed to instantiate: base material is not set in "{}".)",
+                     ExtensionName, aChunk->chunkName.ToString(), meshPathStr, materialPathStr);
+        }
+        else
+        {
+            LogError(R"([{}] Material "{}" of "{}" failed to instantiate: base material is not set.)",
+                     ExtensionName, aChunk->chunkName.ToString(), meshPathStr);
+        }
 
-    if (!path)
-        return false;
+        aChunk->failed = true;
+        return;
+    }
 
-    aReference.LoadAsync();
-    return true;
+    if (baseReference.token)
+    {
+        if (baseReference.token->IsFailed())
+        {
+            const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
+
+            if (aMaterialInstance->path)
+            {
+                const auto materialPathStr = s_resourcePathRegistry->ResolvePathOrHash(aMaterialInstance->path);
+
+                LogError(R"([{}] Material "{}" of "{}" failed to instantiate: invalid reference for base material in "{}".)",
+                         ExtensionName, aChunk->chunkName.ToString(), meshPathStr, materialPathStr);
+            }
+            else
+            {
+                LogError(R"([{}] Material "{}" of "{}" failed to instantiate: invalid reference for base material.)",
+                         ExtensionName, aChunk->chunkName.ToString(), meshPathStr);
+            }
+
+            aChunk->failed = true;
+        }
+        return;
+    }
+
+    auto basePath = ExpandResourcePath(baseReference.path, aChunk->materialName, aContext->targetState);
+
+    if (!basePath)
+    {
+        const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
+        const auto basePathStr = s_resourcePathRegistry->ResolvePathOrHash(baseReference.path);
+
+        if (aMaterialInstance->path)
+        {
+            const auto materialPathStr = s_resourcePathRegistry->ResolvePathOrHash(aMaterialInstance->path);
+
+            LogError(R"([{}] Material "{}" of "{}" failed to instantiate: unresolvable path "{}" for base material in "{}".)",
+                     ExtensionName, aChunk->chunkName.ToString(), meshPathStr, basePathStr, materialPathStr);
+        }
+        else
+        {
+            LogError(R"([{}] Material "{}" of "{}" failed to instantiate: unresolvable path "{}" for base material.)",
+                     ExtensionName, aChunk->chunkName.ToString(), meshPathStr, basePathStr);
+        }
+
+        aChunk->failed = true;
+        return;
+    }
+
+    baseReference.path = basePath;
+    baseReference.LoadAsync();
+
+    if (!baseReference.token || baseReference.token->IsFailed())
+    {
+        const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
+        const auto basePathStr = s_resourcePathRegistry->ResolvePathOrHash(basePath);
+
+        if (aMaterialInstance->path)
+        {
+            const auto materialPathStr = s_resourcePathRegistry->ResolvePathOrHash(aMaterialInstance->path);
+
+            LogError(R"([{}] Material "{}" of "{}" failed to instantiate: invalid path "{}" for base material in "{}".)",
+                     ExtensionName, aChunk->chunkName.ToString(), meshPathStr, basePathStr, materialPathStr);
+        }
+        else
+        {
+            LogError(R"([{}] Material "{}" of "{}" failed to instantiate: invalid path "{}" for base material.)",
+                     ExtensionName, aChunk->chunkName.ToString(), meshPathStr, basePathStr);
+        }
+
+        aChunk->failed = true;
+        return;
+    }
+
+    aJobQueue.Wait(baseReference.token->job);
+    aJobQueue.Dispatch([aContext, aChunk, aMaterialInstance](const Red::JobGroup& aJobGroup) {
+        auto& baseReference = aMaterialInstance->baseMaterial;
+
+        if (baseReference.token->IsFailed())
+        {
+            const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
+            const auto basePathStr = s_resourcePathRegistry->ResolvePathOrHash(baseReference.path);
+
+            if (aMaterialInstance->path)
+            {
+                const auto materialPathStr = s_resourcePathRegistry->ResolvePathOrHash(aMaterialInstance->path);
+
+                LogError(R"([{}] Material "{}" of "{}" failed to instantiate: base material "{}" cannot be loaded for "{}".)",
+                         ExtensionName, aChunk->chunkName.ToString(), meshPathStr, basePathStr, materialPathStr);
+            }
+            else
+            {
+                LogError(R"([{}] Material "{}" of "{}" failed to instantiate: base material "{}" cannot be loaded.)",
+                         ExtensionName, aChunk->chunkName.ToString(), meshPathStr, basePathStr);
+            }
+
+            aChunk->failed = true;
+            return;
+        }
+
+        auto baseInstance = Red::Cast<Red::CMaterialInstance>(baseReference.token->resource);
+
+        if (!baseInstance)
+        {
+            const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
+
+            if (aMaterialInstance->path)
+            {
+                const auto materialPathStr = s_resourcePathRegistry->ResolvePathOrHash(aMaterialInstance->path);
+
+                LogError(R"([{}] Material "{}" of "{}" failed to instantiate: invalid reference for base material in "{}".)",
+                         ExtensionName, aChunk->chunkName.ToString(), meshPathStr, materialPathStr);
+            }
+            else
+            {
+                LogError(R"([{}] Material "{}" of "{}" failed to instantiate: invalid reference for base material.)",
+                         ExtensionName, aChunk->chunkName.ToString(), meshPathStr);
+            }
+
+            aChunk->failed = true;
+            return;
+        }
+
+        Red::JobQueue jobQueue(aJobGroup);
+
+        auto cloneToken = Red::MakeShared<Red::ResourceToken<Red::IMaterial>>();
+        cloneToken->self = cloneToken;
+        cloneToken->path = baseReference.path;
+        cloneToken->resource = CloneMaterialInstance(aContext, aChunk, baseInstance, jobQueue);
+        cloneToken->finished = 1;
+
+        baseReference.token = std::move(cloneToken);
+    });
 }
 
-Red::ResourcePath App::MeshExtension::ExpandResourcePath(Red::ResourcePath aPath,
-                                                         const Core::SharedPtr<MeshState>& aState,
-                                                         Red::CName aMaterialName)
+Red::ResourcePath App::MeshExtension::ExpandResourcePath(Red::ResourcePath aPath, Red::CName aMaterialName,
+                                                         const Core::SharedPtr<MeshState>& aState)
 {
     auto& controller = GarmentExtension::GetDynamicAppearanceController();
     auto pathStr = controller->GetPathString(aPath);
@@ -588,18 +826,32 @@ Red::ResourcePath App::MeshExtension::ExpandResourcePath(Red::ResourcePath aPath
 
     if (!result.valid)
     {
-        LogError("|{}| Dynamic path \"{}\" cannot be resolved.", ExtensionName, pathStr);
         return {};
     }
 
-#ifndef NDEBUG
-    if (!result.value.empty() && result.value != pathStr)
-    {
-        LogDebug("[{}] Dynamic path resolved to \"{}\".", ExtensionName, result.value);
-    }
-#endif
-
     return result.value.data();
+}
+
+void App::MeshExtension::FixFinalMaterialsIndexes(const Core::SharedPtr<DynamicContext>& aContext)
+{
+    for (int32_t chunkIndex = 0; chunkIndex < aContext->materialNames.size; ++chunkIndex)
+    {
+        auto chunkName = aContext->materialNames[chunkIndex];
+        auto materialIndex = aContext->targetState->GetMaterialEntryIndex(chunkName);
+        if (materialIndex >= 0)
+        {
+            (*aContext->finalMaterials)[chunkIndex] = aContext->targetMesh->materialEntries[materialIndex].materialWeak;
+        }
+        else
+        {
+            (*aContext->finalMaterials)[chunkIndex] = {};
+        }
+    }
+}
+
+bool App::MeshExtension::ContainsUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials)
+{
+    return std::ranges::any_of(aMaterials, [](const auto& aMaterial) { return !aMaterial; });
 }
 
 bool App::MeshExtension::IsSpecialMaterial(Red::CName aMaterialName)
