@@ -1,6 +1,5 @@
 #include "ResourcePathRegistry.hpp"
 #include "App/Project.hpp"
-#include "Core/Facades/Container.hpp"
 #include "Red/SharedStorage.hpp"
 
 namespace
@@ -95,10 +94,4 @@ void App::ResourcePathRegistry::RegisterPath(Red::ResourcePath aPath, const std:
         std::scoped_lock _(s_instance->m_lock);
         s_instance->m_map[aPath] = aPathStr;
     }
-}
-
-App::ResourcePathRegistry* App::ResourcePathRegistry::Get()
-{
-    static const auto s_reference = Core::Resolve<ResourcePathRegistry>();
-    return s_reference.get();
 }

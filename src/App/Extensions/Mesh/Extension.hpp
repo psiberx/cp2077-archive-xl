@@ -2,6 +2,7 @@
 
 #include "App/Extensions/ExtensionBase.hpp"
 #include "App/Extensions/Garment/Dynamic.hpp"
+#include "App/Shared/ResourcePathRegistry.hpp"
 #include "Red/Mesh.hpp"
 
 namespace App
@@ -109,5 +110,6 @@ private:
     inline static Red::Handle<Red::meshMeshAppearance> s_dummyAppearance;
     inline static Red::Handle<Red::CMaterialInstance> s_dummyMaterial;
     inline static Red::SharedSpinLock s_stateLock;
+    inline static Core::SharedPtr<ResourcePathRegistry> s_resourcePathRegistry;
 };
 }

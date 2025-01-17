@@ -20,8 +20,6 @@ public:
 
     void RegisterPath(Red::ResourcePath aPath, const std::string& aPathStr);
 
-    static ResourcePathRegistry* Get();
-
 protected:
     struct SharedInstance
     {

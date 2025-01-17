@@ -2,6 +2,7 @@
 #include "App/Extensions/Customization/Extension.hpp"
 #include "App/Extensions/Mesh/Extension.hpp"
 #include "App/Extensions/ResourceMeta/Extension.hpp"
+#include "Core/Facades/Container.hpp"
 #include "Red/Buffer.hpp"
 #include "Red/EntityBuilder.hpp"
 #include "Red/Mesh.hpp"
@@ -35,6 +36,8 @@ bool App::ResourcePatchExtension::Load()
     HookAfter<Raw::AppearanceDefinition::ExtractPartComponents>(&OnPartPackageExtract).OrThrow();
     HookAfter<Raw::GarmentAssembler::ExtractComponentsJob>(&OnGarmentPackageExtract).OrThrow();
     HookAfter<Raw::PersistencySystem::SetPersistentStateData>(&OnSetPersistentStateData).OrThrow();
+
+    s_resourcePathRegistry = Core::Resolve<ResourcePathRegistry>();
 
     return true;
 }
@@ -215,7 +218,6 @@ void App::ResourcePatchExtension::OnEntityTemplateLoad(Red::EntityTemplate* aTem
         return;
 
     auto depot = Red::ResourceDepot::Get();
-    auto pathRegistry = ResourcePathRegistry::Get();
 
     for (const auto& patchPath : patchList)
     {
@@ -250,7 +252,7 @@ void App::ResourcePatchExtension::OnEntityTemplateLoad(Red::EntityTemplate* aTem
             {
                 LogError(R"([{}] Patch resource "{}" refers to non-existent resource "{}".)",
                          ExtensionName, s_paths[patchResource->path],
-                         pathRegistry->ResolvePathOrHash(dependency.path));
+                         s_resourcePathRegistry->ResolvePathOrHash(dependency.path));
                 continue;
             }
 
@@ -286,7 +288,6 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
         return;
 
     auto depot = Red::ResourceDepot::Get();
-    auto pathRegistry = ResourcePathRegistry::Get();
 
     Core::Set<Red::CName> newAppearances;
 
@@ -323,7 +324,7 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
                         {
                             LogError(R"([{}] Patch resource "{}" refers to non-existent resource "{}".)",
                                      ExtensionName, s_paths[patchResource->path],
-                                     pathRegistry->ResolvePathOrHash(partValue.resource.path));
+                                     s_resourcePathRegistry->ResolvePathOrHash(partValue.resource.path));
                             continue;
                         }
 
@@ -350,7 +351,7 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
                         {
                             LogError(R"([{}] Patch resource "{}" refers to non-existent resource "{}".)",
                                      ExtensionName, s_paths[patchResource->path],
-                                     pathRegistry->ResolvePathOrHash(dependency.path));
+                                     s_resourcePathRegistry->ResolvePathOrHash(dependency.path));
                             continue;
                         }
 

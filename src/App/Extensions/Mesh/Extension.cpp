@@ -1,6 +1,7 @@
 #include "Extension.hpp"
 #include "App/Extensions/Garment/Extension.hpp"
 #include "App/Utils/Str.hpp"
+#include "Core/Facades/Container.hpp"
 
 namespace
 {
@@ -31,6 +32,8 @@ bool App::MeshExtension::Load()
     s_dummyMaterial = Red::MakeHandle<Red::CMaterialInstance>();
 
     Raw::MeshAppearance::Owner::Set(s_dummyAppearance.instance, s_dummyMesh.instance);
+
+    s_resourcePathRegistry = Core::Resolve<ResourcePathRegistry>();
 
     return true;
 }

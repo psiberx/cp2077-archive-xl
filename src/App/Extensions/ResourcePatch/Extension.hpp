@@ -2,6 +2,7 @@
 
 #include "App/Extensions/ExtensionBase.hpp"
 #include "App/Extensions/ResourcePatch/Config.hpp"
+#include "App/Shared/ResourcePathRegistry.hpp"
 #include "Red/AppearanceResource.hpp"
 #include "Red/EntityBuilder.hpp"
 #include "Red/EntityTemplate.hpp"
@@ -88,5 +89,6 @@ private:
     inline static Core::Map<Red::ResourcePath, Red::SharedPtr<Red::ResourceToken<>>> s_tokens;
     inline static Red::SharedSpinLock s_definitionLock;
     inline static Core::Map<Red::ResourcePath, DefinitionMap> s_definitions;
+    inline static Core::SharedPtr<ResourcePathRegistry> s_resourcePathRegistry;
 };
 }
