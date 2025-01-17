@@ -78,7 +78,7 @@ void App::PuppetStateExtension::ApplyTweaks()
 void App::PuppetStateExtension::OnAttachPuppet(Red::gameuiCharacterCustomizationGenitalsController* aComponent)
 {
 #ifndef NDEBUG
-    LogDebug("|{}| [event=AttachPuppet ent={}]", ExtensionName, aComponent->owner->entityID.hash);
+    LogDebug("[{}] [event=AttachPuppet ent={}]", ExtensionName, aComponent->owner->entityID.hash);
 #endif
 
     std::unique_lock _(s_mutex);
@@ -99,7 +99,7 @@ void App::PuppetStateExtension::OnAttachPuppet(Red::gameuiCharacterCustomization
 void App::PuppetStateExtension::OnDetachPuppet(Red::gameuiCharacterCustomizationHairstyleController* aComponent, uintptr_t)
 {
 #ifndef NDEBUG
-    LogDebug("|{}| [event=DetachPuppet ent={}]", ExtensionName, aComponent->owner->entityID.hash);
+    LogDebug("[{}] [event=DetachPuppet ent={}]", ExtensionName, aComponent->owner->entityID.hash);
 #endif
 
     std::unique_lock _(s_mutex);

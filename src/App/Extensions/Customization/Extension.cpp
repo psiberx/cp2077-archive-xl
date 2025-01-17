@@ -6,7 +6,7 @@
 
 namespace
 {
-constexpr auto ExtensionName = "Customization";
+constexpr auto ExtensionName = "CharacterCustomization";
 
 constexpr auto HairColorSlotName = Red::CName("hair_color");
 
@@ -274,7 +274,7 @@ void App::CustomizationExtension::MergeCustomEntries(CustomizationResourceToken&
         Red::WaitForResource(aTargetResource, std::chrono::milliseconds(250));
         if (!aTargetResource.instance->finished)
         {
-            LogError("|{}| Game customization resource is not ready.", ExtensionName);
+            LogError("[{}] Game customization resource is not ready.", ExtensionName);
             return;
         }
     }
@@ -289,7 +289,7 @@ void App::CustomizationExtension::MergeCustomEntries(CustomizationResourceToken&
     {
         if (!customResource->finished)
         {
-            LogError("|{}| Mod customization resource is not ready.", ExtensionName);
+            LogError("[{}] Mod customization resource is not ready.", ExtensionName);
             continue;
         }
 
@@ -397,7 +397,7 @@ void App::CustomizationExtension::MergeCustomOptions(Red::DynArray<Customization
 
             if (targetOption->GetNativeType() != sourceOption->GetNativeType())
             {
-                LogWarning("|{}| Option \"{}\" can't be merged: expected {}, got {}.",
+                LogWarning("[{}] Option \"{}\" can't be merged: expected {}, got {}.",
                            ExtensionName, targetOption->name.ToString(),
                            targetOption->GetNativeType()->GetName().ToString(),
                            sourceOption->GetNativeType()->GetName().ToString());

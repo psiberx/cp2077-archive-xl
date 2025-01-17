@@ -65,6 +65,7 @@ void Support::SpdlogProvider::OnInitialize()
 
     auto sink = Core::MakeShared<spdlog::sinks::basic_file_sink_mt>(logPath.string(), true);
     auto logger = Core::MakeShared<spdlog::logger>("", spdlog::sinks_init_list{sink});
+    logger->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%t] [%l] %v");
     logger->flush_on(spdlog::level::trace);
 
     spdlog::set_default_logger(logger);

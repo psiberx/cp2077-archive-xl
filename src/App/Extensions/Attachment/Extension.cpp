@@ -5,7 +5,7 @@
 
 namespace
 {
-constexpr auto ExtensionName = "Attachment";
+constexpr auto ExtensionName = "EntityAttachment";
 
 constexpr auto HeadSlot = Red::TweakDBID("AttachmentSlots.Head");
 constexpr auto FaceSlot = Red::TweakDBID("AttachmentSlots.Eyes");
@@ -70,7 +70,7 @@ void App::AttachmentExtension::OnInitializeSlots(Red::game::AttachmentSlots* aCo
 // #ifndef NDEBUG
 //         const auto entity = Raw::IComponent::Owner::Ptr(aComponent);
 //         const auto entityID = Raw::Entity::EntityID::Ptr(entity);
-//         LogDebug("|{}| [event=InitializeSlots ent={}]", ExtensionName, entityID->hash);
+//         LogDebug("[{}] [event=InitializeSlots ent={}]", ExtensionName, entityID->hash);
 // #endif
 
         std::unique_lock _(s_slotsMutex);
@@ -116,7 +116,7 @@ bool App::AttachmentExtension::OnSlotSpawningCheck(Red::game::AttachmentSlots* a
     if (!result)
     {
 // #ifndef NDEBUG
-//         LogDebug("|{}| [event=SlotSpawningCheck]", ExtensionName);
+//         LogDebug("[{}] [event=SlotSpawningCheck]", ExtensionName);
 // #endif
 
         std::shared_lock _(s_slotsMutex);
@@ -140,7 +140,7 @@ bool App::AttachmentExtension::OnSlotSpawningCheck(Red::game::AttachmentSlots* a
 void App::AttachmentExtension::OnAttachTPP(Red::game::TPPRepresentationComponent* aComponent, uintptr_t)
 {
 #ifndef NDEBUG
-    LogDebug("|{}| [event=AttachTPP]", ExtensionName);
+    LogDebug("[{}] [event=AttachTPP]", ExtensionName);
 #endif
 
     auto transactionSystem = Red::GetGameSystem<Red::ITransactionSystem>();

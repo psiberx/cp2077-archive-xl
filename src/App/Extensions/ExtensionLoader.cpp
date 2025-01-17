@@ -155,12 +155,12 @@ void App::ExtensionLoader::Load()
         }
         catch (const std::exception& ex)
         {
-            LogError("|{}| {}", module->GetName(), ex.what());
+            LogError("[{}] {}", module->GetName(), ex.what());
             module->Unload();
         }
         catch (...)
         {
-            LogError("|{}| Failed to load. An unknown error has occurred.", module->GetName());
+            LogError("[{}] Failed to load. An unknown error has occurred.", module->GetName());
             module->Unload();
         }
     }
@@ -173,11 +173,11 @@ void App::ExtensionLoader::Load()
         }
         catch (const std::exception& ex)
         {
-            LogError("|{}| {}", module->GetName(), ex.what());
+            LogError("[{}] {}", module->GetName(), ex.what());
         }
         catch (...)
         {
-            LogError("|{}| Failed to configure. An unknown error has occurred.", module->GetName());
+            LogError("[{}] Failed to configure. An unknown error has occurred.", module->GetName());
         }
     }
 
@@ -197,12 +197,12 @@ void App::ExtensionLoader::PostLoad()
         }
         catch (const std::exception& ex)
         {
-            LogError("|{}| {}", module->GetName(), ex.what());
+            LogError("[{}] {}", module->GetName(), ex.what());
             module->Unload();
         }
         catch (...)
         {
-            LogError("|{}| Failed to apply post load effects. An unknown error has occurred.", module->GetName());
+            LogError("[{}] Failed to apply post load effects. An unknown error has occurred.", module->GetName());
             module->Unload();
         }
     }
@@ -221,12 +221,12 @@ void App::ExtensionLoader::ApplyTweaks()
         }
         catch (const std::exception& ex)
         {
-            LogError("|{}| {}", module->GetName(), ex.what());
+            LogError("[{}] {}", module->GetName(), ex.what());
             module->Unload();
         }
         catch (...)
         {
-            LogError("|{}| Failed to apply TweakDB changes. An unknown error has occurred.", module->GetName());
+            LogError("[{}] Failed to apply TweakDB changes. An unknown error has occurred.", module->GetName());
             module->Unload();
         }
     }
@@ -245,11 +245,11 @@ void App::ExtensionLoader::Unload()
         }
         catch (const std::exception& ex)
         {
-            LogError("|{}| {}", module->GetName(), ex.what());
+            LogError("[{}] {}", module->GetName(), ex.what());
         }
         catch (...)
         {
-            LogError("|{}| Failed to unload. An unknown error has occurred.", module->GetName());
+            LogError("[{}] Failed to unload. An unknown error has occurred.", module->GetName());
         }
     }
 
@@ -269,11 +269,11 @@ void App::ExtensionLoader::Reload()
         }
         catch (const std::exception& ex)
         {
-            LogError("|{}| {}", module->GetName(), ex.what());
+            LogError("[{}] {}", module->GetName(), ex.what());
         }
         catch (...)
         {
-            LogError("|{}| Failed to configure. An unknown error has occurred.", module->GetName());
+            LogError("[{}] Failed to configure. An unknown error has occurred.", module->GetName());
         }
     }
 
@@ -285,12 +285,12 @@ void App::ExtensionLoader::Reload()
         }
         catch (const std::exception& ex)
         {
-            LogError("|{}| {}", module->GetName(), ex.what());
+            LogError("[{}] {}", module->GetName(), ex.what());
             module->Unload();
         }
         catch (...)
         {
-            LogError("|{}| Failed to reload. An unknown error has occurred.", module->GetName());
+            LogError("[{}] Failed to reload. An unknown error has occurred.", module->GetName());
             module->Unload();
         }
     }

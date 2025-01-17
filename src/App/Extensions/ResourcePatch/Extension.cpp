@@ -72,7 +72,7 @@ void App::ResourcePatchExtension::Configure()
             {
                 if (!invalidPaths.contains(patchPath))
                 {
-                    LogError("|{}| Patch resource \"{}\" doesn't exist.", ExtensionName, config.paths[patchPath]);
+                    LogError("[{}] Patch resource \"{}\" doesn't exist.", ExtensionName, config.paths[patchPath]);
                     invalidPaths.insert(patchPath);
                 }
                 continue;
@@ -114,7 +114,7 @@ void App::ResourcePatchExtension::Configure()
                 // {
                 //     if (!invalidPaths.contains(targetPath))
                 //     {
-                //         LogWarning("|{}| Target resource \"{}\" doesn't exist.",
+                //         LogWarning("[{}] Target resource \"{}\" doesn't exist.",
                 //                    ExtensionName, config.paths[targetPath]);
                 //         invalidPaths.insert(targetPath);
                 //     }
@@ -138,7 +138,7 @@ void App::ResourcePatchExtension::Configure()
         {
             if (!invalidPaths.contains(targetPath))
             {
-                LogError(R"(|{}| Patch resource "{}" cannot be patched.)", ExtensionName, s_paths[targetPath]);
+                LogError(R"([{}] Patch resource "{}" cannot be patched.)", ExtensionName, s_paths[targetPath]);
                 invalidPaths.insert(targetPath);
             }
 
@@ -248,7 +248,7 @@ void App::ResourcePatchExtension::OnEntityTemplateLoad(Red::EntityTemplate* aTem
         {
             if (!depot->ResourceExists(dependency.path))
             {
-                LogError(R"(|{}| Patch resource "{}" refers to non-existent resource "{}".)",
+                LogError(R"([{}] Patch resource "{}" refers to non-existent resource "{}".)",
                          ExtensionName, s_paths[patchResource->path],
                          pathRegistry->ResolvePathOrHash(dependency.path));
                 continue;
@@ -321,7 +321,7 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
                     {
                         if (!depot->ResourceExists(partValue.resource.path))
                         {
-                            LogError(R"(|{}| Patch resource "{}" refers to non-existent resource "{}".)",
+                            LogError(R"([{}] Patch resource "{}" refers to non-existent resource "{}".)",
                                      ExtensionName, s_paths[patchResource->path],
                                      pathRegistry->ResolvePathOrHash(partValue.resource.path));
                             continue;
@@ -348,7 +348,7 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
                     {
                         if (!depot->ResourceExists(dependency.path))
                         {
-                            LogError(R"(|{}| Patch resource "{}" refers to non-existent resource "{}".)",
+                            LogError(R"([{}] Patch resource "{}" refers to non-existent resource "{}".)",
                                      ExtensionName, s_paths[patchResource->path],
                                      pathRegistry->ResolvePathOrHash(dependency.path));
                             continue;
@@ -1089,7 +1089,7 @@ Red::SharedPtr<Red::ResourceToken<T>> App::ResourcePatchExtension::GetPatchToken
 
         if (token->IsFailed())
         {
-            LogError("|{}| Patch resource \"{}\" is failed to load.", ExtensionName, s_paths[token->path]);
+            LogError("[{}] Patch resource \"{}\" is failed to load.", ExtensionName, s_paths[token->path]);
             return {};
         }
     }

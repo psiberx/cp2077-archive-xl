@@ -4,7 +4,7 @@
 
 namespace
 {
-constexpr auto ExtensionName = "Mesh";
+constexpr auto ExtensionName = "DynamicMesh";
 
 constexpr auto SpecialMaterialMarker = '@';
 constexpr auto ContextMaterialName = Red::CName("@context");
@@ -265,7 +265,7 @@ void App::MeshExtension::ProcessMeshResource(const Core::SharedPtr<MeshState>& a
 
             if (sourceIndex < 0)
             {
-                LogError(R"(|{}| Material for entry "{}" cannot be resoled.)", ExtensionName, chunkName.ToString());
+                LogError(R"([{}] Material for entry "{}" cannot be resoled.)", ExtensionName, chunkName.ToString());
                 continue;
             }
         }
@@ -283,7 +283,7 @@ void App::MeshExtension::ProcessMeshResource(const Core::SharedPtr<MeshState>& a
                                                            aSourceMesh, sourceEntry.index, 0, 0);
                 if (!token)
                 {
-                    LogError("|{}| Material \"{}\" instance not found.", ExtensionName, templateName.ToString());
+                    LogError("[{}] Material \"{}\" instance not found.", ExtensionName, templateName.ToString());
                     continue;
                 }
             }
@@ -294,7 +294,7 @@ void App::MeshExtension::ProcessMeshResource(const Core::SharedPtr<MeshState>& a
 
                 if (!materialPath)
                 {
-                    //LogError("|{}| Material \"{}\" path cannot be resolved.", ExtensionName, templateName.ToString());
+                    //LogError("[{}] Material \"{}\" path cannot be resolved.", ExtensionName, templateName.ToString());
                     continue;
                 }
 
@@ -303,7 +303,7 @@ void App::MeshExtension::ProcessMeshResource(const Core::SharedPtr<MeshState>& a
 
             if (token->IsFailed())
             {
-                LogError("|{}| Material \"{}\" instance failed to load.", ExtensionName, templateName.ToString());
+                LogError("[{}] Material \"{}\" instance failed to load.", ExtensionName, templateName.ToString());
                 continue;
             }
 
@@ -317,7 +317,7 @@ void App::MeshExtension::ProcessMeshResource(const Core::SharedPtr<MeshState>& a
 
             if (!sourceInstance)
             {
-                LogError("|{}| Material \"{}\" must be instance of {}.",
+                LogError("[{}] Material \"{}\" must be instance of {}.",
                          ExtensionName, templateName.ToString(), Red::CMaterialInstance::NAME);
                 continue;
             }
@@ -373,7 +373,7 @@ void App::MeshExtension::ProcessMeshResource(const Core::SharedPtr<MeshState>& a
         {
             if (deferred.sourceToken->IsFailed())
             {
-                LogError("|{}| Material \"{}\" instance failed to load.", ExtensionName, deferred.templateName.ToString());
+                LogError("[{}] Material \"{}\" instance failed to load.", ExtensionName, deferred.templateName.ToString());
                 continue;
             }
 
@@ -381,7 +381,7 @@ void App::MeshExtension::ProcessMeshResource(const Core::SharedPtr<MeshState>& a
 
             if (!sourceInstance)
             {
-                LogError("|{}| Material \"{}\" must be instance of {}.",
+                LogError("[{}] Material \"{}\" must be instance of {}.",
                          ExtensionName, deferred.templateName.ToString(), Red::CMaterialInstance::NAME);
                 continue;
             }
@@ -578,7 +578,7 @@ Red::ResourcePath App::MeshExtension::ExpandResourcePath(Red::ResourcePath aPath
 #ifndef NDEBUG
     if (!result.value.empty() && result.value != pathStr)
     {
-        LogDebug("|{}| Dynamic path resolved to \"{}\".", ExtensionName, result.value);
+        LogDebug("[{}] Dynamic path resolved to \"{}\".", ExtensionName, result.value);
     }
 #endif
 

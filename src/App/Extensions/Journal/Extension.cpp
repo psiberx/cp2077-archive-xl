@@ -56,11 +56,11 @@ void App::JournalExtension::Reload()
 
 void App::JournalExtension::OnLoadJournal(uintptr_t a1, Red::JobGroup& aJobGroup)
 {
-    LogInfo("|{}| Journal tree is initializing...", ExtensionName);
+    LogInfo("[{}] Journal tree is initializing...", ExtensionName);
 
     if (m_configs.empty())
     {
-        LogInfo("|{}| No entries to merge.", ExtensionName);
+        LogInfo("[{}] No entries to merge.", ExtensionName);
         return;
     }
 
@@ -69,7 +69,7 @@ void App::JournalExtension::OnLoadJournal(uintptr_t a1, Red::JobGroup& aJobGroup
 
     for (const auto& unit : m_configs)
     {
-        LogInfo("|{}| Processing \"{}\"...", ExtensionName, unit.name);
+        // LogInfo("[{}] Processing \"{}\"...", ExtensionName, unit.name);
 
         for (const auto& path : unit.journals)
         {
@@ -101,7 +101,7 @@ void App::JournalExtension::OnInitializeRoot(Red::game::JournalRootFolderEntry* 
     {
         if (resource->IsFailed())
         {
-            LogError("|{}| Resource \"{}\" failed to load.", ExtensionName, s_paths[resource->path]);
+            LogError("[{}] Resource \"{}\" failed to load.", ExtensionName, s_paths[resource->path]);
             successAll = false;
             continue;
         }
@@ -110,7 +110,7 @@ void App::JournalExtension::OnInitializeRoot(Red::game::JournalRootFolderEntry* 
 
         if (!root->GetType()->IsA(s_rootEntryType))
         {
-            LogError("|{}| Resource \"{}\" root entry must be {}.",
+            LogError("[{}] Resource \"{}\" root entry must be {}.",
                      ExtensionName, s_paths[resource->path], s_rootEntryType->GetName().ToString());
             successAll = false;
             continue;
@@ -119,7 +119,7 @@ void App::JournalExtension::OnInitializeRoot(Red::game::JournalRootFolderEntry* 
         if (root->id != aJournalRoot->id)
             continue;
 
-        LogInfo("|{}| Merging entries from \"{}\"...", ExtensionName, s_paths[resource->path]);
+        LogInfo("[{}] Merging entries from \"{}\"...", ExtensionName, s_paths[resource->path]);
 
         successAll &= MergeEntries(aJournalRoot, root);
         mergedAny = true;
@@ -128,9 +128,9 @@ void App::JournalExtension::OnInitializeRoot(Red::game::JournalRootFolderEntry* 
     if (mergedAny)
     {
         if (successAll)
-            LogInfo("|{}| All journal entries merged.", ExtensionName);
+            LogInfo("[{}] All journal entries merged.", ExtensionName);
         else
-            LogWarning("|{}| Journal entries merged with issues.", ExtensionName);
+            LogWarning("[{}] Journal entries merged with issues.", ExtensionName);
     }
 }
 
@@ -239,7 +239,7 @@ void App::JournalExtension::ResolveCookedMappin(void* aMappinSystem, uint32_t aH
 
 bool App::JournalExtension::ResolveMappinPosition(uint32_t aHash, const JournalMappin& aMappin, Red::Vector3& aResult)
 {
-    LogInfo("|{}| Cooked mappin #{} requested...", ExtensionName, aHash);
+    LogInfo("[{}] Cooked mappin #{} requested...", ExtensionName, aHash);
 
     if (aMappin.reference.hash)
     {
@@ -248,7 +248,7 @@ bool App::JournalExtension::ResolveMappinPosition(uint32_t aHash, const JournalM
 
         if (!context.hash)
         {
-            LogError("|{}| Can't resolve mappin #{} context.", ExtensionName, aHash);
+            LogError("[{}] Can't resolve mappin #{} context.", ExtensionName, aHash);
             return false;
         }
 
@@ -258,7 +258,7 @@ bool App::JournalExtension::ResolveMappinPosition(uint32_t aHash, const JournalM
 
         if (!resolved.hash)
         {
-            LogError("|{}| Can't resolve mappin #{} reference.", ExtensionName, aHash);
+            LogError("[{}] Can't resolve mappin #{} reference.", ExtensionName, aHash);
             return false;
         }
 
@@ -269,7 +269,7 @@ bool App::JournalExtension::ResolveMappinPosition(uint32_t aHash, const JournalM
 
         if (!success)
         {
-            LogError("|{}| Can't resolve mappin #{} position.", ExtensionName, aHash);
+            LogError("[{}] Can't resolve mappin #{} position.", ExtensionName, aHash);
             return false;
         }
 
@@ -277,13 +277,13 @@ bool App::JournalExtension::ResolveMappinPosition(uint32_t aHash, const JournalM
         aResult.Y = transform.position.Y;
         aResult.Z = transform.position.Z;
 
-        LogInfo("|{}| Cooked mappin #{} resolved to NodeRef #{}.",  ExtensionName, aHash, resolved.hash);
+        LogInfo("[{}] Cooked mappin #{} resolved to NodeRef #{}.",  ExtensionName, aHash, resolved.hash);
     }
     else
     {
         aResult = aMappin.offset;
 
-        LogInfo("|{}| Cooked mappin #{} resolved to static offset.", ExtensionName, aHash);
+        LogInfo("[{}] Cooked mappin #{} resolved to static offset.", ExtensionName, aHash);
     }
 
     return true;
@@ -359,7 +359,7 @@ bool App::JournalExtension::MergeEntries(Red::game::JournalContainerEntry* aTarg
         {
             if (markedForEdit)
             {
-                LogWarning("|{}| {}: Cannot modify entry, path not fould.", ExtensionName, targetPath);
+                LogWarning("[{}] {}: Cannot modify entry, path not fould.", ExtensionName, targetPath);
                 success = false;
                 continue;
             }
@@ -370,7 +370,7 @@ bool App::JournalExtension::MergeEntries(Red::game::JournalContainerEntry* aTarg
         }
         else
         {
-            LogWarning("|{}| {}: Path not fould.", ExtensionName, targetPath);
+            LogWarning("[{}] {}: Path not fould.", ExtensionName, targetPath);
             success = false;
         }
     }
@@ -404,7 +404,7 @@ bool App::JournalExtension::MergeEntry(Red::game::JournalEntry* aTarget, Red::ga
         }
         else
         {
-            LogWarning("|{}| {}: Cannot modify entry, type mismatch.", ExtensionName, aPath);
+            LogWarning("[{}] {}: Cannot modify entry, type mismatch.", ExtensionName, aPath);
             success = false;
         }
     }

@@ -45,7 +45,7 @@ void App::QuestPhaseExtension::Configure()
             {
                 if (!invalidPaths.contains(phasePath))
                 {
-                    LogWarning("|{}| Phase \"{}\" doesn't exist. Skipped.", ExtensionName, phaseMod.phasePath);
+                    LogWarning("[{}] Phase \"{}\" doesn't exist. Skipped.", ExtensionName, phaseMod.phasePath);
                     invalidPaths.insert(phasePath);
                 }
                 continue;
@@ -57,7 +57,7 @@ void App::QuestPhaseExtension::Configure()
             {
                 if (!invalidPaths.contains(parentPath))
                 {
-                    LogWarning("|{}| Phase \"{}\" doesn't exist. Skipped.", ExtensionName, phaseMod.parentPath);
+                    LogWarning("[{}] Phase \"{}\" doesn't exist. Skipped.", ExtensionName, phaseMod.parentPath);
                     invalidPaths.insert(parentPath);
                 }
                 continue;
@@ -78,7 +78,7 @@ void App::QuestPhaseExtension::OnPhasePreload(void* aLoader, Red::ResourcePath a
     if (phaseMods == s_phases.end())
         return;
 
-    LogInfo("|{}| Patching phase \"{}\"...", ExtensionName, phaseMods.value().begin()->parentPath);
+    LogInfo("[{}] Patching phase \"{}\"...", ExtensionName, phaseMods.value().begin()->parentPath);
 
     for (const auto& phaseMod : phaseMods.value())
     {
@@ -173,7 +173,7 @@ bool App::QuestPhaseExtension::PatchPhase(Red::Handle<Red::questQuestPhaseResour
     auto& rootPhaseGraph = Red::Cast<Red::questGraphDefinition>(aPhaseResource->graph);
     if (!rootPhaseGraph)
     {
-        LogWarning(R"(|{}| Can't merge phase "{}" from "{}", parent phase is not loaded.)",
+        LogWarning(R"([{}] Can't merge phase "{}" from "{}", parent phase is not loaded.)",
                    ExtensionName, aPhaseMod.phasePath, aPhaseMod.mod);
         return false;
     }
@@ -181,7 +181,7 @@ bool App::QuestPhaseExtension::PatchPhase(Red::Handle<Red::questQuestPhaseResour
     auto [inputPhaseGraph, inputNode] = FindConnectionPoint(rootPhaseGraph, aPhaseMod.input.nodePath);
     if (!inputPhaseGraph || !inputNode)
     {
-        LogWarning(R"(|{}| Can't merge phase "{}" from "{}", input node doesn't exist.)",
+        LogWarning(R"([{}] Can't merge phase "{}" from "{}", input node doesn't exist.)",
                    ExtensionName, aPhaseMod.phasePath, aPhaseMod.mod);
         return false;
     }
@@ -189,7 +189,7 @@ bool App::QuestPhaseExtension::PatchPhase(Red::Handle<Red::questQuestPhaseResour
     auto modPhaseNode = CreatePhaseNode(inputPhaseGraph, aPhaseMod, inputNode->id);
     if (!modPhaseNode)
     {
-        LogWarning(R"(|{}| Can't merge phase "{}" from "{}", node with the same id already exists.)",
+        LogWarning(R"([{}] Can't merge phase "{}" from "{}", node with the same id already exists.)",
                    ExtensionName, aPhaseMod.phasePath, aPhaseMod.mod);
         return false;
     }
@@ -199,7 +199,7 @@ bool App::QuestPhaseExtension::PatchPhase(Red::Handle<Red::questQuestPhaseResour
         auto [outputPhaseGraph, outputNode] = FindConnectionPoint(rootPhaseGraph, aPhaseMod.output.nodePath);
         if (!outputPhaseGraph || !outputNode)
         {
-            LogWarning(R"(|{}| Can't merge phase "{}" from "{}", output node doesn't exist.)",
+            LogWarning(R"([{}] Can't merge phase "{}" from "{}", output node doesn't exist.)",
                        ExtensionName, aPhaseMod.phasePath, aPhaseMod.mod);
             return false;
         }
@@ -220,7 +220,7 @@ bool App::QuestPhaseExtension::PatchPhase(Red::Handle<Red::questQuestPhaseResour
         s_forced[aPhaseResource->path].insert(modPhaseNode->id);
     }
 
-    LogInfo(R"(|{}| Merged phase "{}" from "{}".)", ExtensionName, aPhaseMod.phasePath, aPhaseMod.mod);
+    LogInfo(R"([{}] Merged phase "{}" from "{}".)", ExtensionName, aPhaseMod.phasePath, aPhaseMod.mod);
 
     return true;
 }

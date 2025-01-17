@@ -4,7 +4,7 @@
 
 namespace
 {
-constexpr auto ExtensionName = "Animation";
+constexpr auto ExtensionName = "EntityAnimation";
 }
 
 std::string_view App::AnimationExtension::GetName()
@@ -43,7 +43,7 @@ void App::AnimationExtension::Configure()
             {
                 if (!invalidPaths.contains(animPath))
                 {
-                    LogError("|{}| Animation \"{}\" doesn't exist. Skipped.", ExtensionName, animation.set);
+                    LogError("[{}] Animation \"{}\" doesn't exist. Skipped.", ExtensionName, animation.set);
                     invalidPaths.insert(animPath);
                 }
                 continue;
@@ -78,7 +78,7 @@ void App::AnimationExtension::Configure()
                 {
                     if (!invalidPaths.contains(targetPath))
                     {
-                        // LogWarning("|{}| Entity \"{}\" doesn't exist. Skipped.", ExtensionName, m_paths[targetPath]);
+                        // LogWarning("[{}] Entity \"{}\" doesn't exist. Skipped.", ExtensionName, m_paths[targetPath]);
                         invalidPaths.insert(targetPath);
                     }
                     continue;
@@ -118,16 +118,16 @@ void App::AnimationExtension::OnInitializeAnimations(Red::entAnimatedComponent* 
             return;
     }
 
-    LogInfo("|{}| Initializing animations for \"{}:{}\"...",
+    LogInfo("[{}] Initializing animations for \"{}:{}\"...",
             ExtensionName, m_paths[templatePath], aComponent->name.ToString());
 
     for (const auto& anim : anims.value())
     {
-        LogInfo("|{}| Merging animations from \"{}\" with priority {}...",
+        LogInfo("[{}] Merging animations from \"{}\" with priority {}...",
                 ExtensionName, m_paths[anim.animSet.path], anim.priority);
 
         aComponent->animations.gameplay.PushBack(anim);
     }
 
-    LogInfo("|{}| All animations merged.", ExtensionName);
+    LogInfo("[{}] All animations merged.", ExtensionName);
 }

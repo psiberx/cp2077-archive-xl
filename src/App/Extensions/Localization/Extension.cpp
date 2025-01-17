@@ -73,7 +73,7 @@ void App::LocalizationExtension::OnLoadTexts(Red::Handle<TextResource>& aOnScree
     if (language.IsNone())
         return;
 
-    LogInfo("|{}| Initializing translations for \"{}\" language...", ExtensionName, language.ToString());
+    LogInfo("[{}] Initializing texts for \"{}\" language...", ExtensionName, language.ToString());
 
     auto mergedAny = false;
     auto successAll = true;
@@ -95,14 +95,14 @@ void App::LocalizationExtension::OnLoadTexts(Red::Handle<TextResource>& aOnScree
 
             if (paths != unit.onscreens.end())
             {
-                LogInfo(R"(|{}| Processing "{}"...)", ExtensionName, unit.name, language.ToString());
+                // LogInfo(R"([{}] Processing "{}"...)", ExtensionName, unit.name);
             }
             else
             {
                 fallback = true;
                 paths = unit.onscreens.find(unit.fallback);
-                LogInfo(R"(|{}| Processing "{}" using fallback language "{}"...)",
-                        ExtensionName, unit.name, unit.fallback.ToString());
+                // LogInfo(R"([{}] Processing "{}" using fallback language "{}"...)",
+                //         ExtensionName, unit.name, unit.fallback.ToString());
             }
 
             for (const auto& path : paths->second)
@@ -127,11 +127,11 @@ void App::LocalizationExtension::OnLoadTexts(Red::Handle<TextResource>& aOnScree
     }
 
     if (!mergedAny)
-        LogInfo("|{}| No translations to merge.", ExtensionName);
+        LogInfo("[{}] No translations to merge.", ExtensionName);
     else if (successAll)
-        LogInfo("|{}| All translations merged.", ExtensionName);
+        LogInfo("[{}] All translations merged.", ExtensionName);
     else
-        LogWarning("|{}| Some translations merged with issues.", ExtensionName);
+        LogWarning("[{}] Translations merged with issues.", ExtensionName);
 }
 
 bool App::LocalizationExtension::MergeTextResource(const std::string& aPath, TextEntryList& aFinalList,
@@ -143,11 +143,11 @@ bool App::LocalizationExtension::MergeTextResource(const std::string& aPath, Tex
 
     if (!resource.instance)
     {
-        LogError("|{}| Resource \"{}\" failed to load.", ExtensionName, aPath);
+        LogError("[{}] Resource \"{}\" failed to load.", ExtensionName, aPath);
         return false;
     }
 
-    LogInfo("|{}| Merging entries from \"{}\"...", ExtensionName, aPath);
+    LogInfo("[{}] Merging entries from \"{}\"...", ExtensionName, aPath);
 
     bool success = true;
     auto& newEntries = resource.GetPtr()->entries;
@@ -163,7 +163,7 @@ bool App::LocalizationExtension::MergeTextResource(const std::string& aPath, Tex
         {
             if (newEntry.secondaryKey.Length() == 0)
             {
-                LogWarning("|{}| Item #{} has no primary or secondary key. Skipped.", ExtensionName, i);
+                LogWarning("[{}] Item #{} has no primary or secondary key. Skipped.", ExtensionName, i);
                 success = false;
                 continue;
             }
@@ -216,10 +216,10 @@ void App::LocalizationExtension::MergeTextEntry(TextEntryList& aFinalList, TextE
         if (!aExtraEntry)
         {
             if (originalEntry->secondaryKey.Length() == 0)
-                LogWarning("|{}| Item #{} overwrites entry {}.",
+                LogWarning("[{}] Item #{} overwrites entry {}.",
                            ExtensionName, aIndex, originalEntry->primaryKey);
             else
-                LogWarning("|{}| Item #{} overwrites entry {} aka {}.",
+                LogWarning("[{}] Item #{} overwrites entry {} (\"{}\").",
                            ExtensionName, aIndex, originalEntry->primaryKey, originalEntry->secondaryKey.c_str());
         }
 
@@ -257,7 +257,7 @@ void App::LocalizationExtension::OnLoadSubtitles(Red::Handle<SubtitleResource>& 
     if (language.IsNone())
         return;
 
-    LogInfo("|{}| Initializing subtitles for \"{}\" language...", ExtensionName, language.ToString());
+    LogInfo("[{}] Initializing subtitles for \"{}\" language...", ExtensionName, language.ToString());
 
     auto mergedAny = false;
     auto successAll = true;
@@ -276,14 +276,14 @@ void App::LocalizationExtension::OnLoadSubtitles(Red::Handle<SubtitleResource>& 
 
             if (paths != unit.subtitles.end())
             {
-                LogInfo("|{}| Processing \"{}\"...", ExtensionName, unit.name);
+                // LogInfo("[{}] Processing \"{}\"...", ExtensionName, unit.name);
             }
             else
             {
                 fallback = true;
                 paths = unit.subtitles.find(unit.fallback);
-                LogInfo("|{}| Processing \"{}\" using fallback language \"{}\"...",
-                        ExtensionName, unit.name, unit.fallback.ToString());
+                // LogInfo(R"([{}] Processing "{}" using fallback language "{}"...)",
+                //         ExtensionName, unit.name, unit.fallback.ToString());
             }
 
             for (const auto& path : paths->second)
@@ -296,11 +296,11 @@ void App::LocalizationExtension::OnLoadSubtitles(Red::Handle<SubtitleResource>& 
     }
 
     if (!mergedAny)
-        LogInfo("|{}| No subtitles to merge.", ExtensionName);
+        LogInfo("[{}] No subtitles to merge.", ExtensionName);
     else if (successAll)
-        LogInfo("|{}| All subtitles merged.", ExtensionName);
+        LogInfo("[{}] All subtitles merged.", ExtensionName);
     else
-        LogWarning("|{}| Some subtitles merged with issues.", ExtensionName);
+        LogWarning("[{}] Subtitles merged with issues.", ExtensionName);
 }
 
 bool App::LocalizationExtension::MergeSubtitleResource(const std::string& aPath, App::SubtitleEntryList& aFinalList)
@@ -310,11 +310,11 @@ bool App::LocalizationExtension::MergeSubtitleResource(const std::string& aPath,
 
     if (!resource.instance)
     {
-        LogError("|{}| Resource \"{}\" failed to load.", ExtensionName, aPath);
+        LogError("[{}] Resource \"{}\" failed to load.", ExtensionName, aPath);
         return false;
     }
 
-    LogInfo("|{}| Merging entries from \"{}\"...", ExtensionName, aPath);
+    LogInfo("[{}] Merging entries from \"{}\"...", ExtensionName, aPath);
 
     for (const auto& newEntry : resource->entries)
     {
@@ -326,7 +326,7 @@ bool App::LocalizationExtension::MergeSubtitleResource(const std::string& aPath,
 
 void App::LocalizationExtension::OnLoadVoiceOvers(void* aContext, uint64_t a2)
 {
-    LogInfo("|{}| Initializing voiceover index...", ExtensionName);
+    LogInfo("[{}] Initializing voiceover index...", ExtensionName);
 
     auto mergedAny = false;
     auto successAll = true;
@@ -344,7 +344,7 @@ void App::LocalizationExtension::OnLoadVoiceOvers(void* aContext, uint64_t a2)
                 auto paths = unit.vomaps.find(entry.languageCode);
                 if (paths != unit.vomaps.end())
                 {
-                    LogInfo("|{}| Processing \"{}\"...", ExtensionName, unit.name);
+                    // LogInfo("[{}] Processing \"{}\"...", ExtensionName, unit.name);
 
                     for (const auto& path : paths->second)
                     {
@@ -352,12 +352,12 @@ void App::LocalizationExtension::OnLoadVoiceOvers(void* aContext, uint64_t a2)
 
                         if (depot->ResourceExists(ref.path))
                         {
-                            LogInfo("|{}| Merging entries from \"{}\"...", ExtensionName, path);
+                            LogInfo("[{}] Merging entries from \"{}\"...", ExtensionName, path);
                             entry.voMapChunks.PushBack(ref);
                         }
                         else
                         {
-                            LogError("|{}| Resource \"{}\" not found.", ExtensionName, path);
+                            LogError("[{}] Resource \"{}\" not found.", ExtensionName, path);
                             successAll = false;
                         }
                     }
@@ -369,11 +369,11 @@ void App::LocalizationExtension::OnLoadVoiceOvers(void* aContext, uint64_t a2)
     }
 
     if (!mergedAny)
-        LogInfo("|{}| No voiceover maps to merge.", ExtensionName);
+        LogInfo("[{}] No voiceover maps to merge.", ExtensionName);
     else if (successAll)
-        LogInfo("|{}| All voiceover maps merged.", ExtensionName);
+        LogInfo("[{}] All voiceover maps merged.", ExtensionName);
     else
-        LogWarning("|{}| Some voiceover maps merged with issues.", ExtensionName);
+        LogWarning("[{}] Voiceover maps merged with issues.", ExtensionName);
 }
 
 void App::LocalizationExtension::OnLoadLipsyncs(void* aContext, uint8_t a2)
@@ -386,7 +386,7 @@ void App::LocalizationExtension::OnLoadLipsyncs(void* aContext, uint8_t a2)
 
         const auto language = Language::ResolveFromLipsyncResource(mainToken->path);
 
-        LogInfo("|{}| Initializing lipsync maps for \"{}\" language...", ExtensionName, language.ToString());
+        LogInfo("[{}] Initializing lipsync maps for \"{}\" language...", ExtensionName, language.ToString());
 
         auto mergedAny = false;
         bool successAll = true;
@@ -399,7 +399,7 @@ void App::LocalizationExtension::OnLoadLipsyncs(void* aContext, uint8_t a2)
             auto paths = unit.lipmaps.find(language);
             if (paths != unit.lipmaps.end())
             {
-                LogInfo("|{}| Processing \"{}\"...", ExtensionName, unit.name);
+                // LogInfo("[{}] Processing \"{}\"...", ExtensionName, unit.name);
 
                 for (const auto& path : paths->second)
                 {
@@ -412,7 +412,7 @@ void App::LocalizationExtension::OnLoadLipsyncs(void* aContext, uint8_t a2)
                     }
                     else
                     {
-                        LogError("|{}| Resource \"{}\" failed to load.", ExtensionName, path);
+                        LogError("[{}] Resource \"{}\" failed to load.", ExtensionName, path);
                         successAll = false;
                     }
                 }
@@ -429,7 +429,7 @@ void App::LocalizationExtension::OnLoadLipsyncs(void* aContext, uint8_t a2)
             {
                 if (mainToken->IsFailed())
                 {
-                    LogWarning("|{}| Failed to initialize lipsync maps for \"{}\" language...",
+                    LogWarning("[{}] Failed to initialize lipsync maps for \"{}\" language...",
                                ExtensionName, language.ToString());
                     return;
                 }
@@ -438,7 +438,7 @@ void App::LocalizationExtension::OnLoadLipsyncs(void* aContext, uint8_t a2)
                 {
                     if (token->IsFailed())
                     {
-                        LogError("|{}| Resource \"{}\" failed to load.", ExtensionName, s_paths[token->path]);
+                        LogError("[{}] Resource \"{}\" failed to load.", ExtensionName, s_paths[token->path]);
                         successAll = false;
                         continue;
                     }
@@ -455,7 +455,7 @@ void App::LocalizationExtension::OnLoadLipsyncs(void* aContext, uint8_t a2)
                     {
                         if (token->IsFailed())
                         {
-                            LogError("|{}| Resource \"{}\" failed to load.", ExtensionName, s_paths[token->path]);
+                            LogError("[{}] Resource \"{}\" failed to load.", ExtensionName, s_paths[token->path]);
                             successAll = false;
                             continue;
                         }
@@ -464,9 +464,9 @@ void App::LocalizationExtension::OnLoadLipsyncs(void* aContext, uint8_t a2)
                     }
 
                     if (successAll)
-                        LogInfo("|{}| All lipsync maps merged.", ExtensionName);
+                        LogInfo("[{}] All lipsync maps merged.", ExtensionName);
                     else
-                        LogWarning("|{}| Some lipsync maps merged with issues.", ExtensionName);
+                        LogWarning("[{}] Lipsync maps merged with issues.", ExtensionName);
                 });
 
                 return;
@@ -474,11 +474,11 @@ void App::LocalizationExtension::OnLoadLipsyncs(void* aContext, uint8_t a2)
         }
 
         if (!mergedAny)
-            LogInfo("|{}| No lipsync maps to merge.", ExtensionName);
+            LogInfo("[{}] No lipsync maps to merge.", ExtensionName);
         else if (successAll)
-            LogInfo("|{}| All lipsync maps merged.", ExtensionName);
+            LogInfo("[{}] All lipsync maps merged.", ExtensionName);
         else
-            LogWarning("|{}| Some lipsync maps merged with issues.", ExtensionName);
+            LogWarning("[{}] Lipsync maps merged with issues.", ExtensionName);
     }
 }
 
@@ -488,14 +488,14 @@ bool App::LocalizationExtension::MergeLipsyncResource(const Red::Handle<Red::ani
     if (aSource->scenePaths.size != aSource->sceneEntries.size)
         return false;
 
-    LogInfo("|{}| Merging entries from \"{}\"...", ExtensionName, s_paths[aSource->path]);
+    LogInfo("[{}] Merging entries from \"{}\"...", ExtensionName, s_paths[aSource->path]);
 
     for (uint32_t i = 0; i < aSource->scenePaths.size; ++i)
     {
         auto& path = aSource->scenePaths[i];
         auto& entry = aSource->sceneEntries[i];
 
-        LogInfo("|{}| Merging entry #{} with hash {}...", ExtensionName, i + 1, path);
+        LogInfo("[{}] Merging entry #{} with hash {}...", ExtensionName, i + 1, path);
 
         auto pathIt = std::lower_bound(aTarget->scenePaths.Begin(), aTarget->scenePaths.End(), path);
         auto targetIt = aTarget->sceneEntries.Begin() + (pathIt - aTarget->scenePaths.Begin());

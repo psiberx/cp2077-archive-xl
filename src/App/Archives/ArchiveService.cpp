@@ -28,7 +28,7 @@ void App::ArchiveService::OnInitializeArchives(Red::ResourceDepot* aDepot)
 
     m_loaded = true;
 
-    LogInfo("Loading archives...");
+    LogInfo("Loading extra archives...");
 
     if (m_dirs.empty() && m_archives.empty())
         return;
@@ -122,14 +122,14 @@ bool App::ArchiveService::RegisterArchive(std::filesystem::path aPath)
 
     if (!std::filesystem::exists(aPath, error) || !std::filesystem::is_regular_file(aPath, error))
     {
-        LogError("Can't register non-existing archive \"{}\".",
+        LogError("Can't register archive \"{}\": path doesn't exist.",
                  std::filesystem::relative(aPath, m_gameDir).string());
         return false;
     }
 
     if (m_loaded)
     {
-        LogError("Can't register archive \"{}\" because depot is already initialized.",
+        LogError("Can't register archive \"{}\": depot is already initialized.",
                  std::filesystem::relative(aPath, m_gameDir).string());
         return false;
     }
@@ -149,14 +149,14 @@ bool App::ArchiveService::RegisterDirectory(std::filesystem::path aPath)
 
     if (!std::filesystem::exists(aPath, error) || !std::filesystem::is_directory(aPath, error))
     {
-        LogError("Can't register non-existing archive directory \"{}\".",
+        LogError("Can't register archive directory \"{}\": path doesn't exist.",
                  std::filesystem::relative(aPath, m_gameDir).string());
         return false;
     }
 
     if (m_loaded)
     {
-        LogError("Can't register archive directory \"{}\" because depot is already initialized.",
+        LogError("Can't register archive directory \"{}\": depot is already initialized.",
                  std::filesystem::relative(aPath, m_gameDir).string());
         return false;
     }

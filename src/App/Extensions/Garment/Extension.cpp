@@ -7,7 +7,7 @@
 
 namespace
 {
-constexpr auto ExtensionName = "Garment";
+constexpr auto ExtensionName = "GarmentOverride";
 
 constexpr auto BodyPartTag = Red::CName("PlayerBodyPart");
 
@@ -129,7 +129,7 @@ void App::GarmentExtension::OnLoadAppearanceResource(Red::ItemFactoryRequest* aR
         if (auto& entityState = s_stateManager->GetEntityState(entityWeak.instance))
         {
 #ifndef NDEBUG
-            LogDebug("|{}| [event=LoadAppearanceResource entity={}]", ExtensionName, entityState->GetName());
+            LogDebug("[{}] [event=LoadAppearanceResource entity={}]", ExtensionName, entityState->GetName());
 #endif
             if (itemRecord)
             {
@@ -161,7 +161,7 @@ void App::GarmentExtension::OnChangeAppearanceResource(Red::ItemFactoryAppearanc
         if (auto& entityState = s_stateManager->GetEntityState(entityWeak.instance))
         {
 #ifndef NDEBUG
-            LogDebug("|{}| [event=ChangeAppearanceResource entity={}]", ExtensionName, entityState->GetName());
+            LogDebug("[{}] [event=ChangeAppearanceResource entity={}]", ExtensionName, entityState->GetName());
 #endif
             if (itemRecord)
             {
@@ -313,7 +313,7 @@ void App::GarmentExtension::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset*
 #ifndef NDEBUG
     if (aFinalTags.tags.size == 0)
     {
-        LogDebug("|{}| [event=GetVisualTags ent={} app={}]", ExtensionName, aEntityPath.hash, aAppearanceName.ToString());
+        LogDebug("[{}] [event=GetVisualTags ent={} app={}]", ExtensionName, aEntityPath.hash, aAppearanceName.ToString());
     }
 #endif
 
@@ -453,7 +453,7 @@ void App::GarmentExtension::OnAddItem(Red::GarmentAssemblerState* aState,
     if (auto& entityState = s_stateManager->FindEntityState(aState->unk00))
     {
 #ifndef NDEBUG
-        LogDebug("|{}| [event=AddItem entity={} item={} app={}]",
+        LogDebug("[{}] [event=AddItem entity={} item={} app={}]",
                  ExtensionName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
 #endif
 
@@ -470,7 +470,7 @@ void App::GarmentExtension::OnAddCustomItem(Red::GarmentAssemblerState* aState,
     if (auto& entityState = s_stateManager->FindEntityState(aState->unk00))
     {
 #ifndef NDEBUG
-        LogDebug("|{}| [event=AddCustomItem entity={} item={} app={}]",
+        LogDebug("[{}] [event=AddCustomItem entity={} item={} app={}]",
                  ExtensionName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
 #endif
 
@@ -488,7 +488,7 @@ void App::GarmentExtension::OnChangeItem(Red::GarmentAssemblerState* aState,
     if (auto& entityState = s_stateManager->FindEntityState(aState->unk00))
     {
 #ifndef NDEBUG
-        LogDebug("|{}| [event=ChangeItem entity={} item={} app={}]",
+        LogDebug("[{}] [event=ChangeItem entity={} item={} app={}]",
                  ExtensionName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
 #endif
 
@@ -505,7 +505,7 @@ void App::GarmentExtension::OnChangeCustomItem(Red::GarmentAssemblerState* aStat
     if (auto& entityState = s_stateManager->FindEntityState(aState->unk00))
     {
 #ifndef NDEBUG
-        LogDebug("|{}| [event=ChangeCustomItem entity={} item={} app={}]",
+        LogDebug("[{}] [event=ChangeCustomItem entity={} item={} app={}]",
                  ExtensionName, entityState->GetName(), aRequest.hash, aRequest.apperance->name.ToString());
 #endif
 
@@ -525,7 +525,7 @@ void App::GarmentExtension::OnRemoveItem(uintptr_t, Red::WeakHandle<Red::Entity>
         if (auto& entityState = s_stateManager->GetEntityState(entity))
         {
 #ifndef NDEBUG
-            LogDebug("|{}| [event=RemoveItem entity={} item={}]",
+            LogDebug("[{}] [event=RemoveItem entity={} item={}]",
                      ExtensionName, entityState->GetName(), aRequest.hash);
 #endif
 
@@ -540,7 +540,7 @@ void App::GarmentExtension::OnRegisterPart(uintptr_t, Red::Handle<Red::EntityTem
                                                 Red::Handle<Red::AppearanceDefinition>& aAppearance)
 {
 #ifndef NDEBUG
-    LogDebug("|{}| [event=RegisterPart part={}]", ExtensionName, aPart->path.hash);
+    LogDebug("[{}] [event=RegisterPart part={}]", ExtensionName, aPart->path.hash);
 #endif
 
     std::unique_lock _(s_mutex);
@@ -557,7 +557,7 @@ uintptr_t App::GarmentExtension::OnProcessGarment(Red::SharedPtr<Red::GarmentPro
     if (auto& entityState = s_stateManager->FindEntityState(aParams->entity))
     {
 #ifndef NDEBUG
-        LogDebug("|{}| [event=ProcessGarment entity={}]", ExtensionName, entityState->GetName());
+        LogDebug("[{}] [event=ProcessGarment entity={}]", ExtensionName, entityState->GetName());
 #endif
 
         UpdateDynamicAttributes(entityState);
@@ -583,7 +583,7 @@ void App::GarmentExtension::OnProcessGarmentMesh(Raw::GarmentAssembler::ProcessM
         if (entityState->ApplyDynamicAppearance(aComponent, aPartTemplate->path))
         {
 #ifndef NDEBUG
-            LogDebug("|{}| [event=ProcessGarmentMesh entity={} comp={}]", ExtensionName, entityState->GetName(), aComponent->name.ToString());
+            LogDebug("[{}] [event=ProcessGarmentMesh entity={} comp={}]", ExtensionName, entityState->GetName(), aComponent->name.ToString());
 #endif
             // if (aMeshToken->IsFailed())
             // {
@@ -620,7 +620,7 @@ void App::GarmentExtension::OnProcessGarmentMesh(Raw::GarmentAssembler::ProcessM
 //             offset %= 1000;
 //
 // #ifndef NDEBUG
-//             LogDebug("|{}| [event=GetBaseMeshOffset comp={} offset={}]", ExtensionName, aComponent->name.ToString(), offset);
+//             LogDebug("[{}] [event=GetBaseMeshOffset comp={} offset={}]", ExtensionName, aComponent->name.ToString(), offset);
 // #endif
 //         }
 //     }
@@ -637,7 +637,7 @@ void App::GarmentExtension::OnComputeGarment(uintptr_t, Red::Handle<Red::Entity>
     if (auto& entityState = s_stateManager->FindEntityState(aEntity))
     {
 #ifndef NDEBUG
-        LogDebug("|{}| [event=ComputeGarment entity={}]",
+        LogDebug("[{}] [event=ComputeGarment entity={}]",
                  ExtensionName, entityState->GetName());
 #endif
 
@@ -659,7 +659,7 @@ void App::GarmentExtension::OnReassembleAppearance(Red::Entity* aEntity, uintptr
     if (auto& entityState = s_stateManager->FindEntityState(aEntity))
     {
 #ifndef NDEBUG
-        LogDebug("|{}| [event=ReassembleAppearance entity={}]",
+        LogDebug("[{}] [event=ReassembleAppearance entity={}]",
                  ExtensionName, entityState->GetName());
 #endif
 
@@ -836,7 +836,7 @@ void App::GarmentExtension::ApplyComponentOverrides(Core::SharedPtr<EntityState>
 
             if (wrapper.IsMeshComponent())
             {
-                LogDebug("|{}| [index={} component={} type={} enabled={} app={} chunks={:064b}]",
+                LogDebug("[{}] [index={} component={} type={} enabled={} app={} chunks={:064b}]",
                          ExtensionName,
                          index,
                          component->name.ToString(),
@@ -847,7 +847,7 @@ void App::GarmentExtension::ApplyComponentOverrides(Core::SharedPtr<EntityState>
             }
             else
             {
-                LogDebug("|{}| [index={} component={} type={} enabled={}]",
+                LogDebug("[{}] [index={} component={} type={} enabled={}]",
                          ExtensionName,
                          index,
                          component->name.ToString(),

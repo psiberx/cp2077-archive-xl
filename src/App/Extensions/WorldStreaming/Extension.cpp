@@ -60,7 +60,7 @@ void App::WorldStreamingExtension::Configure()
             {
                 if (!invalidPaths.contains(sectorPath))
                 {
-                    LogError("|{}| {}: Sector \"{}\" doesn't exist.",
+                    LogError("[{}] {}: Sector \"{}\" doesn't exist.",
                              ExtensionName, sectorMod.mod, sectorMod.path);
                     invalidPaths.insert(sectorPath);
                 }
@@ -77,7 +77,7 @@ void App::WorldStreamingExtension::Configure()
 
                     if (!invalidNodeTypes.contains(nodeDeletion.nodeType))
                     {
-                        LogError("|{}| {}: Node type \"{}\" doesn't exist.",
+                        LogError("[{}] {}: Node type \"{}\" doesn't exist.",
                                  ExtensionName, sectorMod.mod, nodeDeletion.nodeType.ToString());
                         invalidNodeTypes.insert(nodeDeletion.nodeType);
                     }
@@ -99,7 +99,7 @@ void App::WorldStreamingExtension::OnWorldLoad(Red::world::StreamingWorld* aWorl
     if (aWorld->path != MainWorldResource)
         return;
 
-    LogInfo("|{}| World streaming is initializing...", ExtensionName);
+    LogInfo("[{}] World streaming is initializing...", ExtensionName);
 
     if (!m_configs.empty())
     {
@@ -110,7 +110,7 @@ void App::WorldStreamingExtension::OnWorldLoad(Red::world::StreamingWorld* aWorl
         {
             if (!unit.blocks.empty())
             {
-                LogInfo("|{}| Processing \"{}\"...", ExtensionName, unit.name);
+                // LogInfo("[{}] Processing \"{}\"...", ExtensionName, unit.name);
 
                 for (const auto& path : unit.blocks)
                 {
@@ -133,31 +133,31 @@ void App::WorldStreamingExtension::OnWorldLoad(Red::world::StreamingWorld* aWorl
             {
                 if (!blockRef.token->IsFailed())
                 {
-                    LogInfo("|{}| Merging streaming block \"{}\"...", ExtensionName, blockPaths[blockRef.path]);
+                    LogInfo("[{}] Merging streaming block \"{}\"...", ExtensionName, blockPaths[blockRef.path]);
 
                     aWorld->blockRefs.EmplaceBack(std::move(blockRef));
                 }
                 else
                 {
-                    LogError("|{}| Resource \"{}\" failed to load.", ExtensionName, blockPaths[blockRef.path]);
+                    LogError("[{}] Resource \"{}\" failed to load.", ExtensionName, blockPaths[blockRef.path]);
 
                     allSucceeded = false;
                 }
             }
 
             if (allSucceeded)
-                LogInfo("|{}| All streaming blocks merged.", ExtensionName);
+                LogInfo("[{}] All streaming blocks merged.", ExtensionName);
             else
-                LogWarning("|{}| Streaming blocks merged with issues.", ExtensionName);
+                LogWarning("[{}] Streaming blocks merged with issues.", ExtensionName);
         }
         else
         {
-            LogInfo("|{}| No blocks to merge.", ExtensionName);
+            LogInfo("[{}] No blocks to merge.", ExtensionName);
         }
     }
     else
     {
-        LogInfo("|{}| No blocks to merge.", ExtensionName);
+        LogInfo("[{}] No blocks to merge.", ExtensionName);
     }
 }
 
@@ -174,11 +174,11 @@ void App::WorldStreamingExtension::OnSectorReady(Red::world::StreamingSector* aS
     auto patchedAny = false;
     auto successAll = true;
 
-    LogInfo("|{}| Patching sector \"{}\"...", ExtensionName, sectorPath);
+    LogInfo("[{}] Patching sector \"{}\"...", ExtensionName, sectorPath);
 
     for (const auto& sectorMod : sectorMods.value())
     {
-        LogInfo("|{}| Applying changes from \"{}\"...", ExtensionName, sectorMod.mod);
+        LogInfo("[{}] Applying changes from \"{}\"...", ExtensionName, sectorMod.mod);
 
         if (PatchSector(aSector, sectorMod))
         {
@@ -191,11 +191,11 @@ void App::WorldStreamingExtension::OnSectorReady(Red::world::StreamingSector* aS
     }
 
     if (successAll)
-        LogInfo("|{}| All patches have been applied to \"{}\".", ExtensionName, sectorPath);
+        LogInfo("[{}] All patches have been applied to \"{}\".", ExtensionName, sectorPath);
     else if (patchedAny)
-        LogWarning("|{}| Some patches have not been applied to \"{}\".", ExtensionName, sectorPath);
+        LogWarning("[{}] Some patches have not been applied to \"{}\".", ExtensionName, sectorPath);
     else
-        LogWarning("|{}| No patches have been applied to \"{}\".", ExtensionName, sectorPath);
+        LogWarning("[{}] No patches have been applied to \"{}\".", ExtensionName, sectorPath);
 }
 
 bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSector, const App::WorldSectorMod& aSectorMod)
@@ -205,7 +205,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
 
     if (buffer.nodeSetups.GetInstanceCount() != aSectorMod.expectedNodes)
     {
-        LogError(R"(|{}| {}: The target sector has {} node(s), but the mod expects {}.)",
+        LogError(R"([{}] {}: The target sector has {} node(s), but the mod expects {}.)",
                  ExtensionName, aSectorMod.mod, nodeCount, aSectorMod.expectedNodes);
         return false;
     }
@@ -219,7 +219,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
 
         if (nodeMutation.nodeType != nodeDefinition->GetNativeType()->name)
         {
-            LogError(R"(|{}| {}: The target node #{} has type {}, but the mod expects {}.)",
+            LogError(R"([{}] {}: The target node #{} has type {}, but the mod expects {}.)",
                      ExtensionName, aSectorMod.mod,
                      nodeMutation.nodeIndex,
                      nodeDefinition->GetNativeType()->name.ToString(),
@@ -235,7 +235,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
 
         if (nodeDeletion.nodeType != nodeDefinition->GetNativeType()->name)
         {
-            LogError(R"(|{}| {}: The target node #{} has type {}, but the mod expects {}.)",
+            LogError(R"([{}] {}: The target node #{} has type {}, but the mod expects {}.)",
                      ExtensionName, aSectorMod.mod, nodeDeletion.nodeIndex,
                      nodeDefinition->GetNativeType()->name.ToString(),
                      nodeDeletion.nodeType.ToString());
@@ -248,7 +248,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             auto& actors = Raw::CollisionNode::Actors::Ref(nodeDefinition);
             if (actors.GetSize() != nodeDeletion.expectedSubNodes)
             {
-                LogError(R"(|{}| {}: The target node #{} has {} actor(s), but the mod expects {}.)",
+                LogError(R"([{}] {}: The target node #{} has {} actor(s), but the mod expects {}.)",
                          ExtensionName, aSectorMod.mod, nodeDeletion.nodeIndex,
                          actors.GetSize(), nodeDeletion.expectedSubNodes);
                 nodeValidationPassed = false;
