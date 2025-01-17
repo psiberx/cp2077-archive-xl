@@ -94,17 +94,25 @@ void App::ArchiveService::OnInitializeArchives(Red::ResourceDepot* aDepot)
 
 Red::ArchiveGroup& App::ArchiveService::ResolveArchiveGroup(Red::ResourceDepot* aDepot, const Red::CString& aBasePath)
 {
-    for (auto& group : aDepot->groups)
+    auto existingGroup = std::find_if(aDepot->groups.begin(), aDepot->groups.end(),
+                                     [&aBasePath](const Red::ArchiveGroup& aGroup) {
+                                         return aGroup.basePath == aBasePath;
+                                     });
+
+    if (existingGroup != aDepot->groups.end())
     {
-        if (group.basePath == aBasePath)
-        {
-            return group;
-        }
+        return *existingGroup;
     }
 
-    aDepot->groups.Emplace(aDepot->groups.Begin() + 1);
+    auto firstNonModGroup = std::find_if(aDepot->groups.begin(), aDepot->groups.end(),
+                                         [](const Red::ArchiveGroup& aGroup) {
+                                             return aGroup.scope != Red::ArchiveScope::Mod;
+                                         });
+    auto firstNonModGroupIndex = firstNonModGroup - aDepot->groups.begin();
 
-    auto& group = aDepot->groups[1];
+    aDepot->groups.Emplace(firstNonModGroup);
+
+    auto& group = aDepot->groups[firstNonModGroupIndex];
     group.basePath = aBasePath;
     group.scope = Red::ArchiveScope::Mod;
 
