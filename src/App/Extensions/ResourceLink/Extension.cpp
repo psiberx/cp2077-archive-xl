@@ -43,7 +43,7 @@ void App::ResourceLinkExtension::Configure()
                 {
                     if (!invalidPaths.contains(linkPath))
                     {
-                        LogError("|{}| Link \"{}\" points to itself.", ExtensionName, config.paths[linkPath]);
+                        LogError("[{}] Link \"{}\" points to itself.", ExtensionName, config.paths[linkPath]);
                         invalidPaths.insert(linkPath);
                     }
                     continue;
@@ -53,7 +53,7 @@ void App::ResourceLinkExtension::Configure()
                 {
                     if (!invalidPaths.contains(linkPath))
                     {
-                        LogError("|{}| Link \"{}\" is an existing resource.", ExtensionName, config.paths[linkPath]);
+                        LogError("[{}] Link \"{}\" is an existing resource.", ExtensionName, config.paths[linkPath]);
                         invalidPaths.insert(linkPath);
                     }
                     continue;
@@ -115,7 +115,7 @@ void App::ResourceLinkExtension::Configure()
     {
         if (!invalidPaths.contains(linkPath))
         {
-            LogError("|{}| Link \"{}\" is cyclic.", ExtensionName, s_paths[linkPath]);
+            LogError("[{}] Link \"{}\" is cyclic.", ExtensionName, s_paths[linkPath]);
             invalidPaths.insert(linkPath);
         }
 
@@ -131,7 +131,7 @@ void App::ResourceLinkExtension::Configure()
         {
             if (!invalidPaths.contains(targetPath))
             {
-                LogError(R"(|{}| Link "{}" points to a non-existent resource "{}".)",
+                LogError(R"([{}] Link "{}" points to a non-existent resource "{}".)",
                          ExtensionName, s_paths[linkPath], s_paths[targetPath]);
                 invalidPaths.insert(targetPath);
             }
