@@ -1,4 +1,5 @@
 #include "Extension.hpp"
+#include "Core/Facades/Container.hpp"
 #include "Red/FactoryIndex.hpp"
 
 namespace
@@ -14,7 +15,9 @@ std::string_view App::FactoryIndexExtension::GetName()
 
 bool App::FactoryIndexExtension::Load()
 {
-    HookAfter<Raw::FactoryIndex::LoadFactoryAsync>(&FactoryIndexExtension::OnLoadFactoryAsync).OrThrow();
+    HookAfter<Raw::FactoryIndex::LoadFactoryAsync>(&OnLoadFactoryAsync).OrThrow();
+
+    s_resourcePathRegistry = Core::Resolve<ResourcePathRegistry>();
 
     return true;
 }
@@ -26,32 +29,62 @@ bool App::FactoryIndexExtension::Unload()
     return true;
 }
 
-void App::FactoryIndexExtension::OnLoadFactoryAsync(uintptr_t aIndex, Red::ResourcePath aPath, uintptr_t aContext)
+void App::FactoryIndexExtension::Configure()
 {
-    if (aPath == LastFactory)
+    s_factories.clear();
+
+    auto depot = Red::ResourceDepot::Get();
+
+    Core::Set<Red::ResourcePath> invalidPaths;
+
+    for (const auto& unit : m_configs)
     {
-        LogInfo("[{}] Initializing factory index...", ExtensionName);
-
-        if (!m_configs.empty())
+        for (const auto& factoryPathStr : unit.factories)
         {
-            for (const auto& unit : m_configs)
+            auto factoryPath = Red::ResourcePath(factoryPathStr.c_str());
+
+            if (!depot->ResourceExists(factoryPath))
             {
-                // LogInfo("[{}] Processing \"{}\"...", ExtensionName, unit.name);
-
-                for (const auto& path : unit.factories)
+                if (!invalidPaths.contains(factoryPath))
                 {
-                    LogInfo("[{}] Adding factory \"{}\"...", ExtensionName, path);
-
-                    // TODO: Check if factory resource exists...
-                    Raw::FactoryIndex::LoadFactoryAsync(aIndex, path.c_str(), aContext);
+                    LogError("[{}] Factory \"{}\" doesn't exist. Skipped.", ExtensionName, factoryPathStr);
+                    invalidPaths.insert(factoryPath);
                 }
+                continue;
             }
 
-            LogInfo("[{}] All factories added to the index.", ExtensionName);
+            s_factories.insert_or_assign(factoryPath, factoryPathStr);
         }
-        else
+    }
+
+    for (const auto& [knownPath, knownPathStr] : s_factories)
+    {
+        s_resourcePathRegistry->RegisterPath(knownPath, knownPathStr);
+    }
+
+    m_configs.clear();
+}
+
+void App::FactoryIndexExtension::OnLoadFactoryAsync(uintptr_t aIndex, Red::ResourcePath aPath, uintptr_t aContext)
+{
+    if (aPath != LastFactory)
+        return;
+
+    LogInfo("[{}] Initializing factory index...", ExtensionName);
+
+    if (!s_factories.empty())
+    {
+        for (const auto& [factoryPath, factoryPathStr] : s_factories)
         {
-            LogInfo("[{}] No factories to add to the index.", ExtensionName);
+            LogInfo("[{}] Loading factory \"{}\"...", ExtensionName, factoryPathStr);
+
+            Raw::FactoryIndex::LoadFactoryAsync(aIndex, factoryPath, aContext);
         }
+
+        LogInfo("[{}] All factories loaded.", ExtensionName);
+    }
+    else
+    {
+        LogInfo("[{}] No factories to load.", ExtensionName);
     }
 }
