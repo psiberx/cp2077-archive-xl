@@ -84,7 +84,6 @@ private:
     static Red::Handle<Red::AppearanceDefinition> GetPatchDefinition(Red::ResourcePath aResourcePath, Red::CName aDefinitionName);
 
     inline static Core::Map<Red::ResourcePath, Core::Set<Red::ResourcePath>> s_patches;
-    inline static Core::Map<Red::ResourcePath, std::string> s_paths;
     inline static Red::SharedSpinLock s_tokenLock;
     inline static Core::Map<Red::ResourcePath, Red::SharedPtr<Red::ResourceToken<>>> s_tokens;
     inline static Red::SharedSpinLock s_definitionLock;
