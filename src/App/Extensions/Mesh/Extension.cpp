@@ -54,7 +54,7 @@ bool App::MeshExtension::Unload()
 }
 
 void App::MeshExtension::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& aOut, Red::CMesh* aMesh,
-                                               Red::CName aName)
+                                          Red::CName aName)
 {
     if (!aOut)
         return;
@@ -114,8 +114,41 @@ void App::MeshExtension::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& 
     }
 }
 
+void App::MeshExtension::OnAddStubAppearance(Red::CMesh* aMesh)
+{
+    if (!aMesh->renderResourceBlob || aMesh->surfaceAreaPerAxis.X < 0.0)
+    {
+        Raw::CMesh::AddStubAppearance(aMesh);
+    }
+}
+
+bool App::MeshExtension::OnPreloadAppearances(Red::CMesh* aMesh)
+{
+    if (!aMesh || !aMesh->path || aMesh->appearances.size == 0)
+        return false;
+
+    auto result = Raw::CMesh::ShouldPreloadAppearances(aMesh);
+
+    if (result && !aMesh->forceLoadAllAppearances && aMesh->appearances.size == 1)
+    {
+        if (aMesh->appearances[0]->chunkMaterials.size == 0)
+        {
+            result = false;
+        }
+        else if (aMesh->appearances[0]->name != DefaultAppearanceName)
+        {
+            if (aMesh->materialEntries.size == 0 || IsSpecialMaterial(aMesh->materialEntries[0].name))
+            {
+                result = false;
+            }
+        }
+    }
+
+    return result;
+}
+
 void* App::MeshExtension::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMaterialsToken& aToken,
-                                               const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4)
+                                          const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4)
 {
     Raw::CMesh::LoadMaterialsAsync(aTargetMesh, aToken, aMaterialNames, a4);
 
@@ -176,8 +209,8 @@ void* App::MeshExtension::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMate
             auto sourceMesh = sourceMeshWeak.Lock();
             if (targetMesh && sourceMesh)
             {
-                ProcessMeshResource(targetMeshState, targetMesh, sourceMeshState, sourceMesh, materialNames,
-                                    finalMaterials, aJobGroup);
+                ProcessDynamicMaterials(targetMeshState, targetMesh, sourceMeshState, sourceMesh, materialNames,
+                                        finalMaterials, aJobGroup);
             }
         });
 
@@ -189,26 +222,11 @@ void* App::MeshExtension::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMate
     return &aToken;
 }
 
-Core::SharedPtr<App::MeshExtension::MeshState> App::MeshExtension::AcquireMeshState(Red::CMesh* aMesh)
-{
-    std::unique_lock _(s_stateLock);
-
-    auto it = s_states.find(aMesh->path);
-    if (it == s_states.end())
-    {
-        it = s_states.emplace(aMesh->path, Core::MakeShared<MeshState>(aMesh)).first;
-    }
-
-    return it.value();
-}
-
-void App::MeshExtension::ProcessMeshResource(const Core::SharedPtr<MeshState>& aMeshState,
-                                             const Red::Handle<Red::CMesh>& aMesh,
-                                             const Core::SharedPtr<MeshState>& aSourceState,
-                                             const Red::Handle<Red::CMesh>& aSourceMesh,
-                                             const Red::DynArray<Red::CName>& aMaterialNames,
-                                             const Red::SharedPtr<Red::DynArray<Red::Handle<Red::IMaterial>>>& aFinalMaterials,
-                                             const Red::JobGroup& aJobGroup)
+void App::MeshExtension::ProcessDynamicMaterials(
+    const Core::SharedPtr<MeshState>& aMeshState, const Red::Handle<Red::CMesh>& aMesh,
+    const Core::SharedPtr<MeshState>& aSourceState, const Red::Handle<Red::CMesh>& aSourceMesh,
+    const Red::DynArray<Red::CName>& aMaterialNames,
+    const Red::SharedPtr<Red::DynArray<Red::Handle<Red::IMaterial>>>& aFinalMaterials, const Red::JobGroup& aJobGroup)
 {
     Red::JobQueue jobQueue(aJobGroup);
     Core::Vector<DeferredMaterial> deferredMaterials(0);
@@ -216,6 +234,7 @@ void App::MeshExtension::ProcessMeshResource(const Core::SharedPtr<MeshState>& a
     std::scoped_lock _(aMeshState->meshMutex, aSourceState->sourceMutex);
 
     aMeshState->FillMaterials(aMesh);
+
     if (aSourceState != aMeshState)
     {
         aSourceState->FillMaterials(aSourceMesh);
@@ -230,15 +249,10 @@ void App::MeshExtension::ProcessMeshResource(const Core::SharedPtr<MeshState>& a
 
         if (chunkName.hash == aSourceMesh->path.hash)
         {
-            aMeshState->materials[chunkName] = static_cast<int32_t>(aMesh->materialEntries.size);
-            aMesh->materialEntries.EmplaceBack();
-
-            auto& materialEntry = aMesh->materialEntries.Back();
-            materialEntry.name = chunkName;
-            materialEntry.material = s_dummyMaterial;
-            materialEntry.materialWeak = s_dummyMaterial;
-            materialEntry.isLocalInstance = true;
-
+            auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aMesh->path);
+            auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aSourceMesh->path);
+            LogError(R"([{}] Mesh "{}" is not registered as a source for "{}".)",
+                     ExtensionName, meshPathStr, sourcePathStr);
             continue;
         }
 
@@ -588,23 +602,6 @@ Red::ResourcePath App::MeshExtension::ExpandResourcePath(Red::ResourcePath aPath
     return result.value.data();
 }
 
-template<typename T>
-void App::MeshExtension::EnsureResourceLoaded(Red::ResourceReference<T>& aRef)
-{
-    if (!aRef.token)
-    {
-        aRef.LoadAsync();
-    }
-
-    EnsureResourceLoaded(aRef.token);
-}
-
-template<typename T>
-void App::MeshExtension::EnsureResourceLoaded(Red::SharedPtr<Red::ResourceToken<T>>& aToken)
-{
-    Red::WaitForResource(aToken, std::chrono::milliseconds(1000));
-}
-
 bool App::MeshExtension::IsSpecialMaterial(Red::CName aMaterialName)
 {
     return aMaterialName.ToString()[0] == SpecialMaterialMarker;
@@ -617,12 +614,25 @@ bool App::MeshExtension::IsContextualMesh(Red::CMesh* aMesh)
            aMesh->materialEntries.Front().name == ContextMaterialName;
 }
 
+Core::SharedPtr<App::MeshExtension::MeshState> App::MeshExtension::AcquireMeshState(Red::CMesh* aMesh)
+{
+    std::unique_lock _(s_stateLock);
+
+    auto it = s_states.find(aMesh->path);
+    if (it == s_states.end())
+    {
+        it = s_states.emplace(aMesh->path, Core::MakeShared<MeshState>(aMesh)).first;
+    }
+
+    return it.value();
+}
+
 void App::MeshExtension::PrefetchMeshState(Red::CMesh* aMesh, const Core::Map<Red::CName, std::string>& aContext)
 {
     if (!aContext.empty())
     {
         auto meshState = AcquireMeshState(aMesh);
-        meshState->FillContext(aContext);
+        meshState->PrefillContext(aContext);
     }
     else if (IsContextualMesh(aMesh))
     {
@@ -636,40 +646,22 @@ Red::CName App::MeshExtension::RegisterMeshSource(Red::CMesh* aMesh, Red::CMesh*
         return {};
 
     auto meshState = AcquireMeshState(aMesh);
-    return meshState->RegisterSource(aSourceMesh);
-}
+    auto sourceTag = meshState->RegisterSource(aSourceMesh);
 
-void App::MeshExtension::OnAddStubAppearance(Red::CMesh* aMesh)
-{
-    if (!aMesh->renderResourceBlob || aMesh->surfaceAreaPerAxis.X < 0.0)
     {
-        Raw::CMesh::AddStubAppearance(aMesh);
-    }
-}
+        std::scoped_lock _(meshState->meshMutex);
 
-bool App::MeshExtension::OnPreloadAppearances(Red::CMesh* aMesh)
-{
-    if (!aMesh || !aMesh->path || aMesh->appearances.size == 0)
-        return false;
+        meshState->materials[sourceTag] = static_cast<int32_t>(aMesh->materialEntries.size);
+        aMesh->materialEntries.EmplaceBack();
 
-    auto result = Raw::CMesh::ShouldPreloadAppearances(aMesh);
-
-    if (result && !aMesh->forceLoadAllAppearances && aMesh->appearances.size == 1)
-    {
-        if (aMesh->appearances[0]->chunkMaterials.size == 0)
-        {
-            result = false;
-        }
-        else if (aMesh->appearances[0]->name != DefaultAppearanceName)
-        {
-            if (aMesh->materialEntries.size == 0 || IsSpecialMaterial(aMesh->materialEntries[0].name))
-            {
-                result = false;
-            }
-        }
+        auto& materialEntry = aMesh->materialEntries.Back();
+        materialEntry.name = sourceTag;
+        materialEntry.material = s_dummyMaterial;
+        materialEntry.materialWeak = s_dummyMaterial;
+        materialEntry.isLocalInstance = true;
     }
 
-    return result;
+    return sourceTag;
 }
 
 App::MeshExtension::MeshState::MeshState(Red::CMesh* aMesh)
@@ -712,7 +704,7 @@ void App::MeshExtension::MeshState::PrefetchContext(Red::CMesh* aMesh)
     }
 }
 
-void App::MeshExtension::MeshState::FillContext(const Core::Map<Red::CName, std::string>& aContext)
+void App::MeshExtension::MeshState::PrefillContext(const Core::Map<Red::CName, std::string>& aContext)
 {
     contextToken.Reset();
 
@@ -733,26 +725,20 @@ void App::MeshExtension::MeshState::ResolveContextProperties()
     }
 }
 
-void App::MeshExtension::MeshState::EnsureContextFilled()
+void App::MeshExtension::MeshState::EnsureContextReady()
 {
     if (!contextToken)
         return;
 
-    EnsureResourceLoaded(contextToken);
+    if (!contextToken->IsFinished())
+    {
+        Red::WaitForResource(contextToken, std::chrono::milliseconds(500));
+    }
 
     if (!contextToken->IsLoaded())
     {
-        auto& controller = GarmentExtension::GetDynamicAppearanceController();
-        auto pathStr = controller->GetPathString(meshPath);
-
-        if (!pathStr.empty())
-        {
-            LogWarning(R"(|{}| Can't load context for mesh \"{}\".)", ExtensionName, pathStr);
-        }
-        else
-        {
-            LogWarning(R"(|{}| Can't load context for mesh {}.)", ExtensionName, meshPath.hash);
-        }
+        auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(meshPath);
+        LogError(R"([{}] Context for mesh \"{}\" cannot be loaded.)", ExtensionName, meshPathStr);
 
         contextToken.Reset();
         return;
@@ -762,6 +748,10 @@ void App::MeshExtension::MeshState::EnsureContextFilled()
 
     if (!contextInstance)
     {
+        auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(meshPath);
+        LogError(R"([{}] Context for mesh \"{}\" must be instance of {}, got {}.)", ExtensionName, meshPathStr,
+                 Red::CMaterialInstance::NAME, contextToken->resource->GetType()->name.ToString());
+
         contextToken.Reset();
         return;
     }
@@ -786,21 +776,21 @@ void App::MeshExtension::MeshState::EnsureContextFilled()
 
 const Red::DynArray<Red::MaterialParameterInstance>& App::MeshExtension::MeshState::GetContextParams()
 {
-    EnsureContextFilled();
+    EnsureContextReady();
 
     return contextParams;
 }
 
 const App::DynamicAttributeList& App::MeshExtension::MeshState::GetContextAttrs()
 {
-    EnsureContextFilled();
+    EnsureContextReady();
 
     return contextAttrs;
 }
 
 std::string_view App::MeshExtension::MeshState::GetContextAttr(Red::CName aAttr)
 {
-    EnsureContextFilled();
+    EnsureContextReady();
 
     const auto& it = contextAttrs.find(aAttr);
 
@@ -812,7 +802,7 @@ std::string_view App::MeshExtension::MeshState::GetContextAttr(Red::CName aAttr)
 
 Red::CName App::MeshExtension::MeshState::GetExpansionSource()
 {
-    EnsureContextFilled();
+    EnsureContextReady();
 
     return expansionSource;
 }
@@ -891,10 +881,10 @@ bool App::MeshExtension::MeshState::HasMaterialEntry(Red::CName aMaterialName) c
 
 Red::CName App::MeshExtension::MeshState::RegisterSource(Red::CMesh* aSourceMesh)
 {
-    Red::CName sourceName = aSourceMesh->path.hash;
-    sources[sourceName] = Red::AsWeakHandle(aSourceMesh);
+    Red::CName sourceTag = aSourceMesh->path.hash;
+    sources[sourceTag] = Red::AsWeakHandle(aSourceMesh);
 
-    return sourceName;
+    return sourceTag;
 }
 
 Red::Handle<Red::CMesh> App::MeshExtension::MeshState::ResolveSource(Red::CName aSourceName)

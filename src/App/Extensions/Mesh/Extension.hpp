@@ -28,9 +28,9 @@ private:
         [[nodiscard]] bool IsStatic() const;
 
         void PrefetchContext(Red::CMesh* aMesh);
-        void FillContext(const Core::Map<Red::CName, std::string>& aContext);
+        void PrefillContext(const Core::Map<Red::CName, std::string>& aContext);
         void ResolveContextProperties();
-        void EnsureContextFilled();
+        void EnsureContextReady();
         const Red::DynArray<Red::MaterialParameterInstance>& GetContextParams();
         const DynamicAttributeList& GetContextAttrs();
         std::string_view GetContextAttr(Red::CName aAttr);
@@ -78,7 +78,7 @@ private:
     static void OnAddStubAppearance(Red::CMesh* aMesh);
     static bool OnPreloadAppearances(Red::CMesh* aMesh);
 
-    static void ProcessMeshResource(const Core::SharedPtr<MeshState>& aMeshState,
+    static void ProcessDynamicMaterials(const Core::SharedPtr<MeshState>& aMeshState,
                                     const Red::Handle<Red::CMesh>& aMeshWeak,
                                     const Core::SharedPtr<MeshState>& aSourceState,
                                     const Red::Handle<Red::CMesh>& aSourceMeshWeak,
@@ -89,6 +89,10 @@ private:
     static Red::Handle<Red::CMaterialInstance> CloneMaterialInstance(
         const Red::Handle<Red::CMaterialInstance>& aSourceInstance, const Core::SharedPtr<MeshState>& aMeshState,
         Red::CName aMaterialName, Red::JobQueue& aJobQueue, bool aAppendExtraContextPatams = false);
+    static void ExpandMaterialInstanceInheritance(Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
+                                                  const Red::Handle<Red::CMaterialInstance>& aSourceInstance,
+                                                  const Core::SharedPtr<MeshState>& aMeshState,
+                                                  Red::CName aMaterialName, Red::JobQueue& aJobQueue);
     static void ExpandMaterialInstanceParams(Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
                                              const Core::SharedPtr<MeshState>& aMeshState, Red::CName aMaterialName,
                                              Red::JobQueue& aJobQueue);
@@ -97,11 +101,6 @@ private:
                                         Red::CName aMaterialName);
     static Red::ResourcePath ExpandResourcePath(Red::ResourcePath aPath, const Core::SharedPtr<MeshState>& aState,
                                                 Red::CName aMaterialName);
-
-    template<typename T>
-    static void EnsureResourceLoaded(Red::ResourceReference<T>& aRef);
-    template<typename T>
-    static void EnsureResourceLoaded(Red::SharedPtr<Red::ResourceToken<T>>& aToken);
 
     static Core::SharedPtr<MeshState> AcquireMeshState(Red::CMesh* aMesh);
 
