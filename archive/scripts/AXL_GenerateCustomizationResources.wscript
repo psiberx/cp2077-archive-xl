@@ -6,11 +6,11 @@ const resources = [
   'archive_xl\\characters\\common\\eyes\\hel_pma.mi.json',
   'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\hel_pwa_lashes.app.json',
   'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\hel_pma_lashes.app.json',
-  'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\heb_pwa_brows_patch.morphtarget.json',
-  'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\h0_000_pwa_c__basehead\\heb_pwa_brows_patch.mesh.json',
+  // 'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\heb_pwa_brows_patch.morphtarget.json',
+  // 'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\h0_000_pwa_c__basehead\\heb_pwa_brows_patch.mesh.json',
   'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\h0_000_pwa_c__basehead\\he_000_pwa_c__basehead_patch.mesh.json',
-  'archive_xl\\characters\\head\\player_base_heads\\player_man_average\\heb_pma_brows_patch.morphtarget.json',
-  'archive_xl\\characters\\head\\player_base_heads\\player_man_average\\h0_000_pma_c__basehead\\heb_pma_brows_patch.mesh.json',
+  // 'archive_xl\\characters\\head\\player_base_heads\\player_man_average\\heb_pma_brows_patch.morphtarget.json',
+  // 'archive_xl\\characters\\head\\player_base_heads\\player_man_average\\h0_000_pma_c__basehead\\heb_pma_brows_patch.mesh.json',
   'archive_xl\\characters\\head\\player_base_heads\\player_man_average\\h0_000_pma_c__basehead\\he_000_pma_c__basehead_patch.mesh.json',
 ]
 

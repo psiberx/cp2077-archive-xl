@@ -33,11 +33,15 @@ resource:
     ep1\gameplay\gui\fullscreen\main_menu\female_cco_ep1.inkcharcustomization: *AppearanceFixF
     ep1\gameplay\gui\fullscreen\main_menu\male_cco_ep1.inkcharcustomization: *AppearanceFixM
   patch:
-    archive_xl\characters\head\player_base_heads\player_female_average\heb_pwa_brows_patch.morphtarget:
-      - player_wa_brows.morphtarget
-    archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_pwa_brows_patch.mesh:
-      - player_wa_brows.mesh
-    archive_xl\characters\head\player_base_heads\player_man_average\heb_pma_brows_patch.morphtarget:
-      - player_ma_brows.morphtarget
-    archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_pma_brows_patch.mesh:
-      - player_ma_brows.mesh
+    base\characters\head\player_base_heads\player_female_average\heb_000_pwa__morphs.morphtarget:
+      props: [ blob, boundingBox, targets ]
+      targets: [ player_wa_brows.morphtarget ]
+    base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_000_pwa_c__basehead.mesh:
+      props: [ renderResourceBlob ]
+      targets: [ player_wa_brows.mesh ]
+    base\characters\head\player_base_heads\player_man_average\heb_000_pma__morphs.morphtarget:
+      props: [ blob, boundingBox, targets ]
+      targets: [ player_ma_brows.morphtarget ]
+    base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_000_pma_c__basehead.mesh:
+      props: [ renderResourceBlob ]
+      targets: [ player_ma_brows.mesh ]
