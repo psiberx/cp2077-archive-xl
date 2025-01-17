@@ -1075,22 +1075,26 @@ Red::SharedPtr<Red::ResourceToken<T>> App::ResourcePatchExtension::GetPatchToken
 
     if constexpr (!std::is_same_v<T, Red::CResource>)
     {
+        if (token->IsFailed())
+        {
+            LogError("[{}] Patch resource \"{}\" failed to load.", ExtensionName, s_paths[token->path]);
+            return {};
+        }
+
         if (!token->IsFinished())
         {
-            LogWarning("|{}| Patch resource \"{}\" is not ready.", ExtensionName, s_paths[token->path]);
-
             Red::WaitForResource(token, std::chrono::milliseconds(250));
 
             if (!token->IsFinished())
             {
                 Red::WaitForResource(token, std::chrono::milliseconds(250));
-            }
-        }
 
-        if (token->IsFailed())
-        {
-            LogError("[{}] Patch resource \"{}\" is failed to load.", ExtensionName, s_paths[token->path]);
-            return {};
+                if (!token->IsFinished())
+                {
+                    LogError("[{}] Patch resource \"{}\" cannot be loaded.", ExtensionName, s_paths[token->path]);
+                    return {};
+                }
+            }
         }
     }
 
