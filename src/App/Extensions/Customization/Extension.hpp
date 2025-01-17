@@ -27,7 +27,7 @@ class CustomizationExtension : public ConfigurableExtensionImpl<CustomizationCon
 public:
     std::string_view GetName() override;
     bool Load() override;
-    void PostLoad() override;
+    void OnDepotReady() override;
     void Reload() override;
     bool Unload() override;
 
@@ -108,7 +108,7 @@ private:
     Core::Vector<CustomizationResourceToken> m_customFemaleResources;
     Core::Map<Red::AppearanceDescriptor::Hash, Red::AppearanceDescriptor> m_customAppOverrides;
     Core::Set<Red::CName> m_customEntryNames;
-    std::mutex m_customEntriesMergeLock;
+    Red::SharedSpinLock m_customEntriesMergeLock;
     Core::Set<Red::CName> m_hairColorNames;
     bool m_customEntriesMerged;
     bool m_customizationActive;

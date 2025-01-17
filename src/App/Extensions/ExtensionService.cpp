@@ -54,11 +54,11 @@ void App::ExtensionService::OnBootstrap()
     });
 
     HookOnceAfter<Raw::CBaseEngine::LoadGatheredResources>([&]() {
-        m_loader->PostLoad();
+        m_loader->OnDepotReady();
     });
 
     HookAfter<Raw::LoadTweakDB>([&]() {
-        m_loader->ApplyTweaks();
+        m_loader->OnTweakDBReady();
     });
 }
 

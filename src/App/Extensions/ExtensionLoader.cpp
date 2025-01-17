@@ -184,7 +184,7 @@ void App::ExtensionLoader::Load()
     m_loaded = true;
 }
 
-void App::ExtensionLoader::PostLoad()
+void App::ExtensionLoader::OnDepotReady()
 {
     if (!m_loaded)
         return;
@@ -193,7 +193,7 @@ void App::ExtensionLoader::PostLoad()
     {
         try
         {
-            module->PostLoad();
+            module->OnDepotReady();
         }
         catch (const std::exception& ex)
         {
@@ -208,7 +208,7 @@ void App::ExtensionLoader::PostLoad()
     }
 }
 
-void App::ExtensionLoader::ApplyTweaks()
+void App::ExtensionLoader::OnTweakDBReady()
 {
     if (!m_loaded)
         return;
@@ -217,7 +217,7 @@ void App::ExtensionLoader::ApplyTweaks()
     {
         try
         {
-            module->ApplyTweaks();
+            module->OnTweakDBReady();
         }
         catch (const std::exception& ex)
         {

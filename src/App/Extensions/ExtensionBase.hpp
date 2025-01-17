@@ -16,8 +16,8 @@ public:
     virtual std::string_view GetName() = 0;
     virtual bool Load() { return true; }
     virtual bool Unload() { return true; }
-    virtual void PostLoad() {}
-    virtual void ApplyTweaks() {}
+    virtual void OnDepotReady() {}
+    virtual void OnTweakDBReady() {}
 };
 
 class ConfigurableExtension : public Extension
@@ -59,8 +59,6 @@ public:
             for (const auto& issue : config.issues)
             {
                 LogError(issue.data());
-                // LogError("{}: {}", aName, issue);
-                // LogError("|{}| {}", GetName(), issue);
             }
         }
 

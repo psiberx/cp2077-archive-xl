@@ -24,8 +24,8 @@ public:
 
     void Configure();
     void Load();
-    void PostLoad();
-    void ApplyTweaks();
+    void OnDepotReady();
+    void OnTweakDBReady();
     void Unload();
     void Reload();
 

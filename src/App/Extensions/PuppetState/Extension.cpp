@@ -49,7 +49,7 @@ void App::PuppetStateExtension::Configure()
     }
 }
 
-void App::PuppetStateExtension::ApplyTweaks()
+void App::PuppetStateExtension::OnTweakDBReady()
 {
     CreateSuffixRecord(BodyTypeSuffixID,
                        RTTI_TYPE_NAME(PuppetStateSystem),

@@ -20,7 +20,7 @@ public:
     bool Load() override;
     bool Unload() override;
     void Configure() override;
-    void ApplyTweaks() override;
+    void OnTweakDBReady() override;
 
     std::string_view GetName() override;
 

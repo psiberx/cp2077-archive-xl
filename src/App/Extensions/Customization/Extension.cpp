@@ -40,7 +40,7 @@ bool App::CustomizationExtension::Load()
     return true;
 }
 
-void App::CustomizationExtension::PostLoad()
+void App::CustomizationExtension::OnDepotReady()
 {
     PrefetchCustomResources();
 }
