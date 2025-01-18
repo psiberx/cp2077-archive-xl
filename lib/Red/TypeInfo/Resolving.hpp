@@ -20,7 +20,7 @@ struct TypeProxyMapping : public std::false_type {};
 namespace Detail
 {
 template<typename T>
-concept IsTypeNameConst = std::is_convertible_v<T, const char*> || std::is_same_v<T, std::string_view>;
+concept IsTypeNameConst = std::is_same_v<std::remove_cvref_t<T>, const char*> || std::is_convertible_v<T, std::string_view>;
 
 template<typename T>
 concept HasGeneratedTypeName = requires(T*)
@@ -156,15 +156,15 @@ consteval auto GetTypeNameStr()
     {
         constexpr auto name = Detail::ResolveTypeNameBuilder<U>();
 
-        if constexpr (std::is_same_v<std::remove_cvref_t<decltype(name)>, std::string_view>)
-        {
-            return Detail::MakeConstStr<name.size()>(name.data());
-        }
-        else
+        if constexpr (std::is_same_v<std::remove_cvref_t<decltype(name)>, const char*>)
         {
             constexpr auto length = std::char_traits<char>::length(name);
 
             return Detail::MakeConstStr<length>(name);
+        }
+        else
+        {
+            return Detail::MakeConstStr<name.size()>(name.data());
         }
     }
     else if constexpr (Detail::HasTypeNameMapping<U>)
@@ -215,6 +215,12 @@ template<typename T>
 consteval CName GetTypeName()
 {
     return GetTypeNameStr<T>().data();
+}
+
+template<typename T>
+consteval uint64_t GetTypeHash()
+{
+    return FNV1a64(GetTypeNameStr<T>().data());
 }
 
 template<CName AType>
