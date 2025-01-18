@@ -302,6 +302,14 @@ void App::CustomizationExtension::MergeCustomEntries(CustomizationResourceToken&
         MergeCustomOptions(gameData->armsCustomizationOptions, customData->armsCustomizationOptions, false);
         MergeCustomOptions(gameData->bodyCustomizationOptions, customData->bodyCustomizationOptions, false);
         MergeCustomOptions(gameData->headCustomizationOptions, customData->headCustomizationOptions, false);
+    }
+
+    for (const auto& customResource : aSourceResources)
+    {
+        if (!customResource->finished)
+            continue;
+
+        auto& customData = customResource->Get();
 
         MergeCustomOptions(gameData->armsCustomizationOptions, customData->armsCustomizationOptions, true);
         MergeCustomOptions(gameData->bodyCustomizationOptions, customData->bodyCustomizationOptions, true);
@@ -401,7 +409,7 @@ void App::CustomizationExtension::MergeCustomOptions(Red::DynArray<Customization
                            ExtensionName, targetOption->name.ToString(),
                            targetOption->GetNativeType()->GetName().ToString(),
                            sourceOption->GetNativeType()->GetName().ToString());
-                break;
+                continue;
             }
 
             if (targetOption->GetNativeType()->IsA(s_AppInfoType))

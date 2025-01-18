@@ -1102,15 +1102,15 @@ Red::Handle<Red::rendRenderMorphTargetMeshBlob> App::ResourcePatchExtension::Cop
     const Red::Handle<Red::rendRenderMorphTargetMeshBlob>& aSourceBlob)
 {
     auto cloneBlob = Red::MakeHandle<Red::rendRenderMorphTargetMeshBlob>();
-    cloneBlob->header = aSourceBlob->header;
-
-    Red::CopyBuffer(cloneBlob->diffsBuffer, aSourceBlob->diffsBuffer);
-    Red::CopyBuffer(cloneBlob->mappingBuffer, aSourceBlob->mappingBuffer);
-    Red::CopyBuffer(cloneBlob->textureDiffsBuffer, aSourceBlob->textureDiffsBuffer);
 
     if (auto& baseBlob = Red::Cast<Red::rendRenderMeshBlob>(aSourceBlob->baseBlob))
     {
+        cloneBlob->header = aSourceBlob->header;
         cloneBlob->baseBlob = CopyRenderBlob(baseBlob);
+
+        Red::CopyBuffer(cloneBlob->diffsBuffer, aSourceBlob->diffsBuffer);
+        Red::CopyBuffer(cloneBlob->mappingBuffer, aSourceBlob->mappingBuffer);
+        Red::CopyBuffer(cloneBlob->textureDiffsBuffer, aSourceBlob->textureDiffsBuffer);
     }
 
     return cloneBlob;
