@@ -13,11 +13,14 @@ public:
     std::string_view GetName() override;
     void Configure() override;
 
-    static const Core::Set<Red::ResourcePath>& GetResourceList(Red::ResourcePath aScopePath);
-    static bool IsInResourceList(Red::ResourcePath aScopePath, Red::ResourcePath aTargetPath);
-    static std::string_view GetPathString(Red::ResourcePath aTargetPath);
+    static bool InScope(Red::ResourcePath aScopePath, Red::ResourcePath aTargetPath);
+    static const Core::Set<Red::ResourcePath>& GetList(Red::ResourcePath aScopePath);
 
-    static const ResourceFix& GetResourceFix(Red::ResourcePath aTargetPath);
+    static Core::Set<std::string> ExpandList(const Core::Set<std::string>& aList);
+    static Core::Set<Red::ResourcePath> ExpandList(const Core::Set<Red::ResourcePath>& aList);
+    static Core::Map<Red::ResourcePath, std::string> ExpandList(const Core::Map<Red::ResourcePath, std::string>& aList);
+
+    static const ResourceFix& GetFix(Red::ResourcePath aTargetPath);
 
 private:
     inline static Core::Map<Red::ResourcePath, Core::Set<Red::ResourcePath>> s_scopes;

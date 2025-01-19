@@ -6,13 +6,7 @@ namespace App
 {
 struct AnimationEntry
 {
-    AnimationEntry(std::string aEntity, std::string aAnimSet)
-        : entity(std::move(aEntity))
-        , set(std::move(aAnimSet))
-    {
-    }
-
-    std::string entity;
+    Core::Set<std::string> entities;
     std::string component = "root";
     std::string set;
     uint8_t priority = 128;

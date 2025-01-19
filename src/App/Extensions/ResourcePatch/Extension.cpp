@@ -111,7 +111,7 @@ void App::ResourcePatchExtension::Configure()
 
             for (const auto& includePath : patchDefinition.includes)
             {
-                const auto& includeList = ResourceMetaExtension::GetResourceList(includePath);
+                const auto& includeList = ResourceMetaExtension::GetList(includePath);
                 if (!includeList.empty())
                 {
                     targetList.insert(includeList.begin(), includeList.end());
@@ -124,7 +124,7 @@ void App::ResourcePatchExtension::Configure()
 
             for (const auto& excludePath : patchDefinition.excludes)
             {
-                const auto& excludeList = ResourceMetaExtension::GetResourceList(excludePath);
+                const auto& excludeList = ResourceMetaExtension::GetList(excludePath);
                 if (!excludeList.empty())
                 {
                     targetList.erase(excludeList.begin(), excludeList.end());
@@ -450,7 +450,7 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
 
 void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, Red::PostLoadParams* aParams)
 {
-    const auto& fix = ResourceMetaExtension::GetResourceFix(aMesh->path);
+    const auto& fix = ResourceMetaExtension::GetFix(aMesh->path);
 
     if (fix.DefinesNameMappings())
     {

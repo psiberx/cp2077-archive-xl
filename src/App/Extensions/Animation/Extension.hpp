@@ -2,6 +2,7 @@
 
 #include "App/Extensions/ExtensionBase.hpp"
 #include "App/Extensions/Animation/Config.hpp"
+#include "App/Shared/ResourcePathRegistry.hpp"
 
 namespace App
 {
@@ -14,9 +15,9 @@ public:
     void Configure() override;
 
 private:
-    void OnInitializeAnimations(Red::entAnimatedComponent* aComponent);
+    static void OnInitializeAnimations(Red::entAnimatedComponent* aComponent);
 
-    Core::Map<uint64_t, Core::Vector<Red::animAnimSetupEntry>> m_animsByTarget;
-    Core::Map<Red::ResourcePath, std::string> m_paths;
+    inline static Core::Map<uint64_t, Core::Vector<Red::animAnimSetupEntry>> s_animsByTarget;
+    inline static Core::SharedPtr<ResourcePathRegistry> s_resourcePathRegistry;
 };
 }

@@ -34,15 +34,45 @@ void App::AnimationsConfig::LoadYAML(const YAML::Node& aNode)
     for (const auto& entryNode : animationsNode)
     {
         const auto& entityNode = entryNode[EntityNodeKey];
-        const auto& animSetNode = entryNode[AnimSetNodeKey];
 
-        if (!entityNode.IsDefined() || !entityNode.IsScalar() || !animSetNode.IsDefined() || !animSetNode.IsScalar())
+        if (!entityNode.IsDefined())
         {
             malformed = true;
             continue;
         }
 
-        auto& entry = animations.emplace_back(entityNode.Scalar(), animSetNode.Scalar());
+        AnimationEntry entry;
+
+        if (entityNode.IsScalar())
+        {
+            entry.entities.insert(entityNode.Scalar());
+        }
+        else if (entityNode.IsScalar())
+        {
+            for (const auto& pathNode : entityNode)
+            {
+                if (pathNode.IsScalar())
+                {
+                    entry.entities.insert(pathNode.Scalar());
+                }
+            }
+        }
+
+        if (entry.entities.empty())
+        {
+            malformed = true;
+            continue;
+        }
+
+        const auto& animSetNode = entryNode[AnimSetNodeKey];
+
+        if (!animSetNode.IsDefined() || !animSetNode.IsScalar())
+        {
+            malformed = true;
+            continue;
+        }
+
+        entry.set = animSetNode.Scalar();
 
         const auto& variablesNode = entryNode[VariablesNodeKey];
         if (variablesNode.IsDefined() && variablesNode.IsSequence())
@@ -67,10 +97,7 @@ void App::AnimationsConfig::LoadYAML(const YAML::Node& aNode)
         {
             entry.component = componentNode.Scalar();
         }
-    }
 
-    if (malformed)
-    {
-        issues.emplace_back("Bad format. Expected list of anim entries.");
+        animations.emplace_back(std::move(entry));
     }
 }

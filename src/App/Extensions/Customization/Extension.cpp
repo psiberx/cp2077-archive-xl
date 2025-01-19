@@ -629,7 +629,7 @@ void App::CustomizationExtension::ResetCustomResources()
 void App::CustomizationExtension::FixCustomizationOptions(Red::ResourcePath aTargetPath,
                                                           Red::DynArray<CustomizationOption>& aTargetOptions)
 {
-    const auto& fix = ResourceMetaExtension::GetResourceFix(aTargetPath);
+    const auto& fix = ResourceMetaExtension::GetFix(aTargetPath);
 
     if (fix.DefinesPathMappings())
     {
@@ -661,7 +661,7 @@ void App::CustomizationExtension::FixCustomizationAppearance(Red::AppearanceReso
     if (aResource->appearances.size == 0)
         return;
 
-    if (!ResourceMetaExtension::IsInResourceList(ResourceMetaExtension::CustomizationApp, aResource->path))
+    if (!ResourceMetaExtension::InScope(ResourceMetaExtension::CustomizationApp, aResource->path))
         return;
 
     auto meshAppearanceStr = std::string_view{aAppearanceName.ToString()};
@@ -761,7 +761,7 @@ void App::CustomizationExtension::FixCustomizationComponents(const Red::Handle<R
                                                              const Red::Handle<Red::AppearanceDefinition>& aDefinition,
                                                              Red::DynArray<Red::Handle<Red::ISerializable>>& aComponents)
 {
-    if (!ResourceMetaExtension::IsInResourceList(ResourceMetaExtension::CustomizationApp, aResource->path))
+    if (!ResourceMetaExtension::InScope(ResourceMetaExtension::CustomizationApp, aResource->path))
         return;
 
     for (auto& override : aDefinition->partsOverrides[0].componentsOverrides)

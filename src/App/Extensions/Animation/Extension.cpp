@@ -1,5 +1,6 @@
 #include "Extension.hpp"
 #include "App/Extensions/ResourceMeta/Extension.hpp"
+#include "Core/Facades/Container.hpp"
 #include "Red/AnimatedComponent.hpp"
 
 namespace
@@ -14,7 +15,9 @@ std::string_view App::AnimationExtension::GetName()
 
 bool App::AnimationExtension::Load()
 {
-    HookBefore<Raw::AnimatedComponent::InitializeAnimations>(&AnimationExtension::OnInitializeAnimations).OrThrow();
+    HookBefore<Raw::AnimatedComponent::InitializeAnimations>(&OnInitializeAnimations).OrThrow();
+
+    s_resourcePathRegistry = Core::Resolve<ResourcePathRegistry>();
 
     return true;
 }
@@ -28,9 +31,10 @@ bool App::AnimationExtension::Unload()
 
 void App::AnimationExtension::Configure()
 {
-    m_animsByTarget.clear();
+    s_animsByTarget.clear();
 
     auto depot = Red::ResourceDepot::Get();
+
     Core::Set<Red::ResourcePath> invalidPaths;
 
     for (const auto& unit : m_configs)
@@ -49,40 +53,12 @@ void App::AnimationExtension::Configure()
                 continue;
             }
 
-            m_paths[animPath] = animation.set;
-
-            Core::Set<Red::ResourcePath> targetList;
+            for (const auto& targetPathStr : ResourceMetaExtension::ExpandList(animation.entities))
             {
-                auto originalPath = Red::ResourcePath(animation.entity.c_str());
-                const auto& entityList = ResourceMetaExtension::GetResourceList(originalPath);
-                if (!entityList.empty())
-                {
-                    targetList.insert(entityList.begin(), entityList.end());
+                auto targetPath = Red::ResourcePath(targetPathStr.data());
 
-                    for (const auto& entityPath : entityList)
-                    {
-                        m_paths[entityPath] = ResourceMetaExtension::GetPathString(entityPath);
-                    }
-                }
-                else
-                {
-                    targetList.insert(originalPath);
-
-                    m_paths[originalPath] = animation.entity;
-                }
-            }
-
-            for (const auto& targetPath : targetList)
-            {
                 if (!depot->ResourceExists(targetPath))
-                {
-                    if (!invalidPaths.contains(targetPath))
-                    {
-                        // LogWarning("[{}] Entity \"{}\" doesn't exist. Skipped.", ExtensionName, m_paths[targetPath]);
-                        invalidPaths.insert(targetPath);
-                    }
                     continue;
-                }
 
                 Red::animAnimSetupEntry animSetupEntry;
                 animSetupEntry.animSet = animPath;
@@ -100,7 +76,7 @@ void App::AnimationExtension::Configure()
                     targetHash = Red::FNV1a64(animation.component.data(), targetHash);
                 }
 
-                m_animsByTarget[targetHash].emplace_back(std::move(animSetupEntry));
+                s_animsByTarget[targetHash].emplace_back(std::move(animSetupEntry));
             }
         }
     }
@@ -110,21 +86,21 @@ void App::AnimationExtension::OnInitializeAnimations(Red::entAnimatedComponent* 
 {
     const auto& templatePath = aComponent->owner->templatePath;
 
-    auto anims = m_animsByTarget.find(templatePath);
-    if (anims == m_animsByTarget.end())
+    auto anims = s_animsByTarget.find(templatePath);
+    if (anims == s_animsByTarget.end())
     {
-        anims = m_animsByTarget.find(Red::FNV1a64(aComponent->name.ToString(), templatePath));
-        if (anims == m_animsByTarget.end())
+        anims = s_animsByTarget.find(Red::FNV1a64(aComponent->name.ToString(), templatePath));
+        if (anims == s_animsByTarget.end())
             return;
     }
 
     LogInfo("[{}] Initializing animations for \"{}:{}\"...",
-            ExtensionName, m_paths[templatePath], aComponent->name.ToString());
+            ExtensionName, s_resourcePathRegistry->ResolvePathOrHash(templatePath), aComponent->name.ToString());
 
     for (const auto& anim : anims.value())
     {
         LogInfo("[{}] Merging animations from \"{}\" with priority {}...",
-                ExtensionName, m_paths[anim.animSet.path], anim.priority);
+                ExtensionName, s_resourcePathRegistry->ResolvePathOrHash(anim.animSet.path), anim.priority);
 
         aComponent->animations.gameplay.PushBack(anim);
     }

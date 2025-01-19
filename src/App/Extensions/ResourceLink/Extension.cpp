@@ -1,4 +1,5 @@
 #include "Extension.hpp"
+#include "App/Extensions/ResourceMeta/Extension.hpp"
 #include "App/Shared/ResourcePathRegistry.hpp"
 #include "Core/Facades/Container.hpp"
 
@@ -47,7 +48,7 @@ void App::ResourceLinkExtension::Configure()
     {
         for (const auto& [targetPath, copyPaths] : config.copies)
         {
-            for (const auto& copyPath : copyPaths)
+            for (const auto& copyPath : ResourceMetaExtension::ExpandList(copyPaths))
             {
                 if (copyPath == targetPath)
                 {
@@ -81,7 +82,7 @@ void App::ResourceLinkExtension::Configure()
     {
         for (const auto& [targetPath, linkPaths] : config.links)
         {
-            for (const auto& linkPath : linkPaths)
+            for (const auto& linkPath : ResourceMetaExtension::ExpandList(linkPaths))
             {
                 if (linkPath == targetPath)
                 {
