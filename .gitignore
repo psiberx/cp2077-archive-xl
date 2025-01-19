@@ -3,7 +3,7 @@
 /.vscode
 /.xmake
 /bundle/packed
-/bundle/source/bundle
+/bundle/source/archive
 /bundle/*.xml
 /bundle/*.zip
 /bundle/custom_refs.txt
