@@ -3,7 +3,6 @@
 #include "App/Environment.hpp"
 #include "App/Extensions/ExtensionService.hpp"
 #include "App/Migration.hpp"
-#include "App/Patches/PhotoModeNpcPatch.hpp"
 #include "App/Patches/WorldWidgetLimitPatch.hpp"
 #include "App/Project.hpp"
 #include "App/Shared/ResourcePathRegistry.hpp"
@@ -28,7 +27,6 @@ App::Application::Application(HMODULE aHandle, const RED4ext::Sdk* aSdk)
     Register<Support::RedLibProvider>();
 
     Register<App::WorldWidgetLimitPatch>();
-    Register<App::PhotoModeNpcPatch>();
     Register<App::ResourcePathRegistry>();
     Register<App::ArchiveService>(Env::GameDir(), Env::BundleDir());
     Register<App::ExtensionService>(Env::BundleDir());

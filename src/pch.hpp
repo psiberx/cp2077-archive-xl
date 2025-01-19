@@ -82,8 +82,6 @@
 #include <RED4ext/Scripting/Natives/Generated/game/PersistencySystem.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/PersistentState.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/PersistentStateDataResource.hpp>
-#include <RED4ext/Scripting/Natives/Generated/game/PhotoModeAttachmentSlotsListener.hpp>
-#include <RED4ext/Scripting/Natives/Generated/game/PhotoModeSystem.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/PointOfInterestMappinResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/Puppet.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ScriptableSystem.hpp>
@@ -104,8 +102,6 @@
 #include <RED4ext/Scripting/Natives/Generated/game/ui/ICharacterCustomizationSystem.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/MorphInfo.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/OptionsGroup.hpp>
-#include <RED4ext/Scripting/Natives/Generated/game/ui/PhotoModeMenuController.hpp>
-#include <RED4ext/Scripting/Natives/Generated/game/ui/PhotoModeOptionGridButtonData.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/SwitcherInfo.hpp>
 #include <RED4ext/Scripting/Natives/Generated/graph/GraphConnectionDefinition.hpp>
 #include <RED4ext/Scripting/Natives/Generated/graph/GraphDefinition.hpp>
