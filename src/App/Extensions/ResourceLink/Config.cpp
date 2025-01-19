@@ -2,7 +2,7 @@
 
 bool App::ResourceLinkConfig::IsDefined()
 {
-    return !links.empty();
+    return !links.empty() || !copies.empty();
 }
 
 void App::ResourceLinkConfig::LoadYAML(const YAML::Node& aNode)
@@ -12,43 +12,83 @@ void App::ResourceLinkConfig::LoadYAML(const YAML::Node& aNode)
     if (!rootNode.IsDefined() || !rootNode.IsMap())
         return;
 
-    const auto& entriesNode = rootNode["link"];
+    const auto& linksNode = rootNode["link"];
 
-    if (!entriesNode.IsDefined() || !entriesNode.IsMap())
-        return;
-
-    for (const auto& entryNode : entriesNode)
+    if (linksNode.IsDefined() && linksNode.IsMap())
     {
-        const auto& targetPathStr = entryNode.first.Scalar();
-        const auto& targetPath = Red::ResourcePath(targetPathStr.data());
-        const auto& linksNode = entryNode.second;
-
-        if (linksNode.IsScalar())
+        for (const auto& linkNode : linksNode)
         {
-            const auto& linkPathStr = linksNode.Scalar();
-            const auto& linkPath = Red::ResourcePath(linkPathStr.data());
+            const auto& targetPathStr = linkNode.first.Scalar();
+            const auto& targetPath = Red::ResourcePath(targetPathStr.data());
+            const auto& sourcesNode = linkNode.second;
 
-            if (linkPath)
+            if (sourcesNode.IsScalar())
             {
-                links[linkPath].insert(targetPath);
-                paths[linkPath] = linkPathStr;
-            }
-        }
-        else if (linksNode.IsSequence())
-        {
-            for (const auto& linkNode : linksNode)
-            {
-                const auto& linkPathStr = linkNode.Scalar();
-                const auto& linkPath = Red::ResourcePath(linkPathStr.data());
+                const auto& linkPathStr = sourcesNode.Scalar();
+                const auto& sourcePath = Red::ResourcePath(linkPathStr.data());
 
-                if (linkPath)
+                if (sourcePath)
                 {
-                    links[targetPath].insert(linkPath);
-                    paths[linkPath] = linkPathStr;
+                    links[sourcePath].insert(targetPath);
+                    paths[sourcePath] = linkPathStr;
                 }
             }
-        }
+            else if (sourcesNode.IsSequence())
+            {
+                for (const auto& sourceNode : sourcesNode)
+                {
+                    const auto& linkPathStr = sourceNode.Scalar();
+                    const auto& sourcePath = Red::ResourcePath(linkPathStr.data());
 
-        paths[targetPath] = targetPathStr;
+                    if (sourcePath)
+                    {
+                        links[targetPath].insert(sourcePath);
+                        paths[sourcePath] = linkPathStr;
+                    }
+                }
+            }
+
+            paths[targetPath] = targetPathStr;
+        }
+    }
+
+    const auto& copiesNode = rootNode["copy"];
+
+    if (copiesNode.IsDefined() && copiesNode.IsMap())
+    {
+        for (const auto& copyNode : copiesNode)
+        {
+            const auto& targetPathStr = copyNode.first.Scalar();
+            const auto& targetPath = Red::ResourcePath(targetPathStr.data());
+            const auto& sourcesNode = copyNode.second;
+
+            if (sourcesNode.IsScalar())
+            {
+                const auto& copyPathStr = sourcesNode.Scalar();
+                const auto& sourcePath = Red::ResourcePath(copyPathStr.data());
+
+                if (sourcePath)
+                {
+                    copies[sourcePath].insert(targetPath);
+                    paths[sourcePath] = copyPathStr;
+                }
+            }
+            else if (sourcesNode.IsSequence())
+            {
+                for (const auto& sourceNode : sourcesNode)
+                {
+                    const auto& copyPathStr = sourceNode.Scalar();
+                    const auto& sourcePath = Red::ResourcePath(copyPathStr.data());
+
+                    if (sourcePath)
+                    {
+                        copies[targetPath].insert(sourcePath);
+                        paths[sourcePath] = copyPathStr;
+                    }
+                }
+            }
+
+            paths[targetPath] = targetPathStr;
+        }
     }
 }

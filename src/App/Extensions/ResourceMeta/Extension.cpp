@@ -2,7 +2,7 @@
 
 namespace
 {
-constexpr auto ExtensionName = "ResourceMeta";
+constexpr auto ExtensionName = "ResourceManager";
 }
 
 std::string_view App::ResourceMetaExtension::GetName()

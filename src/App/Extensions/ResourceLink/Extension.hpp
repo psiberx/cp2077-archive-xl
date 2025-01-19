@@ -16,11 +16,14 @@ public:
     void Configure() override;
 
 private:
-    static void OnResourceRequest(Red::ResourceLoader* aLoader, Red::SharedPtr<Red::ResourceToken<>>& aToken,
-                                  Red::ResourceRequest& aRequest);
-    static bool OnResourceCheck(Red::ResourceDepot* aDepot, Red::ResourcePath aPath);
+    static void OnLoaderResourceRequest(Red::ResourceLoader* aLoader, Red::SharedPtr<Red::ResourceToken<>>& aToken,
+                                        Red::ResourceRequest& aRequest);
+    static uintptr_t* OnDepotResourceRequest(Red::ResourceDepot* aDepot, const uintptr_t* aResourceHandle,
+                                             Red::ResourcePath aPath, const int32_t* aArchiveHandle);
+    static bool OnDepotResourceCheck(Red::ResourceDepot* aDepot, Red::ResourcePath aPath);
 
+    inline static Core::Map<Red::ResourcePath, Red::ResourcePath> s_mappings;
+    inline static Core::Map<Red::ResourcePath, Red::ResourcePath> s_copies;
     inline static Core::Map<Red::ResourcePath, Red::ResourcePath> s_links;
-    inline static Core::Map<Red::ResourcePath, std::string> s_paths;
 };
 }

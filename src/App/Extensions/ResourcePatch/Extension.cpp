@@ -8,7 +8,6 @@
 #include "Red/Mesh.hpp"
 #include "Red/MorphTarget.hpp"
 #include "Red/PersistencySystem.hpp"
-#include "Red/ResourceDepot.hpp"
 #include "Red/StreamingWorld.hpp"
 
 namespace
@@ -50,7 +49,7 @@ std::string_view App::ResourcePatchExtension::GetName()
 
 bool App::ResourcePatchExtension::Load()
 {
-    HookBefore<Raw::ResourceDepot::RequestResource>(&OnResourceRequest).OrThrow();
+    HookBefore<Raw::ResourceSerializer::Load>(&OnResourceRequest).OrThrow();
     HookBefore<Raw::ResourceSerializer::Deserialize>(&OnResourceDeserialize).OrThrow();
     HookBefore<Raw::ResourceSerializer::OnDependenciesReady>(&OnResourceReady).OrThrow();
     HookBefore<Raw::EntityTemplate::PostLoad>(&OnEntityTemplateLoad).OrThrow();
@@ -69,7 +68,7 @@ bool App::ResourcePatchExtension::Load()
 
 bool App::ResourcePatchExtension::Unload()
 {
-    Unhook<Raw::ResourceDepot::RequestResource>();
+    Unhook<Raw::ResourceSerializer::Load>();
     Unhook<Raw::ResourceSerializer::Deserialize>();
     Unhook<Raw::ResourceSerializer::OnDependenciesReady>();
     Unhook<Raw::EntityTemplate::PostLoad>();
@@ -180,10 +179,10 @@ void App::ResourcePatchExtension::Configure()
     m_configs.clear();
 }
 
-void App::ResourcePatchExtension::OnResourceRequest(Red::ResourceDepot*, const uintptr_t* aOut, Red::ResourcePath aPath,
-                                                    const int32_t*)
+void App::ResourcePatchExtension::OnResourceRequest(void* aSerializer, uint64_t a2,
+                                                    Red::ResourceSerializerRequest& aRequest, uint64_t a4, uint64_t a5)
 {
-    const auto& patchList = GetPatchList(aPath);
+    const auto& patchList = GetPatchList(aRequest.path);
 
     if (patchList.empty())
         return;
@@ -214,11 +213,11 @@ void App::ResourcePatchExtension::OnResourceDeserialize(void* aSerializer, uint6
     }
 }
 
-void App::ResourcePatchExtension::OnResourceReady(Red::ResourceSerializer* aSerializer)
+void App::ResourcePatchExtension::OnResourceReady(Red::ResourceSerializerContext* aContext)
 {
-    if (aSerializer->serializables.size > 0)
+    if (aContext->serializables.size > 0)
     {
-        for (const auto& serializable : aSerializer->serializables)
+        for (const auto& serializable : aContext->serializables)
         {
             if (const auto& resource = Red::Cast<Red::CurveSet>(serializable))
             {

@@ -1,8 +1,10 @@
 #include "Extension.hpp"
+#include "App/Shared/ResourcePathRegistry.hpp"
+#include "Core/Facades/Container.hpp"
 
 namespace
 {
-constexpr auto ExtensionName = "ResourceLink";
+constexpr auto ExtensionName = "ResourceManager";
 }
 
 std::string_view App::ResourceLinkExtension::GetName()
@@ -12,15 +14,17 @@ std::string_view App::ResourceLinkExtension::GetName()
 
 bool App::ResourceLinkExtension::Load()
 {
-    HookBefore<Raw::ResourceLoader::RequestResource>(&OnResourceRequest).OrThrow();
-    Hook<Raw::ResourceDepot::CheckResource>(&OnResourceCheck).OrThrow();
+    HookBefore<Raw::ResourceLoader::LoadAsync>(&OnLoaderResourceRequest).OrThrow();
+    Hook<Raw::ResourceDepot::RequestResource>(&OnDepotResourceRequest).OrThrow();
+    Hook<Raw::ResourceDepot::CheckResource>(&OnDepotResourceCheck).OrThrow();
 
     return true;
 }
 
 bool App::ResourceLinkExtension::Unload()
 {
-    Unhook<Raw::ResourceLoader::RequestResource>();
+    Unhook<Raw::ResourceLoader::LoadAsync>();
+    Unhook<Raw::ResourceDepot::RequestResource>();
     Unhook<Raw::ResourceDepot::CheckResource>();
 
     return true;
@@ -28,10 +32,50 @@ bool App::ResourceLinkExtension::Unload()
 
 void App::ResourceLinkExtension::Configure()
 {
+    s_mappings.clear();
+    s_copies.clear();
     s_links.clear();
 
     auto depot = Red::ResourceDepot::Get();
+
+    Core::Map<Red::ResourcePath, Red::ResourcePath> finalCopies;
+    Core::Map<Red::ResourcePath, Red::ResourcePath> finalLinks;
+    Core::Map<Red::ResourcePath, std::string> knownPaths;
     Core::Set<Red::ResourcePath> invalidPaths;
+
+    for (auto& config : m_configs)
+    {
+        for (const auto& [targetPath, copyPaths] : config.copies)
+        {
+            for (const auto& copyPath : copyPaths)
+            {
+                if (copyPath == targetPath)
+                {
+                    if (!invalidPaths.contains(copyPath))
+                    {
+                        LogError("[{}] Copy \"{}\" points to itself.", ExtensionName, config.paths[copyPath]);
+                        invalidPaths.insert(copyPath);
+                    }
+                    continue;
+                }
+
+                if (depot->ResourceExists(copyPath))
+                {
+                    if (!invalidPaths.contains(copyPath))
+                    {
+                        LogError("[{}] Copy \"{}\" is an existing resource.", ExtensionName, config.paths[copyPath]);
+                        invalidPaths.insert(copyPath);
+                    }
+                    continue;
+                }
+
+                finalCopies[copyPath] = targetPath;
+                knownPaths[copyPath] = config.paths[copyPath];
+            }
+
+            knownPaths[targetPath] = config.paths[targetPath];
+        }
+    }
 
     for (auto& config : m_configs)
     {
@@ -49,7 +93,7 @@ void App::ResourceLinkExtension::Configure()
                     continue;
                 }
 
-                if (depot->ResourceExists(linkPath))
+                if (depot->ResourceExists(linkPath) || finalCopies.contains(linkPath))
                 {
                     if (!invalidPaths.contains(linkPath))
                     {
@@ -61,17 +105,17 @@ void App::ResourceLinkExtension::Configure()
 
                 // TODO: Warn about redefinitions?
 
-                s_links[linkPath] = targetPath;
-                s_paths[linkPath] = config.paths[linkPath];
+                finalLinks[linkPath] = targetPath;
+                knownPaths[linkPath] = config.paths[linkPath];
             }
 
-            s_paths[targetPath] = config.paths[targetPath];
+            knownPaths[targetPath] = config.paths[targetPath];
         }
     }
 
     Core::Set<Red::ResourcePath> cyclicLinks;
 
-    for (auto link = s_links.begin(); link != s_links.end();)
+    for (auto link = finalLinks.begin(); link != finalLinks.end();)
     {
         const auto& linkPath = link->first;
         auto targetPath = link->second;
@@ -83,9 +127,9 @@ void App::ResourceLinkExtension::Configure()
 
         while (true)
         {
-            const auto& next = s_links.find(targetPath);
+            const auto& next = finalLinks.find(targetPath);
 
-            if (next == s_links.end())
+            if (next == finalLinks.end())
                 break;
 
             targetPath = next->second;
@@ -115,39 +159,52 @@ void App::ResourceLinkExtension::Configure()
     {
         if (!invalidPaths.contains(linkPath))
         {
-            LogError("[{}] Link \"{}\" is cyclic.", ExtensionName, s_paths[linkPath]);
+            LogError("[{}] Link \"{}\" is cyclic.", ExtensionName, knownPaths[linkPath]);
             invalidPaths.insert(linkPath);
         }
 
-        s_links.erase(linkPath);
+        finalLinks.erase(linkPath);
     }
 
-    for (auto link = s_links.begin(); link != s_links.end();)
+    for (auto link = finalLinks.begin(); link != finalLinks.end();)
     {
         const auto& linkPath = link->first;
         const auto& targetPath = link->second;
 
-        if (!depot->ResourceExists(targetPath))
+        if (!depot->ResourceExists(targetPath) && !finalCopies.contains(targetPath))
         {
             if (!invalidPaths.contains(targetPath))
             {
                 LogError(R"([{}] Link "{}" points to a non-existent resource "{}".)",
-                         ExtensionName, s_paths[linkPath], s_paths[targetPath]);
+                         ExtensionName, knownPaths[linkPath], knownPaths[targetPath]);
                 invalidPaths.insert(targetPath);
             }
 
-            link = s_links.erase(link);
+            link = finalLinks.erase(link);
             continue;
         }
 
         ++link;
     }
 
+    auto resourcePathRegistry = Core::Resolve<ResourcePathRegistry>();
+    for (const auto& [knownPath, knownPathStr] : knownPaths)
+    {
+        resourcePathRegistry->RegisterPath(knownPath, knownPathStr);
+    }
+
+    s_copies = std::move(finalCopies);
+    s_links = std::move(finalLinks);
+
+    s_mappings.insert(s_copies.begin(), s_copies.end());
+    s_mappings.insert(s_links.begin(), s_links.end());
+
     m_configs.clear();
 }
 
-void App::ResourceLinkExtension::OnResourceRequest(Red::ResourceLoader*, Red::SharedPtr<Red::ResourceToken<>>&,
-                                                Red::ResourceRequest& aRequest)
+void App::ResourceLinkExtension::OnLoaderResourceRequest(Red::ResourceLoader* aLoader,
+                                                         Red::SharedPtr<Red::ResourceToken<>>& aToken,
+                                                         Red::ResourceRequest& aRequest)
 {
     const auto& link = s_links.find(aRequest.path);
     if (link != s_links.end())
@@ -156,10 +213,24 @@ void App::ResourceLinkExtension::OnResourceRequest(Red::ResourceLoader*, Red::Sh
     }
 }
 
-bool App::ResourceLinkExtension::OnResourceCheck(Red::ResourceDepot* aDepot, Red::ResourcePath aPath)
+uintptr_t* App::ResourceLinkExtension::OnDepotResourceRequest(Red::ResourceDepot* aDepot,
+                                                              const uintptr_t* aResourceHandle,
+                                                              Red::ResourcePath aPath,
+                                                              const int32_t* aArchiveHandle)
 {
-    const auto& link = s_links.find(aPath);
-    if (link != s_links.end())
+    const auto& link = s_copies.find(aPath);
+    if (link != s_copies.end())
+    {
+        aPath = link->second;
+    }
+
+    return Raw::ResourceDepot::RequestResource(aDepot, aResourceHandle, aPath, aArchiveHandle);
+}
+
+bool App::ResourceLinkExtension::OnDepotResourceCheck(Red::ResourceDepot* aDepot, Red::ResourcePath aPath)
+{
+    const auto& link = s_mappings.find(aPath);
+    if (link != s_mappings.end())
     {
         aPath = link->second;
     }

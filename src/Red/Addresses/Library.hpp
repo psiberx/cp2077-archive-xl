@@ -190,6 +190,7 @@ constexpr uint32_t ResourceLoader_OnUpdate = 1303056161;
 
 constexpr uint32_t ResourcePath_Create = 3998356057;
 
+constexpr uint32_t ResourceSerializer_Load = 2577814646;
 constexpr uint32_t ResourceSerializer_Deserialize = 2901686778;
 constexpr uint32_t ResourceSerializer_PostLoad = 1350901460;
 constexpr uint32_t ResourceSerializer_OnDependenciesReady = 1185093671;

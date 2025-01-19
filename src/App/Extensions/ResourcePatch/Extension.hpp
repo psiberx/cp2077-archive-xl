@@ -23,11 +23,12 @@ private:
     using DefinitionData = std::pair<Red::Handle<Red::AppearanceDefinition>, Red::SharedPtr<Red::DeferredDataBufferToken>>;
     using DefinitionMap = Core::Map<Red::CName, DefinitionData>;
 
-    static void OnResourceRequest(Red::ResourceDepot*, const uintptr_t* aOut, Red::ResourcePath aPath, const int32_t*);
+    static void OnResourceRequest(void* aSerializer, uint64_t a2, Red::ResourceSerializerRequest& aRequest,
+                                  uint64_t a4, uint64_t a5);
     static void OnResourceDeserialize(void* aSerializer, uint64_t, uint64_t, Red::JobHandle& aJob,
                                       Red::ResourceSerializerRequest& aRequest, uint64_t,
                                       Red::DynArray<Red::Handle<Red::ISerializable>>&, uint64_t);
-    static void OnResourceReady(Red::ResourceSerializer* aSerializer);
+    static void OnResourceReady(Red::ResourceSerializerContext* aContext);
     static void OnEntityTemplateLoad(Red::EntityTemplate* aTemplate, void*);
     static void OnAppearanceResourceLoad(Red::AppearanceResource* aResource);
     static void OnMeshResourceLoad(Red::CMesh* aMesh, Red::PostLoadParams* aParams);

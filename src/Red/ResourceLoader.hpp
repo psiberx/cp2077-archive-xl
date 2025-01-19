@@ -17,7 +17,7 @@ RED4EXT_ASSERT_OFFSET(ResourceRequest, path, 0x0);
 
 namespace Raw::ResourceLoader
 {
-constexpr auto RequestResource = Core::RawFunc<
+constexpr auto LoadAsync = Core::RawFunc<
     /* addr = */ Red::AddressLib::ResourceLoader_RequestResource,
     /* type = */ void (*)(Red::ResourceLoader* aLoader,
                           Red::SharedPtr<Red::ResourceToken<>>& aToken,
