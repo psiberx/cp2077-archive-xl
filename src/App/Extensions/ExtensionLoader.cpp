@@ -62,7 +62,7 @@ void App::ExtensionLoader::Configure()
             if (!std::filesystem::exists(configDir, error))
                 continue;
 
-            auto configDirIt = std::filesystem::directory_iterator(
+            auto configDirIt = std::filesystem::recursive_directory_iterator(
                 configDir, std::filesystem::directory_options::follow_directory_symlink);
 
             for (const auto& entry : configDirIt)
