@@ -1,0 +1,23 @@
+resource:
+  copy:
+    base\characters\head\player_base_heads\player_female_average\heb_000_pwa__morphs.morphtarget:
+      - archive_xl\characters\head\player_base_heads\player_female_average\heb_000_pwa__morphs.morphtarget
+    base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_000_pwa_c__basehead.mesh:
+      - archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_000_pwa_c__basehead.mesh
+    base\characters\head\player_base_heads\player_man_average\heb_000_pma__morphs.morphtarget:
+      - archive_xl\characters\head\player_base_heads\player_man_average\heb_000_pma__morphs.morphtarget
+    base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_000_pma_c__basehead.mesh:
+      - archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_000_pma_c__basehead.mesh
+  patch:
+    archive_xl\characters\head\player_base_heads\player_female_average\heb_000_pwa__morphs.morphtarget:
+      props: [ blob, boundingBox, targets ]
+      targets: [ player_wa_brows.morphtarget ]
+    archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_000_pwa_c__basehead.mesh:
+      props: [ renderResourceBlob ]
+      targets: [ player_wa_brows.mesh ]
+    archive_xl\characters\head\player_base_heads\player_man_average\heb_000_pma__morphs.morphtarget:
+      props: [ blob, boundingBox, targets ]
+      targets: [ player_ma_brows.morphtarget ]
+    archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_000_pma_c__basehead.mesh:
+      props: [ renderResourceBlob ]
+      targets: [ player_ma_brows.mesh ]

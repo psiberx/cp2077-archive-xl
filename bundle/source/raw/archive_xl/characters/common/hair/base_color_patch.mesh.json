@@ -1,0 +1,531 @@
+{
+  "Header": {
+    "WolvenKitVersion": "8.15.1-nightly.2024-12-22",
+    "WKitJsonVersion": "0.0.9",
+    "GameVersion": 2200,
+    "ExportedDateTime": "2025-01-20T19:23:55.8454452Z",
+    "DataType": "CR2W"
+  },
+  "Data": {
+    "Version": 195,
+    "BuildVersion": 1568496,
+    "RootChunk": {
+      "$type": "CMesh",
+      "appearances": [
+        {
+          "HandleId": "0",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "black_carbon"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "1",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "black_salt_n_pepper"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "2",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "blonde_dishwater"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "3",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "blonde_golden"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "4",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "blonde_platinum"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "5",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "blue_red_ombre"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "6",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "blue_sapphire"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "7",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "blue_sky"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "8",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "blue_steel"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "9",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "brown_liquorice"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "10",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "brown_medium"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "11",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "brown_ombre"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "12",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "citrus_yellow"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "13",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "cold_white"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "14",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "cyberpunk_yellow"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "15",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "dark_purple"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "16",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "ginger_copper"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "17",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "ginger_strawberry"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "18",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "goblin_green"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "19",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "gray_gunmetal"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "20",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "green_orange"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "21",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "green_toxic"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "22",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "liliac"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "23",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "liliac_ombre"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "24",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "mermaid_aquamarine"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "25",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "phoenix_fire"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "26",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "pink_magenta"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "27",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "pink_rose"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "28",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "purple_blonde"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "29",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "purple_ombre"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "30",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "red_apple"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "31",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "red_merlot"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "32",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "silver_rose"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "33",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "teal_ash"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "34",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "teal_ombre"
+            },
+            "tags": []
+          }
+        }
+      ],
+      "boneNames": [],
+      "boneRigMatrices": [],
+      "boneVertexEpsilons": [],
+      "boundingBox": {
+        "$type": "Box",
+        "Max": {
+          "$type": "Vector4",
+          "W": -3.40282347E+38,
+          "X": -3.40282347E+38,
+          "Y": -3.40282347E+38,
+          "Z": -3.40282347E+38
+        },
+        "Min": {
+          "$type": "Vector4",
+          "W": 3.40282347E+38,
+          "X": 3.40282347E+38,
+          "Y": 3.40282347E+38,
+          "Z": 3.40282347E+38
+        }
+      },
+      "castGlobalShadowsCachedInCook": 0,
+      "castLocalShadowsCachedInCook": 0,
+      "castsRayTracedShadowsFromOriginalGeometry": 0,
+      "consoleBias": 0,
+      "constrainAutoHideDistanceToTerrainHeightMap": 0,
+      "cookingPlatform": "PLATFORM_PC",
+      "externalMaterials": [],
+      "floatTrackNames": [],
+      "forceLoadAllAppearances": 0,
+      "geometryHash": "0",
+      "inplaceResources": [],
+      "isPlayerShadowMesh": 0,
+      "isShadowMesh": 0,
+      "localMaterialBuffer": {
+        "$type": "meshMeshMaterialBuffer",
+        "materials": null,
+        "rawData": null,
+        "rawDataHeaders": []
+      },
+      "localMaterialInstances": [],
+      "lodBoneMask": [],
+      "lodLevelInfo": [],
+      "materialEntries": [],
+      "objectType": "ROT_Static",
+      "parameters": [],
+      "preloadExternalMaterials": [],
+      "preloadLocalMaterialInstances": [],
+      "renderResourceBlob": null,
+      "resourceVersion": 0,
+      "saveDateTime": "1048576",
+      "surfaceAreaPerAxis": {
+        "$type": "Vector3",
+        "X": -1,
+        "Y": -1,
+        "Z": -1
+      },
+      "useRayTracingShadowLODBias": 0
+    },
+    "EmbeddedFiles": []
+  }
+}

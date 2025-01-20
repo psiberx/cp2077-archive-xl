@@ -4,6 +4,7 @@ import * as TypeHelper from 'TypeHelper.wscript'
 const resources = [
   'archive_xl\\characters\\common\\eyes\\hel_pwa.mi.json',
   'archive_xl\\characters\\common\\eyes\\hel_pma.mi.json',
+  'archive_xl\\characters\\common\\hair\\base_color_patch.mesh.json',
   'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\hel_pwa_lashes.app.json',
   'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\hel_pma_lashes.app.json',
   // 'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\heb_pwa_brows_patch.morphtarget.json',

@@ -509,7 +509,12 @@ void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, Red::Pos
                     {
                         if (existingAppearance->name == cloneAppearance->name)
                         {
-                            existingAppearance = cloneAppearance;
+                            if (existingAppearance->chunkMaterials.size == 0 ||
+                                cloneAppearance->chunkMaterials.size != 0)
+                            {
+                                existingAppearance = cloneAppearance;
+                            }
+
                             isNewAppearance = false;
                             break;
                         }
