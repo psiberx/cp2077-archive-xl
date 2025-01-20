@@ -137,23 +137,16 @@ void App::MeshExtension::OnAddStubAppearance(Red::CMesh* aMesh)
 
 bool App::MeshExtension::OnPreloadAppearances(Red::CMesh* aMesh)
 {
-    if (!aMesh || !aMesh->path || aMesh->appearances.size == 0)
+    if (!aMesh || !aMesh->path || aMesh->appearances.size == 0 || aMesh->materialEntries.size == 0)
         return false;
 
     auto result = Raw::CMesh::ShouldPreloadAppearances(aMesh);
 
     if (result && !aMesh->forceLoadAllAppearances && aMesh->appearances.size == 1)
     {
-        if (aMesh->appearances[0]->chunkMaterials.size == 0)
+        if (aMesh->appearances[0]->chunkMaterials.size == 0 || IsSpecialMaterial(aMesh->materialEntries[0].name))
         {
             result = false;
-        }
-        else if (aMesh->appearances[0]->name != DefaultAppearanceName)
-        {
-            if (aMesh->materialEntries.size == 0 || IsSpecialMaterial(aMesh->materialEntries[0].name))
-            {
-                result = false;
-            }
         }
     }
 
@@ -259,11 +252,16 @@ void App::MeshExtension::ProcessDynamicMaterials(const Core::SharedPtr<DynamicCo
 
         if (chunkName.hash == aContext->sourceMesh->path.hash)
         {
-            const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
-            const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
+            auto materialIndex = static_cast<int32_t>(aContext->targetMesh->materialEntries.size);
+            aContext->targetState->materials[chunkName] = materialIndex;
+            aContext->targetMesh->materialEntries.EmplaceBack();
 
-            LogError(R"([{}] Unexpected behavior, mesh "{}" is not registered as a source for "{}".)",
-                     ExtensionName, sourcePathStr, meshPathStr);
+            auto& materialEntry = aContext->targetMesh->materialEntries.Back();
+            materialEntry.name = chunkName;
+            materialEntry.isLocalInstance = true;
+            materialEntry.material = s_dummyMaterial;
+            materialEntry.materialWeak = s_dummyMaterial;
+
             continue;
         }
 
@@ -893,23 +891,25 @@ void App::MeshExtension::PrefetchMeshState(Red::CMesh* aMesh, const Core::Map<Re
 
 Red::CName App::MeshExtension::RegisterMeshSource(Red::CMesh* aMesh, Red::CMesh* aSourceMesh)
 {
-    if (!aSourceMesh || !aSourceMesh->materialEntries.size)
+    if (!aSourceMesh || aSourceMesh->materialEntries.size == 0)
         return {};
 
     auto meshState = AcquireMeshState(aMesh);
     auto sourceTag = meshState->RegisterSource(aSourceMesh);
 
+    if (aMesh->materialEntries.size > 0)
     {
         std::scoped_lock _(meshState->meshMutex);
 
-        meshState->materials[sourceTag] = static_cast<int32_t>(aMesh->materialEntries.size);
+        auto materialIndex = static_cast<int32_t>(aMesh->materialEntries.size);
+        meshState->materials[sourceTag] = materialIndex;
         aMesh->materialEntries.EmplaceBack();
 
         auto& materialEntry = aMesh->materialEntries.Back();
         materialEntry.name = sourceTag;
+        materialEntry.isLocalInstance = true;
         materialEntry.material = s_dummyMaterial;
         materialEntry.materialWeak = s_dummyMaterial;
-        materialEntry.isLocalInstance = true;
     }
 
     return sourceTag;
