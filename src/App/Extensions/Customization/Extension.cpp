@@ -316,6 +316,10 @@ void App::CustomizationExtension::MergeCustomEntries(CustomizationResourceToken&
         MergeCustomOptions(gameData->headCustomizationOptions, customData->headCustomizationOptions, true);
     }
 
+    RegenerateIndexes(gameData->armsCustomizationOptions);
+    RegenerateIndexes(gameData->bodyCustomizationOptions);
+    RegenerateIndexes(gameData->headCustomizationOptions);
+
     if (!m_hairColorNames.empty())
     {
         Red::AppendToFlat("ItemFactory.HairColors.hairColors", m_hairColorNames);
@@ -517,6 +521,40 @@ void App::CustomizationExtension::MergeCustomOptions(Red::DynArray<Customization
             aTargetOptions.EmplaceBack(sourceOption);
 
             RegisterCustomEntryName(sourceOption->name);
+        }
+    }
+}
+
+void App::CustomizationExtension::RegenerateIndexes(Red::DynArray<CustomizationOption>& aTargetOptions)
+{
+    for (auto& targetOption : aTargetOptions)
+    {
+        if (targetOption->GetNativeType()->IsA(s_AppInfoType))
+        {
+            auto& targetAppOption = reinterpret_cast<CustomizationAppearance&>(targetOption);
+
+            for (int32_t index = 0; index < targetAppOption->definitions.size; ++index)
+            {
+                targetAppOption->definitions[index].index = index;
+            }
+        }
+        else if (targetOption->GetNativeType()->IsA(s_MorphInfoType))
+        {
+            auto& targetMorphOption = reinterpret_cast<CustomizationMorph&>(targetOption);
+
+            for (int32_t index = 0; index < targetMorphOption->morphNames.size; ++index)
+            {
+                targetMorphOption->morphNames[index].index = index;
+            }
+        }
+        else if (targetOption->GetNativeType()->IsA(s_SwitcherInfoType))
+        {
+            auto& targetSwitcherOption = reinterpret_cast<CustomizationSwitcher&>(targetOption);
+
+            for (int32_t index = 0; index < targetSwitcherOption->options.size; ++index)
+            {
+                targetSwitcherOption->options[index].index = index;
+            }
         }
     }
 }

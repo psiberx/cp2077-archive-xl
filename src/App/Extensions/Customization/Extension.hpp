@@ -93,6 +93,8 @@ private:
                             Red::DynArray<CustomizationOption>& aSourceOptions,
                             bool aSlotsAndLinks);
 
+    void RegenerateIndexes(Red::DynArray<CustomizationOption>& aTargetOptions);
+
     void RemoveCustomEntries();
     void RemoveCustomEntries(CustomizationResourceToken& aTargetResource);
     void RemoveCustomGroups(Red::DynArray<CustomizationGroup>& aTargetGroups);
