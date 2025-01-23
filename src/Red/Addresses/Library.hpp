@@ -2,7 +2,7 @@
 
 namespace Red::AddressLib
 {
-constexpr uint32_t Main = 3545369307;
+constexpr uint32_t Main = 240386859;
 
 constexpr uint32_t AISpotPersistentDataArray_Reserve = 3842971216;
 constexpr uint32_t AIWorkspotManager_RegisterSpots = 2515346652;
@@ -11,8 +11,8 @@ constexpr uint32_t AnimatedComponent_InitializeAnimations = 2855474741;
 
 constexpr uint32_t AppearanceChanger_ComputePlayerGarment = 3243419919;
 constexpr uint32_t AppearanceChanger_GetBaseMeshOffset = 4219677283;
-constexpr uint32_t AppearanceChanger_GetSuffixes = 332345115;
-constexpr uint32_t AppearanceChanger_GetSuffixValue = 1317875529;
+constexpr uint32_t AppearanceChanger_GetSuffixes = 63057648;
+constexpr uint32_t AppearanceChanger_GetSuffixValue = 1003499294;
 constexpr uint32_t AppearanceChanger_RegisterPart = 3169139695;
 constexpr uint32_t AppearanceChanger_SelectAppearanceName = 2770550105;
 
@@ -152,28 +152,6 @@ constexpr uint32_t MorphTargetManager_ApplyMorphTarget = 633871992;
 
 constexpr uint32_t PersistencySystem_SetPersistentStateData = 546121377;
 
-constexpr uint32_t PhotoModeMenuController_SetupGridSelector = 3755427483;
-constexpr uint32_t PhotoModeMenuController_SetNpcImageCallback = 3051761678;
-
-constexpr uint32_t PhotoModeSystem_Activate = 2593396187;
-constexpr uint32_t PhotoModeSystem_ProcessAttribute = 2433030483;
-constexpr uint32_t PhotoModeSystem_RegisterCharacter = 3267708234;
-constexpr uint32_t PhotoModeSystem_ValidateCharacter = 3842776524;
-constexpr uint32_t PhotoModeSystem_RegisterPoses = 3714525185;
-constexpr uint32_t PhotoModeSystem_RegisterWeaponPoses = 788083328;
-constexpr uint32_t PhotoModeSystem_RegisterClothingItems = 1375351833;
-constexpr uint32_t PhotoModeSystem_UpdateCategoryDependents = 3893174133;
-constexpr uint32_t PhotoModeSystem_UpdatePoseDependents = 231086722;
-constexpr uint32_t PhotoModeSystem_PrepareCategories = 1220162374;
-constexpr uint32_t PhotoModeSystem_PreparePoses = 1533423999;
-constexpr uint32_t PhotoModeSystem_PrepareCameras = 1972968407;
-constexpr uint32_t PhotoModeSystem_CalculateSpawnTransform = 3621919187;
-constexpr uint32_t PhotoModeSystem_SpawnCharacter = 3345561227;
-constexpr uint32_t PhotoModeSystem_ApplyPuppetTransforms = 2694650124;
-constexpr uint32_t PhotoModeSystem_SetRelativePosition = 3157463382;
-constexpr uint32_t PhotoModeSystem_SyncRelativePosition = 4175827669;
-constexpr uint32_t PhotoModeSystem_SetAttributeValue = 815536999;
-
 constexpr uint32_t QuestLoader_ProcessPhaseResource = 790570700;
 
 constexpr uint32_t QuestsSystem_OnGameRestored = 2048921710;
@@ -204,7 +182,7 @@ constexpr uint32_t TPPRepresentationComponent_OnAttach = 4129169021;
 constexpr uint32_t TPPRepresentationComponent_OnItemEquipped = 4010810747;
 constexpr uint32_t TPPRepresentationComponent_OnItemUnequipped = 1933319146;
 constexpr uint32_t TPPRepresentationComponent_RegisterAffectedItem = 3037343626;
-constexpr uint32_t TPPRepresentationComponent_IsAffectedSlot = 684464829;
+constexpr uint32_t TPPRepresentationComponent_IsAffectedSlot = 678894266;
 
 constexpr uint32_t TweakDB_Load = 3602585178; // game::data::TweakDB::LoadOptimized
 }

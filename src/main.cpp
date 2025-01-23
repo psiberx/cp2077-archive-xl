@@ -53,7 +53,8 @@ RED4EXT_C_EXPORT uint32_t RED4EXT_CALL Supports()
 
 BOOL APIENTRY DllMain(HMODULE aHandle, DWORD aReason, LPVOID)
 {
-    using GameMain = Core::RawFunc<Red::AddressLib::Main, int32_t(*)()>;
+    using GameMain = Core::RawFunc<Red::AddressLib::Main, int32_t (*)(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                                                                      PWSTR pCmdLine, int nCmdShow)>;
 
     static const bool s_isGame = Core::Runtime::IsEXE(L"Cyberpunk2077.exe");
     static const bool s_isASI = Core::Runtime::IsASI(aHandle);
