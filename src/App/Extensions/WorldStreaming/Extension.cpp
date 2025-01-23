@@ -104,7 +104,7 @@ void App::WorldStreamingExtension::OnWorldLoad(Red::world::StreamingWorld* aWorl
     if (!m_configs.empty())
     {
         Core::Vector<StreamingBlockRef> blockRefs;
-        Core::Map<Red::ResourcePath, const char*> blockPaths;
+        Core::Map<Red::ResourcePath, std::string_view> blockPaths;
 
         for (const auto& unit : m_configs)
         {
@@ -112,13 +112,16 @@ void App::WorldStreamingExtension::OnWorldLoad(Red::world::StreamingWorld* aWorl
             {
                 // LogInfo("[{}] Processing \"{}\"...", ExtensionName, unit.name);
 
-                for (const auto& path : unit.blocks)
+                for (const auto& blockPathStr : unit.blocks)
                 {
-                    StreamingBlockRef blockRef(path.c_str());
-                    blockRef.LoadAsync();
+                    auto blockPath = Red::ResourcePath(blockPathStr.c_str());
+                    if (!blockPaths.contains(blockPath))
+                    {
+                        blockRefs.emplace_back(blockPath);
+                        blockRefs.back().LoadAsync();
 
-                    blockPaths.insert({blockRef.path, path.c_str()});
-                    blockRefs.emplace_back(std::move(blockRef));
+                        blockPaths.insert({blockPath, blockPathStr});
+                    }
                 }
             }
         }
@@ -198,7 +201,8 @@ void App::WorldStreamingExtension::OnSectorReady(Red::world::StreamingSector* aS
         LogWarning("[{}] No patches have been applied to \"{}\".", ExtensionName, sectorPath);
 }
 
-bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSector, const App::WorldSectorMod& aSectorMod)
+bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSector,
+                                               const App::WorldSectorMod& aSectorMod)
 {
     auto& buffer = Raw::StreamingSector::NodeBuffer::Ref(aSector);
     auto nodeCount = buffer.nodeSetups.GetInstanceCount();
@@ -302,7 +306,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
 }
 
 void App::WorldStreamingExtension::OnRegisterSpots(Red::AIWorkspotManager* aManager,
-                                                const Red::DynArray<Red::AISpotPersistentData>& aNewSpots)
+                                                   const Red::DynArray<Red::AISpotPersistentData>& aNewSpots)
 {
     auto allSpots = Raw::AIWorkspotManager::Spots::Ptr(aManager);
     auto merging = (allSpots->size != 0);
