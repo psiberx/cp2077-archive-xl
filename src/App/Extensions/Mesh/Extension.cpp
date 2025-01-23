@@ -341,7 +341,8 @@ void App::MeshExtension::ProcessDynamicMaterials(const Core::SharedPtr<DynamicCo
             else
             {
                 auto externalPath = aContext->sourceMesh->externalMaterials[sourceEntry.index].path;
-                auto materialPath = ExpandResourcePath(externalPath, chunk->materialName, aContext->targetState);
+                auto [materialPath, isOptionalPath] = ExpandResourcePath(externalPath, chunk->materialName,
+                                                                         aContext->targetState);
 
                 if (!materialPath)
                 {
@@ -593,27 +594,35 @@ void App::MeshExtension::ExpandMaterialParams(const Core::SharedPtr<DynamicConte
             continue;
         }
 
-        auto referencePath = ExpandResourcePath(reference.path, aChunk->materialName, aContext->targetState);
+        auto [referencePath, isOptionalPath] = ExpandResourcePath(reference.path, aChunk->materialName,
+                                                                  aContext->targetState);
 
         if (!referencePath)
         {
-            const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
-            const auto paramPathStr = s_resourcePathRegistry->ResolvePathOrHash(reference.path);
-
-            if (aMaterialInstance->path)
+            if (isOptionalPath)
             {
-                const auto materialPathStr = s_resourcePathRegistry->ResolvePathOrHash(aMaterialInstance->path);
-
-                LogError(R"([{}] Material "{}" of "{}" failed to instantiate: unresolvable path "{}" for param "{}" in "{}".)",
-                         ExtensionName, aChunk->chunkName.ToString(), meshPathStr, paramPathStr, param.name.ToString(), materialPathStr);
+                aMaterialInstance->params.RemoveAt(i);
             }
             else
             {
-                LogError(R"([{}] Material "{}" of "{}" failed to instantiate: unresolvable path "{}" for param "{}".)",
-                         ExtensionName, aChunk->chunkName.ToString(), meshPathStr, paramPathStr, param.name.ToString());
-            }
+                const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
+                const auto paramPathStr = s_resourcePathRegistry->ResolvePathOrHash(reference.path);
 
-            aChunk->failed = true;
+                if (aMaterialInstance->path)
+                {
+                    const auto materialPathStr = s_resourcePathRegistry->ResolvePathOrHash(aMaterialInstance->path);
+
+                    LogError(R"([{}] Material "{}" of "{}" failed to instantiate: unresolvable path "{}" for param "{}" in "{}".)",
+                             ExtensionName, aChunk->chunkName.ToString(), meshPathStr, paramPathStr, param.name.ToString(), materialPathStr);
+                }
+                else
+                {
+                    LogError(R"([{}] Material "{}" of "{}" failed to instantiate: unresolvable path "{}" for param "{}".)",
+                             ExtensionName, aChunk->chunkName.ToString(), meshPathStr, paramPathStr, param.name.ToString());
+                }
+
+                aChunk->failed = true;
+            }
             continue;
         }
 
@@ -698,7 +707,8 @@ void App::MeshExtension::ExpandMaterialInheritance(const Core::SharedPtr<Dynamic
         return;
     }
 
-    auto basePath = ExpandResourcePath(baseReference.path, aChunk->materialName, aContext->targetState);
+    auto [basePath, isOptionalPath] = ExpandResourcePath(baseReference.path, aChunk->materialName,
+                                                         aContext->targetState);
 
     if (!basePath)
     {
@@ -808,25 +818,33 @@ void App::MeshExtension::ExpandMaterialInheritance(const Core::SharedPtr<Dynamic
     });
 }
 
-Red::ResourcePath App::MeshExtension::ExpandResourcePath(Red::ResourcePath aPath, Red::CName aMaterialName,
-                                                         const Core::SharedPtr<MeshState>& aState)
+std::pair<Red::ResourcePath, bool> App::MeshExtension::ExpandResourcePath(Red::ResourcePath aPath,
+                                                                          Red::CName aMaterialName,
+                                                                          const Core::SharedPtr<MeshState>& aState)
 {
     auto& controller = GarmentExtension::GetDynamicAppearanceController();
     auto pathStr = controller->GetPathString(aPath);
 
     if (!controller->IsDynamicValue(pathStr))
     {
-        return aPath;
+        return {aPath, false};
     }
 
     auto result = controller->ProcessString(aState->GetContextAttrs(), {{MaterialAttr, aMaterialName}}, pathStr.data());
 
     if (!result.valid)
     {
-        return {};
+        return {{}, false};
     }
 
-    return result.value.data();
+    if (result.missed)
+    {
+        return {{}, result.optional};
+    }
+
+    auto finalPath = s_resourcePathRegistry->RegisterPath(result.value);
+
+    return {finalPath, result.optional};
 }
 
 void App::MeshExtension::FixFinalMaterialsIndexes(const Core::SharedPtr<DynamicContext>& aContext)

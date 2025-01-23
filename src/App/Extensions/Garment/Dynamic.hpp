@@ -76,9 +76,11 @@ class DynamicAppearanceController
 public:
     struct DynamicString
     {
-        bool valid;
         std::string value;
         DynamicTagList attributes;
+        bool valid;
+        bool missed;
+        bool optional;
     };
 
     DynamicAppearanceController(Core::SharedPtr<ResourcePathRegistry> aPathRegistry);

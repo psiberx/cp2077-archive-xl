@@ -107,8 +107,8 @@ private:
                                              const Core::SharedPtr<ChunkData>& aChunk,
                                              const Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
                                              Red::JobQueue& aJobQueue);
-    static Red::ResourcePath ExpandResourcePath(Red::ResourcePath aPath, Red::CName aMaterialName,
-                                                const Core::SharedPtr<MeshState>& aState);
+    static std::pair<Red::ResourcePath, bool> ExpandResourcePath(Red::ResourcePath aPath, Red::CName aMaterialName,
+                                                                 const Core::SharedPtr<MeshState>& aState);
     static bool ContainsUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials);
 
     static Core::SharedPtr<MeshState> AcquireMeshState(Red::CMesh* aMesh);

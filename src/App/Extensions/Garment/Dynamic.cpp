@@ -21,6 +21,7 @@ constexpr auto TransientMarkers = "%&";
 constexpr auto AllMarkers = "!%&";
 
 constexpr auto DynamicValueMarker = '*';
+constexpr auto OptionalValueMarker = '?';
 constexpr auto AttrOpen = '{';
 constexpr auto AttrClose = '}';
 constexpr auto ConditionEqual = "=";
@@ -328,6 +329,9 @@ Red::CName App::DynamicAppearanceController::ResolveName(Red::Entity* aEntity, c
     if (!result.valid)
         return aName;
 
+    if (result.optional && result.missed)
+        return {};
+
     return Red::CNamePool::Add(result.value.data());
 }
 
@@ -349,6 +353,9 @@ Red::ResourcePath App::DynamicAppearanceController::ResolvePath(Red::Entity* aEn
 
     if (!result.valid)
         return aPath;
+
+    if (result.optional && result.missed)
+        return {};
 
     Red::ResourcePath finalPath = result.value.data();
 
@@ -373,6 +380,9 @@ App::DynamicAppearanceController::DynamicString App::DynamicAppearanceController
 
     DynamicString result{};
 
+    if (!aInput || !*aInput)
+        return result;
+
     char buffer[MaxLength + 1];
     char* out = buffer;
     const char* max = buffer + MaxLength;
@@ -389,9 +399,6 @@ App::DynamicAppearanceController::DynamicString App::DynamicAppearanceController
 
         if (!attrOpen)
         {
-            if (out == buffer)
-                return result;
-
             while (*str && out < max)
             {
                 *out = *str;
@@ -405,7 +412,7 @@ App::DynamicAppearanceController::DynamicString App::DynamicAppearanceController
 
         if (!attrClose)
         {
-            return result;
+            break;
         }
 
         while (str != attrOpen && out < max)
@@ -425,6 +432,8 @@ App::DynamicAppearanceController::DynamicString App::DynamicAppearanceController
         const auto attr = Red::FNV1a64(reinterpret_cast<const uint8_t*>(attrOpen + 1), attrClose - attrOpen - 1);
         const char* value = nullptr;
 
+        result.attributes.insert(attr);
+
         {
             const auto localIt = aLocalAttrs.find(attr);
             if (localIt != aLocalAttrs.end())
@@ -437,7 +446,10 @@ App::DynamicAppearanceController::DynamicString App::DynamicAppearanceController
                 if (globalIt != aGlobalAttrs.end())
                 {
                     value = globalIt.value().value.data();
-                    result.attributes.insert(attr);
+                }
+                else
+                {
+                    result.missed = true;
                 }
             }
         }
@@ -456,6 +468,17 @@ App::DynamicAppearanceController::DynamicString App::DynamicAppearanceController
                 break;
             }
         }
+    }
+
+    if (*str || result.attributes.empty())
+    {
+        return result;
+    }
+
+    if (*(out - 1) == OptionalValueMarker)
+    {
+        result.optional = true;
+        --out;
     }
 
     *out = '\0';
