@@ -79,12 +79,16 @@ std::string App::ResourcePathRegistry::ResolvePathOrHash(Red::ResourcePath aPath
     return str;
 }
 
-void App::ResourcePathRegistry::RegisterPath(const std::string& aPathStr)
+Red::ResourcePath App::ResourcePathRegistry::RegisterPath(const std::string& aPathStr)
 {
-    if (!aPathStr.empty())
-        return;
+    if (aPathStr.empty())
+        return {};
 
-    RegisterPath(aPathStr.data(), aPathStr);
+    auto path = Red::ResourcePath(aPathStr.data());
+
+    RegisterPath(path, aPathStr);
+
+    return path;
 }
 
 void App::ResourcePathRegistry::RegisterPath(Red::ResourcePath aPath, const std::string& aPathStr)

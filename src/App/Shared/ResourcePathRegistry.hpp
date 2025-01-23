@@ -18,7 +18,7 @@ public:
     [[nodiscard]] std::string ResolvePath(Red::ResourcePath aPath);
     [[nodiscard]] std::string ResolvePathOrHash(Red::ResourcePath aPath);
 
-    void RegisterPath(const std::string& aPathStr);
+    Red::ResourcePath RegisterPath(const std::string& aPathStr);
     void RegisterPath(Red::ResourcePath aPath, const std::string& aPathStr);
 
 protected:
