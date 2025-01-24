@@ -467,13 +467,6 @@ void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, Red::Pos
         }
     }
 
-    if (IsPatchResource(aMesh->path))
-    {
-        aParams->disablePreInitialization = true;
-        aMesh->forceLoadAllAppearances = false;
-        return;
-    }
-
     const auto& patchList = GetPatchList(aMesh->path);
 
     if (!patchList.empty())
