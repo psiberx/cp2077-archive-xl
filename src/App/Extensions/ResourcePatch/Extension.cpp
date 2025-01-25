@@ -893,7 +893,7 @@ void App::ResourcePatchExtension::IncludeAppearanceParts(const Red::Handle<Red::
 
             if (partExtractor.results.size > 0)
             {
-                MergeComponents(aResultObjects, partExtractor.results);
+                MergeComponents(aResultObjects, partExtractor.results, true);
 
                 // TODO: Process external components and components overrides
             }
@@ -960,7 +960,7 @@ void App::ResourcePatchExtension::PatchPackageResults(const Red::Handle<Red::Ent
         {
             if (patchProps.empty() || patchProps.contains(EntityTemplateComponentsProp))
             {
-                MergeComponents(aResultObjects, patchExtractor.results);
+                MergeComponents(aResultObjects, patchExtractor.results, false);
             }
 
             if (patchProps.empty() || patchProps.contains(EntityTemplateEntityProp))
@@ -1016,7 +1016,7 @@ void App::ResourcePatchExtension::PatchPackageResults(const Red::Handle<Red::App
             jobQueue.Dispatch([patchExtractor = std::move(patchExtractor), &aResultObjects]() {
                 if (patchExtractor->results.size > 0)
                 {
-                    MergeComponents(aResultObjects, patchExtractor->results);
+                    MergeComponents(aResultObjects, patchExtractor->results, false);
                 }
             });
         });
@@ -1043,7 +1043,8 @@ void App::ResourcePatchExtension::MergeEntity(Red::DynArray<Red::Handle<Red::ISe
 }
 
 void App::ResourcePatchExtension::MergeComponents(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
-                                                  Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects)
+                                                  Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects,
+                                                  bool aPartMerge)
 {
     for (auto& patchObject : aPatchObjects)
     {
@@ -1065,7 +1066,7 @@ void App::ResourcePatchExtension::MergeComponents(Red::DynArray<Red::Handle<Red:
                 }
             }
 
-            if (isNewComponent && !Red::IsInstanceOf<Red::entExternalComponent>(patchComponent))
+            if (isNewComponent && (!aPartMerge || !Red::IsInstanceOf<Red::entExternalComponent>(patchComponent)))
             {
                 aResultObjects.PushBack(std::move(patchComponent));
             }

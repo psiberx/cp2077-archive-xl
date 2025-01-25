@@ -64,7 +64,8 @@ private:
                             Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects,
                             int16_t aResultEntityIndex, int16_t aPatchEntityIndex);
     static void MergeComponents(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
-                                Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects);
+                                Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects,
+                                bool aPartMerge);
     static void MergeObjects(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
                              Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects);
     static void MergeResources(Red::DynArray<Red::SharedPtr<Red::ResourceToken<>>>& aResultResources,
