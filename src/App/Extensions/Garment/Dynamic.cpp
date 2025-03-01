@@ -361,9 +361,14 @@ Red::ResourcePath App::DynamicAppearanceController::ResolvePath(Red::Entity* aEn
 
     if (!Red::ResourceDepot::Get()->ResourceExists(finalPath))
     {
-        if (result.attributes.contains(BodyTypeAttr) || result.attributes.contains(FeetStateAttr))
+        if (result.attributes.contains(BodyTypeAttr))
         {
-            result = ProcessString(state.fallback, aVariant, pathStr.data());
+            result = ProcessString(state.fallbackBody, aVariant, pathStr.data());
+            finalPath = result.value.data();
+        }
+        else if (result.attributes.contains(FeetStateAttr))
+        {
+            result = ProcessString(state.fallbackFeet, aVariant, pathStr.data());
             finalPath = result.value.data();
         }
     }
@@ -505,9 +510,11 @@ void App::DynamicAppearanceController::UpdateState(Red::Entity* aEntity, Red::Tw
     state.values[HairColorAttr] = {custimizationData.hairColor};
     state.values[EyesColorAttr] = {custimizationData.eyesColor};
 
-    state.fallback = state.values;
-    state.fallback[BodyTypeAttr] = {DefaultBodyTypeAttrValue, DefaultBodyTypeSuffixValue};
-    state.fallback[FeetStateAttr] = {DefaultFeetStateAttrValue, DefaultFeetStateSuffixValue};
+    state.fallbackBody = state.values;
+    state.fallbackBody[BodyTypeAttr] = {DefaultBodyTypeAttrValue, DefaultBodyTypeSuffixValue};
+
+    state.fallbackFeet = state.values;
+    state.fallbackFeet[FeetStateAttr] = {DefaultFeetStateAttrValue, DefaultFeetStateSuffixValue};
 
     state.conditions.clear();
     for (const auto& [attributeName, attributeData] : state.values)
