@@ -22,6 +22,7 @@
 #include <RED4ext/RED4ext.hpp>
 
 #include <RED4ext/JobQueue.hpp>
+#include <RED4ext/RenderProxy.hpp>
 #include <RED4ext/ResourceDepot.hpp>
 #include <RED4ext/ResourceLoader.hpp>
 #include <RED4ext/Scripting/Natives/Generated/AI/SpotPersistentData.hpp>
