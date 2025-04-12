@@ -336,29 +336,34 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
         {
             for (const auto& patchDefinition : patchResource->appearances)
             {
-                auto isNewAppearance = true;
+                const auto isMultiTargetPatch = patchDefinition->name.IsNone();
+                auto isNewAppearance = !isMultiTargetPatch;
 
                 for (auto& existingDefinition : aResource->appearances)
                 {
-                    if (existingDefinition->name != patchDefinition->name)
-                        continue;
-
-                    isNewAppearance = false;
-
-                    if (newAppearances.contains(patchDefinition->name))
+                    if (!isMultiTargetPatch)
                     {
-                        // existingDefinition = patchDefinition;
-                        break;
+                        if (existingDefinition->name != patchDefinition->name)
+                        {
+                            continue;
+                        }
+
+                        isNewAppearance = false;
+
+                        if (newAppearances.contains(patchDefinition->name))
+                        {
+                            break;
+                        }
                     }
 
                     if (patchProps.empty() || patchProps.contains(AppearanceResourceComponentsProp))
                     {
                         std::unique_lock _(s_appearanceDefinitionLock);
-                        if (!s_appearanceDefinitions[patchPath].contains(patchDefinition->name))
+                        if (!s_appearanceDefinitions[patchPath].contains(existingDefinition->name))
                         {
                             auto patchBufferToken = patchDefinition->compiledData.LoadAsync();
-                            s_appearanceDefinitions[patchPath][patchDefinition->name] = {patchDefinition,
-                                                                                         patchBufferToken};
+                            s_appearanceDefinitions[patchPath][existingDefinition->name] = {patchDefinition,
+                                                                                            patchBufferToken};
                         }
                     }
 
@@ -427,7 +432,10 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
                         existingDefinition->visualTags.Add(patchDefinition->visualTags);
                     }
 
-                    break;
+                    if (!isMultiTargetPatch)
+                    {
+                        break;
+                    }
                 }
 
                 if (isNewAppearance)
