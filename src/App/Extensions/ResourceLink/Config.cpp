@@ -58,37 +58,37 @@ void App::ResourceLinkConfig::LoadYAML(const YAML::Node& aNode)
     {
         for (const auto& copyNode : copiesNode)
         {
-            const auto& targetPathStr = copyNode.first.Scalar();
-            const auto& targetPath = Red::ResourcePath(targetPathStr.data());
-            const auto& sourcesNode = copyNode.second;
+            const auto& sourcePathStr = copyNode.first.Scalar();
+            const auto& sourcePath = Red::ResourcePath(sourcePathStr.data());
+            const auto& targetsNode = copyNode.second;
 
-            if (sourcesNode.IsScalar())
+            if (targetsNode.IsScalar())
             {
-                const auto& copyPathStr = sourcesNode.Scalar();
-                const auto& sourcePath = Red::ResourcePath(copyPathStr.data());
+                const auto& targetPathStr = targetsNode.Scalar();
+                const auto& targetPath = Red::ResourcePath(targetPathStr.data());
 
-                if (sourcePath)
+                if (targetPath)
                 {
                     copies[sourcePath].insert(targetPath);
-                    paths[sourcePath] = copyPathStr;
+                    paths[targetPath] = targetPathStr;
                 }
             }
-            else if (sourcesNode.IsSequence())
+            else if (targetsNode.IsSequence())
             {
-                for (const auto& sourceNode : sourcesNode)
+                for (const auto& targetNode : targetsNode)
                 {
-                    const auto& copyPathStr = sourceNode.Scalar();
-                    const auto& sourcePath = Red::ResourcePath(copyPathStr.data());
+                    const auto& targetPathStr = targetNode.Scalar();
+                    const auto& targetPath = Red::ResourcePath(targetPathStr.data());
 
-                    if (sourcePath)
+                    if (targetPath)
                     {
-                        copies[targetPath].insert(sourcePath);
-                        paths[sourcePath] = copyPathStr;
+                        copies[sourcePath].insert(targetPath);
+                        paths[targetPath] = targetPathStr;
                     }
                 }
             }
 
-            paths[targetPath] = targetPathStr;
+            paths[sourcePath] = sourcePathStr;
         }
     }
 }
