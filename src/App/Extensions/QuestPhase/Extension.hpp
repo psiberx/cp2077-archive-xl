@@ -2,6 +2,7 @@
 
 #include "App/Extensions/ExtensionBase.hpp"
 #include "App/Extensions/QuestPhase/Config.hpp"
+#include "App/Shared/ResourcePathRegistry.hpp"
 #include "Red/QuestLoader.hpp"
 #include "Red/QuestPhase.hpp"
 #include "Red/QuestsSystem.hpp"
@@ -41,5 +42,6 @@ private:
 
     inline static Core::Map<Red::ResourcePath, Core::Vector<QuestPhaseMod>> s_phases;
     inline static Core::Map<Red::ResourcePath, Core::Set<uint16_t>> s_forced;
+    inline static Core::SharedPtr<ResourcePathRegistry> s_resourcePathRegistry;
 };
 }

@@ -1,0 +1,9 @@
+resource:
+  scope:
+    cyberpunk2077.quest:
+      - cyberpunk2077_main.quest
+      - cyberpunk2077_ep1.quest
+    cyberpunk2077_main.quest:
+      - base\quest\cyberpunk2077.quest
+    cyberpunk2077_ep1.quest:
+      - ep1\quest\ep1_standalone.quest

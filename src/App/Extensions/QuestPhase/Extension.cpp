@@ -1,4 +1,6 @@
 #include "Extension.hpp"
+#include "Core/Facades/Container.hpp"
+#include "App/Extensions/ResourceMeta/Extension.hpp"
 
 namespace
 {
@@ -15,6 +17,8 @@ bool App::QuestPhaseExtension::Load()
     HookBefore<Raw::QuestLoader::ProcessPhaseResource>(&OnPhasePreload).OrThrow();
     HookBefore<Raw::QuestsSystem::OnGameRestored>(&OnGameRestored).OrThrow();
     HookBefore<Raw::QuestRootInstance::Start>(&OnQuestStart).OrThrow();
+
+    s_resourcePathRegistry = Core::Resolve<ResourcePathRegistry>();
 
     return true;
 }
@@ -51,19 +55,22 @@ void App::QuestPhaseExtension::Configure()
                 continue;
             }
 
-            auto parentPath = Red::ResourcePath(phaseMod.parentPath.data());
-
-            if (!depot->ResourceExists(parentPath))
+            for (const auto& parentPathStr : ResourceMetaExtension::ExpandList(phaseMod.parentPaths))
             {
-                if (!invalidPaths.contains(parentPath))
-                {
-                    LogWarning("[{}] Phase \"{}\" doesn't exist. Skipped.", ExtensionName, phaseMod.parentPath);
-                    invalidPaths.insert(parentPath);
-                }
-                continue;
-            }
+                auto parentPath = Red::ResourcePath(parentPathStr.data());
 
-            s_phases[parentPath].emplace_back(std::move(phaseMod));
+                if (!depot->ResourceExists(parentPath))
+                {
+                    if (!invalidPaths.contains(parentPath))
+                    {
+                        LogWarning("[{}] Phase \"{}\" doesn't exist. Skipped.", ExtensionName, parentPathStr);
+                        invalidPaths.insert(parentPath);
+                    }
+                    continue;
+                }
+
+                s_phases[parentPath].emplace_back(phaseMod);
+            }
         }
 
         unit.phases.clear();
@@ -71,14 +78,15 @@ void App::QuestPhaseExtension::Configure()
 }
 
 void App::QuestPhaseExtension::OnPhasePreload(void* aLoader, Red::ResourcePath aPhasePath,
-                                           Red::Handle<Red::questQuestPhaseResource>& aPhaseResource)
+                                              Red::Handle<Red::questQuestPhaseResource>& aPhaseResource)
 {
     const auto& phaseMods = s_phases.find(aPhaseResource->path);
 
     if (phaseMods == s_phases.end())
         return;
 
-    LogInfo("[{}] Patching phase \"{}\"...", ExtensionName, phaseMods.value().begin()->parentPath);
+    LogInfo("[{}] Patching phase \"{}\"...", ExtensionName,
+            s_resourcePathRegistry->ResolvePathOrHash(aPhaseResource->path));
 
     for (const auto& phaseMod : phaseMods.value())
     {

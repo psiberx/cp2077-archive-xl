@@ -33,7 +33,7 @@ void App::QuestPhaseConfig::LoadYAML(const YAML::Node& aNode)
             QuestPhaseMod phaseData{};
             phaseData.mod = name;
             phaseData.phasePath = pathNode.Scalar();
-            phaseData.parentPath = parentNode.Scalar();
+            phaseData.parentPaths.insert(parentNode.Scalar());
 
             FillConnection(phaseNode["connection"], phaseData.input);
             FillConnection(phaseNode["input"], phaseData.input);

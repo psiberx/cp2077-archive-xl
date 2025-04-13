@@ -14,7 +14,7 @@ struct QuestPhaseMod
 {
     std::string mod;
     std::string phasePath;
-    std::string parentPath;
+    Core::Set<std::string> parentPaths;
     QuestPhaseConnection input;
     QuestPhaseConnection output;
 };
