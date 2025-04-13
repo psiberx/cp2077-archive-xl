@@ -58,7 +58,8 @@ struct WorldStreamingConfig : ExtensionConfig
     bool ParseResource(const YAML::Node& aNode, Red::ResourcePath& aValue, bool& aFlag);
     bool ParseName(const YAML::Node& aNode, Red::CName& aValue, bool& aFlag);
     bool ParseRecordID(const YAML::Node& aNode, Red::TweakDBID& aValue, bool& aFlag);
-    bool ParseSubDeletions(const YAML::Node& aNode, WorldNodeDeletion& aDeletionData);
+    bool ParseSubDeletions(const YAML::Node& aDeletionsNode, const YAML::Node& aCountNode,
+                           Core::Vector<int64_t>& aDeletions, int64_t& aExpectedCount);
 
     Core::Vector<std::string> blocks;
     Core::Vector<WorldSectorMod> sectors;

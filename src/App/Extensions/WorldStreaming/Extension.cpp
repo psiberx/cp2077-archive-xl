@@ -6,7 +6,8 @@ namespace
 constexpr auto ExtensionName = "WorldStreaming";
 
 constexpr auto MainWorldResource = Red::ResourcePath(R"(base\worlds\03_night_city\_compiled\default\03_night_city.streamingworld)");
-constexpr auto CollisionNodeType = Red::GetTypeName<Red::world::CollisionNode>();
+constexpr auto CollisionNodeType = Red::GetTypeName<Red::worldCollisionNode>();
+constexpr auto InstancedMeshNodeype = Red::GetTypeName<Red::worldInstancedMeshNode>();
 
 Red::Handle<Red::worldAudioTagNode> s_dummyNode;
 }
@@ -247,16 +248,31 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             continue;
         }
 
-        if (nodeDeletion.nodeType == CollisionNodeType && !nodeDeletion.subNodeDeletions.empty())
+        if (!nodeDeletion.subNodeDeletions.empty())
         {
-            auto& actors = Raw::CollisionNode::Actors::Ref(nodeDefinition);
-            if (actors.GetSize() != nodeDeletion.expectedSubNodes)
+            if (nodeDeletion.nodeType == CollisionNodeType)
             {
-                LogError(R"([{}] {}: The target node #{} has {} actor(s), but the mod expects {}.)",
-                         ExtensionName, aSectorMod.mod, nodeDeletion.nodeIndex,
-                         actors.GetSize(), nodeDeletion.expectedSubNodes);
-                nodeValidationPassed = false;
-                continue;
+                auto& actors = Raw::CollisionNode::Actors::Ref(nodeDefinition);
+                if (actors.GetSize() != nodeDeletion.expectedSubNodes)
+                {
+                    LogError(R"([{}] {}: The target node #{} has {} actor(s), but the mod expects {}.)",
+                             ExtensionName, aSectorMod.mod, nodeDeletion.nodeIndex,
+                             actors.GetSize(), nodeDeletion.expectedSubNodes);
+                    nodeValidationPassed = false;
+                    continue;
+                }
+            }
+            else if (nodeDeletion.nodeType == InstancedMeshNodeype)
+            {
+                auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
+                if (meshNode->worldTransformsBuffer.numElements != nodeDeletion.expectedSubNodes)
+                {
+                    LogError(R"([{}] {}: The target node #{} has {} instance(s), but the mod expects {}.)",
+                             ExtensionName, aSectorMod.mod, nodeDeletion.nodeIndex,
+                             meshNode->worldTransformsBuffer.numElements, nodeDeletion.expectedSubNodes);
+                    nodeValidationPassed = false;
+                    continue;
+                }
             }
         }
     }
@@ -380,15 +396,31 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
         auto* nodeSetup = buffer.nodeSetups.GetInstance(nodeDeletion.nodeIndex);
         auto* nodeDefinition = buffer.nodes[nodeSetup->nodeIndex].instance;
 
-        if (nodeDeletion.nodeType == CollisionNodeType)
+        if (!nodeDeletion.subNodeDeletions.empty())
         {
-            if (!nodeDeletion.subNodeDeletions.empty())
+            if (nodeDeletion.nodeType == CollisionNodeType)
             {
                 auto& actors = Raw::CollisionNode::Actors::Ref(nodeDefinition);
                 for (const auto& subNodeIndex : nodeDeletion.subNodeDeletions)
                 {
                     constexpr auto DelZ = static_cast<int32_t>(-2000 * (2 << 16));
                     actors.beginPtr[subNodeIndex].transform.Position.z.Bits = DelZ;
+                }
+                continue;
+            }
+
+            if (nodeDeletion.nodeType == InstancedMeshNodeype)
+            {
+                auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
+                auto* instances = std::bit_cast<Red::WorldTransformBuffer*>(&meshNode->worldTransformsBuffer.sharedDataBuffer->buffer);
+                auto startIndex = meshNode->worldTransformsBuffer.startIndex;
+                for (const auto& subNodeIndex : nodeDeletion.subNodeDeletions)
+                {
+                    auto* instance = instances->Get(startIndex + subNodeIndex);
+                    instance->translation.Z = -2000;
+                    instance->scale.X = 0;
+                    instance->scale.Y = 0;
+                    instance->scale.Z = 0;
                 }
                 continue;
             }

@@ -68,6 +68,30 @@ struct CollisionActor
     WorldTransform transform;
     uint64_t unk20;
 };
+
+struct WorldTransformBuffer : DataBuffer
+{
+    [[nodiscard]] inline worldNodeTransform* begin() const
+    {
+        return reinterpret_cast<worldNodeTransform*>(buffer.data);
+    }
+
+    [[nodiscard]] inline worldNodeTransform* end() const
+    {
+        return reinterpret_cast<worldNodeTransform*>(reinterpret_cast<uintptr_t>(buffer.data) + buffer.size);
+    }
+
+    [[nodiscard]] worldNodeTransform* Get(int64_t aIndex) const
+    {
+        return begin() + aIndex;
+    }
+
+    uint32_t GetCount()
+    {
+        return buffer.size / sizeof(worldNodeTransform);
+    }
+};
+RED4EXT_ASSERT_SIZE(WorldTransformBuffer, 0x28);
 }
 
 namespace Raw::StreamingSector

@@ -140,11 +140,13 @@
 #include <RED4ext/Scripting/Natives/Generated/world/InstancedMeshNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/InstancedOccluderNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/Node.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/NodeTransform.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/PhysicalDestructionNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/PopulationSpawnerNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/PrefabProxyMeshNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/RuntimeSystemEntityAppearanceChanger.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/RuntimeSystemWorldStreaming.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/SharedDataBuffer.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/StaticDecalNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/StaticOccluderMeshNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/StreamingBlock.hpp>

@@ -141,7 +141,10 @@ void App::WorldStreamingConfig::LoadYAML(const YAML::Node& aNode)
                                 continue;
                             }
 
-                            ParseSubDeletions(deletionNode, deletionData);
+                            ParseSubDeletions(deletionNode["actorDeletions"], deletionNode["expectedActors"],
+                                              deletionData.subNodeDeletions, deletionData.expectedSubNodes);
+                            ParseSubDeletions(deletionNode["instanceDeletions"], deletionNode["expectedInstances"],
+                                              deletionData.subNodeDeletions, deletionData.expectedSubNodes);
 
                             sectorData.nodeDeletions.emplace_back(std::move(deletionData));
                         }
@@ -358,54 +361,51 @@ bool App::WorldStreamingConfig::ParseRecordID(const YAML::Node& aNode, Red::Twea
     return true;
 }
 
-bool App::WorldStreamingConfig::ParseSubDeletions(const YAML::Node& aNode, WorldNodeDeletion& aDeletionData)
+bool App::WorldStreamingConfig::ParseSubDeletions(const YAML::Node& aDeletionsNode, const YAML::Node& aCountNode,
+                                                  Core::Vector<int64_t>& aDeletions, int64_t& aExpectedCount)
 {
-    const auto& subDeletionsNode = aNode["actorDeletions"];
-
-    if (!subDeletionsNode.IsDefined() || !subDeletionsNode.IsSequence())
+    if (!aDeletionsNode.IsDefined() || !aDeletionsNode.IsSequence())
     {
         return false;
     }
 
-    const auto& subCountNode = aNode["expectedActors"];
-
-    if (!subCountNode.IsDefined() || !subCountNode.IsScalar())
+    if (!aCountNode.IsDefined() || !aCountNode.IsScalar())
     {
         return false;
     }
 
-    if (!ParseInt(subCountNode.Scalar(), aDeletionData.expectedSubNodes))
+    if (!ParseInt(aCountNode.Scalar(), aExpectedCount))
     {
         return false;
     }
 
-    if (aDeletionData.expectedSubNodes <= 0)
+    if (aExpectedCount <= 0)
     {
         return false;
     }
 
-    for (const auto& subDeletionNode : subDeletionsNode)
+    for (const auto& subDeletionNode : aDeletionsNode)
     {
         if (!subDeletionNode.IsScalar())
         {
-            aDeletionData.subNodeDeletions.clear();
+            aDeletions.clear();
             return false;
         }
 
         int64_t subIndex;
         if (!ParseInt(subDeletionNode.Scalar(), subIndex))
         {
-            aDeletionData.subNodeDeletions.clear();
+            aDeletions.clear();
             return false;
         }
 
-        if (subIndex < 0 || subIndex >= aDeletionData.expectedSubNodes)
+        if (subIndex < 0 || subIndex >= aExpectedCount)
         {
-            aDeletionData.subNodeDeletions.clear();
+            aDeletions.clear();
             return false;
         }
 
-        aDeletionData.subNodeDeletions.push_back(subIndex);
+        aDeletions.push_back(subIndex);
     }
 
     return true;
