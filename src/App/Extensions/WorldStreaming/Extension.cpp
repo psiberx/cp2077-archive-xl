@@ -18,8 +18,8 @@ std::string_view App::WorldStreamingExtension::GetName()
 
 bool App::WorldStreamingExtension::Load()
 {
-    HookAfter<Raw::StreamingWorld::OnLoad>(&WorldStreamingExtension::OnWorldLoad).OrThrow();
-    HookAfter<Raw::StreamingSector::OnReady>(&OnSectorReady).OrThrow();
+    HookAfter<Raw::StreamingWorld::Serialize>(&WorldStreamingExtension::OnWorldSerialize).OrThrow();
+    HookAfter<Raw::StreamingSector::PostLoad>(&OnSectorPostLoad).OrThrow();
     Hook<Raw::AIWorkspotManager::RegisterSpots>(&OnRegisterSpots).OrThrow();
 
     s_dummyNode = Red::MakeHandle<Red::worldAudioTagNode>();
@@ -31,8 +31,8 @@ bool App::WorldStreamingExtension::Load()
 
 bool App::WorldStreamingExtension::Unload()
 {
-    Unhook<Raw::StreamingWorld::OnLoad>();
-    Unhook<Raw::StreamingSector::OnReady>();
+    Unhook<Raw::StreamingWorld::Serialize>();
+    Unhook<Raw::StreamingSector::PostLoad>();
     Unhook<Raw::AIWorkspotManager::RegisterSpots>();
 
     return true;
@@ -94,7 +94,7 @@ void App::WorldStreamingExtension::Configure()
     }
 }
 
-void App::WorldStreamingExtension::OnWorldLoad(Red::world::StreamingWorld* aWorld, Red::BaseStream* aStream)
+void App::WorldStreamingExtension::OnWorldSerialize(Red::world::StreamingWorld* aWorld, Red::BaseStream* aStream)
 {
     if (aWorld->path != MainWorldResource)
         return;
@@ -164,7 +164,7 @@ void App::WorldStreamingExtension::OnWorldLoad(Red::world::StreamingWorld* aWorl
     }
 }
 
-void App::WorldStreamingExtension::OnSectorReady(Red::world::StreamingSector* aSector, uint64_t)
+void App::WorldStreamingExtension::OnSectorPostLoad(Red::world::StreamingSector* aSector, uint64_t)
 {
     std::shared_lock _(s_sectorsLock);
 
@@ -207,7 +207,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
     auto& buffer = Raw::StreamingSector::NodeBuffer::Ref(aSector);
     auto nodeCount = buffer.nodeSetups.GetInstanceCount();
 
-    if (buffer.nodeSetups.GetInstanceCount() != aSectorMod.expectedNodes)
+    if (nodeCount!= aSectorMod.expectedNodes)
     {
         LogError(R"([{}] {}: The target sector has {} node(s), but the mod expects {}.)",
                  ExtensionName, aSectorMod.mod, nodeCount, aSectorMod.expectedNodes);
@@ -218,8 +218,8 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
 
     for (const auto& nodeMutation : aSectorMod.nodeMutations)
     {
-        auto* nodeInstance = buffer.nodeSetups.GetInstance(nodeMutation.nodeIndex);
-        auto* nodeDefinition = buffer.nodes[nodeInstance->nodeIndex].instance;
+        auto* nodeSetup = buffer.nodeSetups.GetInstance(nodeMutation.nodeIndex);
+        auto* nodeDefinition = buffer.nodes[nodeSetup->nodeIndex].instance;
 
         if (nodeMutation.nodeType != nodeDefinition->GetNativeType()->name)
         {
@@ -234,8 +234,8 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
 
     for (const auto& nodeDeletion : aSectorMod.nodeDeletions)
     {
-        auto* nodeInstance = buffer.nodeSetups.GetInstance(nodeDeletion.nodeIndex);
-        auto* nodeDefinition = buffer.nodes[nodeInstance->nodeIndex].instance;
+        auto* nodeSetup = buffer.nodeSetups.GetInstance(nodeDeletion.nodeIndex);
+        auto* nodeDefinition = buffer.nodes[nodeSetup->nodeIndex].instance;
 
         if (nodeDeletion.nodeType != nodeDefinition->GetNativeType()->name)
         {
@@ -268,17 +268,117 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
 
     for (const auto& nodeMutation : aSectorMod.nodeMutations)
     {
-        auto* nodeInstance = buffer.nodeSetups.GetInstance(nodeMutation.nodeIndex);
+        auto* nodeSetup = buffer.nodeSetups.GetInstance(nodeMutation.nodeIndex);
+        auto* nodeDefinition = buffer.nodes[nodeSetup->nodeIndex].instance;
 
-        nodeInstance->transform.position = nodeMutation.position;
-        nodeInstance->transform.orientation = nodeMutation.orientation;
-        nodeInstance->scale = nodeMutation.scale;
+        if (nodeMutation.modifyPosition)
+        {
+            nodeSetup->transform.position = nodeMutation.position;
+        }
+
+        if (nodeMutation.modifyOrientation)
+        {
+            nodeSetup->transform.orientation = nodeMutation.orientation;
+        }
+
+        if (nodeMutation.modifyScale)
+        {
+            nodeSetup->scale = nodeMutation.scale;
+        }
+
+        if (nodeMutation.modifyResource)
+        {
+            if (auto* meshDefinition = Red::Cast<Red::worldMeshNode>(nodeDefinition))
+            {
+                meshDefinition->mesh.path = nodeMutation.resourcePath;
+            }
+            else if (auto* instancedMeshDefinition = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition))
+            {
+                instancedMeshDefinition->mesh.path = nodeMutation.resourcePath;
+            }
+            else if (auto* entityDefinition = Red::Cast<Red::worldEntityNode>(nodeDefinition))
+            {
+                entityDefinition->entityTemplate.path = nodeMutation.resourcePath;
+            }
+            else if (auto* effectDefinition = Red::Cast<Red::worldEffectNode>(nodeDefinition))
+            {
+                effectDefinition->effect.path = nodeMutation.resourcePath;
+            }
+            else if (auto* decalDefinition = Red::Cast<Red::worldStaticDecalNode>(nodeDefinition))
+            {
+                decalDefinition->material.path = nodeMutation.resourcePath;
+            }
+            else if (auto* physicalDefinition = Red::Cast<Red::worldPhysicalDestructionNode>(nodeDefinition))
+            {
+                physicalDefinition->mesh.path = nodeMutation.resourcePath;
+            }
+            else if (auto* staticOccluderDefinition = Red::Cast<Red::worldStaticOccluderMeshNode>(nodeDefinition))
+            {
+                staticOccluderDefinition->mesh.path = nodeMutation.resourcePath;
+            }
+            else if (auto* instancedOccluderDefinition = Red::Cast<Red::worldInstancedOccluderNode>(nodeDefinition))
+            {
+                instancedOccluderDefinition->mesh.path = nodeMutation.resourcePath;
+            }
+            else if (auto* foliageDefinition = Red::Cast<Red::worldFoliageNode>(nodeDefinition))
+            {
+                foliageDefinition->mesh.path = nodeMutation.resourcePath;
+            }
+            else if (auto* terrainDefinition = Red::Cast<Red::worldTerrainMeshNode>(nodeDefinition))
+            {
+                terrainDefinition->meshRef.path = nodeMutation.resourcePath;
+            }
+        }
+
+        if (nodeMutation.modifyAppearance)
+        {
+            if (auto* meshDefinition = Red::Cast<Red::worldMeshNode>(nodeDefinition))
+            {
+                meshDefinition->meshAppearance = nodeMutation.appearanceName;
+            }
+            else if (auto* instancedMeshDefinition = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition))
+            {
+                instancedMeshDefinition->meshAppearance = nodeMutation.appearanceName;
+            }
+            else if (auto* entityDefinition = Red::Cast<Red::worldEntityNode>(nodeDefinition))
+            {
+                entityDefinition->appearanceName = nodeMutation.appearanceName;
+            }
+            else if (auto* spawnerDefinition = Red::Cast<Red::worldPopulationSpawnerNode>(nodeDefinition))
+            {
+                spawnerDefinition->appearanceName = nodeMutation.appearanceName;
+            }
+            else if (auto* physicalDefinition = Red::Cast<Red::worldPhysicalDestructionNode>(nodeDefinition))
+            {
+                physicalDefinition->meshAppearance = nodeMutation.appearanceName;
+            }
+            else if (auto* foliageDefinition = Red::Cast<Red::worldFoliageNode>(nodeDefinition))
+            {
+                foliageDefinition->meshAppearance = nodeMutation.appearanceName;
+            }
+        }
+
+        if (nodeMutation.modifyRecordID)
+        {
+            if (auto* spawnerDefinition = Red::Cast<Red::worldPopulationSpawnerNode>(nodeDefinition))
+            {
+                spawnerDefinition->objectRecordId = nodeMutation.recordID;
+            }
+        }
+
+        if (nodeMutation.modifyProxyNodes)
+        {
+            if (auto* proxyDefinition = Red::Cast<Red::worldPrefabProxyMeshNode>(nodeDefinition))
+            {
+                proxyDefinition->nbNodesUnderProxy += nodeMutation.nbNodesUnderProxyDiff;
+            }
+        }
     }
 
     for (const auto& nodeDeletion : aSectorMod.nodeDeletions)
     {
-        auto* nodeInstance = buffer.nodeSetups.GetInstance(nodeDeletion.nodeIndex);
-        auto* nodeDefinition = buffer.nodes[nodeInstance->nodeIndex].instance;
+        auto* nodeSetup = buffer.nodeSetups.GetInstance(nodeDeletion.nodeIndex);
+        auto* nodeDefinition = buffer.nodes[nodeSetup->nodeIndex].instance;
 
         if (nodeDeletion.nodeType == CollisionNodeType)
         {
@@ -294,12 +394,15 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             }
         }
 
-        nodeInstance->transform.position.Z = -2000;
-        nodeInstance->scale.X = 0;
-        nodeInstance->scale.Y = 0;
-        nodeInstance->scale.Z = 0;
+        nodeSetup->transform.position.Z = -2000;
+        nodeSetup->scale.X = 0;
+        nodeSetup->scale.Y = 0;
+        nodeSetup->scale.Z = 0;
 
-        nodeInstance->node = s_dummyNode.instance;
+        nodeSetup->globalNodeID = 0;
+        nodeSetup->proxyNodeID = 0;
+
+        nodeSetup->node = s_dummyNode.instance;
     }
 
     return true;

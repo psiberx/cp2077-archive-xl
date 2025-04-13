@@ -2,8 +2,8 @@
 
 namespace Raw::StreamingWorld
 {
-constexpr auto OnLoad = Core::RawFunc<
-    /* addr = */ Red::AddressLib::StreamingWorld_OnLoad,
+constexpr auto Serialize = Core::RawFunc<
+    /* addr = */ Red::AddressLib::StreamingWorld_Serialize,
     /* type = */ void (*)(Red::worldStreamingWorld* aWorld, Red::BaseStream* aStream)>();
 }
 

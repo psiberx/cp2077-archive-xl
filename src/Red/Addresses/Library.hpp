@@ -174,9 +174,9 @@ constexpr uint32_t ResourceSerializer_PostLoad = 1350901460;
 constexpr uint32_t ResourceSerializer_OnDependenciesReady = 1185093671;
 constexpr uint32_t ResourceSerializer_OnResourceReady = 1147149338;
 
-constexpr uint32_t StreamingSector_OnReady = 3972601611;
+constexpr uint32_t StreamingSector_PostLoad = 3972601611;
 
-constexpr uint32_t StreamingWorld_OnLoad = 410718963;
+constexpr uint32_t StreamingWorld_Serialize = 410718963;
 
 constexpr uint32_t TPPRepresentationComponent_OnAttach = 4129169021;
 constexpr uint32_t TPPRepresentationComponent_OnItemEquipped = 4010810747;

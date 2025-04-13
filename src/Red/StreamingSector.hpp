@@ -13,7 +13,7 @@ struct __declspec(align(0x10)) CompiledNodeInstanceSetupInfo
     Vector3 unk44;                     // 44
     worldNode* node;                   // 50
     uint64_t globalNodeID;             // 58
-    uint64_t unk60;                    // 60
+    uint64_t proxyNodeID;              // 60
     ResourcePath unk68;                // 68
     float secondaryRefPointDistance;   // 70
     float streamingDistance;           // 74
@@ -42,7 +42,7 @@ struct CompiledNodeInstanceSetupInfoBuffer : DataBuffer
                                                                 buffer.size);
     }
 
-    CompiledNodeInstanceSetupInfo* GetInstance(int64_t aIndex)
+    [[nodiscard]] CompiledNodeInstanceSetupInfo* GetInstance(int64_t aIndex) const
     {
         return begin() + aIndex;
     }
@@ -74,8 +74,8 @@ namespace Raw::StreamingSector
 {
 using NodeBuffer = Core::OffsetPtr<0x40, Red::StreamingSectorNodeBuffer>;
 
-constexpr auto OnReady = Core::RawFunc<
-    /* addr = */ Red::AddressLib::StreamingSector_OnReady,
+constexpr auto PostLoad = Core::RawFunc<
+    /* addr = */ Red::AddressLib::StreamingSector_PostLoad,
     /* type = */ void (*)(Red::worldStreamingSector* aSector, uint64_t a2)>();
 }
 
