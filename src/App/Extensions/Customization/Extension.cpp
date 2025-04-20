@@ -704,7 +704,7 @@ void App::CustomizationExtension::FixCustomizationAppearance(Red::AppearanceReso
 
     auto meshAppearanceStr = std::string_view{aAppearanceName.ToString()};
 
-    if (meshAppearanceStr.size() < 5)
+    if (meshAppearanceStr.size() < 3)
         return;
 
     std::unique_lock _(*Raw::AppearanceResource::Mutex(aResource));
@@ -741,7 +741,7 @@ void App::CustomizationExtension::FixCustomizationAppearance(Red::AppearanceReso
 
             meshAppearanceStr.remove_prefix(delimiterPos + 2);
 
-            if (meshAppearanceStr.size() < 5)
+            if (meshAppearanceStr.size() < 3)
                 return;
 
             if (meshAppearanceStr[2] == '_' && std::isdigit(meshAppearanceStr[0]))
@@ -749,10 +749,13 @@ void App::CustomizationExtension::FixCustomizationAppearance(Red::AppearanceReso
                 meshAppearanceStr.remove_prefix(3);
             }
         }
-    }
 
-    if (!sourceDefinition)
-        return;
+        if (!sourceDefinition)
+        {
+            auto sourceIndex = aResource->appearances.size > 1 ? 1 : 0;
+            sourceDefinition = aResource->appearances[sourceIndex];
+        }
+    }
 
     if (sourceDefinition->partsOverrides.size > 0)
     {
