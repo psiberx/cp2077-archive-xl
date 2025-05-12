@@ -59,3 +59,19 @@ func ConvertAppearanceNameToFPP(app: String) -> String {
 
     return OverrideDynamicAppearanceCondition(app, "camera", "fpp");
 }
+
+func ConvertAppearanceNameToPartialSleeves(app: String) -> String {
+    if !StrContains(app, "!") {
+        return StrReplace(app, "&Full", "&Part");
+    }
+
+    return OverrideDynamicAppearanceCondition(app, "sleeves", "part");
+}
+
+func ConvertAppearanceNameToFullSleeves(app: String) -> String {
+    if !StrContains(app, "!") {
+        return StrReplace(app, "&Part", "&Full");
+    }
+
+    return OverrideDynamicAppearanceCondition(app, "sleeves", "full");
+}
