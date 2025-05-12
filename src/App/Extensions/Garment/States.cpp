@@ -194,6 +194,11 @@ void App::ResourceState::LinkToAppearance(DynamicAppearanceName aAppearance)
     m_appearance = std::move(aAppearance);
 }
 
+const App::DynamicAppearanceName& App::ResourceState::GetActiveAppearance() const
+{
+    return m_appearance;
+}
+
 bool App::ResourceState::IsDynamicPart() const
 {
     return m_appearance.isDynamic;
@@ -207,6 +212,11 @@ Red::CName App::ResourceState::GetActiveVariant() const
 const App::DynamicPartList& App::ResourceState::GetActiveVariantParts() const
 {
     return m_appearance.parts;
+}
+
+const App::DynamicTagList& App::ResourceState::GetActiveVariantOverrides() const
+{
+    return m_appearance.overrides;
 }
 
 App::EntityState::EntityState(Red::Entity* aEntity,
@@ -468,7 +478,7 @@ bool App::EntityState::SelectDynamicAppearance(DynamicAppearanceName& aSelector,
                     match = definition;
                 }
             }
-            else if (m_dynamicAppearance->MatchReference(appearanceRef, m_entity, aSelector.variant))
+            else if (m_dynamicAppearance->MatchReference(appearanceRef, m_entity, aSelector))
             {
                 if (maxWeight < appearanceRef.weight)
                 {
@@ -547,9 +557,7 @@ void App::EntityState::ToggleConditionalComponents(Red::DynArray<Red::Handle<Red
         if (!resourceState /*|| !resourceState->IsDynamicPart()*/)
             continue;
 
-        const auto activeVariant = resourceState->GetActiveVariant();
-
-        component->isEnabled = m_dynamicAppearance->MatchReference(componentRef, m_entity, activeVariant);
+        component->isEnabled = m_dynamicAppearance->MatchReference(componentRef, m_entity, resourceState->GetActiveAppearance());
 
         if (component->isEnabled)
         {

@@ -20,6 +20,7 @@ struct DynamicAppearanceName
     Red::CName name;
     Red::CName variant;
     DynamicPartList parts;
+    DynamicTagList overrides;
     uint64_t context;
     bool isDynamic;
 };
@@ -30,6 +31,7 @@ struct DynamicAppearanceRef
 
     [[nodiscard]] bool Match(Red::CName aVariant) const;
     [[nodiscard]] bool Match(const DynamicTagList& aConditions) const;
+    [[nodiscard]] bool Match(const DynamicTagList& aConditions, const DynamicTagList& aOverrides) const;
 
     Red::CName value;
     Red::CName name;
@@ -88,7 +90,7 @@ public:
     [[nodiscard]] DynamicAppearanceName ParseAppearance(Red::CName aAppearance) const;
     [[nodiscard]] DynamicAppearanceRef ParseReference(Red::CName aReference) const;
     [[nodiscard]] bool MatchReference(const DynamicAppearanceRef& aReference, Red::Entity* aEntity,
-                                      Red::CName aVariant) const;
+                                      const DynamicAppearanceName& aAppearance) const;
 
     [[nodiscard]] Red::CName ResolveName(Red::Entity* aEntity, const DynamicPartList& aVariant,
                                          Red::CName aName) const;

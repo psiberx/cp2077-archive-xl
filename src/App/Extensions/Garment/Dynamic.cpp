@@ -150,6 +150,7 @@ App::DynamicAppearanceName::DynamicAppearanceName(Red::CName aAppearance)
                     auto partName = ExtractName(str.data(), 0, assignPos, true);
                     auto partValue = ExtractName(str.data(), assignPos + 1, markerPos - assignPos - 1, true);
                     parts[partName] = partValue;
+                    overrides.insert(Red::FNV1a64(str.data(), markerPos - assignPos));
                 }
                 else
                 {
@@ -270,6 +271,18 @@ bool App::DynamicAppearanceRef::Match(const DynamicTagList& aConditions) const
     return true;
 }
 
+bool App::DynamicAppearanceRef::Match(const App::DynamicTagList& aConditions,
+                                      const App::DynamicTagList& aOverrides) const
+{
+    for (const auto& condition : conditions)
+    {
+        if (!aConditions.contains(condition) && !aOverrides.contains(condition))
+            return false;
+    }
+
+    return true;
+}
+
 App::DynamicAppearanceController::DynamicAppearanceController(Core::SharedPtr<App::ResourcePathRegistry> aPathRegistry)
     : m_pathRegistry(std::move(aPathRegistry))
 {
@@ -286,11 +299,11 @@ App::DynamicAppearanceRef App::DynamicAppearanceController::ParseReference(Red::
 }
 
 bool App::DynamicAppearanceController::MatchReference(const DynamicAppearanceRef& aReference, Red::Entity* aEntity,
-                                                      Red::CName aVariant) const
+                                                      const DynamicAppearanceName& aApperance) const
 {
     if (!aReference.variants.empty() )
     {
-        if (!aReference.Match(aVariant))
+        if (!aReference.Match(aApperance.variant))
             return false;
     }
 
@@ -303,7 +316,7 @@ bool App::DynamicAppearanceController::MatchReference(const DynamicAppearanceRef
 
         const auto& state = stateIt.value();
 
-        if (!aReference.Match(state.conditions))
+        if (!aReference.Match(state.conditions, aApperance.overrides))
             return false;
     }
 

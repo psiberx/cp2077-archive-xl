@@ -63,9 +63,11 @@ public:
     int32_t GetOverriddenOffset();
 
     void LinkToAppearance(DynamicAppearanceName aAppearance);
+    [[nodiscard]] const DynamicAppearanceName& GetActiveAppearance() const;
     [[nodiscard]] bool IsDynamicPart() const;
     [[nodiscard]] Red::CName GetActiveVariant() const;
     [[nodiscard]] const DynamicPartList& GetActiveVariantParts() const;
+    [[nodiscard]] const DynamicTagList& GetActiveVariantOverrides() const;
 
 private:
     Red::ResourcePath m_path;

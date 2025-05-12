@@ -31,7 +31,7 @@ bool App::MeshExtension::Load()
     s_dummyAppearance = Red::MakeHandle<Red::meshMeshAppearance>();
     s_dummyMaterial = Red::MakeHandle<Red::CMaterialInstance>();
 
-    Raw::MeshAppearance::Owner::Set(s_dummyAppearance.instance, s_dummyMesh.instance);
+    Raw::MeshAppearance::Owner::Set(s_dummyAppearance.instance, s_dummyMesh);
     Red::CNamePool::Add("@material");
 
     s_resourcePathRegistry = Core::Resolve<ResourcePathRegistry>();
