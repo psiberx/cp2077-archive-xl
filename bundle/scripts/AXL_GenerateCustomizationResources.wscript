@@ -5,67 +5,63 @@ const resources = [
   'archive_xl\\characters\\common\\eyes\\hel_pwa.mi.json',
   'archive_xl\\characters\\common\\eyes\\hel_pma.mi.json',
   'archive_xl\\characters\\common\\hair\\base_color_patch.mesh.json',
-  'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\hel_pwa_lashes.app.json',
-  'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\hel_pma_lashes.app.json',
-  // 'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\heb_pwa_brows_patch.morphtarget.json',
-  // 'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\h0_000_pwa_c__basehead\\heb_pwa_brows_patch.mesh.json',
-  'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\h0_000_pwa_c__basehead\\he_000_pwa_c__basehead_patch.mesh.json',
-  // 'archive_xl\\characters\\head\\player_base_heads\\player_man_average\\heb_pma_brows_patch.morphtarget.json',
-  // 'archive_xl\\characters\\head\\player_base_heads\\player_man_average\\h0_000_pma_c__basehead\\heb_pma_brows_patch.mesh.json',
-  'archive_xl\\characters\\head\\player_base_heads\\player_man_average\\h0_000_pma_c__basehead\\he_000_pma_c__basehead_patch.mesh.json',
+  'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\hel_000_pwa__basehead.app.json',
+  'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\hel_000_pma__basehead.app.json',
+  'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\h0_000_pwa_c__basehead\\hel_000_pwa_c__basehead_patch.mesh.json',
+  'archive_xl\\characters\\head\\player_base_heads\\player_man_average\\h0_000_pma_c__basehead\\hel_000_pma_c__basehead_patch.mesh.json',
 ]
 
 const templates = [
   {
-    path: 'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\eyebrows\\heb_pwa_brows__01.app.json',
+    path: 'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\eyebrows\\heb_000_pwa__basehead_01.app.json',
     patterns: [
-      [/(?<=heb_pwa_brows__)(\d+)/g],
+      [/(?<=heb_000_pwa__basehead_)(\d+)/g],
     ],
     range: [1, 13],
   },
   {
-    path: 'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\heb_pwa_brows__01.morphtarget.json',
+    path: 'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\heb_000_pwa__basehead_01.morphtarget.json',
     patterns: [
-      [/(?<=heb_pwa_brows__)(\d+)/g],
+      [/(?<=heb_000_pwa__basehead_)(\d+)/g],
     ],
     range: [1, 13],
   },
   {
-    path: 'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\h0_000_pwa_c__basehead\\heb_pwa_brows__01.mesh.json',
+    path: 'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\h0_000_pwa_c__basehead\\heb_000_pwa__basehead_01.mesh.json',
     patterns: [
-      [/(?<=heb_pwa_brows__)(\d+)/g],
-      [/(?<=heb_brows__)(\d+)(?=\.mi)/g],
+      [/(?<=heb_000_pwa__basehead_)(\d+)/g],
+      [/(?<=heb__)(\d+)(?=\.mi)/g],
       [/(?<=_d|_ds|_n?)(\d+)(?=\.xbm)/g, (n) => n >= 9 ? n + 3 : n],
     ],
     range: [1, 13],
   },
   {
-    path: 'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\eyebrows\\heb_pma_brows__01.app.json',
+    path: 'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\eyebrows\\heb_000_pma__basehead_01.app.json',
     patterns: [
-      [/(?<=heb_pma_brows__)(\d+)/g],
+      [/(?<=heb_000_pma__basehead_)(\d+)/g],
     ],
     range: [1, 13],
   },
   {
-    path: 'archive_xl\\characters\\head\\player_base_heads\\player_man_average\\heb_pma_brows__01.morphtarget.json',
+    path: 'archive_xl\\characters\\head\\player_base_heads\\player_man_average\\heb_000_pma__basehead_01.morphtarget.json',
     patterns: [
-      [/(?<=heb_pma_brows__)(\d+)/g],
+      [/(?<=heb_000_pma__basehead_)(\d+)/g],
     ],
     range: [1, 13],
   },
   {
-    path: 'archive_xl\\characters\\head\\player_base_heads\\player_man_average\\h0_000_pma_c__basehead\\heb_pma_brows__01.mesh.json',
+    path: 'archive_xl\\characters\\head\\player_base_heads\\player_man_average\\h0_000_pma_c__basehead\\heb_000_pma__basehead_01.mesh.json',
     patterns: [
-      [/(?<=heb_pma_brows__)(\d+)/g],
-      [/(?<=heb_brows__)(\d+)(?=\.mi)/g],
+      [/(?<=heb_000_pma__basehead_)(\d+)/g],
+      [/(?<=heb__)(\d+)(?=\.mi)/g],
       [/(?<=_d|_ds|_n?)(\d+)(?=\.xbm)/g, (n) => n >= 9 ? n + 3 : n],
     ],
     range: [1, 13],
   },
   {
-    path: 'archive_xl\\characters\\common\\eyes\\heb_brows__01.mi.json',
+    path: 'archive_xl\\characters\\common\\eyes\\heb__01.mi.json',
     patterns: [
-      [/(?<=heb_brows__)(\d+)(?=\.mi)/g],
+      [/(?<=heb__)(\d+)(?=\.mi)/g],
       [/(?<=_d|_ds|_n?)(\d+)(?=\.xbm)/g, (n) => n >= 9 ? n + 3 : n],
     ],
     range: [1, 13],

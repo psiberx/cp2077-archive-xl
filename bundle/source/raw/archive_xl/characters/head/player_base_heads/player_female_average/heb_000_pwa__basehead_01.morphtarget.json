@@ -1,0 +1,64 @@
+{
+  "Header": {
+    "WolvenKitVersion": "8.15.1-nightly.2024-12-22",
+    "WKitJsonVersion": "0.0.9",
+    "GameVersion": 2200,
+    "ExportedDateTime": "2025-01-02T10:21:38.3952972Z",
+    "DataType": "CR2W"
+  },
+  "Data": {
+    "Version": 195,
+    "BuildVersion": 0,
+    "RootChunk": {
+      "$type": "MorphTargetMesh",
+      "baseMesh": {
+        "DepotPath": {
+          "$type": "ResourcePath",
+          "$storage": "string",
+          "$value": "archive_xl\\characters\\head\\player_base_heads\\player_female_average\\h0_000_pwa_c__basehead\\heb_000_pwa__basehead_01.mesh"
+        },
+        "Flags": "Default"
+      },
+      "baseMeshAppearance": {
+        "$type": "CName",
+        "$storage": "string",
+        "$value": "default"
+      },
+      "baseTexture": {
+        "DepotPath": {
+          "$type": "ResourcePath",
+          "$storage": "string",
+          "$value": "engine\\textures\\editor\\normal.xbm"
+        },
+        "Flags": "Default"
+      },
+      "baseTextureParamName": {
+        "$type": "CName",
+        "$storage": "string",
+        "$value": "Normal"
+      },
+      "blob": null,
+      "boundingBox": {
+        "$type": "Box",
+        "Max": {
+          "$type": "Vector4",
+          "W": 0,
+          "X": 0,
+          "Y": 0,
+          "Z": 0
+        },
+        "Min": {
+          "$type": "Vector4",
+          "W": 0,
+          "X": 0,
+          "Y": 0,
+          "Z": 0
+        }
+      },
+      "cookingPlatform": "PLATFORM_PC",
+      "resourceVersion": 2,
+      "targets": []
+    },
+    "EmbeddedFiles": []
+  }
+}
