@@ -491,6 +491,7 @@ void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, Red::Pos
             if (patchMesh->appearances.size != 0 && (patchProps.empty() || patchProps.contains(MeshAppearancesProp)))
             {
                 auto sourceTag = MeshExtension::RegisterMeshSource(aMesh, patchMesh);
+                auto expansionTag = Red::CName();
 
                 for (const auto& patchAppearance : patchMesh->appearances)
                 {
@@ -498,11 +499,13 @@ void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, Red::Pos
                     cloneAppearance->name = patchAppearance->name;
                     cloneAppearance->chunkMaterials = patchAppearance->chunkMaterials;
 
-                    if (sourceTag)
+                    if (patchAppearance->tags.size == 1)
                     {
-                        cloneAppearance->tags.Clear();
-                        cloneAppearance->tags.PushBack(sourceTag);
+                        expansionTag = patchAppearance->tags[0];
                     }
+
+                    cloneAppearance->tags.PushBack(expansionTag);
+                    cloneAppearance->tags.PushBack(sourceTag);
 
                     auto isNewAppearance = true;
 

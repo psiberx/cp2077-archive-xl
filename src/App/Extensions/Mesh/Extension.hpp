@@ -35,9 +35,10 @@ private:
         const DynamicAttributeList& GetContextAttrs();
         std::string_view GetContextAttr(Red::CName aAttr);
 
-        Red::CName GetExpansionSource();
-        int32_t GetExpansionSourceIndex(Red::CMesh* aMesh);
+        Red::CName GetDefaultExpansionName();
+        int32_t GetExpansionIndex(Red::CName aExpansionName);
 
+        void FillAppearances(Red::CMesh* aMesh);
         void FillMaterials(Red::CMesh* aMesh);
         void RegisterMaterialEntry(Red::CName aMaterialName, int32_t aEntryIndex);
         [[nodiscard]] int32_t GetTemplateEntryIndex(Red::CName aMaterialName);
@@ -56,7 +57,7 @@ private:
         Red::DynArray<Red::MaterialParameterInstance> contextParams;
         DynamicAttributeList contextAttrs;
         Red::CName expansionSource;
-        int32_t expansionSourceIndex;
+        Core::Map<Red::CName, int32_t> appearances;
         Core::Map<Red::CName, int32_t> templates;
         Core::Map<Red::CName, int32_t> materials;
         Core::Map<Red::CName, Red::WeakHandle<Red::CMesh>> sources;
@@ -112,6 +113,7 @@ private:
     static bool ContainsUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials);
 
     static Core::SharedPtr<MeshState> AcquireMeshState(Red::CMesh* aMesh);
+    static Core::SharedPtr<MeshState> FindMeshState(uint64_t aHash);
 
     inline static Core::Map<Red::ResourcePath, Core::SharedPtr<MeshState>> s_states;
     inline static Red::Handle<Red::CMesh> s_dummyMesh;

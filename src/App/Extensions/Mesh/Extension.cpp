@@ -78,13 +78,14 @@ void App::MeshExtension::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& 
 
     if (aAppearance->chunkMaterials.size == 0)
     {
-        auto sourceIndex = meshState->GetExpansionSourceIndex(aMesh);
-        auto sourceAppearance = aMesh->appearances[sourceIndex];
+        auto expansionName = aAppearance->tags.size >= 1 ? aAppearance->tags[0] : "";
+        auto expansionIndex = meshState->GetExpansionIndex(expansionName);
+        auto expansionAppearance = aMesh->appearances[expansionIndex];
 
-        if (sourceAppearance && sourceAppearance != aAppearance)
+        if (expansionAppearance && expansionAppearance != aAppearance)
         {
             const auto appearanceNameStr = std::string{aAppearance->name.ToString()};
-            for (auto chunkMaterialName : sourceAppearance->chunkMaterials)
+            for (auto chunkMaterialName : expansionAppearance->chunkMaterials)
             {
                 auto chunkMaterialNameStr = std::string_view{chunkMaterialName.ToString()};
                 auto templateNamePos = chunkMaterialNameStr.find(SpecialMaterialMarker);
@@ -98,7 +99,7 @@ void App::MeshExtension::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& 
 
                     chunkMaterialName = Red::CNamePool::Add(generatedMaterialNameStr.data());
                 }
-                else if (chunkMaterialName == sourceAppearance->name)
+                else if (chunkMaterialName == expansionAppearance->name)
                 {
                     chunkMaterialName = aAppearance->name;
                 }
@@ -109,7 +110,7 @@ void App::MeshExtension::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& 
             auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aMesh->path);
 
             LogInfo(R"([{}] Appearance "{}" of "{}" has been expanded using "{}".)",
-                    ExtensionName, aAppearance->name.ToString(), meshPathStr, sourceAppearance->name.ToString());
+                    ExtensionName, aAppearance->name.ToString(), meshPathStr, expansionAppearance->name.ToString());
         }
         else if (aAppearance->name != DefaultAppearanceName)
         {
@@ -120,9 +121,9 @@ void App::MeshExtension::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& 
         }
     }
 
-    if (aAppearance->chunkMaterials.size > 0 && aAppearance->tags.size == 1)
+    if (aAppearance->chunkMaterials.size > 0 && aAppearance->tags.size == 2)
     {
-        aAppearance->chunkMaterials.PushBack(aAppearance->tags[0]);
+        aAppearance->chunkMaterials.PushBack(aAppearance->tags[1]);
         aAppearance->tags.Clear();
     }
 }
@@ -894,16 +895,31 @@ Core::SharedPtr<App::MeshExtension::MeshState> App::MeshExtension::AcquireMeshSt
     return it.value();
 }
 
+Core::SharedPtr<App::MeshExtension::MeshState> App::MeshExtension::FindMeshState(uint64_t aHash)
+{
+    std::shared_lock _(s_stateLock);
+
+    auto it = s_states.find(aHash);
+    if (it == s_states.end())
+    {
+        return {};
+    }
+
+    return it.value();
+}
+
 void App::MeshExtension::PrefetchMeshState(Red::CMesh* aMesh, const Core::Map<Red::CName, std::string>& aContext)
 {
+    auto meshState = AcquireMeshState(aMesh);
+
     if (!aContext.empty())
     {
-        auto meshState = AcquireMeshState(aMesh);
         meshState->PrefillContext(aContext);
     }
-    else if (IsContextualMesh(aMesh))
+
+    if (meshState->appearances.size() != aMesh->appearances.size)
     {
-        AcquireMeshState(aMesh);
+        meshState->FillAppearances(aMesh);
     }
 }
 
@@ -936,8 +952,8 @@ Red::CName App::MeshExtension::RegisterMeshSource(Red::CMesh* aMesh, Red::CMesh*
 App::MeshExtension::MeshState::MeshState(Red::CMesh* aMesh)
     : dynamic(true)
     , meshPath(aMesh->path)
-    , expansionSourceIndex(-1)
 {
+    FillAppearances(aMesh);
     FillMaterials(aMesh);
 
     if (!templates.empty())
@@ -1069,34 +1085,26 @@ std::string_view App::MeshExtension::MeshState::GetContextAttr(Red::CName aAttr)
     return it.value().value;
 }
 
-Red::CName App::MeshExtension::MeshState::GetExpansionSource()
+Red::CName App::MeshExtension::MeshState::GetDefaultExpansionName()
 {
     EnsureContextReady();
 
     return expansionSource;
 }
 
-int32_t App::MeshExtension::MeshState::GetExpansionSourceIndex(Red::CMesh* aMesh)
+int32_t App::MeshExtension::MeshState::GetExpansionIndex(Red::CName aExpansionName)
 {
-    if (expansionSourceIndex < 0)
+    if (!aExpansionName)
     {
-        expansionSourceIndex = 0;
-
-        auto sourceName = GetExpansionSource();
-        if (sourceName)
-        {
-            for (auto i = 0; i < aMesh->appearances.size; ++i)
-            {
-                if (aMesh->appearances[i]->name == sourceName)
-                {
-                    expansionSourceIndex = i;
-                    break;
-                }
-            }
-        }
+        aExpansionName = GetDefaultExpansionName();
     }
 
-    return expansionSourceIndex;
+    auto appearanceEntry = appearances.find(aExpansionName);
+
+    if (appearanceEntry == appearances.end())
+        return 0;
+
+    return appearanceEntry.value();
 }
 
 void App::MeshExtension::MeshState::FillMaterials(Red::CMesh* aMesh)
@@ -1115,6 +1123,16 @@ void App::MeshExtension::MeshState::FillMaterials(Red::CMesh* aMesh)
         {
             materials[materialName] = i;
         }
+    }
+}
+
+void App::MeshExtension::MeshState::FillAppearances(Red::CMesh* aMesh)
+{
+    appearances.clear();
+
+    for (auto i = 0; i < aMesh->appearances.size; ++i)
+    {
+        appearances[aMesh->appearances[i]->name] = i;
     }
 }
 
