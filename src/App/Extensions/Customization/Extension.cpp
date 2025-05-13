@@ -719,7 +719,7 @@ void App::CustomizationExtension::FixCustomizationAppearance(Red::AppearanceReso
     }
     else
     {
-        auto delimiterPos = meshAppearanceStr.find("__");
+        auto delimiterPos = meshAppearanceStr.rfind("__");
         if (delimiterPos != std::string_view::npos)
         {
             if (aResource->appearances.size == 1)

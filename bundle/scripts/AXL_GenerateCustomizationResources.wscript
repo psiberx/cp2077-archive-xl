@@ -5,9 +5,13 @@ const resources = [
   'archive_xl\\characters\\common\\eyes\\hel_pwa.mi.json',
   'archive_xl\\characters\\common\\eyes\\hel_pma.mi.json',
   'archive_xl\\characters\\common\\hair\\base_color_patch.mesh.json',
+  'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\he_000_pwa__basehead.app.json',
+  'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\he_000_pma__basehead.app.json',
   'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\hel_000_pwa__basehead.app.json',
   'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\hel_000_pma__basehead.app.json',
+  'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\h0_000_pwa_c__basehead\\he_000_pwa_c__basehead_patch.mesh.json',
   'archive_xl\\characters\\head\\player_base_heads\\player_female_average\\h0_000_pwa_c__basehead\\hel_000_pwa_c__basehead_patch.mesh.json',
+  'archive_xl\\characters\\head\\player_base_heads\\player_man_average\\h0_000_pma_c__basehead\\he_000_pma_c__basehead_patch.mesh.json',
   'archive_xl\\characters\\head\\player_base_heads\\player_man_average\\h0_000_pma_c__basehead\\hel_000_pma_c__basehead_patch.mesh.json',
 ]
 

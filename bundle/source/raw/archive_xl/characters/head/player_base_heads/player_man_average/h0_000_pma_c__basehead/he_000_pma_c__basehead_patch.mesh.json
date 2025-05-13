@@ -1,0 +1,308 @@
+{
+  "Header": {
+    "WolvenKitVersion": "8.15.1-nightly.2024-12-22",
+    "WKitJsonVersion": "0.0.9",
+    "GameVersion": 2200,
+    "ExportedDateTime": "2025-05-13T22:03:49.7031292Z",
+    "DataType": "CR2W"
+  },
+  "Data": {
+    "Version": 195,
+    "BuildVersion": 59936,
+    "RootChunk": {
+      "$type": "CMesh",
+      "appearances": [
+        {
+          "HandleId": "0",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "eyeMat3"
+              },
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "eyeWetness_MAT3"
+              },
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "cyber_eye@eyes"
+              }
+            ],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "cyber_eye"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "1",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "eyeMat3"
+              },
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "eyeWetness_MAT3"
+              },
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "cyber_eye_black@eyes"
+              }
+            ],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "cyber_eye_black"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "2",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "eyeMat3"
+              },
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "eyeWetness_MAT3"
+              },
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "ring_orange_eye"
+              }
+            ],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "ring_orange@eyes"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "3",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "eyeMat3"
+              },
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "eyeWetness_MAT3"
+              },
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "ring_green@eyes"
+              }
+            ],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "ring_green"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "4",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "eyeMat3"
+              },
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "eyeWetness_MAT3"
+              },
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "stand_clear@eyes"
+              }
+            ],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "stand_clear"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "5",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "eyeMat3"
+              },
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "eyeWetness_MAT3"
+              },
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "stand_clear_black@eyes"
+              }
+            ],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "stand_clear_black"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "6",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "eyeMat3"
+              },
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "eyeWetness_MAT3"
+              },
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "circle_pink@eyes"
+              }
+            ],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "circle_pink"
+            },
+            "tags": []
+          }
+        },
+        {
+          "HandleId": "7",
+          "Data": {
+            "$type": "meshMeshAppearance",
+            "chunkMaterials": [
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "eyeMat3"
+              },
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "eyeWetness_MAT3"
+              },
+              {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "circle_orange@eyes"
+              }
+            ],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "circle_orange"
+            },
+            "tags": []
+          }
+        }
+      ],
+      "boneNames": [],
+      "boneRigMatrices": [],
+      "boneVertexEpsilons": [],
+      "boundingBox": {
+        "$type": "Box",
+        "Max": {
+          "$type": "Vector4",
+          "W": -3.40282347E+38,
+          "X": -3.40282347E+38,
+          "Y": -3.40282347E+38,
+          "Z": -3.40282347E+38
+        },
+        "Min": {
+          "$type": "Vector4",
+          "W": 3.40282347E+38,
+          "X": 3.40282347E+38,
+          "Y": 3.40282347E+38,
+          "Z": 3.40282347E+38
+        }
+      },
+      "castGlobalShadowsCachedInCook": 0,
+      "castLocalShadowsCachedInCook": 0,
+      "castsRayTracedShadowsFromOriginalGeometry": 0,
+      "consoleBias": 0,
+      "constrainAutoHideDistanceToTerrainHeightMap": 0,
+      "cookingPlatform": "PLATFORM_PC",
+      "externalMaterials": [],
+      "floatTrackNames": [],
+      "forceLoadAllAppearances": 0,
+      "geometryHash": "0",
+      "inplaceResources": [],
+      "isPlayerShadowMesh": 0,
+      "isShadowMesh": 0,
+      "localMaterialBuffer": {
+        "$type": "meshMeshMaterialBuffer",
+        "materials": null,
+        "rawData": null,
+        "rawDataHeaders": []
+      },
+      "localMaterialInstances": [],
+      "lodBoneMask": [],
+      "lodLevelInfo": [],
+      "materialEntries": [],
+      "objectType": "ROT_Static",
+      "parameters": [],
+      "preloadExternalMaterials": [],
+      "preloadLocalMaterialInstances": [],
+      "renderResourceBlob": null,
+      "resourceVersion": 0,
+      "saveDateTime": "1048576",
+      "surfaceAreaPerAxis": {
+        "$type": "Vector3",
+        "X": -1,
+        "Y": -1,
+        "Z": -1
+      },
+      "useRayTracingShadowLODBias": 0
+    },
+    "EmbeddedFiles": []
+  }
+}

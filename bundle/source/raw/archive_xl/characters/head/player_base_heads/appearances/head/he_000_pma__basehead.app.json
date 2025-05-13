@@ -1,0 +1,2695 @@
+{
+  "Header": {
+    "WolvenKitVersion": "8.15.1-nightly.2024-12-22",
+    "WKitJsonVersion": "0.0.9",
+    "GameVersion": 2200,
+    "ExportedDateTime": "2025-05-13T22:01:44.9672835Z",
+    "DataType": "CR2W"
+  },
+  "Data": {
+    "Version": 195,
+    "BuildVersion": 0,
+    "RootChunk": {
+      "$type": "appearanceAppearanceResource",
+      "alternateAppearanceMapping": [],
+      "alternateAppearanceSettingName": {
+        "$type": "CName",
+        "$storage": "string",
+        "$value": "None"
+      },
+      "alternateAppearanceSuffixes": [],
+      "appearances": [
+        {
+          "HandleId": "0",
+          "Data": {
+            "$type": "appearanceAppearanceDefinition",
+            "censorFlags": 0,
+            "compiledData": {
+              "BufferId": "0",
+              "Flags": 0,
+              "Type": "WolvenKit.RED4.Archive.Buffer.RedPackage, WolvenKit.RED4, Version=8.15.1.0, Culture=neutral, PublicKeyToken=null",
+              "Data": {
+                "Version": 4,
+                "Sections": 7,
+                "CruidIndex": -1,
+                "CruidDict": {
+                  "0": "2024510947074064384"
+                },
+                "Chunks": [
+                  {
+                    "$type": "entMorphTargetSkinnedMeshComponent",
+                    "acceptDismemberment": 1,
+                    "autoHideDistance": 15,
+                    "castLocalShadows": "Always",
+                    "castShadows": "Always",
+                    "chunkMask": "18446744073709551614",
+                    "forceLODLevel": -1,
+                    "id": "2024510947074064384",
+                    "isEnabled": 1,
+                    "isReplicable": 0,
+                    "localTransform": {
+                      "$type": "WorldTransform",
+                      "Orientation": {
+                        "$type": "Quaternion",
+                        "i": 0,
+                        "j": 0,
+                        "k": 0,
+                        "r": 1
+                      },
+                      "Position": {
+                        "$type": "WorldPosition",
+                        "x": {
+                          "$type": "FixedPoint",
+                          "Bits": 0
+                        },
+                        "y": {
+                          "$type": "FixedPoint",
+                          "Bits": 0
+                        },
+                        "z": {
+                          "$type": "FixedPoint",
+                          "Bits": 0
+                        }
+                      }
+                    },
+                    "meshAppearance": {
+                      "$type": "CName",
+                      "$storage": "string",
+                      "$value": "blood_gradient_black"
+                    },
+                    "morphResource": {
+                      "DepotPath": {
+                        "$type": "ResourcePath",
+                        "$storage": "string",
+                        "$value": "base\\characters\\head\\player_base_heads\\player_man_average\\he_000_pma__morphs.morphtarget"
+                      },
+                      "Flags": "Default"
+                    },
+                    "name": {
+                      "$type": "CName",
+                      "$storage": "string",
+                      "$value": "he_000_pma__basehead"
+                    },
+                    "parentTransform": {
+                      "HandleId": "1",
+                      "Data": {
+                        "$type": "entHardTransformBinding",
+                        "bindName": {
+                          "$type": "CName",
+                          "$storage": "string",
+                          "$value": "root"
+                        },
+                        "enabled": 1,
+                        "enableMask": {
+                          "$type": "entTagMask",
+                          "excludedTags": {
+                            "$type": "redTagList",
+                            "tags": [
+                              {
+                                "$type": "CName",
+                                "$storage": "string",
+                                "$value": "NoBinding"
+                              }
+                            ]
+                          },
+                          "hardTags": {
+                            "$type": "redTagList",
+                            "tags": []
+                          },
+                          "softTags": {
+                            "$type": "redTagList",
+                            "tags": []
+                          }
+                        },
+                        "slotName": {
+                          "$type": "CName",
+                          "$storage": "string",
+                          "$value": "None"
+                        }
+                      }
+                    },
+                    "renderingPlaneAnimationParam": {
+                      "$type": "CName",
+                      "$storage": "string",
+                      "$value": "None"
+                    },
+                    "renderSceneLayerMask": "Default",
+                    "skinning": {
+                      "HandleId": "2",
+                      "Data": {
+                        "$type": "entSkinningBinding",
+                        "bindName": {
+                          "$type": "CName",
+                          "$storage": "string",
+                          "$value": "root"
+                        },
+                        "enabled": 1,
+                        "enableMask": {
+                          "$type": "entTagMask",
+                          "excludedTags": {
+                            "$type": "redTagList",
+                            "tags": [
+                              {
+                                "$type": "CName",
+                                "$storage": "string",
+                                "$value": "NoBinding"
+                              }
+                            ]
+                          },
+                          "hardTags": {
+                            "$type": "redTagList",
+                            "tags": []
+                          },
+                          "softTags": {
+                            "$type": "redTagList",
+                            "tags": []
+                          }
+                        }
+                      }
+                    },
+                    "tags": {
+                      "$type": "redTagList",
+                      "tags": []
+                    },
+                    "useSkinningLOD": 0,
+                    "version": 1,
+                    "visibilityAnimationParam": {
+                      "$type": "CName",
+                      "$storage": "string",
+                      "$value": "None"
+                    }
+                  }
+                ]
+              }
+            },
+            "components": [
+              {
+                "$type": "entMorphTargetSkinnedMeshComponent",
+                "acceptDismemberment": 1,
+                "autoHideDistance": 15,
+                "castLocalShadows": "Always",
+                "castShadows": "Always",
+                "chunkMask": "18446744073709551614",
+                "forceLODLevel": -1,
+                "id": "2024510947074064384",
+                "isEnabled": 1,
+                "isReplicable": 0,
+                "localTransform": {
+                  "$type": "WorldTransform",
+                  "Orientation": {
+                    "$type": "Quaternion",
+                    "i": 0,
+                    "j": 0,
+                    "k": 0,
+                    "r": 1
+                  },
+                  "Position": {
+                    "$type": "WorldPosition",
+                    "x": {
+                      "$type": "FixedPoint",
+                      "Bits": 0
+                    },
+                    "y": {
+                      "$type": "FixedPoint",
+                      "Bits": 0
+                    },
+                    "z": {
+                      "$type": "FixedPoint",
+                      "Bits": 0
+                    }
+                  }
+                },
+                "meshAppearance": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "blood_gradient_black"
+                },
+                "morphResource": {
+                  "DepotPath": {
+                    "$type": "ResourcePath",
+                    "$storage": "string",
+                    "$value": "base\\characters\\head\\player_base_heads\\player_man_average\\he_000_pma__morphs.morphtarget"
+                  },
+                  "Flags": "Default"
+                },
+                "name": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "he_000_pma__basehead"
+                },
+                "parentTransform": {
+                  "HandleRefId": "1"
+                },
+                "renderingPlaneAnimationParam": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "None"
+                },
+                "renderSceneLayerMask": "Default",
+                "skinning": {
+                  "HandleRefId": "2"
+                },
+                "tags": {
+                  "$type": "redTagList",
+                  "tags": []
+                },
+                "useSkinningLOD": 0,
+                "version": 1,
+                "visibilityAnimationParam": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "None"
+                }
+              }
+            ],
+            "cookedDataPathOverride": {
+              "DepotPath": {
+                "$type": "ResourcePath",
+                "$storage": "uint64",
+                "$value": "0"
+              },
+              "Flags": "Soft"
+            },
+            "forcedLodDistance": 0,
+            "hitRepresentationOverrides": [],
+            "inheritedVisualTags": {
+              "$type": "redTagList",
+              "tags": []
+            },
+            "looseDependencies": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "he_000_pma__basehead__01_blood_gradient_black"
+            },
+            "parametersBuffer": {
+              "$type": "entEntityParametersBuffer",
+              "parameterBuffers": []
+            },
+            "parentAppearance": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "None"
+            },
+            "partsMasks": [
+              []
+            ],
+            "partsOverrides": [
+              {
+                "$type": "appearanceAppearancePartOverrides",
+                "componentsOverrides": [
+                  {
+                    "$type": "appearancePartComponentOverrides",
+                    "acceptDismemberment": 1,
+                    "chunkMask": "18446744073709551614",
+                    "componentName": {
+                      "$type": "CName",
+                      "$storage": "string",
+                      "$value": "he_000_pma__basehead"
+                    },
+                    "initialTransform": {
+                      "$type": "Transform",
+                      "orientation": {
+                        "$type": "Quaternion",
+                        "i": 0,
+                        "j": 0,
+                        "k": 0,
+                        "r": 1
+                      },
+                      "position": {
+                        "$type": "Vector4",
+                        "W": 0,
+                        "X": 0,
+                        "Y": 0,
+                        "Z": 0
+                      }
+                    },
+                    "meshAppearance": {
+                      "$type": "CName",
+                      "$storage": "string",
+                      "$value": "blood_gradient_black"
+                    },
+                    "useCustomTransform": 0,
+                    "visualScale": {
+                      "$type": "Vector3",
+                      "X": 0,
+                      "Y": 0,
+                      "Z": 0
+                    }
+                  }
+                ],
+                "partResource": {
+                  "DepotPath": {
+                    "$type": "ResourcePath",
+                    "$storage": "string",
+                    "$value": "base\\characters\\head\\player_base_heads\\appearances\\entity\\head\\he_000_pma__basehead.ent"
+                  },
+                  "Flags": "Soft"
+                }
+              }
+            ],
+            "partsValues": [
+              {
+                "$type": "appearanceAppearancePart",
+                "resource": {
+                  "DepotPath": {
+                    "$type": "ResourcePath",
+                    "$storage": "string",
+                    "$value": "base\\characters\\head\\player_base_heads\\appearances\\entity\\head\\he_000_pma__basehead.ent"
+                  },
+                  "Flags": "Soft"
+                }
+              }
+            ],
+            "proxyMesh": {
+              "DepotPath": {
+                "$type": "ResourcePath",
+                "$storage": "uint64",
+                "$value": "0"
+              },
+              "Flags": "Soft"
+            },
+            "proxyMeshAppearance": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "None"
+            },
+            "resolvedDependencies": [
+              {
+                "DepotPath": {
+                  "$type": "ResourcePath",
+                  "$storage": "string",
+                  "$value": "base\\characters\\head\\player_base_heads\\player_man_average\\he_000_pma__morphs.morphtarget"
+                },
+                "Flags": "Soft"
+              }
+            ],
+            "visualTags": {
+              "$type": "redTagList",
+              "tags": [
+                {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "Male"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "baseEntity": {
+        "DepotPath": {
+          "$type": "ResourcePath",
+          "$storage": "uint64",
+          "$value": "0"
+        },
+        "Flags": "Soft"
+      },
+      "baseEntityType": {
+        "$type": "CName",
+        "$storage": "string",
+        "$value": "None"
+      },
+      "baseType": {
+        "$type": "CName",
+        "$storage": "string",
+        "$value": "None"
+      },
+      "censorshipMapping": [],
+      "commonCookData": {
+        "DepotPath": {
+          "$type": "ResourcePath",
+          "$storage": "uint64",
+          "$value": "0"
+        },
+        "Flags": "Soft"
+      },
+      "cookingPlatform": "PLATFORM_PC",
+      "DismEffects": [],
+      "DismWoundConfig": {
+        "$type": "entdismembermentWoundsConfigSet",
+        "Configs": [
+          {
+            "HandleId": "3",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "h0_000_pma__basehead__01_ca_pale"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "4",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "h0_000_pma__basehead__02_ca_limestone"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "5",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "h0_000_pma__basehead__03_ca_senna"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "6",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "h0_000_pma__basehead__04_ca_almond"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "7",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "h0_000_pma__basehead__05_bl_espresso"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "8",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "h0_000_pma__basehead__06_bl_dark"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "9",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "h0_000_pma__basehead__npc_01_plastic_doll"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "10",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "h0_000_pma__basehead__npc_02_plastic_doll"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "11",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "h0_000_pwa__basehead__01_ca_pale"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "12",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "h0_000_pwa__basehead__02_ca_limestone"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "13",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "h0_000_pwa__basehead__03_ca_senna"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "14",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "h0_000_pwa__basehead__04_ca_almond"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "15",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "h0_000_pwa__basehead__05_bl_espresso"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "16",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "h0_000_pwa__basehead__06_bl_dark"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "17",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "h0_000_pwa__basehead__npc_01_plastic_doll"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "18",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "h0_000_pwa__basehead__npc_02_plastic_doll"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "19",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__01_blood_gradient_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "20",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__01_green"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "21",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__02_blood_gradient_blue"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "22",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__02_blue"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "23",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__03_blood_gradient_brown"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "24",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__03_grey"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "25",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__04_blood_gradient_green"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "26",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__04_brown"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "27",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__05_blood_gradient_grey"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "28",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__05_hazel"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "29",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__06_blood_gradient_light_blue"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "30",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__06_red"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "31",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__07_blood_gradient_red"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "32",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__08_blood_gradient_violet"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "33",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__09_blood_gradient_yellow"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "34",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__10_gradient_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "35",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__11_gradient_blue"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "36",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__12_gradient_brown"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "37",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__13_gradient_green"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "38",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__14_gradient_grey"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "39",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__15_gradient_light_blue"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "40",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__16_gradient_red"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "41",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__17_gradient_violet"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "42",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__18_gradient_yellow"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "43",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__19_multilayer_arasaka"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "44",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__20_multilayer_arasaka_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "45",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__21_multilayer_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "46",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__22_multilayer_cpu"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "47",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__23_multilayer_cpu_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "48",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__24_multilayer_heart"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "49",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__25_multilayer_heart_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "50",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__26_multilayer_lizzard"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "51",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__27_multilayer_lizzard_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "52",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__28_multilayer_ring"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "53",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__29_multilayer_ring_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "54",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__30_multilayer_skull"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "55",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__31_multilayer_skull_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "56",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__32_multilayer_spider"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "57",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__33_multilayer_spider_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "58",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__34_multilayer_spiral"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "59",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__35_multilayer_spiral_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "60",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__36_multilayer_target"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "61",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__37_multilayer_target_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "62",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__38_multilayer_x_sign"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "63",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__39_multilayer_x_sign_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "64",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__40_multilayer_arasaka_logo"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "65",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__41_multilayer_arasaka_logo_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "66",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__42_multilayer_golden_hexagon"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "67",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__43_multilayer_golden_hexagon_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "68",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__44_multilayer_mox"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "69",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__45_multilayer_mox_blue"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "70",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__46_multilayer_nicola"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "71",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__46_multilayer_rebecca_purple"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "72",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__47_multilayer_nicola_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "73",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__47_multilayer_rebecca_lime"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "74",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__48_multilayer_jinguji"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "75",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__48_multilayer_rebecca_mint"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "76",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__49_multilayer_jinguji_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "77",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__49_multilayer_rebecca_strawberry"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "78",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__50_multilayer_rebecca_pink"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "79",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__50_rebecca_pink"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "80",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__51_multilayer_rebecca_green"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "81",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__51_rebecca_green"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "82",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__52_multilayer_rebecca_cyan"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "83",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__52_rebecca_cyan"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "84",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__53_multilayer_rebecca_red"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "85",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__53_rebecca_red"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "86",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__54_multilayer_rebecca_blue"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "87",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__54_rebecca_blue"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "88",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__55_multilayer_rebecca_baby_pink"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "89",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__55_rebecca_baby_pink"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "90",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__56_multilayer_valentinos"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "91",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__57_multilayer_valentinos_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "92",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__58_multilayer_warning_sign"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "93",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__59_multilayer_warning_sign_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "94",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__60_multilayer_splash"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "95",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pma__basehead__61_multilayer_splash_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "96",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__01_blood_gradient_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "97",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__01_green"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "98",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__02_blood_gradient_blue"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "99",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__02_blue"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "100",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__03_blood_gradient_brown"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "101",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__03_grey"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "102",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__04_blood_gradient_green"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "103",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__04_brown"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "104",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__05_blood_gradient_grey"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "105",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__05_hazel"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "106",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__06_blood_gradient_light_blue"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "107",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__06_red"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "108",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__07_blood_gradient_red"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "109",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__08_blood_gradient_violet"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "110",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__09_blood_gradient_yellow"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "111",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__10_gradient_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "112",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__11_gradient_blue"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "113",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__12_gradient_brown"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "114",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__13_gradient_green"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "115",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__14_gradient_grey"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "116",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__15_gradient_light_blue"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "117",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__16_gradient_red"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "118",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__17_gradient_violet"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "119",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__18_gradient_yellow"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "120",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__19_multilayer_arasaka"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "121",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__20_multilayer_arasaka_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "122",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__21_multilayer_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "123",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__22_multilayer_cpu"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "124",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__23_multilayer_cpu_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "125",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__24_multilayer_heart"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "126",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__25_multilayer_heart_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "127",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__26_multilayer_lizzard"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "128",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__27_multilayer_lizzard_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "129",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__28_multilayer_ring"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "130",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__29_multilayer_ring_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "131",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__30_multilayer_skull"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "132",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__31_multilayer_skull_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "133",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__32_multilayer_spider"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "134",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__33_multilayer_spider_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "135",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__34_multilayer_spiral"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "136",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__35_multilayer_spiral_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "137",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__36_multilayer_target"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "138",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__37_multilayer_target_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "139",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__38_multilayer_x_sign"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "140",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__39_multilayer_x_sign_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "141",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__40_multilayer_arasaka_logo"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "142",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__41_multilayer_arasaka_logo_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "143",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__42_multilayer_golden_hexagon"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "144",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__43_multilayer_golden_hexagon_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "145",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__44_multilayer_mox"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "146",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__45_multilayer_mox_blue"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "147",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__46_multilayer_nicola"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "148",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__46_multilayer_rebecca_purple"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "149",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__47_multilayer_nicola_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "150",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__47_multilayer_rebecca_lime"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "151",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__48_multilayer_jinguji"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "152",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__48_multilayer_rebecca_mint"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "153",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__49_multilayer_jinguji_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "154",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__49_multilayer_rebecca_strawberry"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "155",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__50_multilayer_rebecca_pink"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "156",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__50_rebecca_pink"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "157",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__51_multilayer_rebecca_green"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "158",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__51_rebecca_green"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "159",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__52_multilayer_rebecca_cyan"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "160",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__52_rebecca_cyan"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "161",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__53_multilayer_rebecca_red"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "162",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__53_rebecca_red"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "163",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__54_multilayer_rebecca_blue"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "164",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__54_rebecca_blue"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "165",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__55_multilayer_rebecca_baby_pink"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "166",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__55_rebecca_baby_pink"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "167",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__56_multilayer_valentinos"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "168",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__57_multilayer_valentinos_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "169",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__58_multilayer_warning_sign"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "170",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__59_multilayer_warning_sign_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "171",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__60_multilayer_splash"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "172",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "he_000_pwa__basehead__61_multilayer_splash_black"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "173",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "t0_000_pma_base__01_ca_pale"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "174",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "t0_000_pma_base__02_ca_limestone"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "175",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "t0_000_pma_base__03_ca_senna"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "176",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "t0_000_pma_base__04_ca_almond"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "177",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "t0_000_pma_base__05_bl_espresso"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "178",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "t0_000_pma_base__06_bl_dark"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "179",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "t0_000_pma_base__full"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "180",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "t0_000_pma_base__npc_01_plastic_doll"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "181",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "t0_000_pma_base__npc_02_plastic_doll"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "182",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "t0_000_pwa_base__01_ca_pale"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "183",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "t0_000_pwa_base__02_ca_limestone"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "184",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "t0_000_pwa_base__03_ca_senna"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "185",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "t0_000_pwa_base__04_ca_almond"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "186",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "t0_000_pwa_base__05_bl_espresso"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "187",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "t0_000_pwa_base__full"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "188",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "t0_000_pwa_base__npc_01_plastic_doll"
+              },
+              "Wounds": []
+            }
+          },
+          {
+            "HandleId": "189",
+            "Data": {
+              "$type": "entdismembermentWoundConfigContainer",
+              "AppearanceName": {
+                "$type": "CName",
+                "$storage": "string",
+                "$value": "t0_000_pwa_base__npc_02_plastic_doll"
+              },
+              "Wounds": []
+            }
+          }
+        ]
+      },
+      "forceCompileProxy": 0,
+      "generatePlayerBlockingCollisionForProxy": 0,
+      "partType": {
+        "$type": "CName",
+        "$storage": "string",
+        "$value": "None"
+      },
+      "preset": {
+        "$type": "CName",
+        "$storage": "string",
+        "$value": "None"
+      },
+      "proxyPolyCount": 1400,
+      "Wounds": []
+    },
+    "EmbeddedFiles": []
+  }
+}
