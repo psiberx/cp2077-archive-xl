@@ -11,13 +11,13 @@ resource:
   patch:
     archive_xl\characters\head\player_base_heads\player_female_average\heb_000_pwa__morphs.morphtarget:
       props: [ blob, boundingBox, targets ]
-      targets: [ player_wa_brows.morphtarget ]
+      targets: [ player_wa_base_brows.morphtarget ]
     archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_000_pwa_c__basehead.mesh:
       props: [ renderResourceBlob ]
-      targets: [ player_wa_brows.mesh ]
+      targets: [ player_wa_base_brows.mesh ]
     archive_xl\characters\head\player_base_heads\player_man_average\heb_000_pma__morphs.morphtarget:
       props: [ blob, boundingBox, targets ]
-      targets: [ player_ma_brows.morphtarget ]
+      targets: [ player_ma_base_brows.morphtarget ]
     archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_000_pma_c__basehead.mesh:
       props: [ renderResourceBlob ]
-      targets: [ player_ma_brows.mesh ]
+      targets: [ player_ma_base_brows.mesh ]

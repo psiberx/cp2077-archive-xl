@@ -2,7 +2,10 @@ resource:
   patch:
     archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\he_000_pwa_c__basehead_patch.mesh:
       props: [ appearances ]
-      targets: [ base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\he_000_pwa_c__basehead.mesh ]
+      targets: [ player_wa_base_eyes.mesh ]
     archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\he_000_pma_c__basehead_patch.mesh:
       props: [ appearances ]
-      targets: [ base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\he_000_pma_c__basehead.mesh ]
+      targets: [ player_ma_base_eyes.mesh ]
+    archive_xl\common\null.morphtarget:
+      props: [ baseTexture, baseTextureParamName ]
+      targets: [ player_wa_base_eyes.morphtarget, player_ma_base_eyes.morphtarget ]

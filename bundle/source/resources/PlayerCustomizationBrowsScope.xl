@@ -18,6 +18,8 @@ resource:
       - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_000_pma__basehead_12.app
       - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_000_pma__basehead_13.app
     player_ma_brows.morphtarget:
+      - player_ma_base_brows.morphtarget
+    player_ma_base_brows.morphtarget:
       - archive_xl\characters\head\player_base_heads\player_man_average\heb_000_pma__basehead_01.morphtarget
       - archive_xl\characters\head\player_base_heads\player_man_average\heb_000_pma__basehead_02.morphtarget
       - archive_xl\characters\head\player_base_heads\player_man_average\heb_000_pma__basehead_03.morphtarget
@@ -32,6 +34,8 @@ resource:
       - archive_xl\characters\head\player_base_heads\player_man_average\heb_000_pma__basehead_12.morphtarget
       - archive_xl\characters\head\player_base_heads\player_man_average\heb_000_pma__basehead_13.morphtarget
     player_ma_brows.mesh:
+      - player_ma_base_brows.mesh
+    player_ma_base_brows.mesh:
       - archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_000_pma__basehead_01.mesh
       - archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_000_pma__basehead_02.mesh
       - archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\heb_000_pma__basehead_03.mesh
@@ -60,6 +64,8 @@ resource:
       - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_000_pwa__basehead_12.app
       - archive_xl\characters\head\player_base_heads\appearances\head\eyebrows\heb_000_pwa__basehead_13.app
     player_wa_brows.morphtarget:
+      - player_wa_base_brows.morphtarget
+    player_wa_base_brows.morphtarget:
       - archive_xl\characters\head\player_base_heads\player_female_average\heb_000_pwa__basehead_01.morphtarget
       - archive_xl\characters\head\player_base_heads\player_female_average\heb_000_pwa__basehead_02.morphtarget
       - archive_xl\characters\head\player_base_heads\player_female_average\heb_000_pwa__basehead_03.morphtarget
@@ -74,6 +80,8 @@ resource:
       - archive_xl\characters\head\player_base_heads\player_female_average\heb_000_pwa__basehead_12.morphtarget
       - archive_xl\characters\head\player_base_heads\player_female_average\heb_000_pwa__basehead_13.morphtarget
     player_wa_brows.mesh:
+      - player_wa_base_brows.mesh
+    player_wa_base_brows.mesh:
       - archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_000_pwa__basehead_01.mesh
       - archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_000_pwa__basehead_02.mesh
       - archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\heb_000_pwa__basehead_03.mesh

@@ -6,12 +6,20 @@ resource:
     player_ma_lashes.app:
       - archive_xl\characters\head\player_base_heads\appearances\head\hel_000_pma__basehead.app
     player_ma_lashes.morphtarget:
+      - player_ma_base_lashes.morphtarget
+    player_ma_base_lashes.morphtarget:
       - base\characters\head\player_base_heads\player_man_average\he_000_pma__morphs.morphtarget
     player_ma_lashes.mesh:
+      - player_ma_base_lashes.mesh
+    player_ma_base_lashes.mesh:
       - base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\he_000_pma_c__basehead.mesh
     player_wa_lashes.app:
       - archive_xl\characters\head\player_base_heads\appearances\head\hel_000_pwa__basehead.app
     player_wa_lashes.morphtarget:
+      - player_wa_base_lashes.morphtarget
+    player_wa_base_lashes.morphtarget:
       - base\characters\head\player_base_heads\player_female_average\he_000_pwa__morphs.morphtarget
     player_wa_lashes.mesh:
+      - player_wa_base_lashes.mesh
+    player_wa_base_lashes.mesh:
       - base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\he_000_pwa_c__basehead.mesh

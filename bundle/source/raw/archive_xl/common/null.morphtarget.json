@@ -1,0 +1,64 @@
+{
+  "Header": {
+    "WolvenKitVersion": "8.15.1-nightly.2024-12-22",
+    "WKitJsonVersion": "0.0.9",
+    "GameVersion": 2200,
+    "ExportedDateTime": "2025-05-15T19:43:25.2967155Z",
+    "DataType": "CR2W"
+  },
+  "Data": {
+    "Version": 195,
+    "BuildVersion": 0,
+    "RootChunk": {
+      "$type": "MorphTargetMesh",
+      "baseMesh": {
+        "DepotPath": {
+          "$type": "ResourcePath",
+          "$storage": "uint64",
+          "$value": "0"
+        },
+        "Flags": "Default"
+      },
+      "baseMeshAppearance": {
+        "$type": "CName",
+        "$storage": "string",
+        "$value": "None"
+      },
+      "baseTexture": {
+        "DepotPath": {
+          "$type": "ResourcePath",
+          "$storage": "uint64",
+          "$value": "0"
+        },
+        "Flags": "Default"
+      },
+      "baseTextureParamName": {
+        "$type": "CName",
+        "$storage": "string",
+        "$value": "None"
+      },
+      "blob": null,
+      "boundingBox": {
+        "$type": "Box",
+        "Max": {
+          "$type": "Vector4",
+          "W": 0,
+          "X": 0,
+          "Y": 0,
+          "Z": 0
+        },
+        "Min": {
+          "$type": "Vector4",
+          "W": 0,
+          "X": 0,
+          "Y": 0,
+          "Z": 0
+        }
+      },
+      "cookingPlatform": "PLATFORM_None",
+      "resourceVersion": 0,
+      "targets": []
+    },
+    "EmbeddedFiles": []
+  }
+}

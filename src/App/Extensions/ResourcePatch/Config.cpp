@@ -23,7 +23,7 @@ void App::ResourcePatchConfig::LoadYAML(const YAML::Node& aNode)
         const auto& patchPath = Red::ResourcePath(patchPathStr.data());
         const auto& definitionNode = entryNode.second;
 
-        ResourcePatchDefinition patchDefinition;
+        ResourcePatch patchConfig;
 
         if (definitionNode.IsScalar())
         {
@@ -32,7 +32,7 @@ void App::ResourcePatchConfig::LoadYAML(const YAML::Node& aNode)
 
             if (targetPath)
             {
-                patchDefinition.includes.insert(targetPath);
+                patchConfig.includes.insert(targetPath);
                 paths[targetPath] = targetPathStr;
             }
         }
@@ -47,11 +47,11 @@ void App::ResourcePatchConfig::LoadYAML(const YAML::Node& aNode)
                 {
                     if (definitionNode.Tag() != "!exclude")
                     {
-                        patchDefinition.includes.insert(targetPath);
+                        patchConfig.includes.insert(targetPath);
                     }
                     else
                     {
-                        patchDefinition.excludes.insert(targetPath);
+                        patchConfig.excludes.insert(targetPath);
                     }
 
                     paths[targetPath] = targetPathStr;
@@ -70,7 +70,7 @@ void App::ResourcePatchConfig::LoadYAML(const YAML::Node& aNode)
 
                 if (propName)
                 {
-                    patchDefinition.props.insert(propName);
+                    patchConfig.props.insert(propName);
                 }
             }
 
@@ -83,11 +83,11 @@ void App::ResourcePatchConfig::LoadYAML(const YAML::Node& aNode)
                 {
                     if (definitionNode.Tag() != "!exclude")
                     {
-                        patchDefinition.includes.insert(targetPath);
+                        patchConfig.includes.insert(targetPath);
                     }
                     else
                     {
-                        patchDefinition.excludes.insert(targetPath);
+                        patchConfig.excludes.insert(targetPath);
                     }
 
                     paths[targetPath] = targetPathStr;
@@ -95,9 +95,9 @@ void App::ResourcePatchConfig::LoadYAML(const YAML::Node& aNode)
             }
         }
 
-        if (!patchDefinition.includes.empty())
+        if (!patchConfig.includes.empty())
         {
-            patches[patchPath] = std::move(patchDefinition);
+            patches[patchPath] = std::move(patchConfig);
             paths[patchPath] = patchPathStr;
         }
     }

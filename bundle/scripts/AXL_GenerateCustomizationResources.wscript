@@ -2,9 +2,10 @@ import * as Logger from 'Logger.wscript'
 import * as TypeHelper from 'TypeHelper.wscript'
 
 const resources = [
+  'archive_xl\\common\\null.morphtarget.json',
   'archive_xl\\characters\\common\\eyes\\hel_pwa.mi.json',
   'archive_xl\\characters\\common\\eyes\\hel_pma.mi.json',
-  'archive_xl\\characters\\common\\hair\\base_color_patch.mesh.json',
+  'archive_xl\\characters\\common\\hair\\h1_base_color_patch.mesh.json',
   'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\he_000_pwa__basehead.app.json',
   'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\he_000_pma__basehead.app.json',
   'archive_xl\\characters\\head\\player_base_heads\\appearances\\head\\hel_000_pwa__basehead.app.json',

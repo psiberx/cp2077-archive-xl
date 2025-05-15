@@ -1,7 +1,5 @@
 resource:
   patch:
-    archive_xl\characters\common\hair\base_color_patch.mesh:
+    archive_xl\characters\common\hair\h1_base_color_patch.mesh:
       props: [ appearances ]
-      targets:
-        - player_ma_hair.mesh
-        - player_wa_hair.mesh
+      targets: [ player_ma_hair.mesh, player_wa_hair.mesh ]

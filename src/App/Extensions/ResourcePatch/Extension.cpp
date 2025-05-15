@@ -95,7 +95,7 @@ void App::ResourcePatchExtension::Configure()
 
     for (auto& config : m_configs)
     {
-        for (const auto& [patchPath, patchDefinition] : config.patches)
+        for (const auto& [patchPath, patchConfig] : config.patches)
         {
             if (!depot->ResourceExists(patchPath))
             {
@@ -109,7 +109,7 @@ void App::ResourcePatchExtension::Configure()
 
             Core::Set<Red::ResourcePath> targetList;
 
-            for (const auto& includePath : patchDefinition.includes)
+            for (const auto& includePath : patchConfig.includes)
             {
                 const auto& includeList = ResourceMetaExtension::GetList(includePath);
                 if (!includeList.empty())
@@ -122,7 +122,7 @@ void App::ResourcePatchExtension::Configure()
                 }
             }
 
-            for (const auto& excludePath : patchDefinition.excludes)
+            for (const auto& excludePath : patchConfig.excludes)
             {
                 const auto& excludeList = ResourceMetaExtension::GetList(excludePath);
                 if (!excludeList.empty())
@@ -147,7 +147,7 @@ void App::ResourcePatchExtension::Configure()
             knownPaths.insert_or_assign(patchPath, config.paths[patchPath]);
             patchPaths.insert(patchPath);
 
-            s_patchProps[patchPath] = patchDefinition.props;
+            s_patches[patchPath] = Core::MakeShared<ResourcePatch>(patchConfig);
         }
     }
 
@@ -250,9 +250,9 @@ void App::ResourcePatchExtension::OnEntityTemplateLoad(Red::EntityTemplate* aTem
         if (!patchResource)
             continue;
 
-        const auto& patchProps = GetPatchProps(patchPath);
+        const auto& patchConfig = GetPatchConfig(patchPath);
 
-        if (patchProps.empty() || patchProps.contains(EntityTemplateAppearancesProp))
+        if (patchConfig->Modifies(EntityTemplateAppearancesProp))
         {
             for (const auto& patchAppearance : patchResource->appearances)
             {
@@ -275,7 +275,7 @@ void App::ResourcePatchExtension::OnEntityTemplateLoad(Red::EntityTemplate* aTem
             }
         }
 
-        if (patchProps.empty() || patchProps.contains(EntityTemplateDependenciesProp))
+        if (patchConfig->Modifies(EntityTemplateDependenciesProp))
         {
             for (const auto& dependency : patchResource->resolvedDependencies)
             {
@@ -300,7 +300,7 @@ void App::ResourcePatchExtension::OnEntityTemplateLoad(Red::EntityTemplate* aTem
             }
         }
 
-        if (patchResource->visualTagsSchema && (patchProps.empty() || patchProps.contains(EntityTemplateVisualTagsProp)))
+        if (patchResource->visualTagsSchema && (patchConfig->Modifies(EntityTemplateVisualTagsProp)))
         {
             if (!aTemplate->visualTagsSchema)
             {
@@ -330,9 +330,9 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
         if (!patchResource)
             continue;
 
-        const auto& patchProps = GetPatchProps(patchPath);
+        const auto& patchConfig = GetPatchConfig(patchPath);
 
-        if (patchProps.empty() || patchProps.contains(AppearanceResourceDefinitionsProp))
+        if (patchConfig->Modifies(AppearanceResourceDefinitionsProp))
         {
             for (const auto& patchDefinition : patchResource->appearances)
             {
@@ -356,7 +356,7 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
                         }
                     }
 
-                    if (patchProps.empty() || patchProps.contains(AppearanceResourceComponentsProp))
+                    if (patchConfig->Modifies(AppearanceResourceComponentsProp))
                     {
                         std::unique_lock _(s_appearanceDefinitionLock);
                         if (!s_appearanceDefinitions[patchPath].contains(existingDefinition->name))
@@ -367,7 +367,7 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
                         }
                     }
 
-                    if (patchProps.empty() || patchProps.contains(AppearanceResourcePartsValuesProp))
+                    if (patchConfig->Modifies(AppearanceResourcePartsValuesProp))
                     {
                         for (const auto& partValue : patchDefinition->partsValues)
                         {
@@ -393,7 +393,7 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
                         }
                     }
 
-                    if (patchProps.empty() || patchProps.contains(AppearanceResourcePartsOverridesProp))
+                    if (patchConfig->Modifies(AppearanceResourcePartsOverridesProp))
                     {
                         for (const auto& partOverride : patchDefinition->partsOverrides)
                         {
@@ -401,7 +401,7 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
                         }
                     }
 
-                    if (patchProps.empty() || patchProps.contains(AppearanceResourceDependenciesProp))
+                    if (patchConfig->Modifies(AppearanceResourceDependenciesProp))
                     {
                         for (const auto& dependency : patchDefinition->resolvedDependencies)
                         {
@@ -427,7 +427,7 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
                         }
                     }
 
-                    if (patchProps.empty() || patchProps.contains(AppearanceResourceVisualTagsProp))
+                    if (patchConfig->Modifies(AppearanceResourceVisualTagsProp))
                     {
                         existingDefinition->visualTags.Add(patchDefinition->visualTags);
                     }
@@ -446,7 +446,7 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
             }
         }
 
-        if (patchProps.empty() || patchProps.contains(AppearanceResourceCensorshipProp))
+        if (patchConfig->Modifies(AppearanceResourceCensorshipProp))
         {
             for (const auto& censorship : patchResource->censorshipMapping)
             {
@@ -486,9 +486,9 @@ void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, Red::Pos
             if (!patchMesh)
                 continue;
 
-            const auto& patchProps = GetPatchProps(patchPath);
+            const auto& patchConfig = GetPatchConfig(patchPath);
 
-            if (patchMesh->appearances.size != 0 && (patchProps.empty() || patchProps.contains(MeshAppearancesProp)))
+            if (patchMesh->appearances.size != 0 && (patchConfig->Modifies(MeshAppearancesProp)))
             {
                 auto sourceTag = MeshExtension::RegisterMeshSource(aMesh, patchMesh);
                 auto expansionTag = Red::CName();
@@ -533,8 +533,7 @@ void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, Red::Pos
                 aMesh->forceLoadAllAppearances = false;
             }
 
-            if (patchMesh->renderResourceBlob && !aMesh->renderResourceBlob
-                && (patchProps.empty() || patchProps.contains(MeshBlobProp)))
+            if (patchMesh->renderResourceBlob && patchConfig->Modifies(MeshBlobProp, aMesh->renderResourceBlob))
             {
                 if (auto& renderBlob = Red::Cast<Red::rendRenderMeshBlob>(patchMesh->renderResourceBlob))
                 {
@@ -579,29 +578,29 @@ void App::ResourcePatchExtension::OnMorphTargetResourceLoad(Red::MorphTargetMesh
         if (!patchResource)
             continue;
 
-        const auto& patchProps = GetPatchProps(patchPath);
+        const auto& patchConfig = GetPatchConfig(patchPath);
 
-        if (patchResource->baseMesh.path && (patchProps.empty() || patchProps.contains(MorphTargetMeshProp)))
+        if (patchResource->baseMesh.path && (patchConfig->Modifies(MorphTargetMeshProp)))
         {
             aMorphTarget->baseMesh = patchResource->baseMesh;
         }
 
-        if (patchResource->baseMeshAppearance && (patchProps.empty() || patchProps.contains(MorphTargetMeshAppProp)))
+        if (patchConfig->Modifies(MorphTargetMeshAppProp, !patchResource->baseMeshAppearance))
         {
             aMorphTarget->baseMeshAppearance = patchResource->baseMeshAppearance;
         }
 
-        if (patchResource->baseTexture.path && (patchProps.empty() || patchProps.contains(MorphTargetTextureProp)))
+        if (patchConfig->Modifies(MorphTargetTextureProp, !patchResource->baseTexture.path))
         {
             aMorphTarget->baseTexture = patchResource->baseTexture;
         }
 
-        if (patchResource->baseTextureParamName && (patchProps.empty() || patchProps.contains(MorphTargetTextureParamProp)))
+        if (patchConfig->Modifies(MorphTargetTextureParamProp, !patchResource->baseTextureParamName))
         {
             aMorphTarget->baseTextureParamName = patchResource->baseTextureParamName;
         }
 
-        if (patchResource->blob && !aMorphTarget->blob && (patchProps.empty() || patchProps.contains(MorphTargetBlobProp)))
+        if (patchResource->blob && patchConfig->Modifies(MorphTargetBlobProp, aMorphTarget->blob))
         {
             if (auto& renderBlob = Red::Cast<Red::rendRenderMorphTargetMeshBlob>(patchResource->blob))
             {
@@ -610,12 +609,12 @@ void App::ResourcePatchExtension::OnMorphTargetResourceLoad(Red::MorphTargetMesh
         }
 
         if (patchResource->boundingBox.Max.X > patchResource->boundingBox.Min.X
-            && (patchProps.empty() || patchProps.contains(MorphTargetBoundingBoxProp)))
+            && (patchConfig->Modifies(MorphTargetBoundingBoxProp)))
         {
             aMorphTarget->boundingBox = patchResource->boundingBox;
         }
 
-        if (patchProps.empty() || patchProps.contains(MorphTargetTargetsProp))
+        if (patchConfig->Modifies(MorphTargetTargetsProp))
         {
             for (const auto& patchTarget : patchResource->targets)
             {
@@ -751,9 +750,9 @@ void App::ResourcePatchExtension::OnGarmentPackageExtract(Red::GarmentExtraction
         if (!patchResource)
             continue;
 
-        const auto& patchProps = GetPatchProps(patchPath);
+        const auto& patchConfig = GetPatchConfig(patchPath);
 
-        if (patchProps.empty() || patchProps.contains(EntityTemplateComponentsProp))
+        if (patchConfig->Modifies(EntityTemplateComponentsProp))
         {
             aParams->partTemplate = patchResource;
             Raw::GarmentAssembler::ExtractComponentsJob(aParams, aJobGroup);
@@ -937,10 +936,10 @@ void App::ResourcePatchExtension::PatchPackageResults(const Red::Handle<Red::Ent
         if (!patchResource)
             continue;
 
-        const auto& patchProps = GetPatchProps(patchPath);
+        const auto& patchConfig = GetPatchConfig(patchPath);
 
-        if (!patchProps.empty() && !patchProps.contains(EntityTemplateEntityProp)
-            && !patchProps.contains(EntityTemplateComponentsProp))
+        if (!patchConfig->Modifies(EntityTemplateEntityProp) &&
+            !patchConfig->Modifies(EntityTemplateComponentsProp))
             continue;
 
         auto& patchBuffer = patchResource->compiledData;
@@ -969,12 +968,12 @@ void App::ResourcePatchExtension::PatchPackageResults(const Red::Handle<Red::Ent
 
         if (patchExtractor.results.size > 0)
         {
-            if (patchProps.empty() || patchProps.contains(EntityTemplateComponentsProp))
+            if (patchConfig->Modifies(EntityTemplateComponentsProp))
             {
                 MergeComponents(aResultObjects, patchExtractor.results, false);
             }
 
-            if (patchProps.empty() || patchProps.contains(EntityTemplateEntityProp))
+            if (patchConfig->Modifies(EntityTemplateEntityProp))
             {
                 MergeEntity(aResultObjects, patchExtractor.results, templateHeader.rootIndex, patchHeader.rootIndex);
             }
@@ -1002,7 +1001,7 @@ void App::ResourcePatchExtension::PatchPackageResults(const Red::Handle<Red::App
 
     for (const auto& patchPath : patchList)
     {
-        auto patchDefinition = GetPatchDefinition(patchPath, aDefinition->name);
+        auto patchDefinition = GetPatchAppearance(patchPath, aDefinition->name);
 
         if (!patchDefinition)
             continue;
@@ -1132,14 +1131,13 @@ Red::Handle<Red::rendRenderMorphTargetMeshBlob> App::ResourcePatchExtension::Cop
     return cloneBlob;
 }
 
-const Core::Set<Red::CName>& App::ResourcePatchExtension::GetPatchProps(Red::ResourcePath aPatchPath)
+Core::SharedPtr<App::ResourcePatch> App::ResourcePatchExtension::GetPatchConfig(
+    Red::ResourcePath aPatchPath)
 {
-    static const Core::Set<Red::CName> s_null;
+    const auto& patchIt = s_patches.find(aPatchPath);
 
-    const auto& patchIt = s_patchProps.find(aPatchPath);
-
-    if (patchIt == s_patchProps.end())
-        return s_null;
+    if (patchIt == s_patches.end())
+        return {};
 
     return patchIt.value();
 }
@@ -1227,7 +1225,7 @@ Red::Handle<T> App::ResourcePatchExtension::GetPatchResource(Red::ResourcePath a
     return token->resource;
 }
 
-Red::Handle<Red::AppearanceDefinition> App::ResourcePatchExtension::GetPatchDefinition(
+Red::Handle<Red::AppearanceDefinition> App::ResourcePatchExtension::GetPatchAppearance(
     Red::ResourcePath aPatchPath, Red::CName aDefinitionName)
 {
     std::shared_lock _(s_appearanceDefinitionLock);
