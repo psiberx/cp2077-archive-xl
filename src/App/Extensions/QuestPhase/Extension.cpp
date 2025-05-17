@@ -129,12 +129,12 @@ void App::QuestPhaseExtension::OnGameRestored(Red::QuestsSystem* aSystem)
             Red::QuestNodeKey phaseNodeKey{questNodeHash, phaseNodeId};
             Red::FactID phaseFactId{phaseNodeKey};
 
-            if (!factManager.GetFact(phaseFactId))
+            if (!factManager->GetFact(phaseFactId))
             {
                 Red::DynArray<Red::CName> phaseNodeSockets{"In1"};
                 Raw::QuestsSystem::ForceStartNode(aSystem, phaseNodeKey, phaseNodeSockets);
 
-                factManager.SetFact(phaseFactId, 1);
+                factManager->SetFact(phaseFactId, 1);
             }
         }
     }
@@ -170,7 +170,7 @@ void App::QuestPhaseExtension::OnQuestStart(Red::questRootInstance* aInstance, R
             Red::QuestNodeKey phaseNodeKey{questNodeHash, phaseNodeId};
             Red::FactID phaseFactId{phaseNodeKey};
 
-            factManager.SetFact(phaseFactId, 1);
+            factManager->SetFact(phaseFactId, 1);
         }
     }
 }

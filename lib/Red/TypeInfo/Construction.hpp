@@ -24,7 +24,7 @@ inline void Destruct(T* aInstance)
 }
 
 template<typename T>
-requires std::is_abstract_v<T> && Red::Detail::HasGeneratedTypeName<T>
+requires (std::is_abstract_v<T> || !RED4ext::Detail::HasStaticAllocator<T>) && Red::Detail::HasGeneratedTypeName<T>
 struct RED4ext::Detail::AllocatorHook<T> : std::true_type
 {
     inline static Memory::IAllocator* Get()
@@ -34,7 +34,7 @@ struct RED4ext::Detail::AllocatorHook<T> : std::true_type
 };
 
 template<typename T>
-requires std::is_abstract_v<T> && Red::Detail::HasGeneratedTypeName<T>
+requires (std::is_abstract_v<T> || !RED4ext::Detail::HasStaticAllocator<T>) && Red::Detail::HasGeneratedTypeName<T>
 struct RED4ext::Detail::ConstructorHook<T> : std::true_type
 {
     inline static void Apply(T* aInstance)

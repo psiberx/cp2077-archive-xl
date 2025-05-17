@@ -116,7 +116,7 @@ void App::GarmentExtension::OnLoadAppearanceResource(Red::ItemFactoryRequest* aR
     auto& entityWeak = Raw::ItemFactoryRequest::Entity::Ref(aRequest);
     auto& templateToken = Raw::ItemFactoryRequest::EntityTemplate::Ref(aRequest);
     auto& appearanceName = Raw::ItemFactoryRequest::AppearanceName::Ref(aRequest);
-    auto itemRecord = Raw::ItemFactoryRequest::ItemRecord::Ptr(aRequest);
+    auto itemRecord = Raw::ItemFactoryRequest::ItemRecord::Ref(aRequest);
 
     if (!appearanceName && itemRecord)
     {
@@ -148,7 +148,7 @@ void App::GarmentExtension::OnChangeAppearanceResource(Red::ItemFactoryAppearanc
     auto& entityWeak = Raw::ItemFactoryAppearanceChangeRequest::Entity::Ref(aRequest);
     auto& templateToken = Raw::ItemFactoryAppearanceChangeRequest::EntityTemplate::Ref(aRequest);
     auto& appearanceName = Raw::ItemFactoryAppearanceChangeRequest::AppearanceName::Ref(aRequest);
-    auto itemRecord = Raw::ItemFactoryAppearanceChangeRequest::ItemRecord::Ptr(aRequest);
+    auto itemRecord = Raw::ItemFactoryAppearanceChangeRequest::ItemRecord::Ref(aRequest);
 
     if (!appearanceName && itemRecord)
     {

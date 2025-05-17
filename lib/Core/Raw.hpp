@@ -258,7 +258,8 @@ template<uintptr_t A, typename T>
 class OffsetPtr
 {
 public:
-    using Type = std::conditional_t<std::is_void_v<std::remove_pointer_t<T>>, void*, std::remove_pointer_t<T>>;
+    using Type = T;
+    using ValueType = std::conditional_t<std::is_void_v<std::remove_pointer_t<T>>, void*, std::remove_pointer_t<T>>;
 
     static constexpr uintptr_t offset = A;
     static constexpr bool indirect = std::is_pointer_v<T> && !std::is_void_v<std::remove_pointer_t<T>>;
@@ -275,7 +276,7 @@ public:
 
     [[nodiscard]] inline operator bool() const
     {
-        if constexpr (std::is_same_v<Type, bool>)
+        if constexpr (std::is_same_v<ValueType, bool>)
         {
             return GetValuePtr() && *GetValuePtr();
         }
@@ -285,39 +286,39 @@ public:
         }
     }
 
-    [[nodiscard]] inline operator Type&() const
+    [[nodiscard]] inline operator ValueType&() const
     {
         return *GetValuePtr();
     }
 
-    [[nodiscard]] inline operator Type*() const
+    [[nodiscard]] inline operator ValueType*() const
     {
         return GetValuePtr();
     }
 
-    [[nodiscard]] inline Type* operator->() const
+    [[nodiscard]] inline ValueType* operator->() const
     {
         return GetValuePtr();
     }
 
-    OffsetPtr& operator=(T&& aRhs) const noexcept
+    OffsetPtr& operator=(Type&& aRhs) const noexcept
     {
         *GetPtr() = aRhs;
         return *this;
     }
 
-    const OffsetPtr& operator=(const T& aRhs) const noexcept
+    OffsetPtr& operator=(const Type& aRhs) const noexcept
     {
         *GetPtr() = aRhs;
         return *this;
     }
 
-    [[nodiscard]] inline T* GetPtr() const noexcept
+    [[nodiscard]] inline Type* GetPtr() const noexcept
     {
-        return reinterpret_cast<T*>(GetAddress());
+        return reinterpret_cast<Type*>(GetAddress());
     }
 
-    [[nodiscard]] inline Type* GetValuePtr() const noexcept
+    [[nodiscard]] inline ValueType* GetValuePtr() const noexcept
     {
         if constexpr (indirect)
         {
@@ -336,27 +337,42 @@ public:
 
     inline static Type* Ptr(const void* aBase)
     {
-        return OffsetPtr(aBase).GetValuePtr();
+        return OffsetPtr(aBase).GetPtr();
     }
 
     inline static Type& Ref(const void* aBase)
     {
-        return *OffsetPtr(aBase).GetValuePtr();
+        return *OffsetPtr(aBase).GetPtr();
     }
 
     inline static uintptr_t Addr(const void* aBase)
     {
-        return reinterpret_cast<uintptr_t>(OffsetPtr(aBase).GetValuePtr());
+        return reinterpret_cast<uintptr_t>(OffsetPtr(aBase).GetPtr());
     }
 
     inline static void Set(const void* aBase, const Type& aValue)
     {
-        *OffsetPtr(aBase).GetValuePtr() = aValue;
+        *OffsetPtr(aBase).GetPtr() = aValue;
     }
 
-    inline static void Set(const void* aBase, T& aValue)
+    inline static ValueType* ValuePtr(const void* aBase)
     {
-        *OffsetPtr(aBase).GetPtr() = aValue;
+        return OffsetPtr(aBase).GetValuePtr();
+    }
+
+    inline static ValueType& ValueRef(const void* aBase)
+    {
+        return *OffsetPtr(aBase).GetValuePtr();
+    }
+
+    inline static uintptr_t ValueAddr(const void* aBase)
+    {
+        return reinterpret_cast<uintptr_t>(OffsetPtr(aBase).GetValuePtr());
+    }
+
+    inline static void SetValue(const void* aBase, const ValueType& aValue)
+    {
+        *OffsetPtr(aBase).GetValuePtr() = aValue;
     }
 
     uintptr_t address;
