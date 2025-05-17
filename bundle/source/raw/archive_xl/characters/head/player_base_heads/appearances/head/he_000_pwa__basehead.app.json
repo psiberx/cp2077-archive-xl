@@ -3,7 +3,7 @@
     "WolvenKitVersion": "8.15.1-nightly.2024-12-22",
     "WKitJsonVersion": "0.0.9",
     "GameVersion": 2200,
-    "ExportedDateTime": "2025-05-13T22:01:44.9792825Z",
+    "ExportedDateTime": "2025-05-17T17:54:49.4495105Z",
     "DataType": "CR2W"
   },
   "Data": {
@@ -395,6 +395,383 @@
               ]
             }
           }
+        },
+        {
+          "HandleId": "3",
+          "Data": {
+            "$type": "appearanceAppearanceDefinition",
+            "censorFlags": 0,
+            "compiledData": {
+              "BufferId": "1",
+              "Flags": 0,
+              "Type": "WolvenKit.RED4.Archive.Buffer.RedPackage, WolvenKit.RED4, Version=8.15.1.0, Culture=neutral, PublicKeyToken=null",
+              "Data": {
+                "Version": 4,
+                "Sections": 7,
+                "CruidIndex": -1,
+                "CruidDict": {
+                  "0": "2133220414002642944"
+                },
+                "Chunks": [
+                  {
+                    "$type": "entMorphTargetSkinnedMeshComponent",
+                    "acceptDismemberment": 1,
+                    "autoHideDistance": 15,
+                    "castLocalShadows": "Always",
+                    "castShadows": "Always",
+                    "chunkMask": "18446744073709551614",
+                    "forceLODLevel": -1,
+                    "id": "2133220414002642944",
+                    "isEnabled": 1,
+                    "isReplicable": 0,
+                    "localTransform": {
+                      "$type": "WorldTransform",
+                      "Orientation": {
+                        "$type": "Quaternion",
+                        "i": 0,
+                        "j": 0,
+                        "k": 0,
+                        "r": 1
+                      },
+                      "Position": {
+                        "$type": "WorldPosition",
+                        "x": {
+                          "$type": "FixedPoint",
+                          "Bits": 0
+                        },
+                        "y": {
+                          "$type": "FixedPoint",
+                          "Bits": 0
+                        },
+                        "z": {
+                          "$type": "FixedPoint",
+                          "Bits": 0
+                        }
+                      }
+                    },
+                    "meshAppearance": {
+                      "$type": "CName",
+                      "$storage": "string",
+                      "$value": "blood_gradient_black"
+                    },
+                    "morphResource": {
+                      "DepotPath": {
+                        "$type": "ResourcePath",
+                        "$storage": "string",
+                        "$value": "archive_xl\\characters\\head\\player_base_heads\\player_female_average\\he_000_pwa__morphs_normal_fix.morphtarget"
+                      },
+                      "Flags": "Default"
+                    },
+                    "name": {
+                      "$type": "CName",
+                      "$storage": "string",
+                      "$value": "MorphTargetSkinnedMesh3637"
+                    },
+                    "parentTransform": {
+                      "HandleId": "4",
+                      "Data": {
+                        "$type": "entHardTransformBinding",
+                        "bindName": {
+                          "$type": "CName",
+                          "$storage": "string",
+                          "$value": "root"
+                        },
+                        "enabled": 1,
+                        "enableMask": {
+                          "$type": "entTagMask",
+                          "excludedTags": {
+                            "$type": "redTagList",
+                            "tags": [
+                              {
+                                "$type": "CName",
+                                "$storage": "string",
+                                "$value": "NoBinding"
+                              }
+                            ]
+                          },
+                          "hardTags": {
+                            "$type": "redTagList",
+                            "tags": []
+                          },
+                          "softTags": {
+                            "$type": "redTagList",
+                            "tags": []
+                          }
+                        },
+                        "slotName": {
+                          "$type": "CName",
+                          "$storage": "string",
+                          "$value": "None"
+                        }
+                      }
+                    },
+                    "renderingPlaneAnimationParam": {
+                      "$type": "CName",
+                      "$storage": "string",
+                      "$value": "None"
+                    },
+                    "renderSceneLayerMask": "Default",
+                    "skinning": {
+                      "HandleId": "5",
+                      "Data": {
+                        "$type": "entSkinningBinding",
+                        "bindName": {
+                          "$type": "CName",
+                          "$storage": "string",
+                          "$value": "root"
+                        },
+                        "enabled": 1,
+                        "enableMask": {
+                          "$type": "entTagMask",
+                          "excludedTags": {
+                            "$type": "redTagList",
+                            "tags": [
+                              {
+                                "$type": "CName",
+                                "$storage": "string",
+                                "$value": "NoBinding"
+                              }
+                            ]
+                          },
+                          "hardTags": {
+                            "$type": "redTagList",
+                            "tags": []
+                          },
+                          "softTags": {
+                            "$type": "redTagList",
+                            "tags": []
+                          }
+                        }
+                      }
+                    },
+                    "tags": {
+                      "$type": "redTagList",
+                      "tags": []
+                    },
+                    "useSkinningLOD": 0,
+                    "version": 1,
+                    "visibilityAnimationParam": {
+                      "$type": "CName",
+                      "$storage": "string",
+                      "$value": "None"
+                    }
+                  }
+                ]
+              }
+            },
+            "components": [
+              {
+                "$type": "entMorphTargetSkinnedMeshComponent",
+                "acceptDismemberment": 1,
+                "autoHideDistance": 15,
+                "castLocalShadows": "Always",
+                "castShadows": "Always",
+                "chunkMask": "18446744073709551614",
+                "forceLODLevel": -1,
+                "id": "2133220414002642944",
+                "isEnabled": 1,
+                "isReplicable": 0,
+                "localTransform": {
+                  "$type": "WorldTransform",
+                  "Orientation": {
+                    "$type": "Quaternion",
+                    "i": 0,
+                    "j": 0,
+                    "k": 0,
+                    "r": 1
+                  },
+                  "Position": {
+                    "$type": "WorldPosition",
+                    "x": {
+                      "$type": "FixedPoint",
+                      "Bits": 0
+                    },
+                    "y": {
+                      "$type": "FixedPoint",
+                      "Bits": 0
+                    },
+                    "z": {
+                      "$type": "FixedPoint",
+                      "Bits": 0
+                    }
+                  }
+                },
+                "meshAppearance": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "blood_gradient_black"
+                },
+                "morphResource": {
+                  "DepotPath": {
+                    "$type": "ResourcePath",
+                    "$storage": "string",
+                    "$value": "archive_xl\\characters\\head\\player_base_heads\\player_female_average\\he_000_pwa__morphs_normal_fix.morphtarget"
+                  },
+                  "Flags": "Default"
+                },
+                "name": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "MorphTargetSkinnedMesh3637"
+                },
+                "parentTransform": {
+                  "HandleRefId": "4"
+                },
+                "renderingPlaneAnimationParam": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "None"
+                },
+                "renderSceneLayerMask": "Default",
+                "skinning": {
+                  "HandleRefId": "5"
+                },
+                "tags": {
+                  "$type": "redTagList",
+                  "tags": []
+                },
+                "useSkinningLOD": 0,
+                "version": 1,
+                "visibilityAnimationParam": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "None"
+                }
+              }
+            ],
+            "cookedDataPathOverride": {
+              "DepotPath": {
+                "$type": "ResourcePath",
+                "$storage": "uint64",
+                "$value": "0"
+              },
+              "Flags": "Soft"
+            },
+            "forcedLodDistance": 0,
+            "hitRepresentationOverrides": [],
+            "inheritedVisualTags": {
+              "$type": "redTagList",
+              "tags": []
+            },
+            "looseDependencies": [],
+            "name": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "he_000_pwa__basehead__mod"
+            },
+            "parametersBuffer": {
+              "$type": "entEntityParametersBuffer",
+              "parameterBuffers": []
+            },
+            "parentAppearance": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "None"
+            },
+            "partsMasks": [
+              []
+            ],
+            "partsOverrides": [
+              {
+                "$type": "appearanceAppearancePartOverrides",
+                "componentsOverrides": [
+                  {
+                    "$type": "appearancePartComponentOverrides",
+                    "acceptDismemberment": 1,
+                    "chunkMask": "18446744073709551614",
+                    "componentName": {
+                      "$type": "CName",
+                      "$storage": "string",
+                      "$value": "MorphTargetSkinnedMesh3637"
+                    },
+                    "initialTransform": {
+                      "$type": "Transform",
+                      "orientation": {
+                        "$type": "Quaternion",
+                        "i": 0,
+                        "j": 0,
+                        "k": 0,
+                        "r": 1
+                      },
+                      "position": {
+                        "$type": "Vector4",
+                        "W": 0,
+                        "X": 0,
+                        "Y": 0,
+                        "Z": 0
+                      }
+                    },
+                    "meshAppearance": {
+                      "$type": "CName",
+                      "$storage": "string",
+                      "$value": "blood_gradient_black"
+                    },
+                    "useCustomTransform": 0,
+                    "visualScale": {
+                      "$type": "Vector3",
+                      "X": 0,
+                      "Y": 0,
+                      "Z": 0
+                    }
+                  }
+                ],
+                "partResource": {
+                  "DepotPath": {
+                    "$type": "ResourcePath",
+                    "$storage": "string",
+                    "$value": "base\\characters\\head\\player_base_heads\\appearances\\entity\\head\\he_000_pwa__basehead.ent"
+                  },
+                  "Flags": "Soft"
+                }
+              }
+            ],
+            "partsValues": [
+              {
+                "$type": "appearanceAppearancePart",
+                "resource": {
+                  "DepotPath": {
+                    "$type": "ResourcePath",
+                    "$storage": "string",
+                    "$value": "base\\characters\\head\\player_base_heads\\appearances\\entity\\head\\he_000_pwa__basehead.ent"
+                  },
+                  "Flags": "Soft"
+                }
+              }
+            ],
+            "proxyMesh": {
+              "DepotPath": {
+                "$type": "ResourcePath",
+                "$storage": "uint64",
+                "$value": "0"
+              },
+              "Flags": "Soft"
+            },
+            "proxyMeshAppearance": {
+              "$type": "CName",
+              "$storage": "string",
+              "$value": "None"
+            },
+            "resolvedDependencies": [
+              {
+                "DepotPath": {
+                  "$type": "ResourcePath",
+                  "$storage": "string",
+                  "$value": "base\\characters\\head\\player_base_heads\\player_female_average\\he_000_pwa__morphs.morphtarget"
+                },
+                "Flags": "Soft"
+              }
+            ],
+            "visualTags": {
+              "$type": "redTagList",
+              "tags": [
+                {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "Female"
+                }
+              ]
+            }
+          }
         }
       ],
       "baseEntity": {
@@ -430,7 +807,7 @@
         "$type": "entdismembermentWoundsConfigSet",
         "Configs": [
           {
-            "HandleId": "3",
+            "HandleId": "6",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -442,7 +819,7 @@
             }
           },
           {
-            "HandleId": "4",
+            "HandleId": "7",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -454,7 +831,7 @@
             }
           },
           {
-            "HandleId": "5",
+            "HandleId": "8",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -466,7 +843,7 @@
             }
           },
           {
-            "HandleId": "6",
+            "HandleId": "9",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -478,7 +855,7 @@
             }
           },
           {
-            "HandleId": "7",
+            "HandleId": "10",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -490,7 +867,7 @@
             }
           },
           {
-            "HandleId": "8",
+            "HandleId": "11",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -502,7 +879,7 @@
             }
           },
           {
-            "HandleId": "9",
+            "HandleId": "12",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -514,7 +891,7 @@
             }
           },
           {
-            "HandleId": "10",
+            "HandleId": "13",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -526,7 +903,7 @@
             }
           },
           {
-            "HandleId": "11",
+            "HandleId": "14",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -538,7 +915,7 @@
             }
           },
           {
-            "HandleId": "12",
+            "HandleId": "15",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -550,7 +927,7 @@
             }
           },
           {
-            "HandleId": "13",
+            "HandleId": "16",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -562,7 +939,7 @@
             }
           },
           {
-            "HandleId": "14",
+            "HandleId": "17",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -574,7 +951,7 @@
             }
           },
           {
-            "HandleId": "15",
+            "HandleId": "18",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -586,7 +963,7 @@
             }
           },
           {
-            "HandleId": "16",
+            "HandleId": "19",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -598,7 +975,7 @@
             }
           },
           {
-            "HandleId": "17",
+            "HandleId": "20",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -610,7 +987,7 @@
             }
           },
           {
-            "HandleId": "18",
+            "HandleId": "21",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -622,7 +999,7 @@
             }
           },
           {
-            "HandleId": "19",
+            "HandleId": "22",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -634,7 +1011,7 @@
             }
           },
           {
-            "HandleId": "20",
+            "HandleId": "23",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -646,7 +1023,7 @@
             }
           },
           {
-            "HandleId": "21",
+            "HandleId": "24",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -658,7 +1035,7 @@
             }
           },
           {
-            "HandleId": "22",
+            "HandleId": "25",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -670,7 +1047,7 @@
             }
           },
           {
-            "HandleId": "23",
+            "HandleId": "26",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -682,7 +1059,7 @@
             }
           },
           {
-            "HandleId": "24",
+            "HandleId": "27",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -694,7 +1071,7 @@
             }
           },
           {
-            "HandleId": "25",
+            "HandleId": "28",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -706,7 +1083,7 @@
             }
           },
           {
-            "HandleId": "26",
+            "HandleId": "29",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -718,7 +1095,7 @@
             }
           },
           {
-            "HandleId": "27",
+            "HandleId": "30",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -730,7 +1107,7 @@
             }
           },
           {
-            "HandleId": "28",
+            "HandleId": "31",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -742,7 +1119,7 @@
             }
           },
           {
-            "HandleId": "29",
+            "HandleId": "32",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -754,7 +1131,7 @@
             }
           },
           {
-            "HandleId": "30",
+            "HandleId": "33",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -766,7 +1143,7 @@
             }
           },
           {
-            "HandleId": "31",
+            "HandleId": "34",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -778,7 +1155,7 @@
             }
           },
           {
-            "HandleId": "32",
+            "HandleId": "35",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -790,7 +1167,7 @@
             }
           },
           {
-            "HandleId": "33",
+            "HandleId": "36",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -802,7 +1179,7 @@
             }
           },
           {
-            "HandleId": "34",
+            "HandleId": "37",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -814,7 +1191,7 @@
             }
           },
           {
-            "HandleId": "35",
+            "HandleId": "38",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -826,7 +1203,7 @@
             }
           },
           {
-            "HandleId": "36",
+            "HandleId": "39",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -838,7 +1215,7 @@
             }
           },
           {
-            "HandleId": "37",
+            "HandleId": "40",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -850,7 +1227,7 @@
             }
           },
           {
-            "HandleId": "38",
+            "HandleId": "41",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -862,7 +1239,7 @@
             }
           },
           {
-            "HandleId": "39",
+            "HandleId": "42",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -874,7 +1251,7 @@
             }
           },
           {
-            "HandleId": "40",
+            "HandleId": "43",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -886,7 +1263,7 @@
             }
           },
           {
-            "HandleId": "41",
+            "HandleId": "44",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -898,7 +1275,7 @@
             }
           },
           {
-            "HandleId": "42",
+            "HandleId": "45",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -910,7 +1287,7 @@
             }
           },
           {
-            "HandleId": "43",
+            "HandleId": "46",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -922,7 +1299,7 @@
             }
           },
           {
-            "HandleId": "44",
+            "HandleId": "47",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -934,7 +1311,7 @@
             }
           },
           {
-            "HandleId": "45",
+            "HandleId": "48",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -946,7 +1323,7 @@
             }
           },
           {
-            "HandleId": "46",
+            "HandleId": "49",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -958,7 +1335,7 @@
             }
           },
           {
-            "HandleId": "47",
+            "HandleId": "50",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -970,7 +1347,7 @@
             }
           },
           {
-            "HandleId": "48",
+            "HandleId": "51",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -982,7 +1359,7 @@
             }
           },
           {
-            "HandleId": "49",
+            "HandleId": "52",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -994,7 +1371,7 @@
             }
           },
           {
-            "HandleId": "50",
+            "HandleId": "53",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1006,7 +1383,7 @@
             }
           },
           {
-            "HandleId": "51",
+            "HandleId": "54",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1018,7 +1395,7 @@
             }
           },
           {
-            "HandleId": "52",
+            "HandleId": "55",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1030,7 +1407,7 @@
             }
           },
           {
-            "HandleId": "53",
+            "HandleId": "56",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1042,7 +1419,7 @@
             }
           },
           {
-            "HandleId": "54",
+            "HandleId": "57",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1054,7 +1431,7 @@
             }
           },
           {
-            "HandleId": "55",
+            "HandleId": "58",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1066,7 +1443,7 @@
             }
           },
           {
-            "HandleId": "56",
+            "HandleId": "59",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1078,7 +1455,7 @@
             }
           },
           {
-            "HandleId": "57",
+            "HandleId": "60",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1090,7 +1467,7 @@
             }
           },
           {
-            "HandleId": "58",
+            "HandleId": "61",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1102,7 +1479,7 @@
             }
           },
           {
-            "HandleId": "59",
+            "HandleId": "62",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1114,7 +1491,7 @@
             }
           },
           {
-            "HandleId": "60",
+            "HandleId": "63",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1126,7 +1503,7 @@
             }
           },
           {
-            "HandleId": "61",
+            "HandleId": "64",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1138,7 +1515,7 @@
             }
           },
           {
-            "HandleId": "62",
+            "HandleId": "65",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1150,7 +1527,7 @@
             }
           },
           {
-            "HandleId": "63",
+            "HandleId": "66",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1162,7 +1539,7 @@
             }
           },
           {
-            "HandleId": "64",
+            "HandleId": "67",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1174,7 +1551,7 @@
             }
           },
           {
-            "HandleId": "65",
+            "HandleId": "68",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1186,7 +1563,7 @@
             }
           },
           {
-            "HandleId": "66",
+            "HandleId": "69",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1198,7 +1575,7 @@
             }
           },
           {
-            "HandleId": "67",
+            "HandleId": "70",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1210,7 +1587,7 @@
             }
           },
           {
-            "HandleId": "68",
+            "HandleId": "71",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1222,7 +1599,7 @@
             }
           },
           {
-            "HandleId": "69",
+            "HandleId": "72",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1234,7 +1611,7 @@
             }
           },
           {
-            "HandleId": "70",
+            "HandleId": "73",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1246,7 +1623,7 @@
             }
           },
           {
-            "HandleId": "71",
+            "HandleId": "74",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1258,7 +1635,7 @@
             }
           },
           {
-            "HandleId": "72",
+            "HandleId": "75",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1270,7 +1647,7 @@
             }
           },
           {
-            "HandleId": "73",
+            "HandleId": "76",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1282,7 +1659,7 @@
             }
           },
           {
-            "HandleId": "74",
+            "HandleId": "77",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1294,7 +1671,7 @@
             }
           },
           {
-            "HandleId": "75",
+            "HandleId": "78",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1306,7 +1683,7 @@
             }
           },
           {
-            "HandleId": "76",
+            "HandleId": "79",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1318,7 +1695,7 @@
             }
           },
           {
-            "HandleId": "77",
+            "HandleId": "80",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1330,7 +1707,7 @@
             }
           },
           {
-            "HandleId": "78",
+            "HandleId": "81",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1342,7 +1719,7 @@
             }
           },
           {
-            "HandleId": "79",
+            "HandleId": "82",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1354,7 +1731,7 @@
             }
           },
           {
-            "HandleId": "80",
+            "HandleId": "83",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1366,7 +1743,7 @@
             }
           },
           {
-            "HandleId": "81",
+            "HandleId": "84",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1378,7 +1755,7 @@
             }
           },
           {
-            "HandleId": "82",
+            "HandleId": "85",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1390,7 +1767,7 @@
             }
           },
           {
-            "HandleId": "83",
+            "HandleId": "86",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1402,7 +1779,7 @@
             }
           },
           {
-            "HandleId": "84",
+            "HandleId": "87",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1414,7 +1791,7 @@
             }
           },
           {
-            "HandleId": "85",
+            "HandleId": "88",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1426,7 +1803,7 @@
             }
           },
           {
-            "HandleId": "86",
+            "HandleId": "89",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1438,7 +1815,7 @@
             }
           },
           {
-            "HandleId": "87",
+            "HandleId": "90",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1450,7 +1827,7 @@
             }
           },
           {
-            "HandleId": "88",
+            "HandleId": "91",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1462,7 +1839,7 @@
             }
           },
           {
-            "HandleId": "89",
+            "HandleId": "92",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1474,7 +1851,7 @@
             }
           },
           {
-            "HandleId": "90",
+            "HandleId": "93",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1486,7 +1863,7 @@
             }
           },
           {
-            "HandleId": "91",
+            "HandleId": "94",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1498,7 +1875,7 @@
             }
           },
           {
-            "HandleId": "92",
+            "HandleId": "95",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1510,7 +1887,7 @@
             }
           },
           {
-            "HandleId": "93",
+            "HandleId": "96",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1522,7 +1899,7 @@
             }
           },
           {
-            "HandleId": "94",
+            "HandleId": "97",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1534,7 +1911,7 @@
             }
           },
           {
-            "HandleId": "95",
+            "HandleId": "98",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1546,7 +1923,7 @@
             }
           },
           {
-            "HandleId": "96",
+            "HandleId": "99",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1558,7 +1935,7 @@
             }
           },
           {
-            "HandleId": "97",
+            "HandleId": "100",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1570,7 +1947,7 @@
             }
           },
           {
-            "HandleId": "98",
+            "HandleId": "101",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1582,7 +1959,7 @@
             }
           },
           {
-            "HandleId": "99",
+            "HandleId": "102",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1594,7 +1971,7 @@
             }
           },
           {
-            "HandleId": "100",
+            "HandleId": "103",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1606,7 +1983,7 @@
             }
           },
           {
-            "HandleId": "101",
+            "HandleId": "104",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1618,7 +1995,7 @@
             }
           },
           {
-            "HandleId": "102",
+            "HandleId": "105",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1630,7 +2007,7 @@
             }
           },
           {
-            "HandleId": "103",
+            "HandleId": "106",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1642,7 +2019,7 @@
             }
           },
           {
-            "HandleId": "104",
+            "HandleId": "107",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1654,7 +2031,7 @@
             }
           },
           {
-            "HandleId": "105",
+            "HandleId": "108",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1666,7 +2043,7 @@
             }
           },
           {
-            "HandleId": "106",
+            "HandleId": "109",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1678,7 +2055,7 @@
             }
           },
           {
-            "HandleId": "107",
+            "HandleId": "110",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1690,7 +2067,7 @@
             }
           },
           {
-            "HandleId": "108",
+            "HandleId": "111",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1702,7 +2079,7 @@
             }
           },
           {
-            "HandleId": "109",
+            "HandleId": "112",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1714,7 +2091,7 @@
             }
           },
           {
-            "HandleId": "110",
+            "HandleId": "113",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1726,7 +2103,7 @@
             }
           },
           {
-            "HandleId": "111",
+            "HandleId": "114",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1738,7 +2115,7 @@
             }
           },
           {
-            "HandleId": "112",
+            "HandleId": "115",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1750,7 +2127,7 @@
             }
           },
           {
-            "HandleId": "113",
+            "HandleId": "116",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1762,7 +2139,7 @@
             }
           },
           {
-            "HandleId": "114",
+            "HandleId": "117",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1774,7 +2151,7 @@
             }
           },
           {
-            "HandleId": "115",
+            "HandleId": "118",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1786,7 +2163,7 @@
             }
           },
           {
-            "HandleId": "116",
+            "HandleId": "119",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1798,7 +2175,7 @@
             }
           },
           {
-            "HandleId": "117",
+            "HandleId": "120",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1810,7 +2187,7 @@
             }
           },
           {
-            "HandleId": "118",
+            "HandleId": "121",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1822,7 +2199,7 @@
             }
           },
           {
-            "HandleId": "119",
+            "HandleId": "122",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1834,7 +2211,7 @@
             }
           },
           {
-            "HandleId": "120",
+            "HandleId": "123",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1846,7 +2223,7 @@
             }
           },
           {
-            "HandleId": "121",
+            "HandleId": "124",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1858,7 +2235,7 @@
             }
           },
           {
-            "HandleId": "122",
+            "HandleId": "125",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1870,7 +2247,7 @@
             }
           },
           {
-            "HandleId": "123",
+            "HandleId": "126",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1882,7 +2259,7 @@
             }
           },
           {
-            "HandleId": "124",
+            "HandleId": "127",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1894,7 +2271,7 @@
             }
           },
           {
-            "HandleId": "125",
+            "HandleId": "128",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1906,7 +2283,7 @@
             }
           },
           {
-            "HandleId": "126",
+            "HandleId": "129",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1918,7 +2295,7 @@
             }
           },
           {
-            "HandleId": "127",
+            "HandleId": "130",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1930,7 +2307,7 @@
             }
           },
           {
-            "HandleId": "128",
+            "HandleId": "131",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1942,7 +2319,7 @@
             }
           },
           {
-            "HandleId": "129",
+            "HandleId": "132",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1954,7 +2331,7 @@
             }
           },
           {
-            "HandleId": "130",
+            "HandleId": "133",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1966,7 +2343,7 @@
             }
           },
           {
-            "HandleId": "131",
+            "HandleId": "134",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1978,7 +2355,7 @@
             }
           },
           {
-            "HandleId": "132",
+            "HandleId": "135",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -1990,7 +2367,7 @@
             }
           },
           {
-            "HandleId": "133",
+            "HandleId": "136",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2002,7 +2379,7 @@
             }
           },
           {
-            "HandleId": "134",
+            "HandleId": "137",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2014,7 +2391,7 @@
             }
           },
           {
-            "HandleId": "135",
+            "HandleId": "138",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2026,7 +2403,7 @@
             }
           },
           {
-            "HandleId": "136",
+            "HandleId": "139",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2038,7 +2415,7 @@
             }
           },
           {
-            "HandleId": "137",
+            "HandleId": "140",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2050,7 +2427,7 @@
             }
           },
           {
-            "HandleId": "138",
+            "HandleId": "141",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2062,7 +2439,7 @@
             }
           },
           {
-            "HandleId": "139",
+            "HandleId": "142",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2074,7 +2451,7 @@
             }
           },
           {
-            "HandleId": "140",
+            "HandleId": "143",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2086,7 +2463,7 @@
             }
           },
           {
-            "HandleId": "141",
+            "HandleId": "144",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2098,7 +2475,7 @@
             }
           },
           {
-            "HandleId": "142",
+            "HandleId": "145",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2110,7 +2487,7 @@
             }
           },
           {
-            "HandleId": "143",
+            "HandleId": "146",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2122,7 +2499,7 @@
             }
           },
           {
-            "HandleId": "144",
+            "HandleId": "147",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2134,7 +2511,7 @@
             }
           },
           {
-            "HandleId": "145",
+            "HandleId": "148",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2146,7 +2523,7 @@
             }
           },
           {
-            "HandleId": "146",
+            "HandleId": "149",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2158,7 +2535,7 @@
             }
           },
           {
-            "HandleId": "147",
+            "HandleId": "150",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2170,7 +2547,7 @@
             }
           },
           {
-            "HandleId": "148",
+            "HandleId": "151",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2182,7 +2559,7 @@
             }
           },
           {
-            "HandleId": "149",
+            "HandleId": "152",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2194,7 +2571,7 @@
             }
           },
           {
-            "HandleId": "150",
+            "HandleId": "153",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2206,7 +2583,7 @@
             }
           },
           {
-            "HandleId": "151",
+            "HandleId": "154",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2218,7 +2595,7 @@
             }
           },
           {
-            "HandleId": "152",
+            "HandleId": "155",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2230,7 +2607,7 @@
             }
           },
           {
-            "HandleId": "153",
+            "HandleId": "156",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2242,7 +2619,7 @@
             }
           },
           {
-            "HandleId": "154",
+            "HandleId": "157",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2254,7 +2631,7 @@
             }
           },
           {
-            "HandleId": "155",
+            "HandleId": "158",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2266,7 +2643,7 @@
             }
           },
           {
-            "HandleId": "156",
+            "HandleId": "159",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2278,7 +2655,7 @@
             }
           },
           {
-            "HandleId": "157",
+            "HandleId": "160",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2290,7 +2667,7 @@
             }
           },
           {
-            "HandleId": "158",
+            "HandleId": "161",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2302,7 +2679,7 @@
             }
           },
           {
-            "HandleId": "159",
+            "HandleId": "162",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2314,7 +2691,7 @@
             }
           },
           {
-            "HandleId": "160",
+            "HandleId": "163",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2326,7 +2703,7 @@
             }
           },
           {
-            "HandleId": "161",
+            "HandleId": "164",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2338,7 +2715,7 @@
             }
           },
           {
-            "HandleId": "162",
+            "HandleId": "165",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2350,7 +2727,7 @@
             }
           },
           {
-            "HandleId": "163",
+            "HandleId": "166",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2362,7 +2739,7 @@
             }
           },
           {
-            "HandleId": "164",
+            "HandleId": "167",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2374,7 +2751,7 @@
             }
           },
           {
-            "HandleId": "165",
+            "HandleId": "168",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2386,7 +2763,7 @@
             }
           },
           {
-            "HandleId": "166",
+            "HandleId": "169",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2398,7 +2775,7 @@
             }
           },
           {
-            "HandleId": "167",
+            "HandleId": "170",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2410,7 +2787,7 @@
             }
           },
           {
-            "HandleId": "168",
+            "HandleId": "171",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2422,7 +2799,7 @@
             }
           },
           {
-            "HandleId": "169",
+            "HandleId": "172",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2434,7 +2811,7 @@
             }
           },
           {
-            "HandleId": "170",
+            "HandleId": "173",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2446,7 +2823,7 @@
             }
           },
           {
-            "HandleId": "171",
+            "HandleId": "174",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2458,7 +2835,7 @@
             }
           },
           {
-            "HandleId": "172",
+            "HandleId": "175",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2470,7 +2847,7 @@
             }
           },
           {
-            "HandleId": "173",
+            "HandleId": "176",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2482,7 +2859,7 @@
             }
           },
           {
-            "HandleId": "174",
+            "HandleId": "177",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2494,7 +2871,7 @@
             }
           },
           {
-            "HandleId": "175",
+            "HandleId": "178",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2506,7 +2883,7 @@
             }
           },
           {
-            "HandleId": "176",
+            "HandleId": "179",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2518,7 +2895,7 @@
             }
           },
           {
-            "HandleId": "177",
+            "HandleId": "180",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2530,7 +2907,7 @@
             }
           },
           {
-            "HandleId": "178",
+            "HandleId": "181",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2542,7 +2919,7 @@
             }
           },
           {
-            "HandleId": "179",
+            "HandleId": "182",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2554,7 +2931,7 @@
             }
           },
           {
-            "HandleId": "180",
+            "HandleId": "183",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2566,7 +2943,7 @@
             }
           },
           {
-            "HandleId": "181",
+            "HandleId": "184",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2578,7 +2955,7 @@
             }
           },
           {
-            "HandleId": "182",
+            "HandleId": "185",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2590,7 +2967,7 @@
             }
           },
           {
-            "HandleId": "183",
+            "HandleId": "186",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2602,7 +2979,7 @@
             }
           },
           {
-            "HandleId": "184",
+            "HandleId": "187",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2614,7 +2991,7 @@
             }
           },
           {
-            "HandleId": "185",
+            "HandleId": "188",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2626,7 +3003,7 @@
             }
           },
           {
-            "HandleId": "186",
+            "HandleId": "189",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2638,7 +3015,7 @@
             }
           },
           {
-            "HandleId": "187",
+            "HandleId": "190",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2650,7 +3027,7 @@
             }
           },
           {
-            "HandleId": "188",
+            "HandleId": "191",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {
@@ -2662,7 +3039,7 @@
             }
           },
           {
-            "HandleId": "189",
+            "HandleId": "192",
             "Data": {
               "$type": "entdismembermentWoundConfigContainer",
               "AppearanceName": {

@@ -1,4 +1,9 @@
 resource:
+  copy:
+    base\characters\head\player_base_heads\player_female_average\he_000_pwa__morphs.morphtarget:
+      - archive_xl\characters\head\player_base_heads\player_female_average\he_000_pwa__morphs_normal_fix.morphtarget
+    base\characters\head\player_base_heads\player_man_average\he_000_pma__morphs.morphtarget:
+      - archive_xl\characters\head\player_base_heads\player_man_average\he_000_pma__morphs_normal_fix.morphtarget
   patch:
     archive_xl\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\he_000_pwa_c__basehead_patch.mesh:
       props: [ appearances ]
@@ -8,4 +13,6 @@ resource:
       targets: [ player_ma_base_eyes.mesh ]
     archive_xl\common\null.morphtarget:
       props: [ baseTexture, baseTextureParamName ]
-      targets: [ player_wa_base_eyes.morphtarget, player_ma_base_eyes.morphtarget ]
+      targets:
+        - archive_xl\characters\head\player_base_heads\player_female_average\he_000_pwa__morphs_normal_fix.morphtarget
+        - archive_xl\characters\head\player_base_heads\player_man_average\he_000_pma__morphs_normal_fix.morphtarget
