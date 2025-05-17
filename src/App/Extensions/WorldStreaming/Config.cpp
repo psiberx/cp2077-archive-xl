@@ -306,6 +306,11 @@ void App::WorldStreamingConfig::LoadYAML(const YAML::Node& aNode)
                             ParseRecordID(mutationNode["recordId"], mutationData.recordID, mutationData.modifyRecordID);
                             ParseRecordID(mutationNode["objectRecordId"], mutationData.recordID, mutationData.modifyRecordID);
 
+                            ParseSubMutations(mutationNode["actorMutations"], mutationNode["expectedActors"],
+                                              mutationData.subNodeMutations, mutationData.expectedSubNodes);
+                            ParseSubMutations(mutationNode["instanceMutations"], mutationNode["expectedInstances"],
+                                              mutationData.subNodeMutations, mutationData.expectedSubNodes);
+
                             sectorData.nodeMutations.emplace_back(std::move(mutationData));
                         }
                     }
@@ -409,4 +414,143 @@ bool App::WorldStreamingConfig::ParseSubDeletions(const YAML::Node& aDeletionsNo
     }
 
     return true;
+}
+
+bool App::WorldStreamingConfig::ParseSubMutations(const YAML::Node& aMutationsNode, const YAML::Node& aCountNode,
+                                                  Core::Vector<App::WorldSubNodeMutation>& aMutations,
+                                                  int64_t& aExpectedCount)
+{
+    if (!aMutationsNode.IsDefined() || !aMutationsNode.IsSequence())
+    {
+        return false;
+    }
+
+    if (!aCountNode.IsDefined() || !aCountNode.IsScalar())
+    {
+        return false;
+    }
+
+    if (!ParseInt(aCountNode.Scalar(), aExpectedCount))
+    {
+        return false;
+    }
+
+    if (aExpectedCount <= 0)
+    {
+        return false;
+    }
+
+    for (const auto& mutationNode : aMutationsNode)
+    {
+        if (!mutationNode.IsMap())
+        {
+            continue;
+        }
+
+        WorldSubNodeMutation mutationData;
+
+        {
+            const auto& indexNode = mutationNode["index"];
+
+            if (!indexNode.IsScalar())
+            {
+                continue;
+            }
+
+            if (!ParseInt(indexNode.Scalar(), mutationData.subNodeIndex))
+            {
+                continue;
+            }
+
+            if (mutationData.subNodeIndex < 0 || mutationData.subNodeIndex >= aExpectedCount)
+            {
+                continue;
+            }
+        }
+
+        {
+            const auto& positionNode = mutationNode["position"];
+
+            if (positionNode.IsDefined())
+            {
+                if (!positionNode.IsSequence())
+                {
+                    continue;
+                }
+
+                const auto positionValues = positionNode.as<std::vector<float>>();
+
+                if (positionValues.size() != 4)
+                {
+                    continue;
+                }
+
+                mutationData.position.X = positionValues[0];
+                mutationData.position.Y = positionValues[1];
+                mutationData.position.Z = positionValues[2];
+                mutationData.position.W = positionValues[3];
+
+                mutationData.modifyPosition = true;
+            }
+        }
+
+        {
+            const auto& orientationNode = mutationNode["orientation"];
+
+            if (orientationNode.IsDefined())
+            {
+                if (!orientationNode.IsSequence())
+                {
+                    continue;
+                }
+
+                const auto orientationValues = orientationNode.as<std::vector<float>>();
+
+                if (orientationValues.size() != 4)
+                {
+                    continue;
+                }
+
+                mutationData.orientation.i = orientationValues[0];
+                mutationData.orientation.j = orientationValues[1];
+                mutationData.orientation.k = orientationValues[2];
+                mutationData.orientation.r = orientationValues[3];
+
+                mutationData.modifyOrientation = true;
+            }
+        }
+
+        {
+            const auto& scaleNode = mutationNode["scale"];
+
+            if (scaleNode.IsDefined())
+            {
+                if (!scaleNode.IsSequence())
+                {
+                    continue;
+                }
+
+                const auto scaleValues = scaleNode.as<std::vector<float>>();
+
+                if (scaleValues.size() != 3)
+                {
+                    continue;
+                }
+
+                mutationData.scale.X = scaleValues[0];
+                mutationData.scale.Y = scaleValues[1];
+                mutationData.scale.Z = scaleValues[2];
+
+                mutationData.modifyScale = true;
+            }
+        }
+
+        if (!mutationData.modifyPosition && !mutationData.modifyOrientation && !mutationData.modifyScale)
+            continue;
+
+        aMutations.push_back(mutationData);
+    }
+
+    return true;
+
 }

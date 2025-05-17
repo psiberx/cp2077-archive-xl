@@ -4,6 +4,20 @@
 
 namespace App
 {
+struct WorldSubNodeMutation
+{
+    int64_t subNodeIndex;
+
+    bool modifyPosition;
+    Red::Vector4 position;
+
+    bool modifyOrientation;
+    Red::Quaternion orientation;
+
+    bool modifyScale;
+    Red::Vector3 scale;
+};
+
 struct WorldNodeMutation
 {
     int64_t nodeIndex;
@@ -29,6 +43,9 @@ struct WorldNodeMutation
 
     bool modifyProxyNodes;
     int32_t nbNodesUnderProxyDiff;
+
+    int64_t expectedSubNodes;
+    Core::Vector<WorldSubNodeMutation> subNodeMutations;
 };
 
 struct WorldNodeDeletion
@@ -44,8 +61,8 @@ struct WorldSectorMod
     std::string mod;
     std::string path;
     int64_t expectedNodes;
-    Core::Vector<WorldNodeMutation> nodeMutations;
     Core::Vector<WorldNodeDeletion> nodeDeletions;
+    Core::Vector<WorldNodeMutation> nodeMutations;
     bool autoUpdateNodesUnderProxies;
 };
 
@@ -60,6 +77,8 @@ struct WorldStreamingConfig : ExtensionConfig
     bool ParseRecordID(const YAML::Node& aNode, Red::TweakDBID& aValue, bool& aFlag);
     bool ParseSubDeletions(const YAML::Node& aDeletionsNode, const YAML::Node& aCountNode,
                            Core::Vector<int64_t>& aDeletions, int64_t& aExpectedCount);
+    bool ParseSubMutations(const YAML::Node& aMutationsNode, const YAML::Node& aCountNode,
+                           Core::Vector<WorldSubNodeMutation>& aMutations, int64_t& aExpectedCount);
 
     Core::Vector<std::string> blocks;
     Core::Vector<WorldSectorMod> sectors;
