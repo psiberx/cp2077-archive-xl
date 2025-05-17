@@ -7,7 +7,8 @@ constexpr auto ExtensionName = "WorldStreaming";
 
 constexpr auto MainWorldResource = Red::ResourcePath(R"(base\worlds\03_night_city\_compiled\default\03_night_city.streamingworld)");
 constexpr auto CollisionNodeType = Red::GetTypeName<Red::worldCollisionNode>();
-constexpr auto InstancedMeshNodeype = Red::GetTypeName<Red::worldInstancedMeshNode>();
+constexpr auto InstancedMeshNodeType = Red::GetTypeName<Red::worldInstancedMeshNode>();
+constexpr auto InstancedDestructibleNodeType = Red::GetTypeName<Red::worldInstancedDestructibleMeshNode>();
 
 Red::Handle<Red::worldAudioTagNode> s_dummyNode;
 }
@@ -262,7 +263,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
                     continue;
                 }
             }
-            else if (nodeDeletion.nodeType == InstancedMeshNodeype)
+            else if (nodeDeletion.nodeType == InstancedMeshNodeType)
             {
                 auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
                 if (meshNode->worldTransformsBuffer.numElements != nodeDeletion.expectedSubNodes)
@@ -270,6 +271,18 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
                     LogError(R"([{}] {}: The target node #{} has {} instance(s), but the mod expects {}.)",
                              ExtensionName, aSectorMod.mod, nodeDeletion.nodeIndex,
                              meshNode->worldTransformsBuffer.numElements, nodeDeletion.expectedSubNodes);
+                    nodeValidationPassed = false;
+                    continue;
+                }
+            }
+            else if (nodeDeletion.nodeType == InstancedDestructibleNodeType)
+            {
+                auto* meshNode = Red::Cast<Red::worldInstancedDestructibleMeshNode>(nodeDefinition);
+                if (meshNode->cookedInstanceTransforms.numElements != nodeDeletion.expectedSubNodes)
+                {
+                    LogError(R"([{}] {}: The target node #{} has {} instance(s), but the mod expects {}.)",
+                             ExtensionName, aSectorMod.mod, nodeDeletion.nodeIndex,
+                             meshNode->cookedInstanceTransforms.numElements, nodeDeletion.expectedSubNodes);
                     nodeValidationPassed = false;
                     continue;
                 }
@@ -409,7 +422,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
                 continue;
             }
 
-            if (nodeDeletion.nodeType == InstancedMeshNodeype)
+            if (nodeDeletion.nodeType == InstancedMeshNodeType)
             {
                 auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
                 auto* instances = std::bit_cast<Red::WorldTransformBuffer*>(&meshNode->worldTransformsBuffer.sharedDataBuffer->buffer);
@@ -421,6 +434,19 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
                     instance->scale.X = 0;
                     instance->scale.Y = 0;
                     instance->scale.Z = 0;
+                }
+                continue;
+            }
+
+            if (nodeDeletion.nodeType == InstancedDestructibleNodeType)
+            {
+                auto* meshNode = Red::Cast<Red::worldInstancedDestructibleMeshNode>(nodeDefinition);
+                auto* instances = std::bit_cast<Red::TransformBuffer*>(&meshNode->cookedInstanceTransforms.sharedDataBuffer->buffer);
+                auto startIndex = meshNode->cookedInstanceTransforms.startIndex;
+                for (const auto& subNodeIndex : nodeDeletion.subNodeDeletions)
+                {
+                    auto* instance = instances->Get(startIndex + subNodeIndex);
+                    instance->position.Z = -2000;
                 }
                 continue;
             }

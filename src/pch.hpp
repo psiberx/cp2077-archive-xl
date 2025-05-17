@@ -137,6 +137,7 @@
 #include <RED4ext/Scripting/Natives/Generated/world/EntityNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/FoliageNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/GlobalNodeID.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/InstancedDestructibleMeshNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/InstancedMeshNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/InstancedOccluderNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/Node.hpp>

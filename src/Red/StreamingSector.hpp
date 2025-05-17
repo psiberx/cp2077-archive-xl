@@ -69,6 +69,30 @@ struct CollisionActor
     uint64_t unk20;
 };
 
+struct TransformBuffer : DataBuffer
+{
+    [[nodiscard]] inline Transform* begin() const
+    {
+        return reinterpret_cast<Transform*>(buffer.data);
+    }
+
+    [[nodiscard]] inline Transform* end() const
+    {
+        return reinterpret_cast<Transform*>(reinterpret_cast<uintptr_t>(buffer.data) + buffer.size);
+    }
+
+    [[nodiscard]] Transform* Get(int64_t aIndex) const
+    {
+        return begin() + aIndex;
+    }
+
+    uint32_t GetCount()
+    {
+        return buffer.size / sizeof(Transform);
+    }
+};
+RED4EXT_ASSERT_SIZE(TransformBuffer, 0x28);
+
 struct WorldTransformBuffer : DataBuffer
 {
     [[nodiscard]] inline worldNodeTransform* begin() const
@@ -92,6 +116,36 @@ struct WorldTransformBuffer : DataBuffer
     }
 };
 RED4EXT_ASSERT_SIZE(WorldTransformBuffer, 0x28);
+
+struct RenderProxyTransform
+{
+    WorldTransform transform;
+    Vector3 scale;
+};
+
+struct RenderProxyTransformData : DataBuffer
+{
+    [[nodiscard]] inline RenderProxyTransform* begin() const
+    {
+        return reinterpret_cast<RenderProxyTransform*>(buffer.data);
+    }
+
+    [[nodiscard]] inline RenderProxyTransform* end() const
+    {
+        return reinterpret_cast<RenderProxyTransform*>(reinterpret_cast<uintptr_t>(buffer.data) + buffer.size);
+    }
+
+    [[nodiscard]] RenderProxyTransform* Get(int64_t aIndex) const
+    {
+        return begin() + aIndex;
+    }
+
+    uint32_t GetCount()
+    {
+        return buffer.size / sizeof(RenderProxyTransform);
+    }
+};
+RED4EXT_ASSERT_SIZE(RenderProxyTransformData, 0x28);
 }
 
 namespace Raw::StreamingSector
