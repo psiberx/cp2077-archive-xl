@@ -447,7 +447,7 @@ bool App::WorldStreamingConfig::ParseSubMutations(const YAML::Node& aMutationsNo
             continue;
         }
 
-        WorldSubNodeMutation mutationData;
+        WorldSubNodeMutation mutationData{};
 
         {
             const auto& indexNode = mutationNode["index"];

@@ -10,6 +10,8 @@ constexpr auto CollisionNodeType = Red::GetTypeName<Red::worldCollisionNode>();
 constexpr auto InstancedMeshNodeType = Red::GetTypeName<Red::worldInstancedMeshNode>();
 constexpr auto InstancedDestructibleNodeType = Red::GetTypeName<Red::worldInstancedDestructibleMeshNode>();
 
+constexpr auto DelZ = static_cast<int32_t>(-2000 * (2 << 16));
+
 Red::Handle<Red::worldAudioTagNode> s_dummyNode;
 }
 
@@ -468,7 +470,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             if (nodeMutation.nodeType == InstancedMeshNodeType)
             {
                 auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
-                auto* instances = std::bit_cast<Red::WorldTransformBuffer*>(&meshNode->worldTransformsBuffer.sharedDataBuffer->buffer);
+                auto* instances = std::bit_cast<Red::RenderProxyTransformData*>(&meshNode->worldTransformsBuffer.sharedDataBuffer->buffer);
                 auto startIndex = meshNode->worldTransformsBuffer.startIndex;
                 for (const auto& subNodeMutation : nodeMutation.subNodeMutations)
                 {
@@ -476,12 +478,12 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
 
                     if (subNodeMutation.modifyPosition)
                     {
-                        instance->translation = subNodeMutation.position.AsVector3();
+                        instance->transform.Position = subNodeMutation.position;
                     }
 
                     if (subNodeMutation.modifyOrientation)
                     {
-                        instance->rotation = subNodeMutation.orientation;
+                        instance->transform.Orientation = subNodeMutation.orientation;
                     }
 
                     if (subNodeMutation.modifyScale)
@@ -528,7 +530,6 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
                 auto& actors = Raw::CollisionNode::Actors::Ref(nodeDefinition);
                 for (const auto& subNodeIndex : nodeDeletion.subNodeDeletions)
                 {
-                    constexpr auto DelZ = static_cast<int32_t>(-2000 * (2 << 16));
                     actors.beginPtr[subNodeIndex].transform.Position.z.Bits = DelZ;
                 }
                 continue;
@@ -537,12 +538,12 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             if (nodeDeletion.nodeType == InstancedMeshNodeType)
             {
                 auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
-                auto* instances = std::bit_cast<Red::WorldTransformBuffer*>(&meshNode->worldTransformsBuffer.sharedDataBuffer->buffer);
+                auto* instances = std::bit_cast<Red::RenderProxyTransformData*>(&meshNode->worldTransformsBuffer.sharedDataBuffer->buffer);
                 auto startIndex = meshNode->worldTransformsBuffer.startIndex;
                 for (const auto& subNodeIndex : nodeDeletion.subNodeDeletions)
                 {
                     auto* instance = instances->Get(startIndex + subNodeIndex);
-                    instance->translation.Z = -2000;
+                    instance->transform.Position.z.Bits = DelZ;
                     instance->scale.X = 0;
                     instance->scale.Y = 0;
                     instance->scale.Z = 0;
