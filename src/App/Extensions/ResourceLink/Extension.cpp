@@ -238,3 +238,22 @@ bool App::ResourceLinkExtension::OnDepotResourceCheck(Red::ResourceDepot* aDepot
 
     return Raw::ResourceDepot::CheckResource(aDepot, aPath);
 }
+
+Core::Set<Red::ResourcePath> App::ResourceLinkExtension::GetAliases(Red::ResourcePath aPath)
+{
+    Core::Set<Red::ResourcePath> result;
+
+    for (const auto& [from, to] : s_mappings)
+    {
+        if (from == aPath)
+        {
+            result.insert(to);
+        }
+        else if (to == aPath)
+        {
+            result.insert(from);
+        }
+    }
+
+    return result;
+}

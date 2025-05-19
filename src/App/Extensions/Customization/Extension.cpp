@@ -1,4 +1,5 @@
 #include "Extension.hpp"
+#include "App/Extensions/ResourceLink/Extension.hpp"
 #include "App/Extensions/ResourceMeta/Extension.hpp"
 #include "Red/AppearanceResource.hpp"
 #include "Red/Buffer.hpp"
@@ -682,9 +683,16 @@ void App::CustomizationExtension::FixCustomizationOptions(Red::ResourcePath aTar
                 {
                     appInfoOption->resource.path = mappedPath;
 
+                    const auto aliasPaths = ResourceLinkExtension::GetAliases(mappedPath);
+
                     for (const auto& definition : appInfoOption->definitions)
                     {
                         RegisterAppOverride(originalPath, mappedPath, definition.name);
+
+                        for (const auto& aliasPath : aliasPaths)
+                        {
+                            RegisterAppOverride(aliasPath, mappedPath, definition.name);
+                        }
                     }
                 }
             }

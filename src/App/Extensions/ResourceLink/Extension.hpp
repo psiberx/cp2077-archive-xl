@@ -15,6 +15,8 @@ public:
     bool Unload() override;
     void Configure() override;
 
+    static Core::Set<Red::ResourcePath> GetAliases(Red::ResourcePath aPath);
+
 private:
     static void OnLoaderResourceRequest(Red::ResourceLoader* aLoader, Red::SharedPtr<Red::ResourceToken<>>& aToken,
                                         Red::ResourceRequest& aRequest);
