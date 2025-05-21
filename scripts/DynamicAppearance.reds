@@ -1,6 +1,6 @@
 module ArchiveXL.DynamicAppearance
 
-func OverrideDynamicAppearanceCondition(app: String, attr: String, value: String) -> String {
+public func OverrideDynamicAppearanceCondition(app: String, attr: String, value: String) -> String {
     if !StrContains(app, "!") {
         return app;
     }
@@ -44,7 +44,7 @@ func OverrideDynamicAppearanceCondition(app: String, attr: String, value: String
     return base + "!" + dynamic;
 }
 
-func ConvertAppearanceNameToTPP(app: String) -> String {
+public func ConvertAppearanceNameToTPP(app: String) -> String {
     if !StrContains(app, "!") {
         return StrReplace(app, "&FPP", "&TPP");
     }
@@ -52,7 +52,7 @@ func ConvertAppearanceNameToTPP(app: String) -> String {
     return OverrideDynamicAppearanceCondition(app, "camera", "tpp");
 }
 
-func ConvertAppearanceNameToFPP(app: String) -> String {
+public func ConvertAppearanceNameToFPP(app: String) -> String {
     if !StrContains(app, "!") {
         return StrReplace(app, "&TPP", "&FPP");
     }
@@ -60,7 +60,7 @@ func ConvertAppearanceNameToFPP(app: String) -> String {
     return OverrideDynamicAppearanceCondition(app, "camera", "fpp");
 }
 
-func ConvertAppearanceNameToPartialSleeves(app: String) -> String {
+public func ConvertAppearanceNameToPartialSleeves(app: String) -> String {
     if !StrContains(app, "!") {
         return StrReplace(app, "&Full", "&Part");
     }
@@ -68,7 +68,7 @@ func ConvertAppearanceNameToPartialSleeves(app: String) -> String {
     return OverrideDynamicAppearanceCondition(app, "sleeves", "part");
 }
 
-func ConvertAppearanceNameToFullSleeves(app: String) -> String {
+public func ConvertAppearanceNameToFullSleeves(app: String) -> String {
     if !StrContains(app, "!") {
         return StrReplace(app, "&Part", "&Full");
     }
