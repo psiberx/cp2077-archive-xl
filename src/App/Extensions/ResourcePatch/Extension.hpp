@@ -19,6 +19,10 @@ public:
     bool Unload() override;
     void Configure() override;
 
+    static bool IsPatched(const Red::Handle<Red::meshMeshAppearance>& aAppearance);
+    static Red::CName GetExpansionName(const Red::Handle<Red::meshMeshAppearance>& aAppearance);
+    static Red::CName GetPatchSource(const Red::Handle<Red::meshMeshAppearance>& aAppearance);
+
 private:
     using DefinitionData = std::pair<Red::Handle<Red::AppearanceDefinition>, Red::SharedPtr<Red::DeferredDataBufferToken>>;
     using DefinitionMap = Core::Map<Red::CName, DefinitionData>;

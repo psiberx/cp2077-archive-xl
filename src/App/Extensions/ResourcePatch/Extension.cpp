@@ -14,6 +14,7 @@ namespace
 {
 constexpr auto ExtensionName = "ResourcePatch";
 
+constexpr auto ResourcePatchTag = Red::CName("ResourcePatch");
 constexpr auto AppearancePartsTag = Red::CName("AppearanceParts");
 
 constexpr auto EntityTemplateAppearancesProp = Red::CName("appearances");
@@ -504,6 +505,7 @@ void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, Red::Pos
                         expansionTag = patchAppearance->tags[0];
                     }
 
+                    cloneAppearance->tags.PushBack(ResourcePatchTag);
                     cloneAppearance->tags.PushBack(expansionTag);
                     cloneAppearance->tags.PushBack(sourceTag);
 
@@ -1239,4 +1241,19 @@ Red::Handle<Red::AppearanceDefinition> App::ResourcePatchExtension::GetPatchAppe
         return {};
 
     return definitionIt.value().first;
+}
+
+bool App::ResourcePatchExtension::IsPatched(const Red::Handle<Red::meshMeshAppearance>& aAppearance)
+{
+    return aAppearance->tags.size == 3 && aAppearance->tags[0] == ResourcePatchTag;
+}
+
+Red::CName App::ResourcePatchExtension::GetExpansionName(const Red::Handle<Red::meshMeshAppearance>& aAppearance)
+{
+    return aAppearance->tags.size == 3 ? aAppearance->tags[1] : "";
+}
+
+Red::CName App::ResourcePatchExtension::GetPatchSource(const Red::Handle<Red::meshMeshAppearance>& aAppearance)
+{
+    return aAppearance->tags.size == 3 ? aAppearance->tags[2] : "";
 }

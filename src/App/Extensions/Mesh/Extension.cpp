@@ -1,5 +1,6 @@
 #include "Extension.hpp"
 #include "App/Extensions/Garment/Extension.hpp"
+#include "App/Extensions/ResourcePatch/Extension.hpp"
 #include "App/Utils/Str.hpp"
 #include "Core/Facades/Container.hpp"
 
@@ -78,7 +79,7 @@ void App::MeshExtension::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& 
 
     if (aAppearance->chunkMaterials.size == 0)
     {
-        auto expansionName = aAppearance->tags.size >= 1 ? aAppearance->tags[0] : "";
+        auto expansionName = ResourcePatchExtension::GetExpansionName(aAppearance);
         auto expansionIndex = meshState->GetExpansionIndex(expansionName);
         auto expansionAppearance = aMesh->appearances[expansionIndex];
 
@@ -121,9 +122,12 @@ void App::MeshExtension::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& 
         }
     }
 
-    if (aAppearance->chunkMaterials.size > 0 && aAppearance->tags.size == 2)
+    if (aAppearance->chunkMaterials.size > 0 && ResourcePatchExtension::IsPatched(aAppearance))
     {
-        aAppearance->chunkMaterials.PushBack(aAppearance->tags[1]);
+        if (auto sourceTag = ResourcePatchExtension::GetPatchSource(aAppearance))
+        {
+            aAppearance->chunkMaterials.PushBack(sourceTag);
+        }
         aAppearance->tags.Clear();
     }
 }
