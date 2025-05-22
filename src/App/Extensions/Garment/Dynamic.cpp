@@ -639,7 +639,7 @@ bool App::DynamicAppearanceController::IsDynamicValue(const std::string_view& aV
 
 bool App::DynamicAppearanceController::IsDynamicValue(const Red::StringView& aValue) const
 {
-    return aValue.size > 0 && IsDynamicValue(aValue.data);
+    return aValue && IsDynamicValue(aValue.Data());
 }
 
 bool App::DynamicAppearanceController::IsDynamicValue(Red::CName aValue) const

@@ -46,10 +46,10 @@ void App::ResourcePathRegistry::OnBootstrap()
 
 void App::ResourcePathRegistry::OnCreatePath(Red::ResourcePath* aPath, Red::StringView* aPathStr)
 {
-    if (aPathStr)
+    if (aPathStr && *aPathStr)
     {
         std::scoped_lock _(s_instance->m_lock);
-        s_instance->m_map[*aPath] = {aPathStr->data, aPathStr->size};
+        s_instance->m_map[*aPath] = {aPathStr->Data(), aPathStr->Length()};
     }
 }
 
