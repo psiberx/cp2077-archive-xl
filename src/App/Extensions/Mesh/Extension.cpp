@@ -68,7 +68,13 @@ void App::MeshExtension::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& 
     }
 
     if (!aAppearance->name || aMesh->appearances.size == 0)
+    {
+        auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aMesh->path);
+
+        LogWarning(R"([{}] Mesh "{}" has no appearances and will crash the game when used.)",
+                   ExtensionName, meshPathStr);
         return;
+    }
 
     if (aAppearance->chunkMaterials.size > 0 && aAppearance->tags.size == 0)
         return;
