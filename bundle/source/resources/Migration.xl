@@ -1,5 +1,7 @@
 resource:
   link:
+    archive_xl\characters\common\hair\h1_base_color_patch.mesh:
+      - archive_xl\characters\common\hair\base_color_patch.mesh
     archive_xl\characters\head\player_base_heads\appearances\head\hel_000_pma__basehead.app:
       - archive_xl\characters\head\player_base_heads\appearances\head\hel_pma_lashes.app
     archive_xl\characters\head\player_base_heads\appearances\head\hel_000_pwa__basehead.app:
