@@ -88,13 +88,13 @@
               {
                 "$type": "CName",
                 "$storage": "string",
-                "$value": "ring_orange_eye"
+                "$value": "ring_orangee@eyes"
               }
             ],
             "name": {
               "$type": "CName",
               "$storage": "string",
-              "$value": "ring_orange@eyes"
+              "$value": "ring_orange"
             },
             "tags": []
           }
