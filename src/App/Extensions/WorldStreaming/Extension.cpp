@@ -233,6 +233,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
                      nodeDefinition->GetNativeType()->name.ToString(),
                      nodeMutation.nodeType.ToString());
             nodeValidationPassed = false;
+            continue;
         }
 
         if (!nodeMutation.subNodeMutations.empty())
