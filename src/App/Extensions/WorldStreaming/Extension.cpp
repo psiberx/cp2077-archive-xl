@@ -471,7 +471,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             if (nodeMutation.nodeType == InstancedMeshNodeType)
             {
                 auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
-                auto* instances = std::bit_cast<Red::RenderProxyTransformData*>(&meshNode->worldTransformsBuffer.sharedDataBuffer->buffer);
+                auto* instances = std::bit_cast<Red::RenderProxyTransformData*>(&meshNode->worldTransformsBuffer.sharedDataBuffer->buffer.buffer.data);
                 auto startIndex = meshNode->worldTransformsBuffer.startIndex;
                 for (const auto& subNodeMutation : nodeMutation.subNodeMutations)
                 {
@@ -498,21 +498,25 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             if (nodeMutation.nodeType == InstancedDestructibleNodeType)
             {
                 auto* meshNode = Red::Cast<Red::worldInstancedDestructibleMeshNode>(nodeDefinition);
-                auto* instances = std::bit_cast<Red::TransformBuffer*>(&meshNode->cookedInstanceTransforms.sharedDataBuffer->buffer);
+                auto* instances = std::bit_cast<Red::TransformBuffer*>(&meshNode->cookedInstanceTransforms.sharedDataBuffer->buffer.buffer.data);
                 auto startIndex = meshNode->cookedInstanceTransforms.startIndex;
+                auto inverseTransform = nodeSetup->transform.Inverse();
                 for (const auto& subNodeMutation : nodeMutation.subNodeMutations)
                 {
                     auto* instance = instances->Get(startIndex + subNodeMutation.subNodeIndex);
+                    auto newTransform = nodeSetup->transform;
 
                     if (subNodeMutation.modifyPosition)
                     {
-                        instance->position = subNodeMutation.position;
+                        newTransform.position = subNodeMutation.position;
                     }
 
                     if (subNodeMutation.modifyOrientation)
                     {
-                        instance->orientation = subNodeMutation.orientation;
+                        newTransform.orientation = subNodeMutation.orientation;
                     }
+
+                    *instance = newTransform * inverseTransform;
                 }
                 continue;
             }
@@ -539,7 +543,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             if (nodeDeletion.nodeType == InstancedMeshNodeType)
             {
                 auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
-                auto* instances = std::bit_cast<Red::RenderProxyTransformData*>(&meshNode->worldTransformsBuffer.sharedDataBuffer->buffer);
+                auto* instances = std::bit_cast<Red::RenderProxyTransformData*>(&meshNode->worldTransformsBuffer.sharedDataBuffer->buffer.buffer.data);
                 auto startIndex = meshNode->worldTransformsBuffer.startIndex;
                 for (const auto& subNodeIndex : nodeDeletion.subNodeDeletions)
                 {
@@ -555,7 +559,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             if (nodeDeletion.nodeType == InstancedDestructibleNodeType)
             {
                 auto* meshNode = Red::Cast<Red::worldInstancedDestructibleMeshNode>(nodeDefinition);
-                auto* instances = std::bit_cast<Red::TransformBuffer*>(&meshNode->cookedInstanceTransforms.sharedDataBuffer->buffer);
+                auto* instances = std::bit_cast<Red::TransformBuffer*>(&meshNode->cookedInstanceTransforms.sharedDataBuffer->buffer.buffer.data);
                 auto startIndex = meshNode->cookedInstanceTransforms.startIndex;
                 for (const auto& subNodeIndex : nodeDeletion.subNodeDeletions)
                 {
