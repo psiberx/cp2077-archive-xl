@@ -96,7 +96,7 @@ private:
     static void FinalizeDynamicMaterial(const Core::SharedPtr<DynamicContext>& aContext,
                                         const Core::SharedPtr<ChunkData>& aChunk,
                                         Red::JobQueue& aJobQueue);
-    static void FixFinalMaterialsIndexes(const Core::SharedPtr<DynamicContext>& aContext);
+    static void FillFinalMaterials(const Core::SharedPtr<DynamicContext>& aContext);
     static Red::Handle<Red::CMaterialInstance> CloneMaterialInstance(
         const Core::SharedPtr<DynamicContext>& aContext, const Core::SharedPtr<ChunkData>& aChunk,
         const Red::Handle<Red::CMaterialInstance>& aSourceInstance, Red::JobQueue& aJobQueue);
@@ -119,6 +119,7 @@ private:
     inline static Red::Handle<Red::CMesh> s_dummyMesh;
     inline static Red::Handle<Red::meshMeshAppearance> s_dummyAppearance;
     inline static Red::Handle<Red::CMaterialInstance> s_dummyMaterial;
+    inline static Red::Handle<Red::CMaterialInstance> s_tempMaterial;
     inline static Red::SharedSpinLock s_stateLock;
     inline static Core::SharedPtr<ResourcePathRegistry> s_resourcePathRegistry;
 };

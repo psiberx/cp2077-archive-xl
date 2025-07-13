@@ -31,6 +31,7 @@ bool App::MeshExtension::Load()
     s_dummyMesh = Red::MakeHandle<Red::CMesh>();
     s_dummyAppearance = Red::MakeHandle<Red::meshMeshAppearance>();
     s_dummyMaterial = Red::MakeHandle<Red::CMaterialInstance>();
+    s_tempMaterial = Red::MakeHandle<Red::CMaterialInstance>();
 
     Raw::MeshAppearance::Owner::Set(s_dummyAppearance.instance, s_dummyMesh);
     Red::CNamePool::Add("@material");
@@ -130,10 +131,27 @@ void App::MeshExtension::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& 
 
     if (aAppearance->chunkMaterials.size > 0 && ResourcePatchExtension::IsPatched(aAppearance))
     {
+        for (const auto chunkName : aAppearance->chunkMaterials)
+        {
+            if (!meshState->HasMaterialEntry(chunkName))
+            {
+                auto materialIndex = static_cast<int32_t>(aMesh->materialEntries.size);
+                meshState->materials[chunkName] = materialIndex;
+                aMesh->materialEntries.EmplaceBack();
+
+                auto& materialEntry = aMesh->materialEntries.Back();
+                materialEntry.name = chunkName;
+                materialEntry.isLocalInstance = true;
+                materialEntry.material = s_tempMaterial;
+                materialEntry.materialWeak = s_tempMaterial;
+            }
+        }
+
         if (auto sourceTag = ResourcePatchExtension::GetPatchSource(aAppearance))
         {
             aAppearance->chunkMaterials.PushBack(sourceTag);
         }
+
         aAppearance->tags.Clear();
     }
 }
@@ -257,22 +275,26 @@ void App::MeshExtension::ProcessDynamicMaterials(const Core::SharedPtr<DynamicCo
     for (int32_t chunkIndex = 0; chunkIndex < aContext->materialNames.size; ++chunkIndex)
     {
         const auto& chunkName = aContext->materialNames[chunkIndex];
+        const auto materialIndex = aContext->targetState->GetMaterialEntryIndex(chunkName);
 
-        if (aContext->targetState->HasMaterialEntry(chunkName))
+        if (materialIndex < 0)
+        {
+            const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
+
+            LogError(R"([{}] Material "{}" of "{}" is not defined and cannot be dynamically instantiated, material entry not found.)",
+                    ExtensionName, chunkName.ToString(), meshPathStr);
+            continue;
+        }
+
+        if (aContext->targetMesh->materialEntries[materialIndex].material != s_tempMaterial)
             continue;
 
         if (chunkName.hash == aContext->sourceMesh->path.hash)
         {
-            auto materialIndex = static_cast<int32_t>(aContext->targetMesh->materialEntries.size);
-            aContext->targetState->materials[chunkName] = materialIndex;
-            aContext->targetMesh->materialEntries.EmplaceBack();
+            const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
 
-            auto& materialEntry = aContext->targetMesh->materialEntries.Back();
-            materialEntry.name = chunkName;
-            materialEntry.isLocalInstance = true;
-            materialEntry.material = s_dummyMaterial;
-            materialEntry.materialWeak = s_dummyMaterial;
-
+            LogWarning(R"([{}] Unexpected behavior while instantiating materials for "{}": source mesh doesn't have material stub.)",
+                    ExtensionName, meshPathStr);
             continue;
         }
 
@@ -403,76 +425,72 @@ void App::MeshExtension::ProcessDynamicMaterials(const Core::SharedPtr<DynamicCo
         FinalizeDynamicMaterial(aContext, chunk, jobQueue);
     }
 
-    if (aContext->deferredMaterials.empty())
+    if (!aContext->deferredMaterials.empty())
     {
-        FixFinalMaterialsIndexes(aContext);
-        return;
-    }
-
-    for (auto& chunk : aContext->deferredMaterials)
-    {
-        jobQueue.Wait(chunk->sourceToken->job);
-    }
-
-    jobQueue.Dispatch([aContext](const Red::JobGroup& aJobGroup) {
-        std::scoped_lock _(aContext->targetState->meshMutex, aContext->sourceState->sourceMutex);
-
-        Red::JobQueue jobQueue(aJobGroup);
-
         for (auto& chunk : aContext->deferredMaterials)
         {
-            if (chunk->sourceToken->IsFailed())
-            {
-                const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
-
-                if (chunk->sourceToken->path)
-                {
-                    const auto externalPathStr = s_resourcePathRegistry->ResolvePathOrHash(chunk->sourceToken->path);
-
-                    LogError(R"([{}] Source material "{}" of "{}" failed to load: invalid external path "{}".)",
-                             ExtensionName, chunk->templateName.ToString(), sourcePathStr, externalPathStr);
-                }
-                else
-                {
-                    LogError(R"([{}] Source material "{}" of "{}" failed to load: cannot read from buffer.)",
-                             ExtensionName, chunk->templateName.ToString(), sourcePathStr);
-                }
-                continue;
-            }
-
-            chunk->sourceInstance = Red::Cast<Red::CMaterialInstance>(chunk->sourceToken->resource);
-
-            if (!chunk->sourceInstance)
-            {
-                const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
-
-                LogError(R"([{}] Source material "{}" of "{}" must be instance of {}, got {}.)", ExtensionName,
-                         chunk->templateName.ToString(), sourcePathStr, Red::CMaterialInstance::NAME,
-                         chunk->sourceToken->resource->GetType()->name.ToString());
-                continue;
-            }
-
-            auto& sourceEntry = aContext->sourceMesh->materialEntries[chunk->sourceIndex];
-            sourceEntry.material = chunk->sourceInstance;
-            sourceEntry.materialWeak = chunk->sourceInstance;
-
-            FinalizeDynamicMaterial(aContext, chunk, jobQueue);
+            jobQueue.Wait(chunk->sourceToken->job);
         }
 
-        FixFinalMaterialsIndexes(aContext);
+        jobQueue.Dispatch([aContext](const Red::JobGroup& aJobGroup) {
+            std::scoped_lock _(aContext->targetState->meshMutex, aContext->sourceState->sourceMutex);
+
+            Red::JobQueue jobQueue(aJobGroup);
+
+            for (auto& chunk : aContext->deferredMaterials)
+            {
+                if (chunk->sourceToken->IsFailed())
+                {
+                    const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
+
+                    if (chunk->sourceToken->path)
+                    {
+                        const auto externalPathStr = s_resourcePathRegistry->ResolvePathOrHash(chunk->sourceToken->path);
+
+                        LogError(R"([{}] Source material "{}" of "{}" failed to load: invalid external path "{}".)",
+                                 ExtensionName, chunk->templateName.ToString(), sourcePathStr, externalPathStr);
+                    }
+                    else
+                    {
+                        LogError(R"([{}] Source material "{}" of "{}" failed to load: cannot read from buffer.)",
+                                 ExtensionName, chunk->templateName.ToString(), sourcePathStr);
+                    }
+                    continue;
+                }
+
+                chunk->sourceInstance = Red::Cast<Red::CMaterialInstance>(chunk->sourceToken->resource);
+
+                if (!chunk->sourceInstance)
+                {
+                    const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
+
+                    LogError(R"([{}] Source material "{}" of "{}" must be instance of {}, got {}.)", ExtensionName,
+                             chunk->templateName.ToString(), sourcePathStr, Red::CMaterialInstance::NAME,
+                             chunk->sourceToken->resource->GetType()->name.ToString());
+                    continue;
+                }
+
+                auto& sourceEntry = aContext->sourceMesh->materialEntries[chunk->sourceIndex];
+                sourceEntry.material = chunk->sourceInstance;
+                sourceEntry.materialWeak = chunk->sourceInstance;
+
+                FinalizeDynamicMaterial(aContext, chunk, jobQueue);
+            }
+        });
+    }
+
+    jobQueue.Dispatch([aContext]() {
+        std::scoped_lock _(aContext->targetState->meshMutex, aContext->sourceState->sourceMutex);
+
+        FillFinalMaterials(aContext);
     });
 }
 
 void App::MeshExtension::FinalizeDynamicMaterial(const Core::SharedPtr<DynamicContext>& aContext,
                                                  const Core::SharedPtr<ChunkData>& aChunk, Red::JobQueue& aJobQueue)
 {
-    auto materialIndex = static_cast<int32_t>(aContext->targetMesh->materialEntries.size);
-    aContext->targetState->materials[aChunk->chunkName] = materialIndex;
-    aContext->targetMesh->materialEntries.EmplaceBack();
-
-    auto& materialEntry = aContext->targetMesh->materialEntries.Back();
-    materialEntry.name = aChunk->chunkName;
-    materialEntry.isLocalInstance = true;
+    auto materialIndex = aContext->targetState->GetMaterialEntryIndex(aChunk->chunkName);
+    auto& materialEntry = aContext->targetMesh->materialEntries[materialIndex];
 
     if (aChunk->materialName == aChunk->templateName)
     {
@@ -858,7 +876,7 @@ std::pair<Red::ResourcePath, bool> App::MeshExtension::ExpandResourcePath(Red::R
     return {finalPath, result.optional};
 }
 
-void App::MeshExtension::FixFinalMaterialsIndexes(const Core::SharedPtr<DynamicContext>& aContext)
+void App::MeshExtension::FillFinalMaterials(const Core::SharedPtr<DynamicContext>& aContext)
 {
     for (int32_t chunkIndex = 0; chunkIndex < aContext->materialNames.size; ++chunkIndex)
     {
@@ -877,7 +895,8 @@ void App::MeshExtension::FixFinalMaterialsIndexes(const Core::SharedPtr<DynamicC
 
 bool App::MeshExtension::ContainsUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials)
 {
-    return std::ranges::any_of(aMaterials, [](const auto& aMaterial) { return !aMaterial; });
+    return std::ranges::any_of(aMaterials,
+                               [](const auto& aMaterial) { return !aMaterial || aMaterial == s_tempMaterial; });
 }
 
 bool App::MeshExtension::IsSpecialMaterial(Red::CName aMaterialName)
