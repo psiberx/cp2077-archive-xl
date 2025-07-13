@@ -11,7 +11,7 @@ resource:
     base\characters\head\player_base_heads\player_female_average\h0_000_pwa_c__basehead\he_000_pwa_c__basehead.mesh:
       context:
         LashesBaseMaterial: archive_xl\characters\common\eyes\hel_pwa.mi
-        AppearanceExpansionSource: blonde_platinum
+        AppearanceExpansionSource: eyelashes__blonde_platinum
       names: &MaterialFix
         eyelashes__black_carbon: black_carbon@lashes
         eyelashes__black_salt_n_pepper: black_salt_n_pepper@lashes
@@ -51,5 +51,5 @@ resource:
     base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\he_000_pma_c__basehead.mesh:
       context:
         LashesBaseMaterial: archive_xl\characters\common\eyes\hel_pma.mi
-        AppearanceExpansionSource: blonde_platinum
+        AppearanceExpansionSource: eyelashes__blonde_platinum
       names: *MaterialFix

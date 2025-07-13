@@ -77,8 +77,8 @@ void App::MeshExtension::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& 
         return;
     }
 
-    if (aAppearance->chunkMaterials.size > 0 && aAppearance->tags.size == 0)
-        return;
+    // if (aAppearance->chunkMaterials.size > 0 && aAppearance->tags.size == 0)
+    //     return;
 
     auto meshState = AcquireMeshState(aMesh);
 
@@ -296,6 +296,11 @@ void App::MeshExtension::ProcessDynamicMaterials(const Core::SharedPtr<DynamicCo
                 materialEntry.material = s_dummyMaterial;
                 materialEntry.materialWeak = s_dummyMaterial;
 
+                const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
+                const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
+
+                LogWarning(R"([{}] Unexpected behavior when instantiating materials for "{}": source mesh "{}" didn't have material stub.)",
+                           ExtensionName, meshPathStr, sourcePathStr);
                 continue;
             }
 
@@ -308,6 +313,15 @@ void App::MeshExtension::ProcessDynamicMaterials(const Core::SharedPtr<DynamicCo
 
         if (aContext->targetMesh->materialEntries[materialIndex].material != s_tempMaterial)
             continue;
+
+        if (chunkName.hash == aContext->sourceMesh->path.hash)
+        {
+            auto& materialEntry = aContext->targetMesh->materialEntries[materialIndex];
+            materialEntry.material = s_dummyMaterial;
+            materialEntry.materialWeak = s_dummyMaterial;
+
+            continue;
+        }
 
         // if (aContext->sourceState == aContext->targetState)
         // {
@@ -353,10 +367,11 @@ void App::MeshExtension::ProcessDynamicMaterials(const Core::SharedPtr<DynamicCo
 
             if (chunk->sourceIndex < 0)
             {
+                const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
                 const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
 
-                LogError(R"([{}] Material "{}" of "{}" is not defined and cannot be dynamically instantiated, material template "{}" doesn't exist.)",
-                         ExtensionName, chunkName.ToString(), sourcePathStr, chunk->templateName.ToString());
+                LogError(R"([{}] Material "{}" of "{}" is not defined and cannot be dynamically instantiated for "{}", material template "{}" doesn't exist.)",
+                         ExtensionName, chunkName.ToString(), sourcePathStr, meshPathStr, chunk->templateName.ToString());
                 continue;
             }
         }
