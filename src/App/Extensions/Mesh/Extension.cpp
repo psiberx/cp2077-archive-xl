@@ -131,6 +131,16 @@ void App::MeshExtension::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& 
 
     if (aAppearance->chunkMaterials.size > 0)
     {
+        if (ResourcePatchExtension::IsPatched(aAppearance))
+        {
+            if (auto sourceTag = ResourcePatchExtension::GetPatchSource(aAppearance))
+            {
+                aAppearance->chunkMaterials.PushBack(sourceTag);
+            }
+
+            aAppearance->tags.Clear();
+        }
+
         meshState->FillMaterials(aMesh);
 
         for (const auto chunkName : aAppearance->chunkMaterials)
@@ -147,16 +157,6 @@ void App::MeshExtension::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& 
                 materialEntry.material = s_tempMaterial;
                 materialEntry.materialWeak = s_tempMaterial;
             }
-        }
-
-        if (ResourcePatchExtension::IsPatched(aAppearance))
-        {
-            if (auto sourceTag = ResourcePatchExtension::GetPatchSource(aAppearance))
-            {
-                aAppearance->chunkMaterials.PushBack(sourceTag);
-            }
-
-            aAppearance->tags.Clear();
         }
     }
 }
@@ -345,7 +345,7 @@ void App::MeshExtension::ProcessDynamicMaterials(const Core::SharedPtr<DynamicCo
         chunk->templateName = chunkName;
         chunk->sourceIndex = aContext->sourceState->GetMaterialEntryIndex(chunkName);
 
-        if (chunk->sourceIndex < 0)
+        if (chunk->sourceIndex < 0 || aContext->sourceMesh->materialEntries[chunk->sourceIndex].material == s_tempMaterial)
         {
             auto chunkMaterialNameStr = std::string_view(chunkName.ToString());
             auto templateNamePos = chunkMaterialNameStr.find(SpecialMaterialMarker);
