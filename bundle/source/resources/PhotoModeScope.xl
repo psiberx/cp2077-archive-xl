@@ -1,37 +1,64 @@
 resource:
   scope:
     photomode_wa.ent:
-      - base\characters\entities\player\photo_mode\player_wa_photomode.ent
       - base\characters\entities\player\photo_mode\alt_cunningham\alt_photomode.ent
       - base\characters\entities\player\photo_mode\blue_moon\bmuc_photomode.ent
+      - base\characters\entities\player\photo_mode\cheri_nowlin\cheri_photomode.ent
+      - base\characters\entities\player\photo_mode\claire\claire_photomode.ent
+      - base\characters\entities\player\photo_mode\dakota_smith\dakota_photomode.ent
       - base\characters\entities\player\photo_mode\evelyn_parker\evelyn_photomode.ent
       - base\characters\entities\player\photo_mode\hanako_arasaka\hanako_photomode.ent
       - base\characters\entities\player\photo_mode\judy_alvarez\judy_photomode.ent
+      - base\characters\entities\player\photo_mode\lana_prince\lana_photomode.ent
       - base\characters\entities\player\photo_mode\lizzy_wizzy\lizzy_photomode.ent
       - base\characters\entities\player\photo_mode\meredith_stout\meredith_photomode.ent
+      - base\characters\entities\player\photo_mode\misty\misty_photomode.ent
       - base\characters\entities\player\photo_mode\panam_palmer\panam_photomode.ent
+      - base\characters\entities\player\photo_mode\player_wa_photomode.ent
       - base\characters\entities\player\photo_mode\purple_force\pfuc_photomode.ent
+      - base\characters\entities\player\photo_mode\rachel_casich\rachel_photomode.ent
       - base\characters\entities\player\photo_mode\red_menace\rmuc_photomode.ent
+      - base\characters\entities\player\photo_mode\regina_jones\regina_photomode.ent
+      - base\characters\entities\player\photo_mode\rita_wheeler\rita_photomode.ent
       - base\characters\entities\player\photo_mode\rogue_amendiares\old_rogue_photomode.ent
       - base\characters\entities\player\photo_mode\rogue_amendiares\young_rogue_photomode.ent
+      - base\characters\entities\player\photo_mode\wakako_okada\wakako_photomode.ent
+      - ep1\characters\entities\player\photo_mode\alex\alex_photomode.ent
+      - ep1\characters\entities\player\photo_mode\aurore_cassel\aurore_photomode.ent
+      - ep1\characters\entities\player\photo_mode\lina_malina\lina_photomode.ent
       - ep1\characters\entities\player\photo_mode\myers\myers_photomode.ent
       - ep1\characters\entities\player\photo_mode\player_wa_photomode_ep1.ent
       - ep1\characters\entities\player\photo_mode\songbird\songbird_photomode.ent
+      - ep1\characters\entities\player\photo_mode\stella_ramos\stella_photomode.ent
     photomode_ma.ent:
-      - base\characters\entities\player\photo_mode\player_ma_photomode.ent
-      - base\characters\entities\player\photo_mode\johnny_photomode.ent
       - base\characters\entities\player\photo_mode\altjohnny_silverhand\altjohnny_photomode.ent
+      - base\characters\entities\player\photo_mode\dexter_deshawn\dexter_photomode.ent
+      - base\characters\entities\player\photo_mode\dino_dinovic\dino_photomode.ent
+      - base\characters\entities\player\photo_mode\dumdum\dumdum_photomode.ent
+      - base\characters\entities\player\photo_mode\gerald_winkler\garry_photomode.ent
       - base\characters\entities\player\photo_mode\goro_takemura\goro_photomode.ent
+      - base\characters\entities\player\photo_mode\johnny_photomode.ent
       - base\characters\entities\player\photo_mode\johnny_silverhand\johnny_photomode_entity.ent
       - base\characters\entities\player\photo_mode\kerry_eurodyne\kerry_photomode.ent
+      - base\characters\entities\player\photo_mode\muamar_reyes\muamar_photomode.ent
+      - base\characters\entities\player\photo_mode\player_ma_photomode.ent
+      - base\characters\entities\player\photo_mode\sebastian_ibarra\sebastian_photomode.ent
       - base\characters\entities\player\photo_mode\viktor_vektor\viktor_photomode.ent
+      - ep1\characters\entities\player\photo_mode\aymeric_cassel\aymeric_photomode.ent
+      - ep1\characters\entities\player\photo_mode\dante_caruso\dante_photomode.ent
       - ep1\characters\entities\player\photo_mode\player_ma_photomode_ep1.ent
+      - ep1\characters\entities\player\photo_mode\wade_bleecker\wade_photomode.ent
     photomode_mb.ent:
       - base\characters\entities\player\photo_mode\jackie_welles\jackie_photomode.ent
+      - base\characters\entities\player\photo_mode\jesse_johnson\jesse_photomode.ent
+      - base\characters\entities\player\photo_mode\ozob\ozob_photomode.ent
       - base\characters\entities\player\photo_mode\river_ward\river_photomode.ent
+      - base\characters\entities\player\photo_mode\royce\royce_photomode.ent
       - ep1\characters\entities\player\photo_mode\kurt\kurt_photomode.ent
       - ep1\characters\entities\player\photo_mode\solomon_reed\reed_photomode.ent
     photomode_mm.ent:
       - base\characters\entities\player\photo_mode\adam_smasher\adam_smasher.ent
     photomode_cat.ent:
       - base\quest\minor_quests\mq000\characters\nibbles.ent
+    photomode_iguana.ent:
+      - base\characters\entities\player\photo_mode\iguana\iguana_photomode.ent
