@@ -33,6 +33,7 @@ constexpr auto ArmsStateAttr = Red::CName("arms");
 constexpr auto FeetStateAttr = Red::CName("feet");
 constexpr auto InnerSleevesAttr = Red::CName("sleeves");
 constexpr auto SkinColorAttr = Red::CName("skin_color");
+constexpr auto HairTypeAttr = Red::CName("hair_type");
 constexpr auto HairColorAttr = Red::CName("hair_color");
 constexpr auto EyesColorAttr = Red::CName("eyes_color");
 constexpr auto VariantAttr = Red::CName("variant");
@@ -43,6 +44,7 @@ constexpr auto BodyTypeSuffix = App::PuppetStateExtension::BodyTypeSuffixID;
 constexpr auto ArmsStateSuffix = App::PuppetStateExtension::ArmsStateSuffixID;
 constexpr auto FeetStateSuffix = App::PuppetStateExtension::FeetStateSuffixID;
 constexpr auto InnerSleevesSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.Partial");
+constexpr auto HairTypeSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.HairType");
 
 constexpr auto MaleAttrValue = "m";
 constexpr auto FemaleAttrValue = "w";
@@ -517,6 +519,7 @@ void App::DynamicAppearanceController::UpdateState(Red::Entity* aEntity, Red::Tw
     state.values[ArmsStateAttr] = GetSuffixData(aEntity, ArmsStateSuffix, aEquippedItemID);
     state.values[FeetStateAttr] = GetSuffixData(aEntity, FeetStateSuffix, aEquippedItemID);
     state.values[InnerSleevesAttr] = GetSuffixData(aEntity, InnerSleevesSuffix, aEquippedItemID);
+    state.values[HairTypeAttr] = GetSuffixData(aEntity, HairTypeSuffix, aEquippedItemID);
 
     auto custimizationData = GetCustomizationData(aEntity);
     state.values[SkinColorAttr] = {custimizationData.skinColor};
