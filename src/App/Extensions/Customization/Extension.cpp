@@ -364,6 +364,20 @@ void App::CustomizationExtension::MergeCustomOptions(Red::DynArray<Customization
                 continue;
         }
 
+        std::string_view sourceSlotStr = sourceOption->uiSlot.ToString();
+        const bool isWildcardSlot = aSlotsAndLinks && sourceSlotStr.ends_with('*');
+        if (isWildcardSlot)
+        {
+            sourceSlotStr.remove_suffix(1);
+        }
+
+        std::string_view sourceLinkStr = sourceOption->link.ToString();
+        const bool isWildcardLink = aSlotsAndLinks && sourceSlotStr.ends_with('*');
+        if (isWildcardLink)
+        {
+            sourceLinkStr.remove_suffix(1);
+        }
+
         bool isExistingOption = false;
 
         for (auto& targetOption : aTargetOptions)
@@ -372,14 +386,30 @@ void App::CustomizationExtension::MergeCustomOptions(Red::DynArray<Customization
             {
                 if (sourceOption->uiSlot)
                 {
-                    if (targetOption->uiSlot != sourceOption->uiSlot)
-                        continue;
+                    if (isWildcardSlot)
+                    {
+                        if (!std::string_view(targetOption->uiSlot.ToString()).starts_with(sourceSlotStr))
+                            continue;
+                    }
+                    else
+                    {
+                        if (targetOption->uiSlot != sourceOption->uiSlot)
+                            continue;
+                    }
                 }
 
                 if (sourceOption->link)
                 {
-                    if (targetOption->link != sourceOption->link)
-                        continue;
+                    if (isWildcardLink)
+                    {
+                        if (!std::string_view(targetOption->link.ToString()).starts_with(sourceLinkStr))
+                            continue;
+                    }
+                    else
+                    {
+                        if (targetOption->link != sourceOption->link)
+                            continue;
+                    }
                 }
             }
             else
@@ -421,6 +451,12 @@ void App::CustomizationExtension::MergeCustomOptions(Red::DynArray<Customization
             {
                 auto& targetAppOption = reinterpret_cast<CustomizationAppearance&>(targetOption);
                 auto& sourceAppOption = reinterpret_cast<const CustomizationAppearance&>(sourceOption);
+
+                if (isWildcardSlot || isWildcardLink)
+                {
+                    if (!targetAppOption->resource.path || !targetAppOption->definitions.size)
+                        continue;
+                }
 
                 for (const auto& sourceChoice : sourceAppOption->definitions)
                 {
