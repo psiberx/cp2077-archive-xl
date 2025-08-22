@@ -1,6 +1,7 @@
 #include "Dynamic.hpp"
 #include "App/Extensions/Garment/Wrapper.hpp"
 #include "App/Extensions/PuppetState/Extension.hpp"
+#include "App/Extensions/ResourceLink/Extension.hpp"
 #include "App/Utils/Num.hpp"
 #include "App/Utils/Str.hpp"
 #include "Red/AppearanceChanger.hpp"
@@ -386,6 +387,8 @@ Red::ResourcePath App::DynamicAppearanceController::ResolvePath(Red::Entity* aEn
 
     Red::ResourcePath resultPath = result.value.data();
 
+    m_pathRegistry->RegisterPath(resultPath, result.value);
+
     if (!Red::ResourceDepot::Get()->ResourceExists(resultPath))
     {
         Core::Vector<Red::CName> fallbackAttrs;
@@ -420,7 +423,9 @@ Red::ResourcePath App::DynamicAppearanceController::ResolvePath(Red::Entity* aEn
                     auto fallbackPath = fallback.value.data();
                     if (Red::ResourceDepot::Get()->ResourceExists(fallbackPath))
                     {
-                        // TODO: Register link
+                        m_pathRegistry->RegisterPath(fallbackPath, fallback.value);
+
+                        ResourceLinkExtension::RegisterLink(resultPath, fallbackPath);
 
                         result = fallback;
                         resultPath = fallbackPath;
@@ -430,8 +435,6 @@ Red::ResourcePath App::DynamicAppearanceController::ResolvePath(Red::Entity* aEn
             }
         }
     }
-
-    m_pathRegistry->RegisterPath(resultPath, result.value);
 
     return resultPath;
 }

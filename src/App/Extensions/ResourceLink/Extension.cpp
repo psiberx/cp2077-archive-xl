@@ -33,6 +33,8 @@ bool App::ResourceLinkExtension::Unload()
 
 void App::ResourceLinkExtension::Configure()
 {
+    std::scoped_lock _(s_linksLock, s_copiesLock, s_mappingsLock);
+
     s_mappings.clear();
     s_copies.clear();
     s_links.clear();
@@ -60,7 +62,7 @@ void App::ResourceLinkExtension::Configure()
                     continue;
                 }
 
-                if (depot->ResourceExists(copyPath))
+                if (Raw::ResourceDepot::CheckResource(depot, copyPath))
                 {
                     if (!invalidPaths.contains(copyPath))
                     {
@@ -94,7 +96,7 @@ void App::ResourceLinkExtension::Configure()
                     continue;
                 }
 
-                if (depot->ResourceExists(linkPath) || finalCopies.contains(linkPath))
+                if (Raw::ResourceDepot::CheckResource(depot, linkPath) || finalCopies.contains(linkPath))
                 {
                     if (!invalidPaths.contains(linkPath))
                     {
@@ -172,7 +174,7 @@ void App::ResourceLinkExtension::Configure()
         const auto& linkPath = link->first;
         const auto& targetPath = link->second;
 
-        if (!depot->ResourceExists(targetPath) && !finalCopies.contains(targetPath))
+        if (!Raw::ResourceDepot::CheckResource(depot, targetPath) && !finalCopies.contains(targetPath))
         {
             if (!invalidPaths.contains(targetPath))
             {
@@ -207,6 +209,7 @@ void App::ResourceLinkExtension::OnLoaderResourceRequest(Red::ResourceLoader* aL
                                                          Red::SharedPtr<Red::ResourceToken<>>& aToken,
                                                          Red::ResourceRequest& aRequest)
 {
+    std::shared_lock _(s_linksLock);
     const auto& link = s_links.find(aRequest.path);
     if (link != s_links.end())
     {
@@ -219,10 +222,13 @@ uintptr_t* App::ResourceLinkExtension::OnDepotResourceRequest(Red::ResourceDepot
                                                               Red::ResourcePath aPath,
                                                               const int32_t* aArchiveHandle)
 {
-    const auto& link = s_copies.find(aPath);
-    if (link != s_copies.end())
     {
-        aPath = link->second;
+        std::shared_lock _(s_copiesLock);
+        const auto& link = s_copies.find(aPath);
+        if (link != s_copies.end())
+        {
+            aPath = link->second;
+        }
     }
 
     return Raw::ResourceDepot::RequestResource(aDepot, aResourceHandle, aPath, aArchiveHandle);
@@ -230,10 +236,13 @@ uintptr_t* App::ResourceLinkExtension::OnDepotResourceRequest(Red::ResourceDepot
 
 bool App::ResourceLinkExtension::OnDepotResourceCheck(Red::ResourceDepot* aDepot, Red::ResourcePath aPath)
 {
-    const auto& link = s_mappings.find(aPath);
-    if (link != s_mappings.end())
     {
-        aPath = link->second;
+        std::shared_lock _(s_mappingsLock);
+        const auto& link = s_mappings.find(aPath);
+        if (link != s_mappings.end())
+        {
+            aPath = link->second;
+        }
     }
 
     return Raw::ResourceDepot::CheckResource(aDepot, aPath);
@@ -243,17 +252,27 @@ Core::Set<Red::ResourcePath> App::ResourceLinkExtension::GetAliases(Red::Resourc
 {
     Core::Set<Red::ResourcePath> result;
 
-    for (const auto& [from, to] : s_mappings)
     {
-        if (from == aPath)
+        std::shared_lock _(s_mappingsLock);
+        for (const auto& [from, to] : s_mappings)
         {
-            result.insert(to);
-        }
-        else if (to == aPath)
-        {
-            result.insert(from);
+            if (from == aPath)
+            {
+                result.insert(to);
+            }
+            else if (to == aPath)
+            {
+                result.insert(from);
+            }
         }
     }
 
     return result;
+}
+
+void App::ResourceLinkExtension::RegisterLink(Red::ResourcePath aLink, Red::ResourcePath aTarget)
+{
+    std::scoped_lock _(s_linksLock, s_mappingsLock);
+    s_links[aLink] = aTarget;
+    s_mappings[aLink] = aTarget;
 }
