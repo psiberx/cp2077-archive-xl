@@ -124,8 +124,7 @@ private:
     struct EntityState
     {
         DynamicAttributeList values;
-        DynamicAttributeList fallbackBody;
-        DynamicAttributeList fallbackFeet;
+        DynamicAttributeList defaults;
         DynamicTagList conditions;
     };
 

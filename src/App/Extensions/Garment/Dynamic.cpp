@@ -65,6 +65,18 @@ constexpr auto FemaleEyesComponent = Red::CName("MorphTargetSkinnedMesh3637");
 
 const std::string s_emptyPathStr;
 
+const Red::CName s_fallbackAttrs[2] = {
+    FeetStateAttr,
+    BodyTypeAttr,
+};
+
+const bool s_fallbackVariants[4][2] = {
+    {false, false},
+    {true, false},
+    {false, true},
+    {true, true},
+};
+
 Red::CName ExtractName(const char* aName, size_t aOffset, size_t aSize, bool aRegister = false)
 {
     if (!aSize)
@@ -372,25 +384,56 @@ Red::ResourcePath App::DynamicAppearanceController::ResolvePath(Red::Entity* aEn
     if (result.optional && result.missed)
         return {};
 
-    Red::ResourcePath finalPath = result.value.data();
+    Red::ResourcePath resultPath = result.value.data();
 
-    if (!Red::ResourceDepot::Get()->ResourceExists(finalPath))
+    if (!Red::ResourceDepot::Get()->ResourceExists(resultPath))
     {
-        if (result.attributes.contains(BodyTypeAttr))
+        Core::Vector<Red::CName> fallbackAttrs;
+        for (const auto attr : s_fallbackAttrs)
         {
-            result = ProcessString(state.fallbackBody, aVariant, pathStr.data());
-            finalPath = result.value.data();
+            if (result.attributes.contains(attr) && !aVariant.contains(attr))
+            {
+                fallbackAttrs.push_back(attr);
+            }
         }
-        else if (result.attributes.contains(FeetStateAttr))
+
+        if (!fallbackAttrs.empty())
         {
-            result = ProcessString(state.fallbackFeet, aVariant, pathStr.data());
-            finalPath = result.value.data();
+            auto fallbackState = state.values;
+
+            const auto n = fallbackAttrs.size();
+            const auto k = 1 << n;
+
+            for (auto i = 1; i < k; ++i)
+            {
+                for (auto j = 0; j < n; ++j)
+                {
+                    const auto& attr = fallbackAttrs[j];
+                    fallbackState[attr].value = s_fallbackVariants[i][j]
+                                                    ? state.defaults.at(attr).value
+                                                    : state.values.at(attr).value;
+                }
+
+                auto fallback = ProcessString(fallbackState, aVariant, pathStr.data());
+                if (fallback.valid)
+                {
+                    auto fallbackPath = fallback.value.data();
+                    if (Red::ResourceDepot::Get()->ResourceExists(fallbackPath))
+                    {
+                        // TODO: Register link
+
+                        result = fallback;
+                        resultPath = fallbackPath;
+                        break;
+                    }
+                }
+            }
         }
     }
 
-    m_pathRegistry->RegisterPath(finalPath, result.value);
+    m_pathRegistry->RegisterPath(resultPath, result.value);
 
-    return finalPath;
+    return resultPath;
 }
 
 App::DynamicAppearanceController::DynamicString App::DynamicAppearanceController::ProcessString(
@@ -513,6 +556,12 @@ void App::DynamicAppearanceController::UpdateState(Red::Entity* aEntity, Red::Tw
 {
     auto& state = m_states[aEntity];
 
+    if (state.defaults.empty())
+    {
+        state.defaults[BodyTypeAttr] = {DefaultBodyTypeAttrValue, DefaultBodyTypeSuffixValue};
+        state.defaults[FeetStateAttr] = {DefaultFeetStateAttrValue, DefaultFeetStateSuffixValue};
+    }
+
     state.values[GenderAttr] = GetSuffixData(aEntity, GenderSuffix, aEquippedItemID);
     state.values[CameraAttr] = GetSuffixData(aEntity, CameraSuffix, aEquippedItemID);
     state.values[BodyTypeAttr] = GetSuffixData(aEntity, BodyTypeSuffix, aEquippedItemID);
@@ -525,12 +574,6 @@ void App::DynamicAppearanceController::UpdateState(Red::Entity* aEntity, Red::Tw
     state.values[SkinColorAttr] = {custimizationData.skinColor};
     state.values[HairColorAttr] = {custimizationData.hairColor};
     state.values[EyesColorAttr] = {custimizationData.eyesColor};
-
-    state.fallbackBody = state.values;
-    state.fallbackBody[BodyTypeAttr] = {DefaultBodyTypeAttrValue, DefaultBodyTypeSuffixValue};
-
-    state.fallbackFeet = state.values;
-    state.fallbackFeet[FeetStateAttr] = {DefaultFeetStateAttrValue, DefaultFeetStateSuffixValue};
 
     state.conditions.clear();
     for (const auto& [attributeName, attributeData] : state.values)
