@@ -215,7 +215,7 @@ void App::WorldStreamingConfig::LoadYAML(const YAML::Node& aNode)
                                     mutationData.position.X = positionValues[0];
                                     mutationData.position.Y = positionValues[1];
                                     mutationData.position.Z = positionValues[2];
-                                    mutationData.position.W = positionValues[3];
+                                    mutationData.position.W = 0;
 
                                     mutationData.modifyPosition = true;
                                 }
@@ -488,7 +488,7 @@ bool App::WorldStreamingConfig::ParseSubMutations(const YAML::Node& aMutationsNo
                 mutationData.position.X = positionValues[0];
                 mutationData.position.Y = positionValues[1];
                 mutationData.position.Z = positionValues[2];
-                mutationData.position.W = positionValues[3];
+                mutationData.position.W = 0;
 
                 mutationData.modifyPosition = true;
             }
