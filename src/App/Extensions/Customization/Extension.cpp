@@ -300,6 +300,10 @@ void App::CustomizationExtension::MergeCustomEntries(CustomizationResourceToken&
         MergeCustomGroups(gameData->bodyGroups, customData->bodyGroups);
         MergeCustomGroups(gameData->headGroups, customData->headGroups);
 
+        ExpandCustomizationOptions(customData->armsCustomizationOptions);
+        ExpandCustomizationOptions(customData->bodyCustomizationOptions);
+        ExpandCustomizationOptions(customData->headCustomizationOptions);
+
         MergeCustomOptions(gameData->armsCustomizationOptions, customData->armsCustomizationOptions, false);
         MergeCustomOptions(gameData->bodyCustomizationOptions, customData->bodyCustomizationOptions, false);
         MergeCustomOptions(gameData->headCustomizationOptions, customData->headCustomizationOptions, false);
@@ -558,6 +562,42 @@ void App::CustomizationExtension::MergeCustomOptions(Red::DynArray<Customization
             aTargetOptions.EmplaceBack(sourceOption);
 
             RegisterCustomEntryName(sourceOption->name);
+        }
+    }
+}
+
+void App::CustomizationExtension::ExpandCustomizationOptions(Red::DynArray<CustomizationOption>& aSourceOptions)
+{
+    CustomizationAppearance nonEmptyAppOption;
+
+    for (auto& sourceOption : aSourceOptions)
+    {
+        if (sourceOption->GetNativeType()->IsA(s_AppInfoType))
+        {
+            auto& currentAppOption = reinterpret_cast<CustomizationAppearance&>(sourceOption);
+
+            if (currentAppOption->name)
+            {
+                continue;
+            }
+
+            if (currentAppOption->definitions.size > 0)
+            {
+                nonEmptyAppOption = currentAppOption;
+                continue;
+            }
+
+            if (!nonEmptyAppOption)
+            {
+                continue;
+            }
+
+            currentAppOption->definitions = nonEmptyAppOption->definitions;
+
+            if (!currentAppOption->resource.path && nonEmptyAppOption->resource.path)
+            {
+                currentAppOption->resource.path = nonEmptyAppOption->resource.path;
+            }
         }
     }
 }

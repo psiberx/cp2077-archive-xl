@@ -93,6 +93,7 @@ private:
                             Red::DynArray<CustomizationOption>& aSourceOptions,
                             bool aSlotsAndLinks);
 
+    void ExpandCustomizationOptions(Red::DynArray<CustomizationOption>& aSourceOptions);
     void RegenerateIndexes(Red::DynArray<CustomizationOption>& aTargetOptions);
 
     void RemoveCustomEntries();
