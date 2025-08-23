@@ -81,7 +81,7 @@ private:
         Red::Handle<Red::CMesh> targetMesh;
         Red::Handle<Red::CMesh> sourceMesh;
         Red::DynArray<Red::CName> materialNames;
-        Red::SharedPtr<Red::DynArray<Red::Handle<Red::IMaterial>>> finalMaterials;
+        Red::SharedPtr<Red::MeshMaterialsData> materialData;
         Core::Vector<Core::SharedPtr<ChunkData>> deferredMaterials{};
     };
 

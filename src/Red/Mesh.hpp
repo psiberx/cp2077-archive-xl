@@ -2,10 +2,17 @@
 
 namespace Red
 {
+struct MeshMaterialsData
+{
+    using AllocatorType = Memory::MeshAllocator;
+
+    DynArray<Handle<IMaterial>> materials;
+};
+
 struct MeshMaterialsToken
 {
     JobHandle job;
-    SharedPtr<DynArray<Handle<IMaterial>>> materials;
+    SharedPtr<MeshMaterialsData> data;
 };
 }
 

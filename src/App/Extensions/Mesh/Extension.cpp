@@ -192,15 +192,15 @@ void* App::MeshExtension::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMate
 {
     Raw::CMesh::LoadMaterialsAsync(aTargetMesh, aToken, aMaterialNames, a4);
 
-    if (!aTargetMesh->path || aMaterialNames.size == 0 || aToken.materials->size != aMaterialNames.size ||
-        !ContainsUnresolvedMaterials(*aToken.materials))
+    if (!aTargetMesh->path || aMaterialNames.size == 0 || aToken.data->materials.size != aMaterialNames.size ||
+        !ContainsUnresolvedMaterials(aToken.data->materials))
         return &aToken;
 
     Red::JobQueue jobQueue;
     jobQueue.Wait(aToken.job);
     jobQueue.Dispatch([targetMeshWeak = Red::AsWeakHandle(aTargetMesh), materialNames = aMaterialNames,
-                       finalMaterials = aToken.materials](const Red::JobGroup& aJobGroup) {
-        if (!ContainsUnresolvedMaterials(*finalMaterials))
+                       materialData = aToken.data](const Red::JobGroup& aJobGroup) {
+        if (!ContainsUnresolvedMaterials(materialData->materials))
             return;
 
         auto targetMesh = targetMeshWeak.Lock();
@@ -244,13 +244,13 @@ void* App::MeshExtension::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMate
 
         jobQueue.Dispatch([targetMeshState, targetMeshWeak = Red::ToWeakHandle(targetMesh),
                            sourceMeshState, sourceMeshWeak = Red::ToWeakHandle(sourceMesh),
-                           materialNames, finalMaterials](const Red::JobGroup& aJobGroup) {
+                           materialNames, materialData](const Red::JobGroup& aJobGroup) {
             auto targetMesh = targetMeshWeak.Lock();
             auto sourceMesh = sourceMeshWeak.Lock();
             if (targetMesh && sourceMesh)
             {
                 auto context = Core::MakeShared<DynamicContext>(targetMeshState, sourceMeshState, targetMesh,
-                                                                sourceMesh, materialNames, finalMaterials);
+                                                                sourceMesh, materialNames, materialData);
                 ProcessDynamicMaterials(context, aJobGroup);
             }
         });
@@ -910,11 +910,11 @@ void App::MeshExtension::FillFinalMaterials(const Core::SharedPtr<DynamicContext
         auto materialIndex = aContext->targetState->GetMaterialEntryIndex(chunkName);
         if (materialIndex >= 0)
         {
-            (*aContext->finalMaterials)[chunkIndex] = aContext->targetMesh->materialEntries[materialIndex].materialWeak;
+            aContext->materialData->materials[chunkIndex] = aContext->targetMesh->materialEntries[materialIndex].materialWeak;
         }
         else
         {
-            (*aContext->finalMaterials)[chunkIndex] = {};
+            aContext->materialData->materials[chunkIndex] = {};
         }
     }
 }
