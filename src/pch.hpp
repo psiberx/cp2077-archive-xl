@@ -131,6 +131,7 @@
 #include <RED4ext/Scripting/Natives/Generated/red/TagList.hpp>
 #include <RED4ext/Scripting/Natives/Generated/rend/RenderMeshBlob.hpp>
 #include <RED4ext/Scripting/Natives/Generated/rend/RenderMorphTargetMeshBlob.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/AdvertisementNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/AudioTagNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/CollisionNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/EffectNode.hpp>
@@ -149,6 +150,7 @@
 #include <RED4ext/Scripting/Natives/Generated/world/RuntimeSystemWorldStreaming.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/SharedDataBuffer.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/StaticDecalNode.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/StaticMeshNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/StaticOccluderMeshNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/StreamingBlock.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/StreamingSector.hpp>

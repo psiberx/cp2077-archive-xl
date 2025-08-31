@@ -7,6 +7,8 @@ constexpr auto ExtensionName = "WorldStreaming";
 
 constexpr auto MainWorldResource = Red::ResourcePath(R"(base\worlds\03_night_city\_compiled\default\03_night_city.streamingworld)");
 constexpr auto CollisionNodeType = Red::GetTypeName<Red::worldCollisionNode>();
+constexpr auto AdvertisementNodeType = Red::GetTypeName<Red::worldAdvertisementNode>();
+constexpr auto StaticMeshNodeType = Red::GetTypeName<Red::worldStaticMeshNode>();
 constexpr auto InstancedMeshNodeType = Red::GetTypeName<Red::worldInstancedMeshNode>();
 constexpr auto InstancedDestructibleNodeType = Red::GetTypeName<Red::worldInstancedDestructibleMeshNode>();
 
@@ -438,7 +440,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             }
         }
 
-        if (nodeMutation.modifyProxyNodes)
+        if (nodeMutation.modifyProxyNodes && nodeMutation.nbNodesUnderProxyDiff > 0)
         {
             if (auto* proxyDefinition = Red::Cast<Red::worldPrefabProxyMeshNode>(nodeDefinition))
             {
@@ -548,7 +550,6 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
                 for (const auto& subNodeIndex : nodeDeletion.subNodeDeletions)
                 {
                     auto* instance = instances->Get(startIndex + subNodeIndex);
-                    instance->transform.Position.z.Bits = DelZ;
                     instance->scale.X = 0;
                     instance->scale.Y = 0;
                     instance->scale.Z = 0;
@@ -570,13 +571,37 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             }
         }
 
+        if (nodeDeletion.nodeType == StaticMeshNodeType || nodeDeletion.nodeType == AdvertisementNodeType)
+        {
+            nodeSetup->scale.X = 0;
+            nodeSetup->scale.Y = 0;
+            nodeSetup->scale.Z = 0;
+            continue;
+        }
+
+        if (nodeDeletion.nodeType == InstancedMeshNodeType)
+        {
+            auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
+            auto* instances = std::bit_cast<Red::RenderProxyTransformData*>(&meshNode->worldTransformsBuffer.sharedDataBuffer->buffer.buffer.data);
+            auto startIndex = meshNode->worldTransformsBuffer.startIndex;
+            auto numElements = meshNode->worldTransformsBuffer.numElements;
+            for (auto i = 0; i < numElements; ++i)
+            {
+                auto* instance = instances->Get(startIndex + i);
+                instance->scale.X = 0;
+                instance->scale.Y = 0;
+                instance->scale.Z = 0;
+            }
+            continue;
+        }
+
         nodeSetup->transform.position.Z = -2000;
         nodeSetup->scale.X = 0;
         nodeSetup->scale.Y = 0;
         nodeSetup->scale.Z = 0;
 
         nodeSetup->globalNodeID = 0;
-        nodeSetup->proxyNodeID = 0;
+        // nodeSetup->proxyNodeID = 0;
 
         nodeSetup->node = s_dummyNode.instance;
     }
