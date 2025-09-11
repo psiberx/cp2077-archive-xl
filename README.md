@@ -16,13 +16,13 @@ With the mod you can:
 
 ### Compatibility
 
-- Cyberpunk 2077 2.3
-- [redscript](https://github.com/jac3km4/redscript) 0.5.27+
+- Cyberpunk 2077 2.31
+- [redscript](https://github.com/jac3km4/redscript) 0.5.31+
 
 ### Installation
 
 1. Install requirements:
-   - [RED4ext](https://docs.red4ext.com/getting-started/installing-red4ext) 1.28.0+
+   - [RED4ext](https://docs.red4ext.com/getting-started/installing-red4ext) 1.29.0+
 2. Extract the release archive `ArchiveXL-x.x.x.zip` into the Cyberpunk 2077 directory.
 
 ## Documentation

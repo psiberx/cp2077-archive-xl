@@ -11,8 +11,8 @@ constexpr uint32_t AnimatedComponent_InitializeAnimations = 2855474741;
 
 constexpr uint32_t AppearanceChanger_ComputePlayerGarment = 3243419919;
 constexpr uint32_t AppearanceChanger_GetBaseMeshOffset = 4219677283;
-constexpr uint32_t AppearanceChanger_GetSuffixes = 1202007969;
-constexpr uint32_t AppearanceChanger_GetSuffixValue = 2328047567;
+constexpr uint32_t AppearanceChanger_GetSuffixes = 63057648;
+constexpr uint32_t AppearanceChanger_GetSuffixValue = 1003499294;
 constexpr uint32_t AppearanceChanger_RegisterPart = 3169139695;
 constexpr uint32_t AppearanceChanger_SelectAppearanceName = 2770550105;
 
@@ -184,7 +184,7 @@ constexpr uint32_t TPPRepresentationComponent_OnAttach = 4129169021;
 constexpr uint32_t TPPRepresentationComponent_OnItemEquipped = 4010810747;
 constexpr uint32_t TPPRepresentationComponent_OnItemUnequipped = 1933319146;
 constexpr uint32_t TPPRepresentationComponent_RegisterAffectedItem = 3037343626;
-constexpr uint32_t TPPRepresentationComponent_IsAffectedSlot = 544938630;
+constexpr uint32_t TPPRepresentationComponent_IsAffectedSlot = 678894266;
 
 constexpr uint32_t TweakDB_Load = 3602585178; // game::data::TweakDB::LoadOptimized
 }
