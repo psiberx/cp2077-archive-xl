@@ -207,7 +207,7 @@ void App::WorldStreamingConfig::LoadYAML(const YAML::Node& aNode)
 
                                     const auto positionValues = positionNode.as<std::vector<float>>();
 
-                                    if (positionValues.size() != 4)
+                                    if (positionValues.size() != 3 && positionValues.size() != 4)
                                     {
                                         continue;
                                     }
