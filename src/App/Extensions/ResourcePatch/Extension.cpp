@@ -93,6 +93,7 @@ void App::ResourcePatchExtension::Configure()
     Core::Map<Red::ResourcePath, std::string> knownPaths;
     Core::Set<Red::ResourcePath> invalidPaths;
     Core::Set<Red::ResourcePath> patchPaths;
+    Core::Map<Red::ResourcePath, Core::Set<Red::ResourcePath>> knownPatches;
 
     for (auto& config : m_configs)
     {
@@ -140,7 +141,11 @@ void App::ResourcePatchExtension::Configure()
 
             for (const auto& targetPath : targetList)
             {
-                s_patchTargets[targetPath].insert(patchPath);
+                if (!knownPatches[targetPath].contains(patchPath))
+                {
+                    s_patchTargets[targetPath].push_back(patchPath);
+                    knownPatches[targetPath].insert(patchPath);
+                }
 
                 knownPaths.insert_or_assign(targetPath, config.paths[targetPath]);
             }
@@ -1144,9 +1149,9 @@ Core::SharedPtr<App::ResourcePatch> App::ResourcePatchExtension::GetPatchConfig(
     return patchIt.value();
 }
 
-const Core::Set<Red::ResourcePath>& App::ResourcePatchExtension::GetPatchList(Red::ResourcePath aTargetPath)
+const Core::Vector<Red::ResourcePath>& App::ResourcePatchExtension::GetPatchList(Red::ResourcePath aTargetPath)
 {
-    static const Core::Set<Red::ResourcePath> s_null;
+    static const Core::Vector<Red::ResourcePath> s_null;
 
     const auto& patchIt = s_patchTargets.find(aTargetPath);
 

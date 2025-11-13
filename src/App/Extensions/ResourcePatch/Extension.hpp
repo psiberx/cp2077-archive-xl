@@ -81,7 +81,7 @@ private:
         const Red::Handle<Red::rendRenderMorphTargetMeshBlob>& aSourceBlob);
 
     static Core::SharedPtr<ResourcePatch> GetPatchConfig(Red::ResourcePath aPatchPath);
-    static const Core::Set<Red::ResourcePath>& GetPatchList(Red::ResourcePath aTargetPath);
+    static const Core::Vector<Red::ResourcePath>& GetPatchList(Red::ResourcePath aTargetPath);
     static void LoadPatchResource(Red::ResourcePath aPatchPath);
     static bool IsPatchResource(Red::ResourcePath aPath);
     template<typename T = Red::CResource>
@@ -92,7 +92,7 @@ private:
                                                                      Red::CName aDefinitionName);
 
     inline static Core::Map<Red::ResourcePath, Core::SharedPtr<ResourcePatch>> s_patches;
-    inline static Core::Map<Red::ResourcePath, Core::Set<Red::ResourcePath>> s_patchTargets;
+    inline static Core::Map<Red::ResourcePath, Core::Vector<Red::ResourcePath>> s_patchTargets;
     inline static Red::SharedSpinLock s_patchTokenLock;
     inline static Core::Map<Red::ResourcePath, Red::SharedPtr<Red::ResourceToken<>>> s_patchTokens;
     inline static Red::SharedSpinLock s_appearanceDefinitionLock;
