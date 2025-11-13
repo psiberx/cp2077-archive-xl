@@ -27,6 +27,7 @@
 #include <RED4ext/ResourceLoader.hpp>
 #include <RED4ext/Scripting/Natives/Generated/AI/SpotPersistentData.hpp>
 #include <RED4ext/Scripting/Natives/Generated/AI/WorkspotManager.hpp>
+#include <RED4ext/Scripting/Natives/Generated/AreaShapeOutline.hpp>
 #include <RED4ext/Scripting/Natives/Generated/CMaterialInstance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/CMesh.hpp>
 #include <RED4ext/Scripting/Natives/Generated/CurveSet.hpp>
@@ -91,6 +92,7 @@
 #include <RED4ext/Scripting/Natives/Generated/game/data/ItemType.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/data/ItemsFactoryAppearanceSuffixBase_Record.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/mappins/IMappinVolume.hpp>
+#include <RED4ext/Scripting/Natives/Generated/game/mappins/OutlineMappinVolume.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/AppearanceInfo.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/CharacterCustomizationFeetController.hpp>
 #include <RED4ext/Scripting/Natives/Generated/game/ui/CharacterCustomizationGenitalsController.hpp>
@@ -132,16 +134,20 @@
 #include <RED4ext/Scripting/Natives/Generated/rend/RenderMeshBlob.hpp>
 #include <RED4ext/Scripting/Natives/Generated/rend/RenderMorphTargetMeshBlob.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/AdvertisementNode.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/AdvertisementNodeInstance.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/AreaShapeNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/AudioTagNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/CollisionNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/EffectNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/EntityNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/FoliageNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/GlobalNodeID.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/INodeInstance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/InstancedDestructibleMeshNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/InstancedMeshNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/InstancedOccluderNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/Node.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/NodeInstanceRegistry.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/NodeTransform.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/PhysicalDestructionNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/PopulationSpawnerNode.hpp>

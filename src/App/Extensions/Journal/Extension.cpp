@@ -2,6 +2,7 @@
 #include "App/Utils/Registers.hpp"
 #include "Red/JobHandle.hpp"
 #include "Red/Localization.hpp"
+#include "Red/WorldNode.hpp"
 
 namespace
 {
@@ -188,7 +189,7 @@ void* App::JournalExtension::OnGetPoiData(void* aMappinSystem, uint32_t aHash)
         auto r8 = get_r8();
         auto r9 = get_r9();
 
-        const auto it = s_mappins.find(aHash);
+        auto it = s_mappins.find(aHash);
         if (it != s_mappins.end())
         {
             ResolveCookedMappin(aMappinSystem, aHash, it.value(), result);
@@ -201,9 +202,11 @@ void* App::JournalExtension::OnGetPoiData(void* aMappinSystem, uint32_t aHash)
     return result;
 }
 
-void App::JournalExtension::ResolveCookedMappin(void* aMappinSystem, uint32_t aHash, const JournalMappin& aJournalMappin,
-                                             void*& aCookedMappin)
+void App::JournalExtension::ResolveCookedMappin(void* aMappinSystem, uint32_t aHash,
+                                                JournalMappin& aJournalMappin, void*& aCookedMappin)
 {
+    ResolveMappinReference(aJournalMappin);
+
     if (aJournalMappin.isPointOfInterest)
     {
         Red::gameCookedPointOfInterestMappinData cookedMappin{};
@@ -226,6 +229,8 @@ void App::JournalExtension::ResolveCookedMappin(void* aMappinSystem, uint32_t aH
 
         if (ResolveMappinPosition(aHash, aJournalMappin, cookedMappin.position))
         {
+            ResolveMappinVolune(aHash, aJournalMappin, cookedMappin.volume);
+
             cookedMappin.journalPathHash = aHash;
 
             std::unique_lock _(s_mappinsLock);
@@ -237,60 +242,94 @@ void App::JournalExtension::ResolveCookedMappin(void* aMappinSystem, uint32_t aH
     }
 }
 
+void App::JournalExtension::ResolveMappinReference(JournalMappin& aMappin)
+{
+    if (aMappin.reference.hash && !aMappin.resolved.hash)
+    {
+        Red::worldGlobalNodeRef context{Red::NodeRef::GlobalRoot};
+        Red::CallGlobal("ResolveNodeRef", aMappin.resolved, aMappin.reference, context);
+    }
+}
+
 bool App::JournalExtension::ResolveMappinPosition(uint32_t aHash, const JournalMappin& aMappin, Red::Vector3& aResult)
 {
     LogInfo("[{}] Cooked mappin #{} requested...", ExtensionName, aHash);
 
-    if (aMappin.reference.hash)
-    {
-        Red::world::GlobalNodeRef context{};
-        Red::ExecuteFunction("worldGlobalNodeID", "GetRoot", &context);
-
-        if (!context.hash)
-        {
-            LogError("[{}] Can't resolve mappin #{} context.", ExtensionName, aHash);
-            return false;
-        }
-
-        Red::NodeRef reference = aMappin.reference;
-        Red::world::GlobalNodeRef resolved{};
-        Red::ExecuteGlobalFunction("ResolveNodeRef", &resolved, reference, context);
-
-        if (!resolved.hash)
-        {
-            LogError("[{}] Can't resolve mappin #{} reference.", ExtensionName, aHash);
-            return false;
-        }
-
-        bool success{};
-        Red::Transform transform{};
-        Red::ScriptGameInstance game{};
-        Red::ExecuteFunction("ScriptGameInstance", "GetNodeTransform", &success, game, resolved, transform);
-
-        if (!success)
-        {
-            LogError("[{}] Can't resolve mappin #{} position.", ExtensionName, aHash);
-            return false;
-        }
-
-        aResult.X = transform.position.X;
-        aResult.Y = transform.position.Y;
-        aResult.Z = transform.position.Z;
-
-        LogInfo("[{}] Cooked mappin #{} resolved to NodeRef #{}.",  ExtensionName, aHash, resolved.hash);
-    }
-    else
+    if (!aMappin.reference.hash)
     {
         aResult = aMappin.offset;
 
         LogInfo("[{}] Cooked mappin #{} resolved to static offset.", ExtensionName, aHash);
+
+        return true;
     }
+
+    if (!aMappin.resolved.hash)
+    {
+        LogError("[{}] Can't resolve mappin #{} reference.", ExtensionName, aHash);
+        return false;
+    }
+
+    bool success{};
+    Red::Transform transform{};
+    Red::ScriptGameInstance game{};
+    Red::CallStatic("ScriptGameInstance", "GetNodeTransform", success, game, aMappin.resolved, transform);
+
+    if (!success)
+    {
+        LogError("[{}] Can't resolve mappin #{} position.", ExtensionName, aHash);
+        return false;
+    }
+
+    aResult.X = transform.position.X;
+    aResult.Y = transform.position.Y;
+    aResult.Z = transform.position.Z;
+
+    LogInfo("[{}] Cooked mappin #{} resolved to NodeRef #{}.",  ExtensionName, aHash, aMappin.resolved.hash);
+
+    return true;
+}
+
+bool App::JournalExtension::ResolveMappinVolune(uint32_t aJournalHash,
+                                                const App::JournalExtension::JournalMappin& aMappin,
+                                                Red::Handle<Red::gamemappinsIMappinVolume>& aResult)
+{
+    if (!aMappin.resolved.hash)
+        return false;
+
+    auto nativeNodeRegistry = Red::GetRuntimeSystem<Red::worldNodeInstanceRegistry>();
+
+    Red::Handle<Red::worldINodeInstance> nodeInstance;
+    Raw::WorldNodeRegistry::FindNode(nativeNodeRegistry, nodeInstance, aMappin.resolved.hash);
+
+    if (!nodeInstance)
+        return false;
+
+    const auto areaNode = Red::Cast<Red::worldAreaShapeNode>(Raw::WorldNodeInstance::Node::Ref(nodeInstance));
+
+    if (!areaNode || !areaNode->outline)
+        return false;
+
+    const auto& scale = Raw::WorldNodeInstance::Scale::Ref(nodeInstance);
+    const auto& transform = Raw::WorldNodeInstance::Transform::Ref(nodeInstance);
+
+    const auto volume = Red::MakeHandle<Red::gamemappinsOutlineMappinVolume>();
+    volume->height = areaNode->outline->height  * scale.Z;
+    volume->outlinePoints.Reserve(areaNode->outline->points.size);
+
+    for (const auto& areaPoint : areaNode->outline->points)
+    {
+        auto mappinPoint = Red::Vector4(areaPoint) * scale * transform.orientation;
+        volume->outlinePoints.EmplaceBack(mappinPoint.X, mappinPoint.Y);
+    }
+
+    aResult = volume;
 
     return true;
 }
 
 App::JournalExtension::EntrySearchResult App::JournalExtension::FindEntry(Red::game::JournalEntry* aParent,
-                                                                    Red::CString& aPath)
+                                                                          Red::CString& aPath)
 {
     static const auto s_containerEntryType = Red::GetClass<Red::game::JournalContainerEntry>();
 

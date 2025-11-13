@@ -24,6 +24,7 @@ private:
         Red::NodeRef reference;
         Red::Vector3 offset;
         bool isPointOfInterest;
+        Red::worldGlobalNodeRef resolved;
     };
 
     void OnLoadJournal(uintptr_t a1, Red::JobGroup& aJobGroup);
@@ -40,9 +41,12 @@ private:
     static void ProcessNewEntries(Red::game::JournalEntry* aEntry, const std::string& aPath, bool aRecursive);
     static void ConvertLocKeys(Red::game::JournalEntry* aEntry);
     static void CollectMappin(Red::game::JournalEntry* aEntry, const std::string& aPath);
-    static void ResolveCookedMappin(void* aMappinSystem, uint32_t aHash, const JournalMappin& aJournalMappin,
+    static void ResolveCookedMappin(void* aMappinSystem, uint32_t aHash, JournalMappin& aJournalMappin,
                                     void*& aCookedMappin);
+    static void ResolveMappinReference(JournalMappin& aMappin);
     static bool ResolveMappinPosition(uint32_t aJournalHash, const JournalMappin& aMappin, Red::Vector3& aResult);
+    static bool ResolveMappinVolune(uint32_t aJournalHash, const JournalMappin& aMappin,
+                                    Red::Handle<Red::gamemappinsIMappinVolume>& aResult);
     static void ResetResourceData();
     static void ResetRuntimeData();
     static void ReloadJournal();
