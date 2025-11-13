@@ -33,6 +33,9 @@ using Vector = std::vector<T, TiltedPhoques::StlAllocator<T>>;
 template<class T>
 using Set = tsl::hopscotch_set<T, std::hash<T>, std::equal_to<T>, TiltedPhoques::StlAllocator<T>>;
 
+template<class T, class Compare = std::less<T>, class Allocator = std::allocator<T>>
+using SortedSet = std::set<T, Compare, Allocator>;
+
 template<class T, class U>
 using Map = tsl::hopscotch_map<T, U, std::hash<T>, std::equal_to<T>, TiltedPhoques::StlAllocator<std::pair<T, U>>>;
 

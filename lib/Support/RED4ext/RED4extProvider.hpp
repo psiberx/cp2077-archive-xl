@@ -46,9 +46,27 @@ public:
         return Defer(this);
     }
 
-    auto RegisterScripts(const std::filesystem::path& aPath) noexcept
+    auto RegisterScripts(const std::filesystem::path& aPath)
     {
         m_sdk->scripts->Add(m_plugin, aPath.c_str());
+        return Defer(this);
+    }
+
+    auto RegisterNeverRefType(const char* aType)
+    {
+        m_sdk->scripts->RegisterNeverRefType(aType);
+        return Defer(this);
+    }
+
+    auto RegisterMixedRefType(const char* aType)
+    {
+        m_sdk->scripts->RegisterMixedRefType(aType);
+        return Defer(this);
+    }
+
+    auto ConfigureScripts(std::function<void(const RED4ext::Scripts*)> aConfig)
+    {
+        aConfig(m_sdk->scripts);
         return Defer(this);
     }
 
