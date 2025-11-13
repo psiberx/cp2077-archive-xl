@@ -26,7 +26,7 @@ void App::ExtensionLoader::Configure()
         {
             auto depot = Red::ResourceDepot::Get();
 
-            for (const auto& group : depot->groups)
+            for (const auto& group : depot->groups | std::views::reverse)
             {
                 if (group.scope == Red::ArchiveScope::Mod)
                 {
@@ -49,7 +49,7 @@ void App::ExtensionLoader::Configure()
         {
             if (std::find(configDirs.begin(), configDirs.end(), m_bundleDir) == configDirs.end())
             {
-                configDirs.emplace_back(m_bundleDir);
+                configDirs.insert(configDirs.begin(), m_bundleDir);
             }
         }
 
