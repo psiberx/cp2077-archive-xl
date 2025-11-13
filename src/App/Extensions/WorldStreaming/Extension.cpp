@@ -14,7 +14,7 @@ constexpr auto InstancedDestructibleNodeType = Red::GetTypeName<Red::worldInstan
 
 constexpr auto DelZ = static_cast<int32_t>(-2000 * (2 << 16));
 
-Red::Handle<Red::worldAudioTagNode> s_dummyNode;
+Red::Handle<Red::worldStaticMeshNode> s_dummyNode;
 }
 
 std::string_view App::WorldStreamingExtension::GetName()
@@ -28,9 +28,8 @@ bool App::WorldStreamingExtension::Load()
     HookAfter<Raw::StreamingSector::PostLoad>(&OnSectorPostLoad).OrThrow();
     Hook<Raw::AIWorkspotManager::RegisterSpots>(&OnRegisterSpots).OrThrow();
 
-    s_dummyNode = Red::MakeHandle<Red::worldAudioTagNode>();
+    s_dummyNode = Red::MakeHandle<Red::worldStaticMeshNode>();
     s_dummyNode->isVisibleInGame = false;
-    s_dummyNode->radius = 0.00001;
 
     return true;
 }
@@ -571,7 +570,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             }
         }
 
-        if (nodeDeletion.nodeType == StaticMeshNodeType || nodeDeletion.nodeType == AdvertisementNodeType)
+        if (nodeDeletion.nodeType == StaticMeshNodeType)
         {
             nodeSetup->scale.X = 0;
             nodeSetup->scale.Y = 0;
@@ -592,6 +591,15 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
                 instance->scale.Y = 0;
                 instance->scale.Z = 0;
             }
+            continue;
+        }
+
+        if (nodeDeletion.nodeType == AdvertisementNodeType)
+        {
+            nodeSetup->scale.X = 0;
+            nodeSetup->scale.Y = 0;
+            nodeSetup->scale.Z = 0;
+            nodeSetup->node = s_dummyNode.instance;
             continue;
         }
 
