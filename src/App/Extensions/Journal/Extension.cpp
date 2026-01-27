@@ -88,7 +88,7 @@ void App::JournalExtension::OnLoadJournal(uintptr_t a1, Red::JobGroup& aJobGroup
 }
 
 void App::JournalExtension::OnInitializeRoot(Red::game::JournalRootFolderEntry* aJournalRoot, uintptr_t, uintptr_t,
-                                          Red::JobQueue& aJobQueue)
+                                             Red::JobQueue& aJobQueue)
 {
     static const auto s_rootEntryType = Red::GetClass<Red::game::JournalRootFolderEntry>();
 
@@ -122,7 +122,7 @@ void App::JournalExtension::OnInitializeRoot(Red::game::JournalRootFolderEntry* 
 
         LogInfo("[{}] Merging entries from \"{}\"...", ExtensionName, s_paths[resource->path]);
 
-        successAll &= MergeEntries(aJournalRoot, root);
+        successAll &= MergeEntries(aJournalRoot, root, root->id.c_str());
         mergedAny = true;
     }
 
@@ -380,8 +380,8 @@ App::JournalExtension::EntrySearchResult App::JournalExtension::FindEntry(Red::g
 }
 
 bool App::JournalExtension::MergeEntries(Red::game::JournalContainerEntry* aTarget,
-                                      Red::game::JournalContainerEntry* aSource,
-                                      const std::string& aPath)
+                                         Red::game::JournalContainerEntry* aSource,
+                                         const std::string& aPath)
 {
     auto success = true;
 
@@ -418,7 +418,7 @@ bool App::JournalExtension::MergeEntries(Red::game::JournalContainerEntry* aTarg
 }
 
 bool App::JournalExtension::MergeEntry(Red::game::JournalEntry* aTarget, Red::game::JournalEntry* aSource,
-                                    const std::string& aPath, bool aEditProps)
+                                       const std::string& aPath, bool aEditProps)
 {
     static const auto s_containerEntryType = Red::GetClass<Red::game::JournalContainerEntry>();
 
