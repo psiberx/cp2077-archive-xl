@@ -39,6 +39,12 @@ void App::QuestPhaseConfig::LoadYAML(const YAML::Node& aNode)
             FillConnection(phaseNode["input"], phaseData.input);
             FillConnection(phaseNode["output"], phaseData.output);
 
+            const auto& interceptNode = phaseNode["intercept"];
+            if (interceptNode.IsDefined() && interceptNode.IsScalar() && interceptNode.as<bool>())
+            {
+                phaseData.intercept = true;
+            }
+
             phases.emplace_back(std::move(phaseData));
         }
     }

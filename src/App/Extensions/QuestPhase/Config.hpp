@@ -17,6 +17,7 @@ struct QuestPhaseMod
     Core::Set<std::string> parentPaths;
     QuestPhaseConnection input;
     QuestPhaseConnection output;
+    bool intercept;
 };
 
 struct QuestPhaseConfig : ExtensionConfig

@@ -141,7 +141,7 @@ void App::QuestPhaseExtension::OnGameRestored(Red::QuestsSystem* aSystem)
 }
 
 void App::QuestPhaseExtension::OnQuestStart(Red::questRootInstance* aInstance, Red::QuestContext* aContext,
-                                         const Red::Handle<Red::questQuestResource>& aResource)
+                                            const Red::Handle<Red::questQuestResource>& aResource)
 {
     if (s_forced.empty())
         return;
@@ -176,7 +176,7 @@ void App::QuestPhaseExtension::OnQuestStart(Red::questRootInstance* aInstance, R
 }
 
 bool App::QuestPhaseExtension::PatchPhase(Red::Handle<Red::questQuestPhaseResource>& aPhaseResource,
-                                       const App::QuestPhaseMod& aPhaseMod)
+                                          const App::QuestPhaseMod& aPhaseMod)
 {
     auto& rootPhaseGraph = Red::Cast<Red::questGraphDefinition>(aPhaseResource->graph);
     if (!rootPhaseGraph)
@@ -212,13 +212,17 @@ bool App::QuestPhaseExtension::PatchPhase(Red::Handle<Red::questQuestPhaseResour
             return false;
         }
 
+        if (aPhaseMod.intercept)
+        {
+            RemoveConnection(outputNode, inputNode);
+        }
+
         auto inSocketName =
             aPhaseMod.output.socketName
                 ? aPhaseMod.output.socketName
                 : (outputNode->GetType()->IsA(Red::GetClass<Red::questPhaseNodeDefinition>()) ? "In1" : "In");
         AddConnection(modPhaseNode, "Out", outputNode, inSocketName);
-
-        RemoveConnection(outputNode, inputNode);
+        AddConnection(modPhaseNode, "Out1", outputNode, inSocketName);
     }
 
     AddConnection(inputNode, aPhaseMod.input.socketName ? aPhaseMod.input.socketName : "Out", modPhaseNode, "In1");
@@ -296,7 +300,7 @@ Red::Handle<Red::questSocketDefinition> App::QuestPhaseExtension::ResolveSocket(
 }
 
 void App::QuestPhaseExtension::AddConnection(Red::Handle<Red::questNodeDefinition>& aOutNode, Red::CName aOutSocket,
-                                          Red::Handle<Red::questNodeDefinition>& aInNode, Red::CName aInSocket)
+                                             Red::Handle<Red::questNodeDefinition>& aInNode, Red::CName aInSocket)
 {
     auto outSocket = ResolveSocket(aOutNode, Red::questSocketType::Output, aOutSocket);
     auto inSocket = ResolveSocket(aInNode, Red::questSocketType::Input, aInSocket);
@@ -310,9 +314,9 @@ void App::QuestPhaseExtension::AddConnection(Red::Handle<Red::questNodeDefinitio
 }
 
 void App::QuestPhaseExtension::RemoveConnection(Red::Handle<Red::questNodeDefinition>& aOutNode,
-                                             Red::Handle<Red::questNodeDefinition>& aInNode)
+                                                Red::Handle<Red::questNodeDefinition>& aInNode)
 {
-    for (auto& rawSocket : aOutNode->sockets)
+    for (auto& rawSocket : aInNode->sockets)
     {
         auto& questSocket = Red::Cast<Red::questSocketDefinition>(rawSocket);
         if (questSocket->type == Red::questSocketType::Output)
@@ -321,7 +325,7 @@ void App::QuestPhaseExtension::RemoveConnection(Red::Handle<Red::questNodeDefini
             {
                 auto& destinationNode =
                     Raw::QuestSocketDefinition::OwnerNode::Ref(questSocket->connections[i]->destination.instance);
-                if (destinationNode.instance == aInNode.instance)
+                if (destinationNode.instance == aOutNode.instance)
                 {
                     questSocket->connections.RemoveAt(i);
                 }
@@ -329,7 +333,7 @@ void App::QuestPhaseExtension::RemoveConnection(Red::Handle<Red::questNodeDefini
         }
     }
 
-    for (auto& rawSocket : aInNode->sockets)
+    for (auto& rawSocket : aOutNode->sockets)
     {
         auto& questSocket = Red::Cast<Red::questSocketDefinition>(rawSocket);
         if (questSocket->type == Red::questSocketType::Input)
@@ -338,7 +342,7 @@ void App::QuestPhaseExtension::RemoveConnection(Red::Handle<Red::questNodeDefini
             {
                 auto& sourceNode =
                     Raw::QuestSocketDefinition::OwnerNode::Ref(questSocket->connections[i]->source.instance);
-                if (sourceNode.instance == aOutNode.instance)
+                if (sourceNode.instance == aInNode.instance)
                 {
                     questSocket->connections.RemoveAt(i);
                 }
