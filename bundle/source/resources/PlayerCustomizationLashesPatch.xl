@@ -6,3 +6,6 @@ resource:
     archive_xl\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hel_000_pma_c__basehead_patch.mesh:
       props: [ appearances ]
       targets: [ player_ma_base_lashes.mesh ]
+    archive_xl\characters\common\hair\h1_base_color_patch.mesh:
+      props: [ appearances ]
+      targets: [ player_ma_lashes.mesh, player_wa_lashes.mesh ]
