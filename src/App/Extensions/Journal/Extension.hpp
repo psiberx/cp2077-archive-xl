@@ -21,6 +21,7 @@ private:
 
     struct JournalMappin
     {
+        std::string path;
         Red::NodeRef reference;
         Red::Vector3 offset;
         bool isPointOfInterest;
@@ -45,7 +46,7 @@ private:
                                     void*& aCookedMappin);
     static void ResolveMappinReference(JournalMappin& aMappin);
     static bool ResolveMappinPosition(uint32_t aJournalHash, const JournalMappin& aMappin, Red::Vector3& aResult);
-    static bool ResolveMappinVolune(uint32_t aJournalHash, const JournalMappin& aMappin,
+    static bool ResolveMappinVolume(uint32_t aJournalHash, const JournalMappin& aMappin,
                                     Red::Handle<Red::gamemappinsIMappinVolume>& aResult);
     static void ResetResourceData();
     static void ResetRuntimeData();
