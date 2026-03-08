@@ -69,11 +69,8 @@ private:
                             int16_t aResultEntityIndex, int16_t aPatchEntityIndex);
     static void MergeComponents(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
                                 Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects,
-                                bool aPartMerge);
-    static void MergeObjects(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
-                             Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects);
-    static void MergeResources(Red::DynArray<Red::SharedPtr<Red::ResourceToken<>>>& aResultResources,
-                               Red::DynArray<Red::SharedPtr<Red::ResourceToken<>>>& aPatchResources);
+                                bool aPartMerge, Red::ResourcePath aPatchPath, Red::ResourcePath aTargetPath,
+                                Red::CName aPatchDefinition = {}, Red::CName aTargetDefinition = {});
 
     inline static Red::Handle<Red::rendRenderMeshBlob> CopyRenderBlob(
         const Red::Handle<Red::rendRenderMeshBlob>& aSourceBlob);
