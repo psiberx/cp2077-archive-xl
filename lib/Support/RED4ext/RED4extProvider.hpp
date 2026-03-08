@@ -14,7 +14,7 @@ class RED4extProvider
     , public Core::AddressResolver
 {
 public:
-    RED4extProvider(RED4ext::PluginHandle aPlugin, const RED4ext::Sdk* aSdk) noexcept;
+    RED4extProvider(RED4ext::v1::PluginHandle aPlugin, const RED4ext::v1::Sdk* aSdk) noexcept;
 
     void LogInfo(const std::string_view& aMessage) override;
     void LogWarning(const std::string_view& aMessage) override;
@@ -46,35 +46,17 @@ public:
         return Defer(this);
     }
 
-    auto RegisterScripts(const std::filesystem::path& aPath)
+    auto RegisterScripts(const std::filesystem::path& aPath) noexcept
     {
         m_sdk->scripts->Add(m_plugin, aPath.c_str());
-        return Defer(this);
-    }
-
-    auto RegisterNeverRefType(const char* aType)
-    {
-        m_sdk->scripts->RegisterNeverRefType(aType);
-        return Defer(this);
-    }
-
-    auto RegisterMixedRefType(const char* aType)
-    {
-        m_sdk->scripts->RegisterMixedRefType(aType);
-        return Defer(this);
-    }
-
-    auto ConfigureScripts(std::function<void(const RED4ext::Scripts*)> aConfig)
-    {
-        aConfig(m_sdk->scripts);
         return Defer(this);
     }
 
 protected:
     void OnInitialize() override;
 
-    RED4ext::PluginHandle m_plugin;
-    const RED4ext::Sdk* m_sdk;
+    RED4ext::v1::PluginHandle m_plugin;
+    const RED4ext::v1::Sdk* m_sdk;
     bool m_enableLogging;
     bool m_enableHooking;
     bool m_enableAddressLibrary;

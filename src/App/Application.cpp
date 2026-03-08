@@ -13,7 +13,7 @@
 #include "Support/RedLib/RedLibProvider.hpp"
 #include "Support/Spdlog/SpdlogProvider.hpp"
 
-App::Application::Application(HMODULE aHandle, const RED4ext::Sdk* aSdk)
+App::Application::Application(HMODULE aHandle, const RED4ext::v1::Sdk* aSdk)
 {
     Register<Core::RuntimeProvider>(aHandle)
         ->SetBaseImagePathDepth(2);

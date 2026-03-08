@@ -1,6 +1,6 @@
 #include "RED4extProvider.hpp"
 
-Support::RED4extProvider::RED4extProvider(RED4ext::PluginHandle aPlugin, const RED4ext::Sdk* aSdk) noexcept
+Support::RED4extProvider::RED4extProvider(RED4ext::v1::PluginHandle aPlugin, const RED4ext::v1::Sdk* aSdk) noexcept
     : m_plugin(aPlugin)
     , m_sdk(aSdk)
     , m_enableLogging(false)

@@ -10,7 +10,7 @@ class Application
     , public Core::LoggingAgent
 {
 public:
-    explicit Application(HMODULE aHandle, const RED4ext::Sdk* aSdk = nullptr);
+    explicit Application(HMODULE aHandle, const RED4ext::v1::Sdk* aSdk = nullptr);
 
 protected:
     void OnStarting() override;
