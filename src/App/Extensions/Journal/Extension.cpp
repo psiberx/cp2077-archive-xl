@@ -281,9 +281,9 @@ bool App::JournalExtension::ResolveMappinPosition(uint32_t aHash, const JournalM
         return false;
     }
 
-    aResult.X = transform.position.X;
-    aResult.Y = transform.position.Y;
-    aResult.Z = transform.position.Z;
+    aResult.X = transform.position.X + aMappin.offset.X;
+    aResult.Y = transform.position.Y + aMappin.offset.Y;
+    aResult.Z = transform.position.Z + aMappin.offset.Z;
 
     LogInfo("[{}] Cooked mappin #{} ({}) resolved to NodeRef #{}.",
             ExtensionName, aHash, aMappin.path, aMappin.resolved.hash);
