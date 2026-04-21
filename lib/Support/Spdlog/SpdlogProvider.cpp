@@ -3,7 +3,7 @@
 #include "Core/Stl.hpp"
 
 #include <spdlog/spdlog.h>
-#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/sinks/rotating_file_sink.h>
 
 void Support::SpdlogProvider::OnInitialize()
 {
@@ -63,7 +63,7 @@ void Support::SpdlogProvider::OnInitialize()
         logPath.replace_extension(logExtension);
     }
 
-    auto sink = Core::MakeShared<spdlog::sinks::basic_file_sink_mt>(logPath.string(), true);
+    auto sink = Core::MakeShared<spdlog::sinks::rotating_file_sink_mt>(logPath.string(), m_maxPartSize, m_maxPartCount);
     auto logger = Core::MakeShared<spdlog::logger>("", spdlog::sinks_init_list{sink});
     logger->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%t] [%l] %v");
     logger->flush_on(spdlog::level::trace);

@@ -34,9 +34,21 @@ public:
         return Defer(this);
     }
 
-    auto SetMaxLogFiles(int32_t aMaxFiles) noexcept
+    auto SetMaxLogFiles(int32_t aCount) noexcept
     {
-        m_maxLogCount = aMaxFiles;
+        m_maxLogCount = aCount;
+        return Defer(this);
+    }
+
+    auto SetMaxPartSize(size_t aSize) noexcept
+    {
+        m_maxPartSize = aSize;
+        return Defer(this);
+    }
+
+    auto SetMaxPartCount(size_t aCount) noexcept
+    {
+        m_maxPartCount = aCount;
         return Defer(this);
     }
 
@@ -47,5 +59,7 @@ protected:
     bool m_appendTimestamp{ false };
     bool m_recentSymlink{ false };
     int32_t m_maxLogCount{ 10 };
+    size_t m_maxPartSize{ 100 * (1 << 20) };
+    size_t m_maxPartCount{ 2 };
 };
 }
