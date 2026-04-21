@@ -547,7 +547,7 @@ void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, Red::Pos
 
             if (patchConfig->Modifies(MeshAppearancesProp) && !patchMesh->appearances.IsEmpty())
             {
-                auto sourceTag = MeshExtension::RegisterMeshSource(aMesh, patchMesh);
+                auto sourceTag = MeshExtension::RegisterMeshPatch(aMesh, patchMesh);
                 auto expansionTag = Red::CName();
 
                 for (const auto& patchAppearance : patchMesh->appearances)
@@ -630,7 +630,7 @@ void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, Red::Pos
         }
     }
 
-    MeshExtension::PrefetchMeshState(aMesh, fix.GetContext());
+    MeshExtension::PrepareMeshState(aMesh, fix.GetContext());
 }
 
 void App::ResourcePatchExtension::OnMorphTargetResourceLoad(Red::MorphTargetMesh* aMorphTarget,
