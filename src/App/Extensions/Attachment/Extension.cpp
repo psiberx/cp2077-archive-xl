@@ -65,7 +65,7 @@ bool App::AttachmentExtension::Unload()
 void App::AttachmentExtension::OnInitializeSlots(Red::game::AttachmentSlots* aComponent,
                                                  Red::DynArray<Red::TweakDBID>& aSlotIDs)
 {
-    if (aSlotIDs.size > 0)
+    if (!aSlotIDs.IsEmpty())
     {
 // #ifndef NDEBUG
 //         const auto entity = Raw::IComponent::Owner::Ptr(aComponent);

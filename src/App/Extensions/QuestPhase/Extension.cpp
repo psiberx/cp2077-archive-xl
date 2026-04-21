@@ -107,13 +107,13 @@ void App::QuestPhaseExtension::OnGameRestored(Red::QuestsSystem* aSystem)
     {
         Red::QuestNodeID questId = 0;
 
-        for (; questId < questList.size; ++questId)
+        for (; questId < questList.Size(); ++questId)
         {
             if (questList[questId] == questPath)
                 break;
         }
 
-        if (questId >= questList.size)
+        if (questId >= questList.Size())
             continue;
 
         Red::QuestNodePath questNodePath{questId};
@@ -153,13 +153,13 @@ void App::QuestPhaseExtension::OnQuestStart(Red::questRootInstance* aInstance, R
     {
         Red::QuestNodeID questId = 0;
 
-        for (; questId < questList.size; ++questId)
+        for (; questId < questList.Size(); ++questId)
         {
             if (questList[questId] == questPath)
                 break;
         }
 
-        if (questId >= questList.size)
+        if (questId >= questList.Size())
             continue;
 
         Red::QuestNodePath questNodePath{questId};
@@ -321,7 +321,7 @@ void App::QuestPhaseExtension::RemoveConnection(Red::Handle<Red::questNodeDefini
         auto& questSocket = Red::Cast<Red::questSocketDefinition>(rawSocket);
         if (questSocket->type == Red::questSocketType::Output)
         {
-            for (auto i = static_cast<int32_t>(questSocket->connections.size) - 1; i >= 0; --i)
+            for (auto i = static_cast<int32_t>(questSocket->connections.Size()) - 1; i >= 0; --i)
             {
                 auto& destinationNode =
                     Raw::QuestSocketDefinition::OwnerNode::Ref(questSocket->connections[i]->destination.instance);
@@ -338,7 +338,7 @@ void App::QuestPhaseExtension::RemoveConnection(Red::Handle<Red::questNodeDefini
         auto& questSocket = Red::Cast<Red::questSocketDefinition>(rawSocket);
         if (questSocket->type == Red::questSocketType::Input)
         {
-            for (auto i = static_cast<int32_t>(questSocket->connections.size) - 1; i >= 0; --i)
+            for (auto i = static_cast<int32_t>(questSocket->connections.Size()) - 1; i >= 0; --i)
             {
                 auto& sourceNode =
                     Raw::QuestSocketDefinition::OwnerNode::Ref(questSocket->connections[i]->source.instance);

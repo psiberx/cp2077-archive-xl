@@ -68,7 +68,7 @@ void App::MeshExtension::OnFindAppearance(Red::Handle<Red::meshMeshAppearance>& 
         return;
     }
 
-    if (!aAppearance->name || aMesh->appearances.size == 0)
+    if (!aAppearance->name || aMesh->appearances.IsEmpty())
     {
         auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aMesh->path);
 
@@ -192,7 +192,7 @@ void* App::MeshExtension::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMate
 {
     Raw::CMesh::LoadMaterialsAsync(aTargetMesh, aToken, aMaterialNames, a4);
 
-    if (!aTargetMesh->path || aMaterialNames.size == 0 || aToken.data->materials.size != aMaterialNames.size ||
+    if (!aTargetMesh->path || aMaterialNames.IsEmpty() || aToken.data->materials.Size() != aMaterialNames.Size() ||
         !ContainsUnresolvedMaterials(aToken.data->materials))
         return &aToken;
 
@@ -208,7 +208,10 @@ void* App::MeshExtension::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMate
         if (!targetMesh)
             return;
 
-        auto targetMeshState = AcquireMeshState(targetMesh);
+        auto targetMeshState = FindMeshState(targetMesh);
+
+        if (!targetMeshState)
+            return;
 
         Red::Handle<Red::CMesh> sourceMesh;
         Core::SharedPtr<MeshState> sourceMeshState;
@@ -220,7 +223,7 @@ void* App::MeshExtension::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMate
 
         if (sourceMesh)
         {
-            sourceMeshState = AcquireMeshState(sourceMesh);
+            sourceMeshState = FindMeshState(sourceMesh);
         }
         else
         {
@@ -228,7 +231,7 @@ void* App::MeshExtension::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMate
             sourceMeshState = targetMeshState;
         }
 
-        if (sourceMeshState == targetMeshState && targetMeshState->IsStatic())
+        if (!sourceMeshState)
             return;
 
         std::unique_lock _(targetMeshState->meshMutex);
@@ -277,7 +280,7 @@ void App::MeshExtension::ProcessDynamicMaterials(const Core::SharedPtr<DynamicCo
         aContext->sourceState->FillMaterials(aContext->sourceMesh);
     }
 
-    for (int32_t chunkIndex = 0; chunkIndex < aContext->materialNames.size; ++chunkIndex)
+    for (int32_t chunkIndex = 0; chunkIndex < aContext->materialNames.Size(); ++chunkIndex)
     {
         const auto& chunkName = aContext->materialNames[chunkIndex];
         const auto materialIndex = aContext->targetState->GetMaterialEntryIndex(chunkName);
@@ -286,7 +289,7 @@ void App::MeshExtension::ProcessDynamicMaterials(const Core::SharedPtr<DynamicCo
         {
             if (chunkName.hash == aContext->sourceMesh->path.hash)
             {
-                auto sourceTagIndex = static_cast<int32_t>(aContext->targetMesh->materialEntries.size);
+                auto sourceTagIndex = static_cast<int32_t>(aContext->targetMesh->materialEntries.Size());
                 aContext->targetState->materials[chunkName] = sourceTagIndex;
                 aContext->targetMesh->materialEntries.EmplaceBack();
 
@@ -616,7 +619,7 @@ void App::MeshExtension::ExpandMaterialParams(const Core::SharedPtr<DynamicConte
                                               const Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
                                               Red::JobQueue& aJobQueue)
 {
-    for (auto i = static_cast<int32_t>(aMaterialInstance->params.size) - 1; i >= 0; --i)
+    for (auto i = static_cast<int32_t>(aMaterialInstance->params.Size()) - 1; i >= 0; --i)
     {
         const auto& param = aMaterialInstance->params[i];
 
@@ -904,7 +907,7 @@ std::pair<Red::ResourcePath, bool> App::MeshExtension::ExpandResourcePath(Red::R
 
 void App::MeshExtension::FillFinalMaterials(const Core::SharedPtr<DynamicContext>& aContext)
 {
-    for (int32_t chunkIndex = 0; chunkIndex < aContext->materialNames.size; ++chunkIndex)
+    for (int32_t chunkIndex = 0; chunkIndex < aContext->materialNames.Size(); ++chunkIndex)
     {
         auto chunkName = aContext->materialNames[chunkIndex];
         auto materialIndex = aContext->targetState->GetMaterialEntryIndex(chunkName);
@@ -932,7 +935,7 @@ bool App::MeshExtension::IsSpecialMaterial(Red::CName aMaterialName)
 
 bool App::MeshExtension::IsContextualMesh(Red::CMesh* aMesh)
 {
-    return aMesh->materialEntries.size > 0 &&
+    return aMesh->materialEntries.Size() > 0 &&
            aMesh->materialEntries.Front().isLocalInstance &&
            aMesh->materialEntries.Front().name == ContextMaterialName;
 }
@@ -980,17 +983,17 @@ void App::MeshExtension::PrefetchMeshState(Red::CMesh* aMesh, const Core::Map<Re
 
 Red::CName App::MeshExtension::RegisterMeshSource(Red::CMesh* aMesh, Red::CMesh* aSourceMesh)
 {
-    if (!aSourceMesh || aSourceMesh->materialEntries.size == 0)
+    if (!aSourceMesh || aSourceMesh->materialEntries.IsEmpty())
         return {};
 
     auto meshState = AcquireMeshState(aMesh);
     auto sourceTag = meshState->RegisterSource(aSourceMesh);
 
-    if (aMesh->materialEntries.size > 0)
+    if (!aMesh->materialEntries.IsEmpty())
     {
         std::scoped_lock _(meshState->meshMutex);
 
-        auto materialIndex = static_cast<int32_t>(aMesh->materialEntries.size);
+        auto materialIndex = static_cast<int32_t>(aMesh->materialEntries.Size());
         meshState->materials[sourceTag] = materialIndex;
         aMesh->materialEntries.EmplaceBack();
 
@@ -1162,15 +1165,25 @@ int32_t App::MeshExtension::MeshState::GetExpansionIndex(Red::CName aExpansionNa
     return appearanceEntry.value();
 }
 
+void App::MeshExtension::MeshState::FillAppearances(Red::CMesh* aMesh)
+{
+    appearances.clear();
+
+    for (auto i = 0; i < aMesh->appearances.Size(); ++i)
+    {
+        appearances[aMesh->appearances[i]->name] = i;
+    }
+}
+
 void App::MeshExtension::MeshState::FillMaterials(Red::CMesh* aMesh)
 {
     materials.clear();
 
-    for (auto i = 0; i < aMesh->materialEntries.size; ++i)
+    for (auto i = 0; i < aMesh->materialEntries.Size(); ++i)
     {
         const auto& materialName = aMesh->materialEntries[i].name;
 
-        if (IsSpecialMaterial(materialName))
+        if (IsTemplateMaterial(materialName))
         {
             templates[materialName] = i;
         }
@@ -1216,9 +1229,14 @@ int32_t App::MeshExtension::MeshState::GetMaterialEntryIndex(Red::CName aMateria
     return materialEntry.value();
 }
 
-bool App::MeshExtension::MeshState::HasMaterialEntry(Red::CName aMaterialName) const
+int32_t App::MeshExtension::MeshState::GetTemplateEntryIndex(Red::CName aMaterialName)
 {
-    return materials.contains(aMaterialName);
+    auto templateEntry = templates.find(aMaterialName);
+
+    if (templateEntry == templates.end())
+        return -1;
+
+    return templateEntry.value();
 }
 
 Red::CName App::MeshExtension::MeshState::RegisterSource(Red::CMesh* aSourceMesh)

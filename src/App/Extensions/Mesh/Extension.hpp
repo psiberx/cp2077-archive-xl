@@ -24,9 +24,6 @@ private:
     {
         MeshState(Red::CMesh* aMesh);
 
-        void MarkStatic();
-        [[nodiscard]] bool IsStatic() const;
-
         void PrefetchContext(Red::CMesh* aMesh);
         void PrefillContext(const Core::Map<Red::CName, std::string>& aContext);
         void ResolveContextProperties();

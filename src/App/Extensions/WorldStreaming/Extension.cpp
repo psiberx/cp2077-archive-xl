@@ -625,7 +625,7 @@ void App::WorldStreamingExtension::OnRegisterSpots(Red::AIWorkspotManager* aMana
 
     if (merging)
     {
-        auto newSize = allSpots->size + aNewSpots.size;
+        auto newSize = allSpots->size + aNewSpots.Size();
         if (allSpots->capacity < newSize)
         {
             Raw::AISpotPersistentDataArray::Reserve(allSpots, newSize);

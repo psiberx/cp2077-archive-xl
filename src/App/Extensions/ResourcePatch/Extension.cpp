@@ -221,7 +221,7 @@ void App::ResourcePatchExtension::OnResourceDeserialize(void* aSerializer, uint6
 
 void App::ResourcePatchExtension::OnResourceReady(Red::ResourceSerializerContext* aContext)
 {
-    if (aContext->serializables.size > 0)
+    if (!aContext->serializables.IsEmpty())
     {
         for (const auto& serializable : aContext->serializables)
         {
@@ -427,7 +427,7 @@ void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResour
                     }
 
                     if (patchConfig->Modifies(AppearanceResourcePartsOverridesProp) &&
-                        patchDefinition->partsOverrides.size > 0)
+                        !patchDefinition->partsOverrides.IsEmpty())
                     {
                         for (const auto& partOverride : patchDefinition->partsOverrides)
                         {
@@ -545,7 +545,7 @@ void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, Red::Pos
 
             const auto& patchConfig = GetPatchConfig(patchPath);
 
-            if (patchConfig->Modifies(MeshAppearancesProp) && patchMesh->appearances.size != 0)
+            if (patchConfig->Modifies(MeshAppearancesProp) && !patchMesh->appearances.IsEmpty())
             {
                 auto sourceTag = MeshExtension::RegisterMeshSource(aMesh, patchMesh);
                 auto expansionTag = Red::CName();
@@ -556,7 +556,7 @@ void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, Red::Pos
                     cloneAppearance->name = patchAppearance->name;
                     cloneAppearance->chunkMaterials = patchAppearance->chunkMaterials;
 
-                    if (patchAppearance->tags.size == 1)
+                    if (patchAppearance->tags.Size() == 1)
                     {
                         expansionTag = patchAppearance->tags[0];
                     }
@@ -571,8 +571,8 @@ void App::ResourcePatchExtension::OnMeshResourceLoad(Red::CMesh* aMesh, Red::Pos
                     {
                         if (existingAppearance->name == cloneAppearance->name)
                         {
-                            if (existingAppearance->chunkMaterials.size == 0 ||
-                                cloneAppearance->chunkMaterials.size != 0)
+                            if (existingAppearance->chunkMaterials.IsEmpty() ||
+                                !cloneAppearance->chunkMaterials.IsEmpty())
                             {
                                 existingAppearance = cloneAppearance;
                             }
@@ -972,7 +972,7 @@ void App::ResourcePatchExtension::IncludeAppearanceParts(const Red::Handle<Red::
     if (!aResource || !aDefinition)
         return;
 
-    if (aDefinition->partsValues.size == 0)
+    if (aDefinition->partsValues.IsEmpty())
         return;
 
     if (!aForceIncludeParts && !aDefinition->visualTags.Contains(AppearancePartsTag))
@@ -1001,7 +1001,7 @@ void App::ResourcePatchExtension::IncludeAppearanceParts(const Red::Handle<Red::
             partExtractor.disablePreInitialization = aDisablePreInitialization;
             partExtractor.ExtractSync();
 
-            if (partExtractor.results.size > 0)
+            if (!partExtractor.results.IsEmpty())
             {
                 MergeComponents(aResultObjects, partExtractor.results, true, partToken->path, aResource->path);
 
@@ -1066,7 +1066,7 @@ void App::ResourcePatchExtension::PatchPackageResults(const Red::Handle<Red::Ent
         patchExtractor.disablePreInitialization = aDisablePreInitialization;
         patchExtractor.ExtractSync();
 
-        if (patchExtractor.results.size > 0)
+        if (!patchExtractor.results.IsEmpty())
         {
             if (patchConfig->Modifies(EntityTemplateComponentsProp))
             {
@@ -1126,7 +1126,7 @@ void App::ResourcePatchExtension::PatchPackageResults(const Red::Handle<Red::App
             jobQueue.Wait(patchExtractionJob);
             jobQueue.Dispatch([patchExtractor = std::move(patchExtractor), &aResultObjects, patchPath, patchDefinition,
                                aResource, aDefinition]() {
-                if (patchExtractor->results.size > 0)
+                if (!patchExtractor->results.IsEmpty())
                 {
                     MergeComponents(aResultObjects, patchExtractor->results, false, patchPath, aResource->path,
                                     patchDefinition->name, aDefinition->name);
@@ -1140,10 +1140,10 @@ void App::ResourcePatchExtension::MergeEntity(Red::DynArray<Red::Handle<Red::ISe
                                               Red::DynArray<Red::Handle<Red::ISerializable>>& aPatchObjects,
                                               int16_t aResultEntityIndex, int16_t aPatchEntityIndex)
 {
-    if (aResultEntityIndex < 0 || aResultEntityIndex >= aResultObjects.size)
+    if (aResultEntityIndex < 0 || aResultEntityIndex >= aResultObjects.Size())
         return;
 
-    if (aPatchEntityIndex < 0 || aPatchEntityIndex >= aPatchObjects.size)
+    if (aPatchEntityIndex < 0 || aPatchEntityIndex >= aPatchObjects.Size())
         return;
 
     if (auto patchEntity = Red::Cast<Red::Entity>(aPatchObjects[aPatchEntityIndex]))
@@ -1382,15 +1382,16 @@ Red::Handle<Red::AppearanceDefinition> App::ResourcePatchExtension::GetPatchAppe
 
 bool App::ResourcePatchExtension::IsPatched(const Red::Handle<Red::meshMeshAppearance>& aAppearance)
 {
-    return aAppearance->tags.size == 3 && aAppearance->tags[0] == ResourcePatchTag;
+    return aAppearance->tags.Size() == 3 && aAppearance->tags[0] == ResourcePatchTag;
 }
 
 Red::CName App::ResourcePatchExtension::GetExpansionName(const Red::Handle<Red::meshMeshAppearance>& aAppearance)
 {
-    return aAppearance->tags.size == 3 ? aAppearance->tags[1] : "";
+    return aAppearance->tags.Size() == 3 ? aAppearance->tags[1]
+                                         : (aAppearance->tags.Size() == 1 ? aAppearance->tags[0] : "");
 }
 
 Red::CName App::ResourcePatchExtension::GetPatchSource(const Red::Handle<Red::meshMeshAppearance>& aAppearance)
 {
-    return aAppearance->tags.size == 3 ? aAppearance->tags[2] : "";
+    return aAppearance->tags.Size() == 3 ? aAppearance->tags[2] : "";
 }

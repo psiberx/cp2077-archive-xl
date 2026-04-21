@@ -22,7 +22,7 @@
 #include <RED4ext/RED4ext.hpp>
 
 #include <RED4ext/JobQueue.hpp>
-#include <RED4ext/RenderProxy.hpp>
+#include <RED4ext/Rendering/RenderProxy.hpp>
 #include <RED4ext/ResourceDepot.hpp>
 #include <RED4ext/ResourceLoader.hpp>
 #include <RED4ext/Scripting/Natives/Generated/AI/SpotPersistentData.hpp>
@@ -114,6 +114,7 @@
 #include <RED4ext/Scripting/Natives/Generated/ink/WidgetLibraryItemInstance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/WidgetLibraryResource.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ink/WidgetLogicController.hpp>
+#include <RED4ext/Scripting/Natives/Generated/ink/anim/Sequence.hpp>
 #include <RED4ext/Scripting/Natives/Generated/loc/VoLanguageDataMap.hpp>
 #include <RED4ext/Scripting/Natives/Generated/localization/PersistenceOnScreenEntries.hpp>
 #include <RED4ext/Scripting/Natives/Generated/localization/PersistenceSubtitleMap.hpp>

@@ -63,7 +63,7 @@ inline Handle<T> ToHandle(U* aInstance)
 }
 
 template<typename T = ISerializable>
-inline Handle<T> MakeScriptedHandle(CClass* aType)
+inline Handle<T> MakeScriptedHandle(const CClass* aType)
 {
     return Handle<T>(reinterpret_cast<T*>(aType->CreateInstance(true)));
 }
@@ -72,11 +72,19 @@ template<typename T = ISerializable>
 inline Handle<T> MakeScriptedHandle(CName aTypeName)
 {
     auto classType = GetClass(aTypeName);
-
-    if (classType == nullptr)
-    {
+    if (!classType)
         return {};
-    }
+
+    return Handle<T>(reinterpret_cast<T*>(classType->CreateInstance(true)));
+}
+
+template<typename T>
+inline Handle<T> MakeScriptedHandle()
+{
+    auto classType = GetClass<T>();
+    if (!classType)
+        return {};
+
     return Handle<T>(reinterpret_cast<T*>(classType->CreateInstance(true)));
 }
 }

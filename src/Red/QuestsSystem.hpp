@@ -8,22 +8,22 @@ using QuestNodePathHash = uint32_t;
 
 inline bool IsRelatedQuestNodePath(const QuestNodePath& aParentPath, const QuestNodePath& aPath)
 {
-    return aPath.size > aParentPath.size &&
-           std::memcmp(aPath.entries, aParentPath.entries, aParentPath.size * sizeof(Red::QuestNodeID)) == 0;
+    return aPath.Size() > aParentPath.Size() &&
+           std::memcmp(aPath.Data(), aParentPath.Data(), aParentPath.Size() * sizeof(Red::QuestNodeID)) == 0;
 }
 
 inline QuestNodePathHash MakeQuestNodePathHash(const QuestNodePath& aNodePath, int32_t aLength = 0)
 {
     if (aLength == 0)
     {
-        aLength = static_cast<int32_t>(aNodePath.size);
+        aLength = static_cast<int32_t>(aNodePath.Size());
     }
     else if (aLength < 0)
     {
-        aLength += static_cast<int32_t>(aNodePath.size);
+        aLength += static_cast<int32_t>(aNodePath.Size());
     }
 
-    return FNV1a32(reinterpret_cast<uint8_t*>(aNodePath.entries), aLength * sizeof(QuestNodeID));
+    return FNV1a32(reinterpret_cast<const uint8_t*>(aNodePath.Data()), aLength * sizeof(QuestNodeID));
 }
 
 struct QuestNodeKey

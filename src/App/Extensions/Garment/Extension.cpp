@@ -181,7 +181,7 @@ Red::TemplateAppearance* App::GarmentExtension::OnResolveAppearance(Red::EntityT
     if (aSelector == EmptyAppearanceName)
         return s_emptyAppearance.get();
 
-    auto appearance = Raw::EntityTemplate::FindAppearance(aTemplate, aSelector);
+    auto* appearance = Raw::EntityTemplate::FindAppearance(aTemplate, aSelector);
 
     if (!IsUniqueAppearanceName(aSelector))
         return appearance;
@@ -224,7 +224,7 @@ Red::TemplateAppearance* App::GarmentExtension::OnResolveAppearance(Red::EntityT
                 {
                     std::unique_lock _(s_mutex);
                     aTemplate->appearances.EmplaceBack(*s_emptyAppearance);
-                    appearance = aTemplate->appearances.End() - 1;
+                    appearance = &aTemplate->appearances.Back();
                 }
 
                 appearance->name = aSelector;
@@ -270,10 +270,10 @@ void App::GarmentExtension::OnResolveDefinition(Red::AppearanceResource* aResour
 
     if (auto definition = aDefinition->instance)
     {
-        if (definition->partsValues.size > 0)
+        if (!definition->partsValues.IsEmpty())
         {
             auto depot = Red::ResourceDepot::Get();
-            for (auto i = static_cast<int32_t>(definition->partsValues.size - 1); i >= 0; --i)
+            for (auto i = static_cast<int32_t>(definition->partsValues.Size() - 1); i >= 0; --i)
             {
                 if (!depot->ResourceExists(definition->partsValues[i].resource.path))
                 {
@@ -310,12 +310,12 @@ void App::GarmentExtension::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset*
     if (!aAppearanceName || aAppearanceName == EmptyAppearanceName)
         return;
 
-#ifndef NDEBUG
-    if (aFinalTags.tags.size == 0)
-    {
-        LogDebug("[{}] [event=GetVisualTags ent={} app={}]", ExtensionName, aEntityPath.hash, aAppearanceName.ToString());
-    }
-#endif
+// #ifndef NDEBUG
+//     if (aFinalTags.tags.IsEmpty())
+//     {
+//         LogDebug("[{}] [event=GetVisualTags ent={} app={}]", ExtensionName, aEntityPath.hash, aAppearanceName.ToString());
+//     }
+// #endif
 
     auto cacheKey = Red::FNV1a64(aAppearanceName.ToString(), aEntityPath.hash);
 
@@ -739,7 +739,7 @@ void App::GarmentExtension::UpdatePartAttributes(Core::SharedPtr<EntityState>& a
 void App::GarmentExtension::UpdatePartAssignments(Red::DynArray<Red::Handle<Red::IComponent>>& aComponents,
                                                        Red::ResourcePath aPartResource)
 {
-    for (auto i = 0; i < aComponents.size; ++i)
+    for (auto i = 0; i < aComponents.Size(); ++i)
     {
         s_stateManager->LinkComponentToPart(aComponents[i], aPartResource);
     }
@@ -749,7 +749,7 @@ void App::GarmentExtension::UpdatePartAssignments(Core::SharedPtr<App::EntitySta
                                                        Red::DynArray<Red::Handle<Red::IComponent>>& aComponents,
                                                        Red::DynArray<Red::ResourcePath>& aPartResources)
 {
-    for (auto i = 0; i < aComponents.size; ++i)
+    for (auto i = 0; i < aComponents.Size(); ++i)
     {
         aEntityState->LinkComponentToPart(aComponents[i], aPartResources[i]);
     }
@@ -865,9 +865,9 @@ void App::GarmentExtension::ApplyOffsetOverrides(Core::SharedPtr<App::EntityStat
                                                       Red::DynArray<int32_t>& aOffsets,
                                                       Red::DynArray<Red::ResourcePath>& aResourcePaths)
 {
-    if (aOffsets.size != aResourcePaths.size)
+    if (aOffsets.Size() != aResourcePaths.Size())
     {
-        aOffsets.Reserve(aResourcePaths.size);
+        aOffsets.Reserve(aResourcePaths.Size());
     }
 
     if (s_garmentOffsetsEnabled)

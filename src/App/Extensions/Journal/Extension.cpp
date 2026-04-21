@@ -138,23 +138,23 @@ void App::JournalExtension::OnInitializeRoot(Red::game::JournalRootFolderEntry* 
 void App::JournalExtension::OnMappinDataLoaded(void* aMappinSystem, Red::worldRuntimeScene*)
 {
     auto cookedMappinResource = Raw::MappinSystem::CookedMappinResource::Ptr(aMappinSystem)->instance;
-    if (cookedMappinResource->cookedData.size && cookedMappinResource->cookedData.size == cookedMappinResource->cookedData.capacity)
+    if (!cookedMappinResource->cookedData.IsEmpty() && cookedMappinResource->cookedData.Size() == cookedMappinResource->cookedData.Capacity())
     {
         {
-            const auto reserve = std::max(s_mappins.size() << 1, cookedMappinResource->cookedData.size / 2ull);
-            cookedMappinResource->cookedData.Reserve(cookedMappinResource->cookedData.size + reserve);
+            const auto reserve = std::max(s_mappins.size() << 1, cookedMappinResource->cookedData.Size() / 2ull);
+            cookedMappinResource->cookedData.Reserve(cookedMappinResource->cookedData.Size() + reserve);
         }
         {
-            const auto reserve = std::max(s_mappins.size() << 1, cookedMappinResource->cookedMultiData.size / 2ull);
-            cookedMappinResource->cookedMultiData.Reserve(cookedMappinResource->cookedMultiData.size + reserve);
+            const auto reserve = std::max(s_mappins.size() << 1, cookedMappinResource->cookedMultiData.Size() / 2ull);
+            cookedMappinResource->cookedMultiData.Reserve(cookedMappinResource->cookedMultiData.Size() + reserve);
         }
     }
 
     auto cookedPoiResource = Raw::MappinSystem::CookedPoiResource::Ptr(aMappinSystem)->instance;
-    if (cookedPoiResource->cookedData.size && cookedPoiResource->cookedData.size == cookedPoiResource->cookedData.capacity)
+    if (!cookedPoiResource->cookedData.IsEmpty() && cookedPoiResource->cookedData.Size() == cookedPoiResource->cookedData.Capacity())
     {
-        const auto reserve = std::max(s_mappins.size() << 1, cookedPoiResource->cookedData.size / 2ull);
-        cookedPoiResource->cookedData.Reserve(cookedPoiResource->cookedData.size + reserve);
+        const auto reserve = std::max(s_mappins.size() << 1, cookedPoiResource->cookedData.Size() / 2ull);
+        cookedPoiResource->cookedData.Reserve(cookedPoiResource->cookedData.Size() + reserve);
     }
 }
 
@@ -220,7 +220,7 @@ void App::JournalExtension::ResolveCookedMappin(void* aMappinSystem, uint32_t aH
             auto resource = Raw::MappinSystem::CookedPoiResource::Ptr(aMappinSystem)->instance;
             resource->cookedData.PushBack(std::move(cookedMappin));
 
-            aCookedMappin = resource->cookedData.End() - 1;
+            aCookedMappin = &resource->cookedData.Back();
         }
     }
     else
@@ -237,7 +237,7 @@ void App::JournalExtension::ResolveCookedMappin(void* aMappinSystem, uint32_t aH
             auto resource = Raw::MappinSystem::CookedMappinResource::Ptr(aMappinSystem)->instance;
             resource->cookedData.PushBack(std::move(cookedMappin));
 
-            aCookedMappin = resource->cookedData.End() - 1;
+            aCookedMappin = &resource->cookedData.Back();
         }
     }
 }
@@ -316,7 +316,7 @@ bool App::JournalExtension::ResolveMappinVolume(uint32_t aJournalHash,
 
     const auto volume = Red::MakeHandle<Red::gamemappinsOutlineMappinVolume>();
     volume->height = areaNode->outline->height  * scale.Z;
-    volume->outlinePoints.Reserve(areaNode->outline->points.size);
+    volume->outlinePoints.Reserve(areaNode->outline->points.Size());
 
     for (const auto& areaPoint : areaNode->outline->points)
     {

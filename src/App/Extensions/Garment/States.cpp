@@ -437,10 +437,10 @@ bool App::EntityState::SelectDynamicAppearance(App::DynamicAppearanceName& aSele
         if (!baseAppearance)
             return false;
 
-        const auto baseAppearanceIndex = baseAppearance - aResource->appearances.Begin();
+        const auto baseAppearanceIndex = baseAppearance - &aResource->appearances.Front();
 
         aResource->appearances.EmplaceBack();
-        aAppearance = aResource->appearances.End() - 1;
+        aAppearance = &aResource->appearances.Back();
 
         baseAppearance = &aResource->appearances[baseAppearanceIndex];
 
