@@ -212,7 +212,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
     auto& buffer = Raw::StreamingSector::NodeBuffer::Ref(aSector);
     auto nodeCount = buffer.nodeSetups.GetInstanceCount();
 
-    if (nodeCount!= aSectorMod.expectedNodes)
+    if (nodeCount != aSectorMod.expectedNodes)
     {
         LogError(R"([{}] {}: The target sector has {} node(s), but the mod expects {}.)",
                  ExtensionName, aSectorMod.mod, nodeCount, aSectorMod.expectedNodes);
