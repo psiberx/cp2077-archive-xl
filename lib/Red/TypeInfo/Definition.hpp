@@ -1028,7 +1028,7 @@ struct ClassDefinition
 
         auto* type = Red::Memory::RTTIAllocator::Get()->Alloc<Descriptor>();
         new (type) Descriptor();
-        
+
         type->name = CNamePool::Add(name.data());
 
         if constexpr (Detail::HasRegisterHandler<Specialization, Descriptor>)
