@@ -21,7 +21,8 @@ App::Application::Application(HMODULE aHandle, const RED4ext::v1::Sdk* aSdk)
     Register<Support::MinHookProvider>();
     Register<Support::SpdlogProvider>()
         ->AppendTimestampToLogName()
-        ->CreateRecentLogSymlink();
+        ->CreateRecentLogSymlink()
+        ->SetMaxLogFiles(5);
     Register<Support::RED4extProvider>(aHandle, aSdk)
         ->EnableAddressLibrary()
         ->RegisterScripts(Env::ScriptsDir());
