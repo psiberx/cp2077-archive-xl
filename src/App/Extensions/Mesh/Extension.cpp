@@ -382,11 +382,21 @@ void App::MeshExtension::ProcessDynamicMaterials(const Core::SharedPtr<DynamicCo
 
             if (chunk->sourceIndex < 0)
             {
-                const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
-                const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
+                if (aContext->sourceState == aContext->targetState)
+                {
+                    const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
 
-                LogError(R"([{}] Material "{}" of "{}" is not defined and cannot be dynamically instantiated for "{}", material template "{}" doesn't exist.)",
-                         ExtensionName, chunkName.ToString(), sourcePathStr, meshPathStr, chunk->templateName.ToString());
+                    LogError(R"([{}] Material "{}" of "{}" is not defined and cannot be dynamically instantiated, material template "{}" doesn't exist.)",
+                             ExtensionName, chunkName.ToString(), meshPathStr, chunk->templateName.ToString());
+                }
+                else
+                {
+                    const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
+                    const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
+
+                    LogError(R"([{}] Material "{}" of "{}" is not defined and cannot be dynamically instantiated for "{}", material template "{}" doesn't exist.)",
+                             ExtensionName, chunkName.ToString(), sourcePathStr, meshPathStr, chunk->templateName.ToString());
+                }
                 continue;
             }
         }
