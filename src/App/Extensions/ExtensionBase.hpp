@@ -26,6 +26,7 @@ public:
     virtual bool AddConfig(const std::string& aConfigName, const YAML::Node& aConfigNode) = 0;
     virtual void ResetConfigs() {}
     virtual void Configure() {}
+    virtual void PostConfigure() {}
     virtual void Reload() {}
 };
 

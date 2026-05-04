@@ -181,6 +181,22 @@ void App::ExtensionLoader::Load()
         }
     }
 
+    for (const auto& module : m_configurables)
+    {
+        try
+        {
+            module->PostConfigure();
+        }
+        catch (const std::exception& ex)
+        {
+            LogError("[{}] {}", module->GetName(), ex.what());
+        }
+        catch (...)
+        {
+            LogError("[{}] Failed to configure. An unknown error has occurred.", module->GetName());
+        }
+    }
+
     m_loaded = true;
 }
 
@@ -266,6 +282,22 @@ void App::ExtensionLoader::Reload()
         try
         {
             module->Configure();
+        }
+        catch (const std::exception& ex)
+        {
+            LogError("[{}] {}", module->GetName(), ex.what());
+        }
+        catch (...)
+        {
+            LogError("[{}] Failed to configure. An unknown error has occurred.", module->GetName());
+        }
+    }
+
+    for (const auto& module : m_configurables)
+    {
+        try
+        {
+            module->PostConfigure();
         }
         catch (const std::exception& ex)
         {

@@ -1,4 +1,5 @@
 #include "Extension.hpp"
+#include "App/Extensions/ResourcePatch/Extension.hpp"
 #include "Red/CommunitySystem.hpp"
 
 namespace
@@ -24,7 +25,6 @@ std::string_view App::WorldStreamingExtension::GetName()
 
 bool App::WorldStreamingExtension::Load()
 {
-    HookBefore<Raw::RuntimeSystemWorldStreaming::LoadWorldJob>(&WorldStreamingExtension::OnLoadWorldJob).OrThrow();
     HookAfter<Raw::StreamingSector::PostLoad>(&OnSectorPostLoad).OrThrow();
     Hook<Raw::AIWorkspotManager::RegisterSpots>(&OnRegisterSpots).OrThrow();
 
@@ -36,7 +36,6 @@ bool App::WorldStreamingExtension::Load()
 
 bool App::WorldStreamingExtension::Unload()
 {
-    Unhook<Raw::RuntimeSystemWorldStreaming::LoadWorldJob>();
     Unhook<Raw::StreamingSector::PostLoad>();
     Unhook<Raw::AIWorkspotManager::RegisterSpots>();
 
@@ -99,83 +98,18 @@ void App::WorldStreamingExtension::Configure()
     }
 }
 
-void App::WorldStreamingExtension::OnLoadWorldJob(Red::WorldLoadJobData* aData, const Red::JobGroup& aJobGroup)
+void App::WorldStreamingExtension::PostConfigure()
 {
-    auto& world = aData->token->Get();
+    ResourcePatchExtension::ClearTarget(MainWorldResource);
 
-    if (!world)
+    for (auto& unit : m_configs)
     {
-        LogWarning("[{}] World streaming cannot be initialized, world resource failed to load.", ExtensionName);
-        return;
-    }
-
-    if (world->path != MainWorldResource)
-        return;
-
-    Red::JobQueue jobQueue(aJobGroup);
-
-    LogInfo("[{}] World streaming is initializing...", ExtensionName);
-
-    if (!m_configs.empty())
-    {
-        Core::Vector<Red::ResourceReference<Red::worldStreamingBlock>> blockRefs;
-        Core::Map<Red::ResourcePath, std::string_view> blockPaths;
-
-        for (const auto& unit : m_configs)
+        for (auto& blockPathStr : unit.blocks)
         {
-            if (!unit.blocks.empty())
-            {
-                for (const auto& blockPathStr : unit.blocks)
-                {
-                    auto blockPath = Red::ResourcePath(blockPathStr.c_str());
-                    if (!blockPaths.contains(blockPath))
-                    {
-                        blockRefs.emplace_back(blockPath);
-                        blockRefs.back().LoadAsync();
-
-                        blockPaths.insert({blockPath, blockPathStr});
-
-                        jobQueue.Wait(blockRefs.back().token->job);
-                    }
-                }
-            }
+            ResourcePatchExtension::RegisterPatch(MainWorldResource, blockPathStr.data());
         }
 
-        if (!blockRefs.empty())
-        {
-            jobQueue.Dispatch([world, blockRefs = std::move(blockRefs), blockPaths]() mutable {
-                bool allSucceeded = true;
-
-                for (auto& blockRef : blockRefs)
-                {
-                    if (!blockRef.token->IsFailed())
-                    {
-                        LogInfo("[{}] Merging streaming block \"{}\"...", ExtensionName, blockPaths[blockRef.path]);
-
-                        world->blockRefs.EmplaceBack(std::move(blockRef));
-                    }
-                    else
-                    {
-                        LogError("[{}] Resource \"{}\" failed to load.", ExtensionName, blockPaths[blockRef.path]);
-
-                        allSucceeded = false;
-                    }
-                }
-
-                if (allSucceeded)
-                    LogInfo("[{}] All streaming blocks merged.", ExtensionName);
-                else
-                    LogWarning("[{}] Streaming blocks merged with issues.", ExtensionName);
-            });
-        }
-        else
-        {
-            LogInfo("[{}] No blocks to merge.", ExtensionName);
-        }
-    }
-    else
-    {
-        LogInfo("[{}] No blocks to merge.", ExtensionName);
+        unit.blocks.clear();
     }
 }
 

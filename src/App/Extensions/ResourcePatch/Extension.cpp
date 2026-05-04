@@ -61,6 +61,7 @@ bool App::ResourcePatchExtension::Load()
     HookAfter<Raw::AppearanceDefinition::ExtractPartComponents>(&OnPartPackageExtract).OrThrow();
     HookAfter<Raw::GarmentAssembler::ExtractComponentsJob>(&OnGarmentPackageExtract).OrThrow();
     HookAfter<Raw::PersistencySystem::SetPersistentStateData>(&OnSetPersistentStateData).OrThrow();
+    HookAfter<Raw::StreamingWorld::Serialize>(&OnStreamingWorldSerialize).OrThrow();
 
     s_resourcePathRegistry = Core::Resolve<ResourcePathRegistry>();
 
@@ -962,6 +963,42 @@ void App::ResourcePatchExtension::OnSetPersistentStateData(uint64_t a1, Red::Dat
     }
 }
 
+void App::ResourcePatchExtension::OnStreamingWorldSerialize(Red::worldStreamingWorld* aWorld, Red::BaseStream* aStream)
+{
+    const auto& patchList = GetPatchList(aWorld->path);
+
+    if (patchList.empty())
+        return;
+
+    LogInfo("[{}] World streaming is initializing...", ExtensionName);
+    bool allSucceeded = true;
+
+    for (const auto& patchPath : patchList)
+    {
+        auto patchToken = GetPatchToken<Red::worldStreamingBlock>(patchPath);
+
+        if (!patchToken)
+        {
+            allSucceeded = false;
+            continue;
+        }
+
+        aWorld->blockRefs.EmplaceBack();
+
+        auto& blockRef = aWorld->blockRefs.Back();
+        blockRef.path = patchToken->path;
+        blockRef.token = patchToken;
+
+        LogInfo("[{}] Merging streaming block \"{}\"...", ExtensionName,
+                s_resourcePathRegistry->ResolvePathOrHash(patchToken->path));
+    }
+
+    if (allSucceeded)
+        LogInfo("[{}] All streaming blocks merged.", ExtensionName);
+    else
+        LogWarning("[{}] Streaming blocks merged with issues.", ExtensionName);
+}
+
 void App::ResourcePatchExtension::IncludeAppearanceParts(const Red::Handle<Red::AppearanceResource>& aResource,
                                                          const Red::Handle<Red::AppearanceDefinition>& aDefinition,
                                                          Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
@@ -1394,4 +1431,23 @@ Red::CName App::ResourcePatchExtension::GetExpansionName(const Red::Handle<Red::
 Red::CName App::ResourcePatchExtension::GetPatchSource(const Red::Handle<Red::meshMeshAppearance>& aAppearance)
 {
     return aAppearance->tags.Size() == 3 ? aAppearance->tags[2] : "";
+}
+
+void App::ResourcePatchExtension::RegisterPatch(Red::ResourcePath aTarget, Red::ResourcePath aPatch)
+{
+    s_patches[aPatch] = Core::MakeShared<ResourcePatch>();
+    s_patchTargets[aTarget].push_back(aPatch);
+}
+
+void App::ResourcePatchExtension::RegisterPatch(Red::ResourcePath aTarget, const char* aPatch)
+{
+    s_patches[aPatch] = Core::MakeShared<ResourcePatch>();
+    s_patchTargets[aTarget].emplace_back(aPatch);
+
+    s_resourcePathRegistry->RegisterPath(aPatch, aPatch);
+}
+
+void App::ResourcePatchExtension::ClearTarget(Red::ResourcePath aTarget)
+{
+    s_patchTargets[aTarget].clear();
 }

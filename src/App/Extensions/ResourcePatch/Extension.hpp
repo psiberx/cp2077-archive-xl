@@ -23,6 +23,10 @@ public:
     static Red::CName GetExpansionName(const Red::Handle<Red::meshMeshAppearance>& aAppearance);
     static Red::CName GetPatchSource(const Red::Handle<Red::meshMeshAppearance>& aAppearance);
 
+    static void RegisterPatch(Red::ResourcePath aTarget, Red::ResourcePath aPatch);
+    static void RegisterPatch(Red::ResourcePath aTarget,  const char* aPatch);
+    static void ClearTarget(Red::ResourcePath aTarget);
+
 private:
     using DefinitionData = std::pair<Red::Handle<Red::AppearanceDefinition>, Red::SharedPtr<Red::DeferredDataBufferToken>>;
     using DefinitionMap = Core::Map<Red::CName, DefinitionData>;
@@ -44,6 +48,7 @@ private:
     static void OnCurveSetResourceLoad(Red::CurveSet* aResource);
     static void OnDeviceResourceLoad(Red::gameDeviceResource* aResource);
     static void OnSetPersistentStateData(uint64_t a1, Red::DataBuffer& aData, uint64_t a3, uint32_t a4);
+    static void OnStreamingWorldSerialize(Red::worldStreamingWorld* aWorld, Red::BaseStream* aStream);
 
     static void IncludeAppearanceParts(const Red::Handle<Red::AppearanceResource>& aResource,
                                        const Red::Handle<Red::AppearanceDefinition>& aDefinition,

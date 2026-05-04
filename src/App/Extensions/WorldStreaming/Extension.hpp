@@ -7,8 +7,6 @@
 
 namespace App
 {
-using StreamingBlockRef = Red::ResourceReference<Red::world::StreamingBlock>;
-
 class WorldStreamingExtension : public ConfigurableExtensionImpl<WorldStreamingConfig>
 {
 public:
@@ -16,9 +14,9 @@ public:
     bool Load() override;
     bool Unload() override;
     void Configure() override;
+    void PostConfigure() override;
 
 private:
-    void OnLoadWorldJob(Red::WorldLoadJobData* aData, const Red::JobGroup& aJobGroup);
     static void OnSectorPostLoad(Red::world::StreamingSector* aSector, uint64_t);
     static void OnRegisterSpots(Red::AIWorkspotManager* aManager,
                                 const Red::DynArray<Red::AISpotPersistentData>& aNewSpots);
