@@ -18,7 +18,7 @@ public:
     void Configure() override;
 
 private:
-    void OnWorldSerialize(Red::world::StreamingWorld* aWorld, Red::BaseStream* aStream);
+    void OnLoadWorldJob(Red::WorldLoadJobData* aData, const Red::JobGroup& aJobGroup);
     static void OnSectorPostLoad(Red::world::StreamingSector* aSector, uint64_t);
     static void OnRegisterSpots(Red::AIWorkspotManager* aManager,
                                 const Red::DynArray<Red::AISpotPersistentData>& aNewSpots);

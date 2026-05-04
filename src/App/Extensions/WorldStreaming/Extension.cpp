@@ -24,7 +24,7 @@ std::string_view App::WorldStreamingExtension::GetName()
 
 bool App::WorldStreamingExtension::Load()
 {
-    HookAfter<Raw::StreamingWorld::Serialize>(&WorldStreamingExtension::OnWorldSerialize).OrThrow();
+    HookBefore<Raw::RuntimeSystemWorldStreaming::LoadWorldJob>(&WorldStreamingExtension::OnLoadWorldJob).OrThrow();
     HookAfter<Raw::StreamingSector::PostLoad>(&OnSectorPostLoad).OrThrow();
     Hook<Raw::AIWorkspotManager::RegisterSpots>(&OnRegisterSpots).OrThrow();
 
@@ -36,7 +36,7 @@ bool App::WorldStreamingExtension::Load()
 
 bool App::WorldStreamingExtension::Unload()
 {
-    Unhook<Raw::StreamingWorld::Serialize>();
+    Unhook<Raw::RuntimeSystemWorldStreaming::LoadWorldJob>();
     Unhook<Raw::StreamingSector::PostLoad>();
     Unhook<Raw::AIWorkspotManager::RegisterSpots>();
 
@@ -99,24 +99,32 @@ void App::WorldStreamingExtension::Configure()
     }
 }
 
-void App::WorldStreamingExtension::OnWorldSerialize(Red::world::StreamingWorld* aWorld, Red::BaseStream* aStream)
+void App::WorldStreamingExtension::OnLoadWorldJob(Red::WorldLoadJobData* aData, const Red::JobGroup& aJobGroup)
 {
-    if (aWorld->path != MainWorldResource)
+    auto& world = aData->token->Get();
+
+    if (!world)
+    {
+        LogWarning("[{}] World streaming cannot be initialized, world resource failed to load.", ExtensionName);
         return;
+    }
+
+    if (world->path != MainWorldResource)
+        return;
+
+    Red::JobQueue jobQueue(aJobGroup);
 
     LogInfo("[{}] World streaming is initializing...", ExtensionName);
 
     if (!m_configs.empty())
     {
-        Core::Vector<StreamingBlockRef> blockRefs;
+        Core::Vector<Red::ResourceReference<Red::worldStreamingBlock>> blockRefs;
         Core::Map<Red::ResourcePath, std::string_view> blockPaths;
 
         for (const auto& unit : m_configs)
         {
             if (!unit.blocks.empty())
             {
-                // LogInfo("[{}] Processing \"{}\"...", ExtensionName, unit.name);
-
                 for (const auto& blockPathStr : unit.blocks)
                 {
                     auto blockPath = Red::ResourcePath(blockPathStr.c_str());
@@ -126,6 +134,8 @@ void App::WorldStreamingExtension::OnWorldSerialize(Red::world::StreamingWorld* 
                         blockRefs.back().LoadAsync();
 
                         blockPaths.insert({blockPath, blockPathStr});
+
+                        jobQueue.Wait(blockRefs.back().token->job);
                     }
                 }
             }
@@ -133,30 +143,30 @@ void App::WorldStreamingExtension::OnWorldSerialize(Red::world::StreamingWorld* 
 
         if (!blockRefs.empty())
         {
-            Red::WaitForResources(blockRefs, std::chrono::milliseconds(5000));
+            jobQueue.Dispatch([world, blockRefs = std::move(blockRefs), blockPaths]() mutable {
+                bool allSucceeded = true;
 
-            bool allSucceeded = true;
-
-            for (auto& blockRef : blockRefs)
-            {
-                if (!blockRef.token->IsFailed())
+                for (auto& blockRef : blockRefs)
                 {
-                    LogInfo("[{}] Merging streaming block \"{}\"...", ExtensionName, blockPaths[blockRef.path]);
+                    if (!blockRef.token->IsFailed())
+                    {
+                        LogInfo("[{}] Merging streaming block \"{}\"...", ExtensionName, blockPaths[blockRef.path]);
 
-                    aWorld->blockRefs.EmplaceBack(std::move(blockRef));
+                        world->blockRefs.EmplaceBack(std::move(blockRef));
+                    }
+                    else
+                    {
+                        LogError("[{}] Resource \"{}\" failed to load.", ExtensionName, blockPaths[blockRef.path]);
+
+                        allSucceeded = false;
+                    }
                 }
+
+                if (allSucceeded)
+                    LogInfo("[{}] All streaming blocks merged.", ExtensionName);
                 else
-                {
-                    LogError("[{}] Resource \"{}\" failed to load.", ExtensionName, blockPaths[blockRef.path]);
-
-                    allSucceeded = false;
-                }
-            }
-
-            if (allSucceeded)
-                LogInfo("[{}] All streaming blocks merged.", ExtensionName);
-            else
-                LogWarning("[{}] Streaming blocks merged with issues.", ExtensionName);
+                    LogWarning("[{}] Streaming blocks merged with issues.", ExtensionName);
+            });
         }
         else
         {
