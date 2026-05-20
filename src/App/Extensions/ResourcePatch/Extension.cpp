@@ -54,14 +54,13 @@ bool App::ResourcePatchExtension::Load()
     HookBefore<Raw::ResourceSerializer::Deserialize>(&OnResourceDeserialize).OrThrow();
     HookBefore<Raw::ResourceSerializer::OnDependenciesReady>(&OnResourceReady).OrThrow();
     HookBefore<Raw::EntityTemplate::PostLoad>(&OnEntityTemplateLoad).OrThrow();
-    HookBefore<Raw::AppearanceResource::OnLoad>(&OnAppearanceResourceLoad).OrThrow();
+    HookBefore<Raw::AppearanceResource::PostLoad>(&OnAppearanceResourceLoad).OrThrow();
     HookBefore<Raw::CMesh::PostLoad>(&OnMeshResourceLoad).OrThrow();
     Hook<Raw::MorphTargetMesh::PostLoad>(&OnMorphTargetResourceLoad).OrThrow();
     HookBefore<Raw::EntityBuilder::ScheduleExtractComponentsJob>(&OnEntityPackageLoad).OrThrow();
     HookAfter<Raw::AppearanceDefinition::ExtractPartComponents>(&OnPartPackageExtract).OrThrow();
     HookAfter<Raw::GarmentAssembler::ExtractComponentsJob>(&OnGarmentPackageExtract).OrThrow();
     HookAfter<Raw::PersistencySystem::SetPersistentStateData>(&OnSetPersistentStateData).OrThrow();
-    HookAfter<Raw::StreamingWorld::Serialize>(&OnStreamingWorldSerialize).OrThrow();
 
     s_resourcePathRegistry = Core::Resolve<ResourcePathRegistry>();
 
@@ -74,7 +73,7 @@ bool App::ResourcePatchExtension::Unload()
     Unhook<Raw::ResourceSerializer::Deserialize>();
     Unhook<Raw::ResourceSerializer::OnDependenciesReady>();
     Unhook<Raw::EntityTemplate::PostLoad>();
-    Unhook<Raw::AppearanceResource::OnLoad>();
+    Unhook<Raw::AppearanceResource::PostLoad>();
     Unhook<Raw::CMesh::PostLoad>();
     Unhook<Raw::MorphTargetMesh::PostLoad>();
     Unhook<Raw::EntityBuilder::ScheduleExtractComponentsJob>();
@@ -226,16 +225,32 @@ void App::ResourcePatchExtension::OnResourceReady(Red::ResourceSerializerContext
     {
         for (const auto& serializable : aContext->serializables)
         {
-            if (const auto& resource = Red::Cast<Red::CurveSet>(serializable))
+            switch (serializable->GetNativeType()->GetName())
             {
-                OnCurveSetResourceLoad(resource);
-                continue;
+            case Red::GetTypeName<Red::CurveSet>():
+            {
+                if (const auto& resource = Red::Cast<Red::CurveSet>(serializable))
+                {
+                    OnCurveSetResourceLoad(resource);
+                }
+                break;
             }
-
-            if (const auto& resource = Red::Cast<Red::gameDeviceResource>(serializable))
+            case Red::GetTypeName<Red::gameDeviceResource>():
             {
-                OnDeviceResourceLoad(resource);
-                continue;
+                if (const auto& resource = Red::Cast<Red::gameDeviceResource>(serializable))
+                {
+                    OnDeviceResourceLoad(resource);
+                }
+                break;
+            }
+            case Red::GetTypeName<Red::worldStreamingWorld>():
+            {
+                if (const auto& resource = Red::Cast<Red::worldStreamingWorld>(serializable))
+                {
+                    OnStreamingWorldLoad(resource);
+                }
+                break;
+            }
             }
         }
     }
@@ -338,7 +353,7 @@ void App::ResourcePatchExtension::OnEntityTemplateLoad(Red::EntityTemplate* aTem
     }
 }
 
-void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResource* aResource)
+void App::ResourcePatchExtension::OnAppearanceResourceLoad(Red::AppearanceResource* aResource, Red::PostLoadParams*)
 {
     const auto& patchList = GetPatchList(aResource->path);
 
@@ -863,6 +878,42 @@ void App::ResourcePatchExtension::OnGarmentPackageExtract(Red::GarmentExtraction
     aParams->partTemplate = originalEntityTemplate;
 }
 
+void App::ResourcePatchExtension::OnStreamingWorldLoad(Red::worldStreamingWorld* aWorld)
+{
+    const auto& patchList = GetPatchList(aWorld->path);
+
+    if (patchList.empty())
+        return;
+
+    LogInfo("[{}] World streaming is initializing...", ExtensionName);
+    bool allSucceeded = true;
+
+    for (const auto& patchPath : patchList)
+    {
+        auto patchToken = GetPatchToken<Red::worldStreamingBlock>(patchPath);
+
+        if (!patchToken)
+        {
+            allSucceeded = false;
+            continue;
+        }
+
+        aWorld->blockRefs.EmplaceBack();
+
+        auto& blockRef = aWorld->blockRefs.Back();
+        blockRef.path = patchToken->path;
+        blockRef.token = patchToken;
+
+        LogInfo("[{}] Merging streaming block \"{}\"...", ExtensionName,
+                s_resourcePathRegistry->ResolvePathOrHash(patchToken->path));
+    }
+
+    if (allSucceeded)
+        LogInfo("[{}] All streaming blocks merged.", ExtensionName);
+    else
+        LogWarning("[{}] Streaming blocks merged with issues.", ExtensionName);
+}
+
 void App::ResourcePatchExtension::OnCurveSetResourceLoad(Red::CurveSet* aResource)
 {
     const auto& patchList = GetPatchList(aResource->path);
@@ -961,42 +1012,6 @@ void App::ResourcePatchExtension::OnSetPersistentStateData(uint64_t a1, Red::Dat
 
         Raw::PersistencySystem::SetPersistentStateData(a1, patchResource->buffer, a3, a4);
     }
-}
-
-void App::ResourcePatchExtension::OnStreamingWorldSerialize(Red::worldStreamingWorld* aWorld, Red::BaseStream* aStream)
-{
-    const auto& patchList = GetPatchList(aWorld->path);
-
-    if (patchList.empty())
-        return;
-
-    LogInfo("[{}] World streaming is initializing...", ExtensionName);
-    bool allSucceeded = true;
-
-    for (const auto& patchPath : patchList)
-    {
-        auto patchToken = GetPatchToken<Red::worldStreamingBlock>(patchPath);
-
-        if (!patchToken)
-        {
-            allSucceeded = false;
-            continue;
-        }
-
-        aWorld->blockRefs.EmplaceBack();
-
-        auto& blockRef = aWorld->blockRefs.Back();
-        blockRef.path = patchToken->path;
-        blockRef.token = patchToken;
-
-        LogInfo("[{}] Merging streaming block \"{}\"...", ExtensionName,
-                s_resourcePathRegistry->ResolvePathOrHash(patchToken->path));
-    }
-
-    if (allSucceeded)
-        LogInfo("[{}] All streaming blocks merged.", ExtensionName);
-    else
-        LogWarning("[{}] Streaming blocks merged with issues.", ExtensionName);
 }
 
 void App::ResourcePatchExtension::IncludeAppearanceParts(const Red::Handle<Red::AppearanceResource>& aResource,

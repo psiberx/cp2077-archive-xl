@@ -23,7 +23,7 @@ constexpr uint32_t AppearanceDefinition_ExtractPartComponents = 39206067;
 
 constexpr uint32_t AppearanceNameVisualTagsPreset_GetVisualTags = 1186798404;
 
-constexpr uint32_t AppearanceResource_OnLoad = 3141736993;
+constexpr uint32_t AppearanceResource_PostLoad = 3141736993;
 constexpr uint32_t AppearanceResource_FindAppearanceDefinition = 549398675;
 
 constexpr uint32_t AttachmentSlots_InitializeSlots = 3224838039;

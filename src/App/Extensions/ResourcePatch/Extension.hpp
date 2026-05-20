@@ -38,17 +38,17 @@ private:
                                       Red::DynArray<Red::Handle<Red::ISerializable>>&, uint64_t);
     static void OnResourceReady(Red::ResourceSerializerContext* aContext);
     static void OnEntityTemplateLoad(Red::EntityTemplate* aTemplate, void*);
-    static void OnAppearanceResourceLoad(Red::AppearanceResource* aResource);
+    static void OnAppearanceResourceLoad(Red::AppearanceResource* aResource, Red::PostLoadParams*);
     static void OnMeshResourceLoad(Red::CMesh* aMesh, Red::PostLoadParams* aParams);
     static void OnMorphTargetResourceLoad(Red::MorphTargetMesh* aMorphTarget, Red::PostLoadParams* aParams);
     static void OnEntityPackageLoad(Red::JobQueue& aJobQueue, void*, Red::EntityBuilderJobParams* aParams);
     static void OnPartPackageExtract(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
                                      const Red::SharedPtr<Red::ResourceToken<Red::EntityTemplate>>& aPartToken);
     static void OnGarmentPackageExtract(Red::GarmentExtractionParams* aParams, const Red::JobGroup& aJobGroup);
+    static void OnStreamingWorldLoad(Red::worldStreamingWorld* aWorld);
     static void OnCurveSetResourceLoad(Red::CurveSet* aResource);
     static void OnDeviceResourceLoad(Red::gameDeviceResource* aResource);
     static void OnSetPersistentStateData(uint64_t a1, Red::DataBuffer& aData, uint64_t a3, uint32_t a4);
-    static void OnStreamingWorldSerialize(Red::worldStreamingWorld* aWorld, Red::BaseStream* aStream);
 
     static void IncludeAppearanceParts(const Red::Handle<Red::AppearanceResource>& aResource,
                                        const Red::Handle<Red::AppearanceDefinition>& aDefinition,
