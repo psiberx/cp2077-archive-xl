@@ -700,12 +700,12 @@ class ClassDescriptorDefaultImpl : public ClassDescriptor<TClass>
         }
         else if constexpr (std::is_copy_assignable_v<TClass>)
         {
-            *reinterpret_cast<TClass*>(aLhs) = *reinterpret_cast<const TClass*>(aRhs);
+            *static_cast<TClass*>(aLhs) = *static_cast<const TClass*>(aRhs);
         }
         else if constexpr (std::is_copy_constructible_v<TClass>)
         {
-            reinterpret_cast<TClass*>(aLhs)->~TClass();
-            new (aLhs) TClass(*reinterpret_cast<const TClass*>(aRhs));
+            static_cast<TClass*>(aLhs)->~TClass();
+            new (aLhs) TClass(*static_cast<const TClass*>(aRhs));
         }
     }
 
@@ -751,7 +751,7 @@ class ClassDescriptorDefaultImpl : public ClassDescriptor<TClass>
         }
         else
         {
-            reinterpret_cast<TClass*>(aMemory)->~TClass();
+            static_cast<TClass*>(aMemory)->~TClass();
         }
     }
 
