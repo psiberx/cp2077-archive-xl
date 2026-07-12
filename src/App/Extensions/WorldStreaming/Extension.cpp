@@ -14,8 +14,10 @@ constexpr auto InstancedMeshNodeType = Red::GetTypeName<Red::worldInstancedMeshN
 constexpr auto InstancedDestructibleNodeType = Red::GetTypeName<Red::worldInstancedDestructibleMeshNode>();
 
 constexpr auto DelZ = static_cast<int32_t>(-2000 * (2 << 16));
+constexpr auto NoCollisionPreset = Red::CName("No Collision");
 
 Red::Handle<Red::worldStaticMeshNode> s_dummyNode;
+Core::Map<Red::ResourcePath, Core::Map<int64_t, Core::Vector<Red::CName>>> s_collisionNodePresets;
 }
 
 std::string_view App::WorldStreamingExtension::GetName()
@@ -250,6 +252,25 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
                     nodeValidationPassed = false;
                     continue;
                 }
+                if (!nodeDeletion.elementDeletions.empty())
+                {
+                    auto& shapes = Raw::CollisionNode::Shapes::Ref(nodeDefinition);
+                    for (const auto& elementDeletion : nodeDeletion.elementDeletions)
+                    {
+                        if (elementDeletion.subElementIndex >= 0)
+                        {
+                            auto& actor = actors.beginPtr[elementDeletion.elementIndex];
+                            if (elementDeletion.subElementIndex >= actor.numShapes)
+                            {
+                                LogError(R"([{}] {}: The target node #{} actor #{} has {} shape(s), but the mod expects {} or more.)",
+                                         ExtensionName, aSectorMod.mod, nodeDeletion.nodeIndex, elementDeletion.elementIndex,
+                                         actor.numShapes, elementDeletion.subElementIndex + 1);
+                                nodeValidationPassed = false;
+                                continue;
+                            }
+                        }
+                    }
+                }
             }
             else if (nodeDeletion.nodeType == InstancedMeshNodeType)
             {
@@ -478,10 +499,41 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             if (nodeDeletion.nodeType == CollisionNodeType)
             {
                 auto& actors = Raw::CollisionNode::Actors::Ref(nodeDefinition);
+                auto& shapes = Raw::CollisionNode::Shapes::Ref(nodeDefinition);
+                auto& presets = Raw::CollisionNode::Presets::Ref(nodeDefinition);
+                uint8_t noCollisionIndex = 0xFF;
+
                 for (const auto& elementDeletion : nodeDeletion.elementDeletions)
                 {
                     auto& actor = actors.beginPtr[elementDeletion.elementIndex];
-                    actor.transform.Position.z.Bits = DelZ;
+                    if (elementDeletion.subElementIndex >= 0 && actor.numShapes > 1)
+                    {
+                        if (elementDeletion.subElementIndex < actor.numShapes)
+                        {
+                            if (noCollisionIndex == 0xFF)
+                            {
+                                auto& overrides = s_collisionNodePresets[aSector->path][nodeDeletion.nodeIndex];
+                                if (overrides.empty())
+                                {
+                                    overrides.resize(presets.GetSize() + 1);
+                                    overrides.back() = NoCollisionPreset;
+                                    std::copy(presets.begin(), presets.end(), overrides.begin());
+                                }
+
+                                presets.beginPtr = std::to_address(overrides.begin());
+                                presets.endPtr = std::to_address(overrides.end());
+
+                                noCollisionIndex = overrides.size() - 1;
+                            }
+
+                            auto& shape = shapes.beginPtr[actor.shapeStartIndex + elementDeletion.subElementIndex];
+                            shape.presetIndex = noCollisionIndex;
+                        }
+                    }
+                    else
+                    {
+                        actor.transform.Position.z.Bits = DelZ;
+                    }
                 }
                 continue;
             }

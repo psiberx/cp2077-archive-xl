@@ -122,6 +122,7 @@
 #include <RED4ext/Scripting/Natives/Generated/mesh/MeshAppearance.hpp>
 #include <RED4ext/Scripting/Natives/Generated/mesh/MeshParameter.hpp>
 #include <RED4ext/Scripting/Natives/Generated/net/PeerID.hpp>
+#include <RED4ext/Scripting/Natives/Generated/physics/GeometryKey.hpp>
 #include <RED4ext/Scripting/Natives/Generated/population/PopulationSpawnParameter.hpp>
 #include <RED4ext/Scripting/Natives/Generated/quest/GraphDefinition.hpp>
 #include <RED4ext/Scripting/Natives/Generated/quest/PhaseNodeDefinition.hpp>
