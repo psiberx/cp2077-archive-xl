@@ -73,6 +73,8 @@ struct DynamicAttributeData
 
 using DynamicAttributeList = Core::Map<Red::CName, DynamicAttributeData>;
 
+Red::CName ExtractDynamicName(const char* aName, size_t aOffset, size_t aSize, bool aRegister = false);
+
 class DynamicAppearanceController
 {
 public:

@@ -425,8 +425,7 @@ void App::MeshExtension::ProcessDynamicMaterials(const Core::SharedPtr<DynamicCo
             else
             {
                 auto externalPath = aContext->sourceMesh->externalMaterials[sourceEntry.index].path;
-                auto [materialPath, isOptionalPath] = ExpandResourcePath(externalPath, chunk->materialName,
-                                                                         aContext->targetState);
+                auto [materialPath, isOptionalPath] = ExpandResourcePath(externalPath, chunk, aContext->targetState);
 
                 if (!materialPath)
                 {
@@ -674,8 +673,7 @@ void App::MeshExtension::ExpandMaterialParams(const Core::SharedPtr<DynamicConte
             continue;
         }
 
-        auto [referencePath, isOptionalPath] = ExpandResourcePath(reference.path, aChunk->materialName,
-                                                                  aContext->targetState);
+        auto [referencePath, isOptionalPath] = ExpandResourcePath(reference.path, aChunk, aContext->targetState);
 
         if (!referencePath)
         {
@@ -787,8 +785,7 @@ void App::MeshExtension::ExpandMaterialInheritance(const Core::SharedPtr<Dynamic
         return;
     }
 
-    auto [basePath, isOptionalPath] = ExpandResourcePath(baseReference.path, aChunk->materialName,
-                                                         aContext->targetState);
+    auto [basePath, isOptionalPath] = ExpandResourcePath(baseReference.path, aChunk, aContext->targetState);
 
     if (!basePath)
     {
@@ -899,7 +896,7 @@ void App::MeshExtension::ExpandMaterialInheritance(const Core::SharedPtr<Dynamic
 }
 
 std::pair<Red::ResourcePath, bool> App::MeshExtension::ExpandResourcePath(Red::ResourcePath aPath,
-                                                                          Red::CName aMaterialName,
+                                                                          const Core::SharedPtr<ChunkData>& aChunk,
                                                                           const Core::SharedPtr<MeshState>& aState)
 {
     auto& controller = GarmentExtension::GetDynamicAppearanceController();
@@ -910,7 +907,7 @@ std::pair<Red::ResourcePath, bool> App::MeshExtension::ExpandResourcePath(Red::R
         return {aPath, false};
     }
 
-    auto result = controller->ProcessString(aState->GetContextAttrs(), {{MaterialAttr, aMaterialName}}, pathStr.data());
+    auto result = controller->ProcessString(aState->GetContextAttrs(), aChunk->GetMaterialAttrs(), pathStr.data());
 
     if (!result.valid)
     {
@@ -1290,4 +1287,48 @@ Red::Handle<Red::CMesh> App::MeshExtension::MeshState::ResolveSource(Red::CName 
         return {};
 
     return sourceMesh.value().Lock();
+}
+
+const App::DynamicPartList& App::MeshExtension::ChunkData::GetMaterialAttrs()
+{
+    if (materialAttrs.empty() && !materialName.IsNone())
+    {
+        materialAttrs[MaterialAttr] = materialName;
+
+        {
+            std::string_view str = materialName.ToString();
+            uint8_t suffix[2]{'.', '1'};
+
+            while (!str.empty())
+            {
+                size_t pos = str.find('+');
+
+                if (pos == 0)
+                {
+                    str.remove_prefix(1);
+                    continue;
+                }
+
+                size_t skip;
+                if (pos == std::string_view::npos)
+                {
+                    pos = str.size();
+                    skip = str.size();
+                }
+                else
+                {
+                    skip = pos + 1;
+                }
+
+                auto attr = Red::FNV1a64(suffix, 2, MaterialAttr);
+                auto value = ExtractDynamicName(str.data(), 0, pos, true);
+                materialAttrs[attr] = value;
+                ++suffix[1];
+
+                str.remove_prefix(skip);
+            }
+        }
+    }
+
+    return materialAttrs;
 }

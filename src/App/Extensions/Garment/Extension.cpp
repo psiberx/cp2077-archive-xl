@@ -303,9 +303,8 @@ void* App::GarmentExtension::OnResolveSuffixes(Red::CString& aResult,
     return Raw::AppearanceChanger::GetSuffixes(aResult, aOwner, aOwnerOverride, aItemRecord, aItemID);
 }
 
-void App::GarmentExtension::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset* aPreset,
-                                                 Red::ResourcePath aEntityPath, Red::CName aAppearanceName,
-                                                 Red::TagList& aFinalTags)
+void App::GarmentExtension::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset* aPreset, Red::ResourcePath aEntityPath,
+                                            Red::CName aAppearanceName, Red::TagList& aFinalTags)
 {
     if (!aAppearanceName || aAppearanceName == EmptyAppearanceName)
         return;

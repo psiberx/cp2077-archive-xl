@@ -77,8 +77,9 @@ const bool s_fallbackVariants[4][2] = {
     {false, true},
     {true, true},
 };
+}
 
-Red::CName ExtractName(const char* aName, size_t aOffset, size_t aSize, bool aRegister = false)
+Red::CName App::ExtractDynamicName(const char* aName, size_t aOffset, size_t aSize, bool aRegister)
 {
     if (!aSize)
         return {};
@@ -90,7 +91,6 @@ Red::CName ExtractName(const char* aName, size_t aOffset, size_t aSize, bool aRe
     }
 
     return Red::FNV1a64(reinterpret_cast<const uint8_t*>(aName + aOffset), aSize);
-}
 }
 
 App::DynamicAppearanceName::DynamicAppearanceName()
@@ -127,13 +127,13 @@ App::DynamicAppearanceName::DynamicAppearanceName(Red::CName aAppearance)
         }
 
         isDynamic = true;
-        name = ExtractName(str.data(), 0, markerPos);
+        name = ExtractDynamicName(str.data(), 0, markerPos);
 
         str.remove_prefix(markerPos + 1);
 
         if (!str.empty())
         {
-            variant = ExtractName(str.data(), 0, str.size(), true);
+            variant = ExtractDynamicName(str.data(), 0, str.size(), true);
             parts[VariantAttr] = variant;
 
             uint8_t partNum[2]{PartNameGlue, '1'};
@@ -162,15 +162,15 @@ App::DynamicAppearanceName::DynamicAppearanceName(Red::CName aAppearance)
                 auto assignPos = str.find(ConditionEqual);
                 if (assignPos != std::string_view::npos && assignPos < markerPos)
                 {
-                    auto partName = ExtractName(str.data(), 0, assignPos, true);
-                    auto partValue = ExtractName(str.data(), assignPos + 1, markerPos - assignPos - 1, true);
+                    auto partName = ExtractDynamicName(str.data(), 0, assignPos, true);
+                    auto partValue = ExtractDynamicName(str.data(), assignPos + 1, markerPos - assignPos - 1, true);
                     parts[partName] = partValue;
                     overrides.insert(Red::FNV1a64(str.data(), markerPos - assignPos));
                 }
                 else
                 {
                     auto partName = Red::FNV1a64(partNum, 2, VariantAttr);
-                    auto partValue = ExtractName(str.data(), 0, markerPos, true);
+                    auto partValue = ExtractDynamicName(str.data(), 0, markerPos, true);
                     parts[partName] = partValue;
                     ++partNum[1];
                 }
@@ -202,7 +202,7 @@ App::DynamicAppearanceRef::DynamicAppearanceRef(Red::CName aReference)
     if (markerPos != std::string_view::npos)
     {
         isDynamic = true;
-        name = ExtractName(str.data(), 0, markerPos);
+        name = ExtractDynamicName(str.data(), 0, markerPos);
 
         str.remove_prefix(markerPos);
 
@@ -223,12 +223,12 @@ App::DynamicAppearanceRef::DynamicAppearanceRef(Red::CName aReference)
 
                     if (markerPos == std::string_view::npos)
                     {
-                        variants.insert(ExtractName(str.data(), 0, str.size()));
+                        variants.insert(ExtractDynamicName(str.data(), 0, str.size()));
                         // don't remove prefix for condition marker check
                         break;
                     }
 
-                    variants.insert(ExtractName(str.data(), 0, markerPos));
+                    variants.insert(ExtractDynamicName(str.data(), 0, markerPos));
 
                     if (str[markerPos] != VariantMarker)
                     {
@@ -250,11 +250,11 @@ App::DynamicAppearanceRef::DynamicAppearanceRef(Red::CName aReference)
 
                     if (markerPos == std::string_view::npos)
                     {
-                        conditions.insert(ExtractName(str.data(), 0, str.size()));
+                        conditions.insert(ExtractDynamicName(str.data(), 0, str.size()));
                         break;
                     }
 
-                    conditions.insert(ExtractName(str.data(), 0, markerPos));
+                    conditions.insert(ExtractDynamicName(str.data(), 0, markerPos));
 
                     str.remove_prefix(markerPos + 1);
                 }

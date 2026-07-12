@@ -63,12 +63,15 @@ private:
 
     struct ChunkData
     {
+        const DynamicPartList& GetMaterialAttrs();
+
         Red::CName chunkName{};
         Red::CName materialName{};
         Red::CName templateName{};
         int32_t sourceIndex{-1};
         Red::SharedPtr<Red::ResourceToken<Red::IMaterial>> sourceToken{};
         Red::Handle<Red::CMaterialInstance> sourceInstance{};
+        DynamicPartList materialAttrs;
         bool failed{false};
     };
 
@@ -108,7 +111,8 @@ private:
                                              const Core::SharedPtr<ChunkData>& aChunk,
                                              const Red::Handle<Red::CMaterialInstance>& aMaterialInstance,
                                              Red::JobQueue& aJobQueue);
-    static std::pair<Red::ResourcePath, bool> ExpandResourcePath(Red::ResourcePath aPath, Red::CName aMaterialName,
+    static std::pair<Red::ResourcePath, bool> ExpandResourcePath(Red::ResourcePath aPath,
+                                                                 const Core::SharedPtr<ChunkData>& aChunk,
                                                                  const Core::SharedPtr<MeshState>& aState);
     static bool ContainsUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials);
 
