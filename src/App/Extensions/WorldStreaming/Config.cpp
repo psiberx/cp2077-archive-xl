@@ -142,9 +142,9 @@ void App::WorldStreamingConfig::LoadYAML(const YAML::Node& aNode)
                             }
 
                             ParseSubDeletions(deletionNode["actorDeletions"], deletionNode["expectedActors"],
-                                              deletionData.subNodeDeletions, deletionData.expectedSubNodes);
+                                              deletionData.elementDeletions, deletionData.expectedElements);
                             ParseSubDeletions(deletionNode["instanceDeletions"], deletionNode["expectedInstances"],
-                                              deletionData.subNodeDeletions, deletionData.expectedSubNodes);
+                                              deletionData.elementDeletions, deletionData.expectedElements);
 
                             sectorData.nodeDeletions.emplace_back(std::move(deletionData));
                         }
@@ -307,9 +307,9 @@ void App::WorldStreamingConfig::LoadYAML(const YAML::Node& aNode)
                             ParseRecordID(mutationNode["objectRecordId"], mutationData.recordID, mutationData.modifyRecordID);
 
                             ParseSubMutations(mutationNode["actorMutations"], mutationNode["expectedActors"],
-                                              mutationData.subNodeMutations, mutationData.expectedSubNodes);
+                                              mutationData.elementMutations, mutationData.expectedElements);
                             ParseSubMutations(mutationNode["instanceMutations"], mutationNode["expectedInstances"],
-                                              mutationData.subNodeMutations, mutationData.expectedSubNodes);
+                                              mutationData.elementMutations, mutationData.expectedElements);
 
                             sectorData.nodeMutations.emplace_back(std::move(mutationData));
                         }
@@ -367,7 +367,8 @@ bool App::WorldStreamingConfig::ParseRecordID(const YAML::Node& aNode, Red::Twea
 }
 
 bool App::WorldStreamingConfig::ParseSubDeletions(const YAML::Node& aDeletionsNode, const YAML::Node& aCountNode,
-                                                  Core::Vector<int64_t>& aDeletions, int64_t& aExpectedCount)
+                                                  Core::Vector<WorldNodeElementDeletion>& aDeletions,
+                                                  int64_t& aExpectedCount)
 {
     if (!aDeletionsNode.IsDefined() || !aDeletionsNode.IsSequence())
     {
@@ -389,35 +390,53 @@ bool App::WorldStreamingConfig::ParseSubDeletions(const YAML::Node& aDeletionsNo
         return false;
     }
 
-    for (const auto& subDeletionNode : aDeletionsNode)
+    for (const auto& elementDeletionNode : aDeletionsNode)
     {
-        if (!subDeletionNode.IsScalar())
+        WorldNodeElementDeletion deletionData{};
+
+        if (elementDeletionNode.IsScalar())
+        {
+            if (!ParseInt(elementDeletionNode.Scalar(), deletionData.elementIndex))
+            {
+                aDeletions.clear();
+                return false;
+            }
+        }
+        else if (elementDeletionNode.IsSequence())
+        {
+            if (elementDeletionNode.size() != 2)
+            {
+                aDeletions.clear();
+                return false;
+            }
+
+            if (!ParseInt(elementDeletionNode[0].Scalar(), deletionData.elementIndex))
+            {
+                aDeletions.clear();
+                return false;
+            }
+
+            if (!ParseInt(elementDeletionNode[1].Scalar(), deletionData.subElementIndex))
+            {
+                aDeletions.clear();
+                return false;
+            }
+        }
+
+        if (deletionData.elementIndex < 0 || deletionData.elementIndex >= aExpectedCount)
         {
             aDeletions.clear();
             return false;
         }
 
-        int64_t subIndex;
-        if (!ParseInt(subDeletionNode.Scalar(), subIndex))
-        {
-            aDeletions.clear();
-            return false;
-        }
-
-        if (subIndex < 0 || subIndex >= aExpectedCount)
-        {
-            aDeletions.clear();
-            return false;
-        }
-
-        aDeletions.push_back(subIndex);
+        aDeletions.push_back(deletionData);
     }
 
     return true;
 }
 
 bool App::WorldStreamingConfig::ParseSubMutations(const YAML::Node& aMutationsNode, const YAML::Node& aCountNode,
-                                                  Core::Vector<App::WorldSubNodeMutation>& aMutations,
+                                                  Core::Vector<App::WorldNodeElementMutation>& aMutations,
                                                   int64_t& aExpectedCount)
 {
     if (!aMutationsNode.IsDefined() || !aMutationsNode.IsSequence())
@@ -447,7 +466,7 @@ bool App::WorldStreamingConfig::ParseSubMutations(const YAML::Node& aMutationsNo
             continue;
         }
 
-        WorldSubNodeMutation mutationData{};
+        WorldNodeElementMutation mutationData{};
 
         {
             const auto& indexNode = mutationNode["index"];
@@ -457,12 +476,12 @@ bool App::WorldStreamingConfig::ParseSubMutations(const YAML::Node& aMutationsNo
                 continue;
             }
 
-            if (!ParseInt(indexNode.Scalar(), mutationData.subNodeIndex))
+            if (!ParseInt(indexNode.Scalar(), mutationData.elementIndex))
             {
                 continue;
             }
 
-            if (mutationData.subNodeIndex < 0 || mutationData.subNodeIndex >= aExpectedCount)
+            if (mutationData.elementIndex < 0 || mutationData.elementIndex >= aExpectedCount)
             {
                 continue;
             }
