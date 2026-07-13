@@ -17,7 +17,7 @@ constexpr auto DelZ = static_cast<int32_t>(-2000 * (2 << 16));
 constexpr auto NoCollisionPreset = Red::CName("No Collision");
 
 Red::Handle<Red::worldStaticMeshNode> s_dummyNode;
-Core::Map<Red::ResourcePath, Core::Map<int64_t, Core::Vector<Red::CName>>> s_collisionNodePresets;
+Core::Map<Red::ResourcePath, Core::Map<int64_t, Red::CName*>> s_collisionNodeOverrides;
 }
 
 std::string_view App::WorldStreamingExtension::GetName()
@@ -512,18 +512,22 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
                         {
                             if (noCollisionIndex == 0xFF)
                             {
-                                auto& overrides = s_collisionNodePresets[aSector->path][nodeDeletion.nodeIndex];
-                                if (overrides.empty())
+                                noCollisionIndex = presets.GetSize();
+                                auto overrideSize = noCollisionIndex + 1;
+
+                                auto& override = s_collisionNodeOverrides[aSector->path][nodeDeletion.nodeIndex];
+                                if (!override)
                                 {
-                                    overrides.resize(presets.GetSize() + 1);
-                                    overrides.back() = NoCollisionPreset;
-                                    std::copy(presets.begin(), presets.end(), overrides.begin());
+                                    auto data = Red::Memory::DefaultAllocator::Get()->Alloc(sizeof(Red::CName) *
+                                                                                            overrideSize);
+                                    override = static_cast<Red::CName*>(data.memory);
+                                    override[noCollisionIndex] = NoCollisionPreset;
+
+                                    std::copy(presets.begin(), presets.end(), override);
                                 }
 
-                                presets.beginPtr = std::to_address(overrides.begin());
-                                presets.endPtr = std::to_address(overrides.end());
-
-                                noCollisionIndex = overrides.size() - 1;
+                                presets.beginPtr = override;
+                                presets.endPtr = override + overrideSize;
                             }
 
                             auto& shape = shapes.beginPtr[actor.shapeStartIndex + elementDeletion.subElementIndex];
