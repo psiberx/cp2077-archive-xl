@@ -86,4 +86,11 @@ inline void WaitForResources(const V<R, A...>& aResources, const W& aTimeout)
         WaitForQueue(queue, aTimeout);
     }
 }
+
+template<std::derived_from<CResource> T, std::derived_from<CResource> U>
+requires std::is_base_of_v<U, T>
+inline const SharedPtr<ResourceToken<T>>& Cast(const SharedPtr<ResourceToken<U>>& aToken)
+{
+    return *reinterpret_cast<const SharedPtr<ResourceToken<T>>*>(&aToken);
+}
 }

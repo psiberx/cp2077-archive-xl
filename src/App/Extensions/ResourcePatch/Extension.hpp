@@ -4,6 +4,7 @@
 #include "App/Extensions/ResourcePatch/Config.hpp"
 #include "App/Shared/ResourcePathRegistry.hpp"
 #include "Red/AppearanceResource.hpp"
+#include "Red/Common.hpp"
 #include "Red/EntityBuilder.hpp"
 #include "Red/EntityTemplate.hpp"
 #include "Red/GarmentAssembler.hpp"
@@ -23,13 +24,40 @@ public:
     static Red::CName GetExpansionName(const Red::Handle<Red::meshMeshAppearance>& aAppearance);
     static Red::CName GetPatchSource(const Red::Handle<Red::meshMeshAppearance>& aAppearance);
 
-    static void RegisterPatch(Red::ResourcePath aTarget, Red::ResourcePath aPatch);
-    static void RegisterPatch(Red::ResourcePath aTarget,  const char* aPatch);
-    static void ClearTarget(Red::ResourcePath aTarget);
+    static void RegisterPatch(Red::ResourcePath aTargetPath, Red::ResourcePath aPatchPath);
+    static void RegisterPatch(Red::ResourcePath aTargetPath, const char* aPatchPathStr);
+    // static void ClearTarget(Red::ResourcePath aTarget);
 
 private:
-    using DefinitionData = std::pair<Red::Handle<Red::AppearanceDefinition>, Red::SharedPtr<Red::DeferredDataBufferToken>>;
-    using DefinitionMap = Core::Map<Red::CName, DefinitionData>;
+    struct PatchInstance
+    {
+        PatchInstance(Red::ResourcePath aSource);
+        PatchInstance(Red::ResourcePath aSource, Core::Set<Red::ResourcePath> aTargets, Core::Set<Red::CName> aProps,
+                      int32_t aOrder);
+
+        [[nodiscard]] bool Modifies(Red::CName aProp) const;
+        [[nodiscard]] bool Modifies(Red::CName aProp, bool aOverwrite) const;
+
+        void LoadResource();
+        template<typename T = Red::CResource>
+        Red::Handle<T> GetResource() const;
+        template<typename T = Red::CResource>
+        Red::ResourceTokenPtr<T> GetToken() const;
+
+        void PrefetchAppearance(const Red::Handle<Red::AppearanceDefinition>& aDefinition);
+        Red::Handle<Red::AppearanceDefinition> GetAppearanceDefinition(Red::CName aName);
+
+        Red::ResourcePath path;
+        Core::Set<Red::CName> props;
+        Core::Set<Red::ResourcePath> targets;
+        int32_t order{0};
+
+        Red::SharedPtr<Red::ResourceToken<>> token;
+        Core::Map<Red::CName, Red::Handle<Red::AppearanceDefinition>> appearances;
+        Red::SharedSpinLock appearanceLock;
+    };
+
+    using PatchInstancePtr = Core::SharedPtr<PatchInstance>;
 
     static void OnResourceRequest(void* aSerializer, uint64_t a2, Red::ResourceSerializerRequest& aRequest,
                                   uint64_t a4, uint64_t a5);
@@ -77,28 +105,16 @@ private:
                                 bool aPartMerge, Red::ResourcePath aPatchPath, Red::ResourcePath aTargetPath,
                                 Red::CName aPatchDefinition = {}, Red::CName aTargetDefinition = {});
 
-    inline static Red::Handle<Red::rendRenderMeshBlob> CopyRenderBlob(
-        const Red::Handle<Red::rendRenderMeshBlob>& aSourceBlob);
-    inline static Red::Handle<Red::rendRenderMorphTargetMeshBlob> CopyRenderBlob(
+    static Red::Handle<Red::rendRenderMeshBlob> CopyRenderBlob(const Red::Handle<Red::rendRenderMeshBlob>& aSourceBlob);
+    static Red::Handle<Red::rendRenderMorphTargetMeshBlob> CopyRenderBlob(
         const Red::Handle<Red::rendRenderMorphTargetMeshBlob>& aSourceBlob);
 
-    static Core::SharedPtr<ResourcePatch> GetPatchConfig(Red::ResourcePath aPatchPath);
-    static const Core::Vector<Red::ResourcePath>& GetPatchList(Red::ResourcePath aTargetPath);
-    static void LoadPatchResource(Red::ResourcePath aPatchPath);
+    static const Core::Vector<PatchInstancePtr>& GetPatchList(Red::ResourcePath aTargetPath);
     static bool IsPatchResource(Red::ResourcePath aPath);
-    template<typename T = Red::CResource>
-    static Red::Handle<T> GetPatchResource(Red::ResourcePath aPatchPath);
-    template<typename T = Red::CResource>
-    static Red::SharedPtr<Red::ResourceToken<T>> GetPatchToken(Red::ResourcePath aPatchPath);
-    static Red::Handle<Red::AppearanceDefinition> GetPatchAppearance(Red::ResourcePath aPatchPath,
-                                                                     Red::CName aDefinitionName);
 
-    inline static Core::Map<Red::ResourcePath, Core::SharedPtr<ResourcePatch>> s_patches;
-    inline static Core::Map<Red::ResourcePath, Core::Vector<Red::ResourcePath>> s_patchTargets;
-    inline static Red::SharedSpinLock s_patchTokenLock;
-    inline static Core::Map<Red::ResourcePath, Red::SharedPtr<Red::ResourceToken<>>> s_patchTokens;
-    inline static Red::SharedSpinLock s_appearanceDefinitionLock;
-    inline static Core::Map<Red::ResourcePath, DefinitionMap> s_appearanceDefinitions;
+    inline static Core::Map<Red::ResourcePath, Core::Vector<PatchInstancePtr>> s_patches;
+    inline static Core::Map<Red::ResourcePath, Core::Vector<PatchInstancePtr>> s_targetPatches;
+    inline static Core::Map<Red::ResourcePath, PatchInstancePtr> s_dynamicPatches;
     inline static Core::SharedPtr<ResourcePathRegistry> s_resourcePathRegistry;
 };
 }

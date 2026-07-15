@@ -3,6 +3,9 @@
 namespace Red
 {
 template<typename T>
+using ResourceTokenPtr = Red::SharedPtr<Red::ResourceToken<T>>;
+
+template<typename T>
 struct Range
 {
     constexpr operator bool() const noexcept

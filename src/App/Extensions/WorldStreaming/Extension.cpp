@@ -102,7 +102,7 @@ void App::WorldStreamingExtension::Configure()
 
 void App::WorldStreamingExtension::PostConfigure()
 {
-    ResourcePatchExtension::ClearTarget(MainWorldResource);
+    // ResourcePatchExtension::ClearTarget(MainWorldResource);
 
     for (auto& unit : m_configs)
     {

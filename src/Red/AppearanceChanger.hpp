@@ -11,9 +11,6 @@ using ComponentsStorage = Red::ent::ComponentsStorage;
 using AppearanceResource = Red::appearance::AppearanceResource;
 using AppearanceDefinition = Red::appearance::AppearanceDefinition;
 
-template<typename T>
-using ResourceTokenPtr = Red::SharedPtr<Red::ResourceToken<T>>;
-
 struct ItemFactoryRequest {};
 
 struct ItemFactoryAppearanceChangeRequest {};

@@ -1,4 +1,5 @@
 #include "Config.hpp"
+#include "App/Utils/Num.hpp"
 
 bool App::ResourcePatchConfig::IsDefined()
 {
@@ -14,16 +15,53 @@ void App::ResourcePatchConfig::LoadYAML(const YAML::Node& aNode)
 
     const auto& patchNode = rootNode["patch"];
 
-    if (!patchNode.IsDefined() || !patchNode.IsMap())
+    if (!patchNode.IsDefined())
         return;
+
+    if (!patchNode.IsMap() && !patchNode.IsSequence())
+    {
+        AddIssue("Line #{}: Patch config must be a map or list.", patchNode.Mark().line);
+        return;
+    }
+
+    const auto isSequence = patchNode.IsSequence();
 
     for (const auto& entryNode : patchNode)
     {
-        const auto& patchPathStr = entryNode.first.Scalar();
-        const auto& patchPath = Red::ResourcePath(patchPathStr.data());
-        const auto& definitionNode = entryNode.second;
-
         ResourcePatch patchConfig;
+
+        if (isSequence)
+        {
+            const auto& sourceNode = entryNode["source"];
+
+            if (!sourceNode.IsDefined())
+            {
+                AddIssue("Line #{}: Patch definition must have a source path.", sourceNode.Mark().line);
+                continue;
+            }
+
+            if (!sourceNode.IsScalar() || sourceNode.Scalar().empty())
+            {
+                AddIssue("Line #{}: Patch source path must be a non-empty string.", sourceNode.Mark().line);
+                continue;
+            }
+
+            patchConfig.source = sourceNode.Scalar().c_str();
+            paths[patchConfig.source] = sourceNode.Scalar();
+        }
+        else
+        {
+            if (entryNode.first.Scalar().empty())
+            {
+                AddIssue("Line #{}: Patch source path must be a non-empty string.", entryNode.Mark().line);
+                continue;
+            }
+
+            patchConfig.source = entryNode.first.Scalar().c_str();
+            paths[patchConfig.source] = entryNode.first.Scalar();
+        }
+
+        const auto& definitionNode = isSequence ? entryNode : entryNode.second;
 
         if (definitionNode.IsScalar())
         {
@@ -62,6 +100,7 @@ void App::ResourcePatchConfig::LoadYAML(const YAML::Node& aNode)
         {
             const auto& propsNode = definitionNode["props"];
             const auto& targetsNode = definitionNode["targets"];
+            const auto& orderNode = definitionNode["order"];
 
             for (const auto& propNode : propsNode)
             {
@@ -93,12 +132,24 @@ void App::ResourcePatchConfig::LoadYAML(const YAML::Node& aNode)
                     paths[targetPath] = targetPathStr;
                 }
             }
+
+            if (orderNode.IsDefined() && orderNode.IsScalar())
+            {
+                ParseInt(orderNode.Scalar(), patchConfig.order);
+            }
+        }
+        else
+        {
+            AddIssue("Line #{}: Patch definition must be a map, list or path.", definitionNode.Mark().line);
+            continue;
         }
 
-        if (!patchConfig.includes.empty())
+        if (patchConfig.includes.empty())
         {
-            patches[patchPath] = std::move(patchConfig);
-            paths[patchPath] = patchPathStr;
+            AddIssue("Line #{}: Patch definition must have at least one target.", definitionNode.Mark().line);
+            continue;
         }
+
+        patches.emplace_back(std::move(patchConfig));
     }
 }

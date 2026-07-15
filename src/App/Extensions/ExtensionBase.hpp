@@ -35,6 +35,12 @@ struct ExtensionConfig
     virtual bool IsDefined() = 0;
     virtual void LoadYAML(const YAML::Node& aNode) = 0;
 
+    template<typename... Args>
+    constexpr void AddIssue(std::format_string<Args...> aFormat, Args&&... aArgs)
+    {
+        issues.push_back(std::format(aFormat, std::forward<Args>(aArgs)...));
+    }
+
     [[nodiscard]] bool HasIssues() const
     {
         return !issues.empty();
