@@ -1370,6 +1370,9 @@ void App::ResourcePatchExtension::PatchInstance::LoadResource()
 template<typename T>
 Red::ResourceTokenPtr<T> App::ResourcePatchExtension::PatchInstance::GetToken() const
 {
+    if (!token)
+        return {};
+
     if constexpr (!std::is_same_v<T, Red::CResource>)
     {
         if (token->IsFailed())
