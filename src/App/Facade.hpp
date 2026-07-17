@@ -10,6 +10,10 @@ public:
     static bool RegisterDir(Red::CString& aPath);
     static bool RegisterArchive(Red::CString& aPath);
     static Red::CName GetBodyType(const Red::WeakHandle<Red::GameObject>& aPuppet);
+    static Red::CString ResolveDynamicAppearanceString(const Red::WeakHandle<Red::GameObject>& aPuppet,
+                                                       const Red::CString& aAppearance, const Red::CString& aString);
+    static Red::CString ResolveDynamicAppearancePath(const Red::WeakHandle<Red::GameObject>& aPuppet,
+                                                     const Red::CString& aAppearance, const Red::CString& aPath);
     static void EnableGarmentOffsets();
     static void DisableGarmentOffsets();
     static void Reload();
@@ -25,6 +29,8 @@ RTTI_DEFINE_CLASS(App::Facade, App::Project::Name, {
     RTTI_METHOD(RegisterDir);
     RTTI_METHOD(RegisterArchive);
     RTTI_METHOD(GetBodyType);
+    RTTI_METHOD(ResolveDynamicAppearanceString);
+    RTTI_METHOD(ResolveDynamicAppearancePath);
     RTTI_METHOD(EnableGarmentOffsets);
     RTTI_METHOD(DisableGarmentOffsets);
     RTTI_METHOD(Reload);

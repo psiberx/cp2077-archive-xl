@@ -20,6 +20,29 @@ Red::CName App::Facade::GetBodyType(const Red::WeakHandle<Red::GameObject>& aPup
     return PuppetStateExtension::GetBodyType(aPuppet);
 }
 
+Red::CString App::Facade::ResolveDynamicAppearanceString(const Red::WeakHandle<Red::GameObject>& aPuppet,
+                                                         const Red::CString& aAppearance, const Red::CString& aString)
+{
+    auto controller = GarmentExtension::GetDynamicAppearanceController();
+    auto appearance = DynamicAppearanceName(aAppearance);
+
+    return controller->ResolveString(aPuppet.Lock(), appearance.parts, aString);
+}
+
+Red::CString App::Facade::ResolveDynamicAppearancePath(const Red::WeakHandle<Red::GameObject>& aPuppet,
+                                                         const Red::CString& aAppearance, const Red::CString& aPath)
+{
+    auto controller = GarmentExtension::GetDynamicAppearanceController();
+    auto pathRegistry = Core::Resolve<ResourcePathRegistry>();
+
+    auto appearance = DynamicAppearanceName(aAppearance);
+    auto path = pathRegistry->RegisterPath(aPath.c_str());
+
+    path = controller->ResolvePath(aPuppet.Lock(), appearance.parts, path);
+
+    return pathRegistry->ResolvePath(path);
+}
+
 void App::Facade::EnableGarmentOffsets()
 {
     GarmentExtension::EnableGarmentOffsets();
