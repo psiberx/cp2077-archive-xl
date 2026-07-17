@@ -13,6 +13,7 @@ struct DynamicAppearanceName
 {
     DynamicAppearanceName();
     explicit DynamicAppearanceName(Red::CName aAppearance);
+    explicit DynamicAppearanceName(const Red::CString& aAppearance);
 
     static bool CheckMark(Red::CName aAppearance);
 
@@ -73,6 +74,7 @@ struct DynamicAttributeData
 
 using DynamicAttributeList = Core::Map<Red::CName, DynamicAttributeData>;
 
+Red::CName ExtractDynamicName(const char* aName, size_t aOffset, bool aRegister = false);
 Red::CName ExtractDynamicName(const char* aName, size_t aOffset, size_t aSize, bool aRegister = false);
 
 class DynamicAppearanceController
@@ -92,12 +94,13 @@ public:
     [[nodiscard]] DynamicAppearanceName ParseAppearance(Red::CName aAppearance) const;
     [[nodiscard]] DynamicAppearanceRef ParseReference(Red::CName aReference) const;
     [[nodiscard]] bool MatchReference(const DynamicAppearanceRef& aReference, Red::Entity* aEntity,
-                                      const DynamicAppearanceName& aAppearance) const;
-
+                                      const DynamicAppearanceName& aAppearance);
+    [[nodiscard]] Red::CString ResolveString(Red::Entity* aEntity, const DynamicPartList& aVariant,
+                                             const Red::CString& aString);
     [[nodiscard]] Red::CName ResolveName(Red::Entity* aEntity, const DynamicPartList& aVariant,
-                                         Red::CName aName) const;
+                                         Red::CName aName);
     [[nodiscard]] Red::ResourcePath ResolvePath(Red::Entity* aEntity, const DynamicPartList& aVariant,
-                                                Red::ResourcePath aPath) const;
+                                                Red::ResourcePath aPath);
 
     void UpdateState(Red::Entity* aEntity, Red::TweakDBID aEquippedItemID = {});
     void RemoveState(Red::Entity* aEntity);
@@ -128,6 +131,8 @@ private:
         DynamicAttributeList values;
         DynamicAttributeList defaults;
         DynamicTagList conditions;
+        Red::TweakDBID equippedItemID;
+        bool valid{false};
     };
 
     struct CustomizationData
@@ -136,8 +141,10 @@ private:
         Red::CName skinColor;
         Red::CName eyesColor;
         Red::CName hairColor;
+        Red::CName nailsColor;
     };
 
+    void CollectStateData(Red::Entity* aEntity);
     DynamicAttributeData GetSuffixData(Red::Entity* aEntity, Red::TweakDBID aSuffixID,
                                        Red::TweakDBID aEquippedItemID) const;
     CustomizationData GetCustomizationData(Red::Entity* aEntity) const;
