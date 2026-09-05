@@ -1,0 +1,95 @@
+overrides:
+  tags:
+    hide_Head:
+      h0_: {hide: 0}
+      he_: {hide: 0}
+      heb_: {hide: 0}
+      ht_: {hide: 0}
+      hx_: {hide: 0}
+      i1_: {hide: 0}  # accessories
+      beard: {hide: 0}
+      beard_: {hide: 0}
+      MorphTargetSkinnedMesh3637: {hide: 0}
+      MorphTargetSkinnedMesh6675: {hide: 0}
+      MorphTargetSkinnedMesh7243: {hide: 0}
+      MorphTargetSkinnedMesh7561: {hide: 0}
+    hide_Arms:
+      a0_: {hide: 0}
+      left_arm: {hide: 0}
+      right_arm: {hide: 0}
+    hide_Torso:
+      n0_: {hide: 0}
+      tx_: {hide: 0}
+      t0_000_pma_base__full: {hide: [0, 1, 2, 3]}
+      t0_000_pma_base__full_seamfix: {hide: 0}
+      t0_000_pwa_base__full: {hide: [0, 1, 2, 3]}
+      t0_000_pwa_base__full_seamfix: {hide: 0}
+      t0_000_pwa_fpp__torso: {hide: [0, 1, 2, 3]}
+      MorphTargetSkinnedMesh0531: {hide: 0}  # nipples
+    hide_LowerAbdomen:
+      t0_000_pma_base__full: {hide: [3]}
+      t0_000_pwa_base__full: {hide: [3]}
+      t0_000_pwa_fpp__torso: {hide: [3]}
+    hide_UpperAbdomen:
+      t0_000_pma_base__full: {hide: [2]}
+      t0_000_pwa_base__full: {hide: [2]}
+      t0_000_pwa_fpp__torso: {hide: [2]}
+    hide_CollarBone:
+      t0_000_pma_base__full: {hide: [1]}
+      t0_000_pwa_base__full: {hide: [1]}
+      t0_000_pwa_fpp__torso: {hide: [1]}
+    hide_Chest:
+      t0_000_pma_base__full: {hide: [0]}
+      t0_000_pwa_base__full: {hide: [0]}
+      t0_000_pwa_fpp__torso: {hide: [0]}
+      MorphTargetSkinnedMesh0531: {hide: 0}  # nipples
+    hide_Legs:
+      l0_: {hide: 0}
+      s0_: {hide: 0}
+      t0_000_pma_base__full: {hide: [4, 5, 6, 7]}
+      t0_000_pwa_base__full: {hide: [4, 5, 6, 7]}
+      t0_000_pwa_fpp__torso: {hide: [4, 5, 6, 7]}
+    hide_Thighs:
+      t0_000_pma_base__full: {hide: [4]}
+      t0_000_pwa_base__full: {hide: [4]}
+      t0_000_pwa_fpp__torso: {hide: [4]}
+    hide_Calves:
+      t0_000_pma_base__full: {hide: [5]}
+      l0_000_pma_base__high_heels: {hide: [0]}
+      l0_000_pma_base__flat_shoes: {hide: [0]}
+      t0_000_pwa_base__full: {hide: [5]}
+      t0_000_pwa_fpp__torso: {hide: [5]}
+      l0_000_pwa_base__cs_flat: {hide: [0]}
+      l0_000_pwa_base__high_heels: {hide: [0]}
+      l0_000_pwa_base__flat_shoes: {hide: [0]}
+    hide_Ankles:
+      s0_: {hide: 0}
+      t0_000_pma_base__full: {hide: [6]}
+      l0_000_pma_base__high_heels: {hide: [1]}
+      l0_000_pma_base__flat_shoes: {hide: [1]}
+      t0_000_pwa_base__full: {hide: [6]}
+      t0_000_pwa_fpp__torso: {hide: [6]}
+      l0_000_pwa_base__cs_flat: {hide: [1]}
+      l0_000_pwa_base__high_heels: {hide: [1]}
+      l0_000_pwa_base__flat_shoes: {hide: [1]}
+    hide_Feet:
+      t0_000_pma_base__full: {hide: [7]}
+      l0_000_pma_base__high_heels: {hide: [2]}
+      l0_000_pma_base__flat_shoes: {hide: [2]}
+      t0_000_pwa_base__full: {hide: [7]}
+      t0_000_pwa_fpp__torso: {hide: [7]}
+      l0_000_pwa_base__cs_flat: {hide: [2]}
+      l0_000_pwa_base__high_heels: {hide: [2]}
+      l0_000_pwa_base__flat_shoes: {hide: [2]}
+    HighHeels:
+      t0_000_pma_base__full: {hide: [5, 6, 7]}
+      l0_000_pma_base__high_heels: {show: [0, 1, 2]}
+      t0_000_pwa_base__full: {hide: [5, 6, 7]}
+      t0_000_pwa_fpp__torso: {hide: [5, 6, 7]}
+      l0_000_pwa_base__high_heels: {show: [0, 1, 2]}
+    FlatShoes:
+      t0_000_pma_base__full: {hide: [5, 6, 7]}
+      l0_000_pma_base__flat_shoes: {show: [0, 1, 2]}
+      t0_000_pwa_base__full: {hide: [5, 6, 7]}
+      t0_000_pwa_fpp__torso: {hide: [5, 6, 7]}
+      l0_000_pwa_base__flat_shoes: {show: [0, 1, 2]}

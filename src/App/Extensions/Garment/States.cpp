@@ -659,29 +659,37 @@ bool App::EntityState::ApplyDynamicAppearance(const Red::Handle<Red::IComponent>
 bool App::EntityState::ApplyAppearanceOverride(const Red::Handle<Red::IComponent>& aComponent)
 {
     if (!aComponent->isEnabled)
+    {
         return false;
+    }
 
     ComponentWrapper component(aComponent);
 
     if (!component.IsMeshComponent())
+    {
         return false;
+    }
 
     auto componentRef = m_dynamicAppearance->ParseReference(aComponent->name);
-    auto& componentState = FindComponentState(componentRef.name);
-    auto& prefixState = FindComponentState(m_prefixResolver->GetPrefix(aComponent->name));
+    auto componentState = FindComponentState(componentRef.name);
+
+    if (!componentState)
+    {
+        componentState = FindComponentState(m_prefixResolver->GetPrefix(aComponent->name));
+
+        if (!componentState)
+        {
+            return false;
+        }
+    }
 
     Red::CName finalAppearance;
 
-    if (componentState && componentState->HasAppearanceOverriddes())
+    if (componentState->HasAppearanceOverriddes())
     {
         finalAppearance = componentState->GetAppearanceOverridde();
     }
-    else if (prefixState && prefixState->HasAppearanceOverriddes())
-    {
-        finalAppearance = prefixState->GetAppearanceOverridde();
-    }
-    else if ((componentState && componentState->ChangesAppearance()) ||
-             (prefixState && prefixState->ChangesAppearance()))
+    else if (componentState->ChangesAppearance())
     {
         finalAppearance = GetOriginalAppearance(component);
     }

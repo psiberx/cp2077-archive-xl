@@ -9,8 +9,6 @@ using OverrideTagDefinition = Core::Map<Red::CName, ChunkMask>;
 class OverrideTagManager
 {
 public:
-    OverrideTagManager() noexcept;
-
     void DefineTag(Red::CName aTag, OverrideTagDefinition aDefinition);
     [[nodiscard]] OverrideTagDefinition& GetOverrides(Red::CName aTag);
 

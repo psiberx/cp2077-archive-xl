@@ -1497,9 +1497,9 @@ Red::Handle<Red::AppearanceDefinition> App::ResourcePatchExtension::PatchInstanc
     if (appearanceIt != appearances.end())
         return appearanceIt.value();
 
-    auto defaultIt = appearances.find({});
-    if (defaultIt != appearances.end())
-        return defaultIt.value();
+    appearanceIt = appearances.find({});
+    if (appearanceIt != appearances.end())
+        return appearanceIt.value();
 
     return {};
 }

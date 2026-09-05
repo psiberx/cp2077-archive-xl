@@ -686,7 +686,7 @@ void App::GarmentExtension::RegisterOffsetOverrides(Core::SharedPtr<EntityState>
 }
 
 void App::GarmentExtension::RegisterComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
-                                                            Red::Handle<Red::AppearanceDefinition>& aApperance)
+                                                       Red::Handle<Red::AppearanceDefinition>& aApperance)
 {
     RegisterComponentOverrides(aEntityState, aHash, aApperance->partsOverrides);
 
@@ -700,7 +700,7 @@ void App::GarmentExtension::RegisterComponentOverrides(Core::SharedPtr<EntitySta
 }
 
 void App::GarmentExtension::RegisterComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
-                                                            Red::DynArray<Red::AppearancePartOverrides>& aOverrides)
+                                                       Red::DynArray<Red::AppearancePartOverrides>& aOverrides)
 {
     for (const auto& partOverrides : aOverrides)
     {
