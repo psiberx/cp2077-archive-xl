@@ -60,6 +60,12 @@ void App::GarmentOverrideConfig::LoadYAML(const YAML::Node& aNode)
                                 tagDefinition.emplace(componentName.data(), ChunkMask(op.second, mask));
                                 success = true;
                             }
+                            else if (opNode.IsScalar())
+                            {
+                                const auto mask = opNode.as<uint64_t>();
+                                tagDefinition.emplace(componentName.data(), ChunkMask(op.second, mask));
+                                success = true;
+                            }
                             else
                             {
                                 malformed = true;
