@@ -151,6 +151,8 @@ void App::MeshExtension::ProcessAppearance(Red::CMesh* aMesh, const Core::Shared
         {
             if (!aMeshState->HasMaterialEntry(chunkName))
             {
+                std::unique_lock _(Raw::CMesh::MaterialLock::Ref(aMesh));
+
                 auto materialIndex = static_cast<int32_t>(aMesh->materialEntries.Size());
                 aMeshState->AddMaterialEntry(chunkName, materialIndex);
                 aMesh->materialEntries.EmplaceBack();
@@ -301,16 +303,6 @@ void App::MeshExtension::ProcessDynamicMaterials(const Core::SharedPtr<DynamicCo
         {
             if (chunkName.hash == aContext->sourceMesh->path.hash)
             {
-                auto sourceTagIndex = static_cast<int32_t>(aContext->targetMesh->materialEntries.Size());
-                aContext->targetState->materials[chunkName] = sourceTagIndex;
-                aContext->targetMesh->materialEntries.EmplaceBack();
-
-                auto& materialEntry = aContext->targetMesh->materialEntries.Back();
-                materialEntry.name = chunkName;
-                materialEntry.isLocalInstance = true;
-                materialEntry.material = s_dummyMaterial;
-                materialEntry.materialWeak = s_dummyMaterial;
-
                 const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
                 const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
 
@@ -1056,7 +1048,7 @@ Red::CName App::MeshExtension::RegisterMeshPatch(Red::CMesh* aMesh, Red::CMesh* 
 
     if (!aMesh->materialEntries.IsEmpty())
     {
-        std::scoped_lock _(meshState->meshMutex);
+        std::scoped_lock _(meshState->meshMutex, Raw::CMesh::MaterialLock::Ref(aMesh));
 
         auto materialIndex = static_cast<int32_t>(aMesh->materialEntries.Size());
         meshState->materials[sourceTag] = materialIndex;
