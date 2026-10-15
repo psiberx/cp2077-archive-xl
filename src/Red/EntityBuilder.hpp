@@ -86,4 +86,50 @@ constexpr auto ExtractComponentsJob = Core::RawFunc<
 constexpr auto ScheduleExtractComponentsJob = Core::RawFunc<
     /* addr = */ Red::AddressLib::EntityBuilder_ScheduleExtractComponentsJob,
     /* type = */ void (*)(Red::JobQueue& aJobQueue, void* a2, Red::EntityBuilderJobParams* aParams)>();
+
+constexpr auto ReleaseSharedPtr = Core::RawFunc<
+    /* addr = */ Red::AddressLib::EntityBuilder_ReleaseSharedPtr,
+    /* type = */ void (*)(Red::SharedPtr<Red::EntityBuilder>* aBuilder)>();
+}
+
+namespace Red
+{
+// Keeps an entity builder alive for the duration of a job, like the engine's own extraction job does.
+// The reference is released by the engine, since the last owner must destroy the builder
+// with the real destructor rather than with the partial layout declared above.
+class EntityBuilderLock
+{
+public:
+    explicit EntityBuilderLock(const WeakPtr<EntityBuilder>& aBuilderWeak) noexcept
+        : m_builder(aBuilderWeak.Lock())
+    {
+    }
+
+    ~EntityBuilderLock() noexcept
+    {
+        if (m_builder.refCount)
+        {
+            Raw::EntityBuilder::ReleaseSharedPtr(&m_builder);
+
+            m_builder.instance = nullptr;
+            m_builder.refCount = nullptr;
+        }
+    }
+
+    EntityBuilderLock(const EntityBuilderLock&) = delete;
+    EntityBuilderLock& operator=(const EntityBuilderLock&) = delete;
+
+    explicit operator bool() const noexcept
+    {
+        return m_builder.instance != nullptr;
+    }
+
+    EntityBuilder* operator->() const noexcept
+    {
+        return m_builder.instance;
+    }
+
+private:
+    SharedPtr<EntityBuilder> m_builder;
+};
 }

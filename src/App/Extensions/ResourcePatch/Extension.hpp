@@ -84,7 +84,9 @@ private:
                                        const Red::Handle<Red::AppearanceDefinition>& aDefinition,
                                        Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
                                        bool aDisablePostLoad, bool aDisableImports, bool aDisablePreInitialization,
-                                       bool aForceIncludeParts, const Red::JobGroup& aJobGroup);
+                                       bool aForceIncludeParts,
+                                       const Core::SharedPtr<Red::EntityBuilderLock>& aBuilderLock,
+                                       const Red::JobGroup& aJobGroup);
 
     static void PatchPackageResults(const Red::Handle<Red::EntityTemplate>& aTemplate,
                                     Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,
@@ -97,6 +99,7 @@ private:
                                     bool aDisablePostLoad,
                                     bool aDisableImports,
                                     bool aDisablePreInitialization,
+                                    const Core::SharedPtr<Red::EntityBuilderLock>& aBuilderLock,
                                     const Red::JobGroup& aJobGroup);
 
     static void MergeEntity(Red::DynArray<Red::Handle<Red::ISerializable>>& aResultObjects,

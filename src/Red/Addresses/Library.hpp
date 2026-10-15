@@ -86,6 +86,7 @@ constexpr uint32_t Entity_RequestComponents = 2296260874;
 
 constexpr uint32_t EntityBuilder_ExtractComponentsJob = 489494088;
 constexpr uint32_t EntityBuilder_ScheduleExtractComponentsJob = 437791594;
+constexpr uint32_t EntityBuilder_ReleaseSharedPtr = 2544967668;
 
 constexpr uint32_t EntitySpawner_SpawnFromTemplate = 2509382878;
 
