@@ -3,8 +3,12 @@
 #include <filesystem>
 #include <vector>
 
+#if defined(_WIN32)
 #include <libloaderapi.h>
 #include <minwindef.h>
+#else
+#include <dlfcn.h>
+#endif
 
 #include <RED4ext/Callback.hpp>
 #include <RED4ext/Memory/Allocators.hpp>
@@ -65,8 +69,14 @@ private:
         if (s_facade)
             return true;
 
+#if defined(_WIN32)
         if (!RED4ext::Memory::Vault::Get()->poolRegistry.Get(RED4ext::Memory::PoolEngine::Name))
             return false;
+#else
+        // The macOS SDK has no Vault global to test; the RTTI system existing is the readiness test there.
+        if (!RED4ext::CRTTISystem::Get())
+            return false;
+#endif
 
         auto facade = RED4ext::CRTTISystem::Get()->GetClass("ArchiveXL");
 
@@ -131,10 +141,22 @@ private:
 
     inline static std::filesystem::path GetModulePath(HMODULE aHandle)
     {
+#if defined(_WIN32)
         wchar_t path[MAX_PATH]{0};
         auto length = GetModuleFileNameW(aHandle, path, MAX_PATH);
 
         return std::filesystem::path(path).parent_path();
+#else
+        // The plugin that includes this header: find the image that holds this function.
+        (void)aHandle;
+        Dl_info info{};
+        if (dladdr(reinterpret_cast<const void*>(&GetModulePath), &info) && info.dli_fname)
+        {
+            return std::filesystem::path(info.dli_fname).parent_path();
+        }
+
+        return {};
+#endif
     }
 
     inline static RED4ext::CClass* s_facade;
