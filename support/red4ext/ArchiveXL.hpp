@@ -64,6 +64,26 @@ public:
 private:
     ArchiveXL() = default;
 
+#if !defined(_WIN32)
+    // Same test as the Windows branch above: the PoolEngine pool is in the vault's pool registry. Vault::Get() cannot
+    // be used here, so the vault is taken from the game's PoolStorageProxy<PoolEngine>::GetAllocator(). That storage
+    // is set up when the game image loads and its allocator is the DefaultAllocator, the first member of the vault.
+    // The getter only reads that static and allocates nothing, so it is safe at any time.
+    inline static bool IsPoolEngineRegistered()
+    {
+        using GetVault_t = RED4ext::Memory::Vault* (*)();
+
+        static const auto getVault = reinterpret_cast<GetVault_t>(
+            dlsym(RTLD_MAIN_ONLY, "_ZN3red6memory16PoolStorageProxyINS_10PoolEngineEE12GetAllocatorEv"));
+
+        if (!getVault)
+            return false;
+
+        auto vault = getVault();
+        return vault && vault->poolRegistry.Get(RED4ext::Memory::PoolEngine::Name);
+    }
+
+#endif
     inline static bool Initialize()
     {
         if (s_facade)
@@ -73,8 +93,7 @@ private:
         if (!RED4ext::Memory::Vault::Get()->poolRegistry.Get(RED4ext::Memory::PoolEngine::Name))
             return false;
 #else
-        // The macOS SDK has no Vault global to test; the RTTI system existing is the readiness test there.
-        if (!RED4ext::CRTTISystem::Get())
+        if (!IsPoolEngineRegistered())
             return false;
 #endif
 
