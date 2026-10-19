@@ -4,19 +4,19 @@ set_project("ArchiveXL")
 set_version("1.27.5", {build = "%y%m%d%H%M"})
 
 set_arch("x64")
-set_languages("cxx2a")
-add_cxxflags("/MP /GR- /EHsc")
+set_languages("cxx20")
+add_cxxflags("/MP /GR- /EHsc /Zi")
 
 if is_mode("debug") then
     set_optimize("none")
     set_symbols("debug")
     set_strip("none")
-    add_cxxflags("/Od /Ob0 /Zi /RTC1")
+    add_cxxflags("/Od /Ob0 /RTC1")
 elseif is_mode("release") then
     set_optimize("fastest")
     set_symbols("debug")
     set_strip("all")
-    add_cxxflags("/Ob2 /Gy /Zi")
+    add_cxxflags("/Ob2 /Gy")
     add_ldflags("/DEBUG:FULL")
     add_ldflags("/INCREMENTAL:NO")
     add_ldflags("/OPT:REF")
@@ -25,7 +25,7 @@ elseif is_mode("releasedbg") then
     set_optimize("fastest")
     set_symbols("debug")
     set_strip("all")
-    add_cxxflags("/Ob1 /Zi")
+    add_cxxflags("/Ob1")
 end
 
 if is_mode("debug") then

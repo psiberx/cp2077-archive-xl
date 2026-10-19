@@ -22,11 +22,18 @@ inline RelocFunc<CallFunction_t> CallFunctionWithFrame(RED4ext::Addresses::CBase
 
 inline bool CallFunctionWithStack(Red::CStackFrame* aFrame, CBaseFunction* aFunc, CStack& aStack)
 {
-    constexpr auto NopOp = 0;
-    constexpr auto ParamOp = 27;
-    constexpr auto ParamEndOp = 38;
-    constexpr auto MaxCodeSize = 264;
-    constexpr auto PointerSize = sizeof(void*);
+    constexpr uint8_t NopOp = 0;
+    constexpr uint8_t ParamOp = 27;
+    constexpr uint8_t ParamEndOp = 38;
+    constexpr uint32_t OpSize = sizeof(NopOp);
+    constexpr uint32_t PointerSize = sizeof(void*);
+    constexpr uint32_t MaxParams = 15;
+    constexpr uint32_t MaxCodeSize = (MaxParams * (OpSize + PointerSize * 2)) + OpSize;
+
+    if (aFunc->params.Size() > MaxParams)
+    {
+        return false;
+    }
 
     char code[MaxCodeSize];
     CStackFrame frame(nullptr, code);
