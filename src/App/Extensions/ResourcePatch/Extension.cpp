@@ -741,10 +741,11 @@ void App::ResourcePatchExtension::OnEntityPackageLoad(Red::JobQueue& aJobQueue, 
                                                       Red::EntityBuilderJobParams* aParams)
 {
     aJobQueue.Dispatch([entityBuilderWeak = aParams->entityBuilderWeak](const Red::JobGroup& aJobGroup) {
-        if (entityBuilderWeak.Expired())
+        auto entityBuilder = entityBuilderWeak.Lock();
+
+        if (!entityBuilder)
             return;
 
-        auto& entityBuilder = entityBuilderWeak.instance;
         auto forceParts = entityBuilder->entityTemplate->visualTagsSchema &&
                           entityBuilder->entityTemplate->visualTagsSchema->visualTags.Contains(AppearancePartsTag);
 
@@ -778,10 +779,10 @@ void App::ResourcePatchExtension::OnEntityPackageLoad(Red::JobQueue& aJobQueue, 
     });
 
     aJobQueue.Dispatch([entityBuilderWeak = aParams->entityBuilderWeak](const Red::JobGroup& aJobGroup) {
-        if (entityBuilderWeak.Expired())
-            return;
+        auto entityBuilder = entityBuilderWeak.Lock();
 
-        auto& entityBuilder = entityBuilderWeak.instance;
+        if (!entityBuilder)
+            return;
 
         if (entityBuilder->flags.ExtractEntity && entityBuilder->entityExtractor)
         {

@@ -47,6 +47,7 @@
 #include <RED4ext/Scripting/Natives/Generated/ent/Entity.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/EntityID.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/EntityInstanceData.hpp>
+#include <RED4ext/Scripting/Natives/Generated/ent/EntityParameter.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/EntityParametersStorage.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/EntityTemplate.hpp>
 #include <RED4ext/Scripting/Natives/Generated/ent/ExternalComponent.hpp>
