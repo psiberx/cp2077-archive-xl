@@ -12,3 +12,8 @@ $Version = & $($PSScriptRoot + "\steps\get-version.ps1")
 & $($PSScriptRoot + "\steps\create-zip-from-stage.ps1") -StageDir ${StageDir} -ProjectName ${ProjectName} -DistDir ${DistDir} -Version ${Version}
 
 Remove-Item -Recurse ${StageDir}
+
+& $($PSScriptRoot + "\steps\compose-red4ext-pdb.ps1") -StageDir ${StageDir} -ProjectName ${ProjectName} -ReleaseBin ${ReleaseBin}
+& $($PSScriptRoot + "\steps\create-zip-from-stage.ps1") -StageDir ${StageDir} -ProjectName ${ProjectName} -DistDir ${DistDir} -Version ${Version} -Suffix "-pdb"
+
+Remove-Item -Recurse ${StageDir}
