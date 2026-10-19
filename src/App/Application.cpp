@@ -1,5 +1,6 @@
 #include "Application.hpp"
 #include "App/Archives/ArchiveService.hpp"
+#include "App/Configuration.hpp"
 #include "App/Environment.hpp"
 #include "App/Extensions/ExtensionService.hpp"
 #include "App/Migration.hpp"
@@ -22,7 +23,8 @@ App::Application::Application(HMODULE aHandle, const RED4ext::v1::Sdk* aSdk)
     Register<Support::SpdlogProvider>()
         ->AppendTimestampToLogName()
         ->CreateRecentLogSymlink()
-        ->SetMaxLogFiles(5);
+        ->SetMaxLogFiles(5)
+        ->ToggleDebugOutput(Config::DebugLogging());
     Register<Support::RED4extProvider>(aHandle, aSdk)
         ->EnableAddressLibrary()
         ->RegisterScripts(Env::ScriptsDir());

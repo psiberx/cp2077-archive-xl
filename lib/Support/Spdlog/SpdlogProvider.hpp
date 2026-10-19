@@ -52,6 +52,12 @@ public:
         return Defer(this);
     }
 
+    auto ToggleDebugOutput(bool aEnabled) noexcept
+    {
+        m_debugOutput = aEnabled;
+        return Defer(this);
+    }
+
 protected:
     void OnInitialize() override;
 
@@ -61,5 +67,6 @@ protected:
     int32_t m_maxLogCount{ 10 };
     size_t m_maxPartSize{ 100 * (1 << 20) };
     size_t m_maxPartCount{ 2 };
+    bool m_debugOutput{ false };
 };
 }

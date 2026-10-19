@@ -70,8 +70,6 @@ void App::JournalExtension::OnLoadJournal(uintptr_t a1, Red::JobGroup& aJobGroup
 
     for (const auto& unit : m_configs)
     {
-        // LogInfo("[{}] Processing \"{}\"...", ExtensionName, unit.name);
-
         for (const auto& path : unit.journals)
         {
             auto token = loader->LoadAsync<Red::game::JournalResource>(path.c_str());
