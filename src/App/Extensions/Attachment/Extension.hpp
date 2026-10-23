@@ -37,7 +37,7 @@ private:
                                  Red::CharacterBodyPartState& aFlatState);
     static bool OnGetSuffixValue(Raw::AppearanceChanger::GetSuffixValuePtr aOriginalFunc,
                                  const Red::ItemID& aItemID, uint64_t a2, Red::Handle<Red::GameObject>& aOwner,
-                                 Red::TweakDBID aSuffixRecordID, Red::CString& aResult);
+                                 const Red::TweakDBID& aSuffixRecordID, Red::CString& aResult);
 
     static bool IsVisualTagActive(Red::Handle<Red::Entity>& aOwner, Red::TweakDBID aBaseSlotID, Red::CName aVisualTag,
                                   Red::TweakDBID aEquippedItemID = {});
