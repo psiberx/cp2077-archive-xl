@@ -19,7 +19,8 @@ constexpr auto LoadArchives = Core::RawFunc<
                           Red::ArchiveGroup& aGroup,
                           const Red::DynArray<Red::CString>& aArchivePaths,
                           Red::DynArray<Red::ResourcePath>& aLoadedResourcePaths,
-                          bool aMemoryResident)>{};
+                          uint32_t aMemoryResident,
+                          uint8_t aMode)>{}; // 2.5: base archives pass 2, mods pass 0
 
 constexpr auto RequestResource = Core::RawFunc<
     /* addr = */ Red::AddressLib::ResourceDepot_RequestResource,
