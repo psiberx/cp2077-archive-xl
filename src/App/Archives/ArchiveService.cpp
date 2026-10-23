@@ -106,7 +106,7 @@ Red::ArchiveGroup& App::ArchiveService::ResolveArchiveGroup(Red::ResourceDepot* 
 
     auto firstNonModGroup = std::find_if(aDepot->groups.begin(), aDepot->groups.end(),
                                          [](const Red::ArchiveGroup& aGroup) {
-                                             return aGroup.scope != Red::ArchiveScope::Mod;
+                                             return aGroup.scope != Red::ModArchiveScope;
                                          });
     auto firstNonModGroupIndex = firstNonModGroup - aDepot->groups.begin();
 
@@ -114,7 +114,7 @@ Red::ArchiveGroup& App::ArchiveService::ResolveArchiveGroup(Red::ResourceDepot* 
 
     auto& group = aDepot->groups[firstNonModGroupIndex];
     group.basePath = aBasePath;
-    group.scope = Red::ArchiveScope::Mod;
+    group.scope = Red::ModArchiveScope;
 
     return group;
 }

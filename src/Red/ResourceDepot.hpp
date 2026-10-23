@@ -1,5 +1,12 @@
 #pragma once
 
+namespace Red
+{
+// The game inserted two archive scopes before the mod scope in 2.5,
+// RED4ext::ArchiveScope::Mod still has the old value (4).
+constexpr auto ModArchiveScope = static_cast<ArchiveScope>(6);
+}
+
 namespace Raw::ResourceDepot
 {
 constexpr auto InitializeArchives = Core::RawFunc<
