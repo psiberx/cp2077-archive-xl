@@ -889,6 +889,10 @@ void App::CustomizationExtension::FixCustomizationComponents(const Red::Handle<R
     if (!ResourceMetaExtension::InScope(ResourceMetaExtension::CustomizationApp, aResource->path))
         return;
 
+    // Game 2.5 has customization appearances without parts overrides
+    if (aDefinition->partsOverrides.IsEmpty())
+        return;
+
     for (auto& override : aDefinition->partsOverrides[0].componentsOverrides)
     {
         for (const auto& component : aComponents)
