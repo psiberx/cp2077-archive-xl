@@ -15,19 +15,20 @@ struct __declspec(align(0x10)) CompiledNodeInstanceSetupInfo
     uint64_t globalNodeID;             // 58
     uint64_t proxyNodeID;              // 60
     ResourcePath unk68;                // 68
-    float secondaryRefPointDistance;   // 70
-    float streamingDistance;           // 74
-    uint16_t nodeIndex;                // 78
-    uint16_t unk7A;                    // 7A
-    uint16_t unk7C;                    // 7C
-    uint16_t unk7E;                    // 7E
-    uint64_t unk80;                    // 80
-    uint64_t unk88;                    // 88
+    uint64_t nodeIndex : 19;           // 70 (2.31: uint16 at 0x78)
+    uint64_t unk70_19 : 29;            // 70
+    uint64_t unk70_48 : 16;            // 70
+    float secondaryRefPointDistance;   // 78 (2.31: 70)
+    float streamingDistance;           // 7C (2.31: 74)
+    uint32_t unk80;                    // 80
+    uint8_t unk84;                     // 84 (2.31: 88)
+    uint8_t unk85[0x90 - 0x85];        // 85
 };
 RED4EXT_ASSERT_SIZE(CompiledNodeInstanceSetupInfo, 0x90);
 RED4EXT_ASSERT_OFFSET(CompiledNodeInstanceSetupInfo, node, 0x50);
 RED4EXT_ASSERT_OFFSET(CompiledNodeInstanceSetupInfo, globalNodeID, 0x58);
-RED4EXT_ASSERT_OFFSET(CompiledNodeInstanceSetupInfo, nodeIndex, 0x78);
+RED4EXT_ASSERT_OFFSET(CompiledNodeInstanceSetupInfo, proxyNodeID, 0x60);
+RED4EXT_ASSERT_OFFSET(CompiledNodeInstanceSetupInfo, secondaryRefPointDistance, 0x78);
 
 struct CompiledNodeInstanceSetupInfoBuffer : DataBuffer
 {
@@ -54,14 +55,16 @@ struct CompiledNodeInstanceSetupInfoBuffer : DataBuffer
 };
 RED4EXT_ASSERT_SIZE(CompiledNodeInstanceSetupInfoBuffer, 0x28);
 
+// Game 2.5: a setup data version dword was inserted at +0x28, so the arrays moved by 8 (see Codeware PR #63)
 struct StreamingSectorNodeBuffer
 {
     CompiledNodeInstanceSetupInfoBuffer nodeSetups; // 00
-    DynArray<Handle<worldNode>> nodes;              // 28
-    DynArray<NodeRef> nodeRefs;                     // 38
+    uint32_t setupVersion;                          // 28
+    DynArray<Handle<worldNode>> nodes;              // 30 (2.31: 28)
+    DynArray<NodeRef> nodeRefs;                     // 40 (2.31: 38)
 };
-RED4EXT_ASSERT_OFFSET(StreamingSectorNodeBuffer, nodes, 0x28);
-RED4EXT_ASSERT_OFFSET(StreamingSectorNodeBuffer, nodeRefs, 0x38);
+RED4EXT_ASSERT_OFFSET(StreamingSectorNodeBuffer, nodes, 0x30);
+RED4EXT_ASSERT_OFFSET(StreamingSectorNodeBuffer, nodeRefs, 0x40);
 
 struct CollisionActor
 {
