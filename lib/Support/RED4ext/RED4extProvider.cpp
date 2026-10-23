@@ -58,6 +58,9 @@ bool Support::RED4extProvider::HookAttach(uintptr_t aAddress, void* aCallback)
 
 bool Support::RED4extProvider::HookAttach(uintptr_t aAddress, void* aCallback, void** aOriginal)
 {
+    if (!aAddress)
+        return false;
+
     return m_sdk->hooking->Attach(m_plugin, reinterpret_cast<void*>(aAddress), aCallback, aOriginal);
 }
 
@@ -68,5 +71,11 @@ bool Support::RED4extProvider::HookDetach(uintptr_t aAddress)
 
 uintptr_t Support::RED4extProvider::ResolveAddress(uint32_t aAddressID)
 {
-    return RED4ext::UniversalRelocBase::Resolve(aAddressID);
+    // UniversalRelocBase::Resolve terminates the game on an unknown hash. Return 0 instead, so only the
+    // features that depend on an address missing from the current game version fail to load.
+    using ResolveFunc = uintptr_t (*)(uint32_t);
+    static const auto resolve = reinterpret_cast<ResolveFunc>(
+        GetProcAddress(GetModuleHandleW(L"RED4ext.dll"), "RED4ext_ResolveAddress"));
+
+    return resolve ? resolve(aAddressID) : 0;
 }
