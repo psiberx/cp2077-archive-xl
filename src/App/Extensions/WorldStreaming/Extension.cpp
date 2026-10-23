@@ -18,6 +18,19 @@ constexpr auto NoCollisionPreset = Red::CName("No Collision");
 
 Red::Handle<Red::worldStaticMeshNode> s_dummyNode;
 Core::Map<Red::ResourcePath, Core::Map<int64_t, Red::CName*>> s_collisionNodeOverrides;
+
+// Game 2.5 keeps the resolved node pointer in the setup (+0x50, written by the node fix-up),
+// the packed node index is only a fallback and is bounds checked.
+Red::worldNode* ResolveNode(Red::StreamingSectorNodeBuffer& aBuffer, Red::CompiledNodeInstanceSetupInfo* aNodeSetup)
+{
+    if (aNodeSetup->node)
+        return aNodeSetup->node;
+
+    if (aNodeSetup->nodeIndex < aBuffer.nodes.Size())
+        return aBuffer.nodes[static_cast<uint32_t>(aNodeSetup->nodeIndex)].instance;
+
+    return nullptr;
+}
 }
 
 std::string_view App::WorldStreamingExtension::GetName()
@@ -170,7 +183,16 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
     for (const auto& nodeMutation : aSectorMod.nodeMutations)
     {
         auto* nodeSetup = buffer.nodeSetups.GetInstance(nodeMutation.nodeIndex);
-        auto* nodeDefinition = buffer.nodes[nodeSetup->nodeIndex].instance;
+        auto* nodeDefinition = ResolveNode(buffer, nodeSetup);
+
+        if (!nodeDefinition)
+        {
+            LogError(R"([{}] {}: The target node #{} can't be resolved (node index {} of {}).)",
+                     ExtensionName, aSectorMod.mod, nodeMutation.nodeIndex,
+                     static_cast<uint32_t>(nodeSetup->nodeIndex), buffer.nodes.Size());
+            nodeValidationPassed = false;
+            continue;
+        }
 
         if (nodeMutation.nodeType != nodeDefinition->GetNativeType()->name)
         {
@@ -183,51 +205,30 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             continue;
         }
 
+        // Game 2.5 changed the layouts of collision and instanced mesh nodes (the instance transforms are now
+        // cooked), so element level edits can't be applied safely yet. Whole node edits still work.
         if (!nodeMutation.elementMutations.empty())
         {
-            if (nodeMutation.nodeType == CollisionNodeType)
-            {
-                auto& actors = Raw::CollisionNode::Actors::Ref(nodeDefinition);
-                if (actors.GetSize() != nodeMutation.expectedElements)
-                {
-                    LogError(R"([{}] {}: The target node #{} has {} actor(s), but the mod expects {}.)",
-                             ExtensionName, aSectorMod.mod, nodeMutation.nodeIndex,
-                             actors.GetSize(), nodeMutation.expectedElements);
-                    nodeValidationPassed = false;
-                    continue;
-                }
-            }
-            else if (nodeMutation.nodeType == InstancedMeshNodeType)
-            {
-                auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
-                if (meshNode->worldTransformsBuffer.numElements != nodeMutation.expectedElements)
-                {
-                    LogError(R"([{}] {}: The target node #{} has {} instance(s), but the mod expects {}.)",
-                             ExtensionName, aSectorMod.mod, nodeMutation.nodeIndex,
-                             meshNode->worldTransformsBuffer.numElements, nodeMutation.expectedElements);
-                    nodeValidationPassed = false;
-                    continue;
-                }
-            }
-            else if (nodeMutation.nodeType == InstancedDestructibleNodeType)
-            {
-                auto* meshNode = Red::Cast<Red::worldInstancedDestructibleMeshNode>(nodeDefinition);
-                if (meshNode->cookedInstanceTransforms.numElements != nodeMutation.expectedElements)
-                {
-                    LogError(R"([{}] {}: The target node #{} has {} instance(s), but the mod expects {}.)",
-                             ExtensionName, aSectorMod.mod, nodeMutation.nodeIndex,
-                             meshNode->cookedInstanceTransforms.numElements, nodeMutation.expectedElements);
-                    nodeValidationPassed = false;
-                    continue;
-                }
-            }
+            LogError(R"([{}] {}: The target node #{} has type {}, element edits for this type are not supported on game 2.5.)",
+                     ExtensionName, aSectorMod.mod, nodeMutation.nodeIndex, nodeMutation.nodeType.ToString());
+            nodeValidationPassed = false;
+            continue;
         }
     }
 
     for (const auto& nodeDeletion : aSectorMod.nodeDeletions)
     {
         auto* nodeSetup = buffer.nodeSetups.GetInstance(nodeDeletion.nodeIndex);
-        auto* nodeDefinition = buffer.nodes[nodeSetup->nodeIndex].instance;
+        auto* nodeDefinition = ResolveNode(buffer, nodeSetup);
+
+        if (!nodeDefinition)
+        {
+            LogError(R"([{}] {}: The target node #{} can't be resolved (node index {} of {}).)",
+                     ExtensionName, aSectorMod.mod, nodeDeletion.nodeIndex,
+                     static_cast<uint32_t>(nodeSetup->nodeIndex), buffer.nodes.Size());
+            nodeValidationPassed = false;
+            continue;
+        }
 
         if (nodeDeletion.nodeType != nodeDefinition->GetNativeType()->name)
         {
@@ -239,63 +240,14 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             continue;
         }
 
+        // Game 2.5 changed the layouts of collision and instanced mesh nodes (the instance transforms are now
+        // cooked), so element level edits can't be applied safely yet. Whole node edits still work.
         if (!nodeDeletion.elementDeletions.empty())
         {
-            if (nodeDeletion.nodeType == CollisionNodeType)
-            {
-                auto& actors = Raw::CollisionNode::Actors::Ref(nodeDefinition);
-                if (actors.GetSize() != nodeDeletion.expectedElements)
-                {
-                    LogError(R"([{}] {}: The target node #{} has {} actor(s), but the mod expects {}.)",
-                             ExtensionName, aSectorMod.mod, nodeDeletion.nodeIndex,
-                             actors.GetSize(), nodeDeletion.expectedElements);
-                    nodeValidationPassed = false;
-                    continue;
-                }
-                if (!nodeDeletion.elementDeletions.empty())
-                {
-                    auto& shapes = Raw::CollisionNode::Shapes::Ref(nodeDefinition);
-                    for (const auto& elementDeletion : nodeDeletion.elementDeletions)
-                    {
-                        if (elementDeletion.subElementIndex >= 0)
-                        {
-                            auto& actor = actors.beginPtr[elementDeletion.elementIndex];
-                            if (elementDeletion.subElementIndex >= actor.numShapes)
-                            {
-                                LogError(R"([{}] {}: The target node #{} actor #{} has {} shape(s), but the mod expects {} or more.)",
-                                         ExtensionName, aSectorMod.mod, nodeDeletion.nodeIndex, elementDeletion.elementIndex,
-                                         actor.numShapes, elementDeletion.subElementIndex + 1);
-                                nodeValidationPassed = false;
-                                continue;
-                            }
-                        }
-                    }
-                }
-            }
-            else if (nodeDeletion.nodeType == InstancedMeshNodeType)
-            {
-                auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
-                if (meshNode->worldTransformsBuffer.numElements != nodeDeletion.expectedElements)
-                {
-                    LogError(R"([{}] {}: The target node #{} has {} instance(s), but the mod expects {}.)",
-                             ExtensionName, aSectorMod.mod, nodeDeletion.nodeIndex,
-                             meshNode->worldTransformsBuffer.numElements, nodeDeletion.expectedElements);
-                    nodeValidationPassed = false;
-                    continue;
-                }
-            }
-            else if (nodeDeletion.nodeType == InstancedDestructibleNodeType)
-            {
-                auto* meshNode = Red::Cast<Red::worldInstancedDestructibleMeshNode>(nodeDefinition);
-                if (meshNode->cookedInstanceTransforms.numElements != nodeDeletion.expectedElements)
-                {
-                    LogError(R"([{}] {}: The target node #{} has {} instance(s), but the mod expects {}.)",
-                             ExtensionName, aSectorMod.mod, nodeDeletion.nodeIndex,
-                             meshNode->cookedInstanceTransforms.numElements, nodeDeletion.expectedElements);
-                    nodeValidationPassed = false;
-                    continue;
-                }
-            }
+            LogError(R"([{}] {}: The target node #{} has type {}, element edits for this type are not supported on game 2.5.)",
+                     ExtensionName, aSectorMod.mod, nodeDeletion.nodeIndex, nodeDeletion.nodeType.ToString());
+            nodeValidationPassed = false;
+            continue;
         }
     }
 
@@ -307,7 +259,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
     for (const auto& nodeMutation : aSectorMod.nodeMutations)
     {
         auto* nodeSetup = buffer.nodeSetups.GetInstance(nodeMutation.nodeIndex);
-        auto* nodeDefinition = buffer.nodes[nodeSetup->nodeIndex].instance;
+        auto* nodeDefinition = ResolveNode(buffer, nodeSetup);
 
         if (nodeMutation.modifyPosition)
         {
@@ -329,10 +281,6 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             if (auto* meshDefinition = Red::Cast<Red::worldMeshNode>(nodeDefinition))
             {
                 meshDefinition->mesh.path = nodeMutation.resourcePath;
-            }
-            else if (auto* instancedMeshDefinition = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition))
-            {
-                instancedMeshDefinition->mesh.path = nodeMutation.resourcePath;
             }
             else if (auto* entityDefinition = Red::Cast<Red::worldEntityNode>(nodeDefinition))
             {
@@ -374,10 +322,6 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             {
                 meshDefinition->meshAppearance = nodeMutation.appearanceName;
             }
-            else if (auto* instancedMeshDefinition = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition))
-            {
-                instancedMeshDefinition->meshAppearance = nodeMutation.appearanceName;
-            }
             else if (auto* entityDefinition = Red::Cast<Red::worldEntityNode>(nodeDefinition))
             {
                 entityDefinition->appearanceName = nodeMutation.appearanceName;
@@ -412,186 +356,18 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             }
         }
 
-        if (!nodeMutation.elementMutations.empty())
-        {
-            if (nodeMutation.nodeType == CollisionNodeType)
-            {
-                auto& actors = Raw::CollisionNode::Actors::Ref(nodeDefinition);
-                for (const auto& elementMutation : nodeMutation.elementMutations)
-                {
-                    auto* instance = actors.beginPtr + elementMutation.elementIndex;
-
-                    if (elementMutation.modifyPosition)
-                    {
-                        instance->transform.Position = elementMutation.position;
-                    }
-
-                    if (elementMutation.modifyOrientation)
-                    {
-                        instance->transform.Orientation = elementMutation.orientation;
-                    }
-                }
-                continue;
-            }
-
-            if (nodeMutation.nodeType == InstancedMeshNodeType)
-            {
-                auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
-                auto* instances = std::bit_cast<Red::RenderProxyTransformData*>(&meshNode->worldTransformsBuffer.sharedDataBuffer->buffer.buffer.data);
-                auto startIndex = meshNode->worldTransformsBuffer.startIndex;
-                for (const auto& elementMutation : nodeMutation.elementMutations)
-                {
-                    auto* instance = instances->Get(startIndex + elementMutation.elementIndex);
-
-                    if (elementMutation.modifyPosition)
-                    {
-                        instance->transform.Position = elementMutation.position;
-                    }
-
-                    if (elementMutation.modifyOrientation)
-                    {
-                        instance->transform.Orientation = elementMutation.orientation;
-                    }
-
-                    if (elementMutation.modifyScale)
-                    {
-                        instance->scale = elementMutation.scale;
-                    }
-                }
-                continue;
-            }
-
-            if (nodeMutation.nodeType == InstancedDestructibleNodeType)
-            {
-                auto* meshNode = Red::Cast<Red::worldInstancedDestructibleMeshNode>(nodeDefinition);
-                auto* instances = std::bit_cast<Red::TransformBuffer*>(&meshNode->cookedInstanceTransforms.sharedDataBuffer->buffer.buffer.data);
-                auto startIndex = meshNode->cookedInstanceTransforms.startIndex;
-                auto inverseTransform = nodeSetup->transform.Inverse();
-                for (const auto& elementMutation : nodeMutation.elementMutations)
-                {
-                    auto* instance = instances->Get(startIndex + elementMutation.elementIndex);
-                    auto newTransform = nodeSetup->transform;
-
-                    if (elementMutation.modifyPosition)
-                    {
-                        newTransform.position = elementMutation.position;
-                    }
-
-                    if (elementMutation.modifyOrientation)
-                    {
-                        newTransform.orientation = elementMutation.orientation;
-                    }
-
-                    *instance = newTransform * inverseTransform;
-                }
-                continue;
-            }
-        }
     }
 
     for (const auto& nodeDeletion : aSectorMod.nodeDeletions)
     {
         auto* nodeSetup = buffer.nodeSetups.GetInstance(nodeDeletion.nodeIndex);
-        auto* nodeDefinition = buffer.nodes[nodeSetup->nodeIndex].instance;
-
-        if (!nodeDeletion.elementDeletions.empty())
-        {
-            if (nodeDeletion.nodeType == CollisionNodeType)
-            {
-                auto& actors = Raw::CollisionNode::Actors::Ref(nodeDefinition);
-                auto& shapes = Raw::CollisionNode::Shapes::Ref(nodeDefinition);
-                auto& presets = Raw::CollisionNode::Presets::Ref(nodeDefinition);
-                uint8_t noCollisionIndex = 0xFF;
-
-                for (const auto& elementDeletion : nodeDeletion.elementDeletions)
-                {
-                    auto& actor = actors.beginPtr[elementDeletion.elementIndex];
-                    if (elementDeletion.subElementIndex >= 0 && actor.numShapes > 1)
-                    {
-                        if (elementDeletion.subElementIndex < actor.numShapes)
-                        {
-                            if (noCollisionIndex == 0xFF)
-                            {
-                                noCollisionIndex = presets.GetSize();
-                                auto overrideSize = noCollisionIndex + 1;
-
-                                auto& override = s_collisionNodeOverrides[aSector->path][nodeDeletion.nodeIndex];
-                                if (!override)
-                                {
-                                    auto data = Red::Memory::DefaultAllocator::Get()->Alloc(sizeof(Red::CName) *
-                                                                                            overrideSize);
-                                    override = static_cast<Red::CName*>(data.memory);
-                                    override[noCollisionIndex] = NoCollisionPreset;
-
-                                    std::copy(presets.begin(), presets.end(), override);
-                                }
-
-                                presets.beginPtr = override;
-                                presets.endPtr = override + overrideSize;
-                            }
-
-                            auto& shape = shapes.beginPtr[actor.shapeStartIndex + elementDeletion.subElementIndex];
-                            shape.presetIndex = noCollisionIndex;
-                        }
-                    }
-                    else
-                    {
-                        actor.transform.Position.z.Bits = DelZ;
-                    }
-                }
-                continue;
-            }
-
-            if (nodeDeletion.nodeType == InstancedMeshNodeType)
-            {
-                auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
-                auto* instances = std::bit_cast<Red::RenderProxyTransformData*>(&meshNode->worldTransformsBuffer.sharedDataBuffer->buffer.buffer.data);
-                auto startIndex = meshNode->worldTransformsBuffer.startIndex;
-                for (const auto& elementDeletion : nodeDeletion.elementDeletions)
-                {
-                    auto* instance = instances->Get(startIndex + elementDeletion.elementIndex);
-                    instance->scale.X = 0;
-                    instance->scale.Y = 0;
-                    instance->scale.Z = 0;
-                }
-                continue;
-            }
-
-            if (nodeDeletion.nodeType == InstancedDestructibleNodeType)
-            {
-                auto* meshNode = Red::Cast<Red::worldInstancedDestructibleMeshNode>(nodeDefinition);
-                auto* instances = std::bit_cast<Red::TransformBuffer*>(&meshNode->cookedInstanceTransforms.sharedDataBuffer->buffer.buffer.data);
-                auto startIndex = meshNode->cookedInstanceTransforms.startIndex;
-                for (const auto& elementDeletion : nodeDeletion.elementDeletions)
-                {
-                    auto* instance = instances->Get(startIndex + elementDeletion.elementIndex);
-                    instance->position.Z = -2000;
-                }
-                continue;
-            }
-        }
+        auto* nodeDefinition = ResolveNode(buffer, nodeSetup);
 
         if (nodeDeletion.nodeType == StaticMeshNodeType)
         {
             nodeSetup->scale.X = 0;
             nodeSetup->scale.Y = 0;
             nodeSetup->scale.Z = 0;
-            continue;
-        }
-
-        if (nodeDeletion.nodeType == InstancedMeshNodeType)
-        {
-            auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
-            auto* instances = std::bit_cast<Red::RenderProxyTransformData*>(&meshNode->worldTransformsBuffer.sharedDataBuffer->buffer.buffer.data);
-            auto startIndex = meshNode->worldTransformsBuffer.startIndex;
-            auto numElements = meshNode->worldTransformsBuffer.numElements;
-            for (auto i = 0; i < numElements; ++i)
-            {
-                auto* instance = instances->Get(startIndex + i);
-                instance->scale.X = 0;
-                instance->scale.Y = 0;
-                instance->scale.Z = 0;
-            }
             continue;
         }
 

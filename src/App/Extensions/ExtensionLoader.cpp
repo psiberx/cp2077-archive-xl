@@ -1,5 +1,6 @@
 #include "ExtensionLoader.hpp"
 #include "App/Utils/Str.hpp"
+#include "Red/ResourceDepot.hpp"
 
 App::ExtensionLoader::ExtensionLoader(std::filesystem::path aBundleDir, std::wstring aConfigExt)
     : m_bundleDir(std::move(aBundleDir))
@@ -28,7 +29,7 @@ void App::ExtensionLoader::Configure()
 
             for (const auto& group : depot->groups | std::views::reverse)
             {
-                if (group.scope == Red::ArchiveScope::Mod)
+                if (group.scope == Red::ModArchiveScope)
                 {
                     if (group.basePath.Length() > 0)
                     {

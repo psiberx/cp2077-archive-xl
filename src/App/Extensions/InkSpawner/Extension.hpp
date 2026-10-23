@@ -24,12 +24,14 @@ private:
 
     static bool OnAsyncSpawnLocal(Red::ink::WidgetLibraryResource& aLibrary,
                                   Red::InkSpawningInfo& aSpawningInfo,
-                                  Red::CName aItemName);
+                                  Red::CName aItemName,
+                                  bool a4);
 
     static bool OnAsyncSpawnExternal(Red::ink::WidgetLibraryResource& aLibrary,
                                      Red::InkSpawningInfo& aSpawningInfo,
                                      Red::ResourcePath aExternalPath,
-                                     Red::CName aItemName);
+                                     Red::CName aItemName,
+                                     bool a5);
 
     static void OnFinishAsyncSpawn(Red::InkSpawningContext& aContext,
                                    Red::Handle<Red::ink::WidgetLibraryItemInstance>& aInstance);

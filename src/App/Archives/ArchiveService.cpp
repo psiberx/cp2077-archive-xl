@@ -68,7 +68,7 @@ void App::ArchiveService::OnInitializeArchives(Red::ResourceDepot* aDepot)
 
         if (!archivePaths.IsEmpty())
         {
-            Raw::ResourceDepot::LoadArchives(nullptr, group, archivePaths, loadedResources, false);
+            Raw::ResourceDepot::LoadArchives(nullptr, group, archivePaths, loadedResources, 0, 0);
         }
     }
 
@@ -83,7 +83,7 @@ void App::ArchiveService::OnInitializeArchives(Red::ResourceDepot* aDepot)
         }
 
         auto& group = ResolveArchiveGroup(aDepot, "");
-        Raw::ResourceDepot::LoadArchives(nullptr, group, archivePaths, loadedResources, false);
+        Raw::ResourceDepot::LoadArchives(nullptr, group, archivePaths, loadedResources, 0, 0);
     }
 
     for (const auto& archivePath : loadedArchives)
@@ -106,7 +106,7 @@ Red::ArchiveGroup& App::ArchiveService::ResolveArchiveGroup(Red::ResourceDepot* 
 
     auto firstNonModGroup = std::find_if(aDepot->groups.begin(), aDepot->groups.end(),
                                          [](const Red::ArchiveGroup& aGroup) {
-                                             return aGroup.scope != Red::ArchiveScope::Mod;
+                                             return aGroup.scope != Red::ModArchiveScope;
                                          });
     auto firstNonModGroupIndex = firstNonModGroup - aDepot->groups.begin();
 
@@ -114,7 +114,7 @@ Red::ArchiveGroup& App::ArchiveService::ResolveArchiveGroup(Red::ResourceDepot* 
 
     auto& group = aDepot->groups[firstNonModGroupIndex];
     group.basePath = aBasePath;
-    group.scope = Red::ArchiveScope::Mod;
+    group.scope = Red::ModArchiveScope;
 
     return group;
 }
