@@ -220,11 +220,11 @@ void App::LocalizationExtension::MergeTextEntry(TextEntryList& aFinalList, TextE
         if (!aExtraEntry)
         {
             if (originalEntry->secondaryKey.Length() == 0)
-                LogWarning("[{}] Item #{} overwrites entry {}.",
-                           ExtensionName, aIndex, originalEntry->primaryKey);
+                LogDebug("[{}] Item #{} overwrites entry {}.",
+                         ExtensionName, aIndex, originalEntry->primaryKey);
             else
-                LogWarning("[{}] Item #{} overwrites entry {} (\"{}\").",
-                           ExtensionName, aIndex, originalEntry->primaryKey, originalEntry->secondaryKey.c_str());
+                LogDebug("[{}] Item #{} overwrites entry {} (\"{}\").",
+                         ExtensionName, aIndex, originalEntry->primaryKey, originalEntry->secondaryKey.c_str());
         }
 
         *originalEntry = aNewEntry;

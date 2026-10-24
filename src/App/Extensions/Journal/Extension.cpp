@@ -55,7 +55,7 @@ void App::JournalExtension::Reload()
     }
 }
 
-void App::JournalExtension::OnLoadJournal(uintptr_t a1, Red::JobGroup& aJobGroup)
+void App::JournalExtension::OnLoadJournal(uintptr_t aTree, uintptr_t aIndexToken, Red::JobQueue& aJobQueue)
 {
     LogInfo("[{}] Journal tree is initializing...", ExtensionName);
 
@@ -65,7 +65,6 @@ void App::JournalExtension::OnLoadJournal(uintptr_t a1, Red::JobGroup& aJobGroup
         return;
     }
 
-    auto queue = Red::JobQueue(aJobGroup);
     auto loader = Red::ResourceLoader::Get();
 
     for (const auto& unit : m_configs)
@@ -76,7 +75,7 @@ void App::JournalExtension::OnLoadJournal(uintptr_t a1, Red::JobGroup& aJobGroup
 
             if (!token->IsLoaded())
             {
-                queue.Wait(token->job);
+                aJobQueue.Wait(token->job);
             }
 
             s_resources.emplace_back(token);

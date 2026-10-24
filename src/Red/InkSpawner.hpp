@@ -20,18 +20,11 @@ RED4EXT_ASSERT_OFFSET(InkSpawningRequest, rootWidget, 0x60);
 
 struct InkSpawningContext
 {
-    virtual void sub_00() = 0;
-    virtual void sub_08() = 0;
-    virtual void sub_10() = 0;
-    virtual void sub_18() = 0;
-    virtual void sub_20() = 0;
-    virtual void sub_28() = 0;
-
-    SharedPtr<void>               unk08;   // 08
-    SharedPtr<InkSpawningRequest> request; // 18
+    WeakHandle<ISerializable>     unk00;   // 00
+    SharedPtr<InkSpawningRequest> request; // 10
 };
-RED4EXT_ASSERT_SIZE(InkSpawningContext, 0x28);
-RED4EXT_ASSERT_OFFSET(InkSpawningContext, request, 0x18);
+RED4EXT_ASSERT_SIZE(InkSpawningContext, 0x20);
+RED4EXT_ASSERT_OFFSET(InkSpawningContext, request, 0x10);
 
 struct InkSpawningInfo
 {
@@ -57,7 +50,8 @@ constexpr auto AsyncSpawnFromLocal = Core::RawFunc<
     /* type = */ bool (*)(
         Red::ink::WidgetLibraryResource& aLibrary,
         Red::InkSpawningInfo& aSpawningInfo,
-        Red::CName aItemName)>();
+        Red::CName aItemName,
+        bool a4)>();
 
 constexpr auto SpawnFromExternal = Core::RawFunc<
     /* addr = */ Red::AddressLib::InkWidgetLibrary_SpawnFromExternal,
@@ -77,6 +71,8 @@ constexpr auto SpawnFromLocal = Core::RawFunc<
 
 namespace Raw::InkSpawner
 {
+using ControllerInjectionEnabled = Core::RawPtr<Red::AddressLib::InkSpawner_ControllerInjectionEnabled, bool>;
+
 constexpr auto FinishAsyncSpawn = Core::RawFunc<
     /* addr = */ Red::AddressLib::InkSpawner_FinishAsyncSpawn,
     /* type = */ bool (*)(

@@ -248,7 +248,7 @@ void App::AttachmentExtension::OnCheckFeetState(Red::game::ui::CharacterCustomiz
 bool App::AttachmentExtension::OnGetSuffixValue(Raw::AppearanceChanger::GetSuffixValuePtr aOriginalFunc,
                                                 const Red::ItemID& aItemID, uint64_t a2,
                                                 Red::Handle<Red::GameObject>& aOwner,
-                                                Red::TweakDBID aSuffixRecordID,
+                                                const Red::TweakDBID& aSuffixRecordID,
                                                 Red::CString& aResult)
 {
     if (aOwner && a2 && aSuffixRecordID == InnerSleevesSuffix)

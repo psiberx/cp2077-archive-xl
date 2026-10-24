@@ -62,7 +62,7 @@ constexpr auto GetSuffixValue = Core::RawFunc<
     /* type = */ bool (*)(const Red::ItemID& aItemID,
                           uint64_t a2, // Must be non-zero
                           Red::Handle<Red::GameObject>& aOwner,
-                          Red::TweakDBID aSuffixRecordID,
+                          const Red::TweakDBID& aSuffixRecordID,
                           Red::CString& aResult)>();
 using GetSuffixValuePtr = decltype(GetSuffixValue)::Callable;
 

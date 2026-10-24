@@ -50,7 +50,7 @@ constexpr auto PostLoad = Core::RawFunc<
 
 constexpr auto OnDependenciesReady = Core::RawFunc<
     /* addr = */ Red::AddressLib::ResourceSerializer_OnDependenciesReady,
-    /* type = */ void (*)(Red::ResourceSerializerContext* aContext)>();
+    /* type = */ bool (*)(Red::ResourceSerializerContext* aContext)>();
 
 constexpr auto OnResourceReady = Core::RawFunc<
     /* addr = */ Red::AddressLib::ResourceSerializer_OnResourceReady,

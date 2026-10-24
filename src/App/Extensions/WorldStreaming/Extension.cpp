@@ -152,7 +152,7 @@ void App::WorldStreamingExtension::OnSectorPostLoad(Red::world::StreamingSector*
         LogWarning("[{}] No patches have been applied to \"{}\".", ExtensionName, sectorPath);
 }
 
-bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSector,
+bool App::WorldStreamingExtension::PatchSector(Red::worldStreamingSector* aSector,
                                                const App::WorldSectorMod& aSectorMod)
 {
     auto& buffer = Raw::StreamingSector::NodeBuffer::Ref(aSector);
@@ -200,11 +200,13 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             else if (nodeMutation.nodeType == InstancedMeshNodeType)
             {
                 auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
-                if (meshNode->worldTransformsBuffer.numElements != nodeMutation.expectedElements)
+                auto* meshNodeEx = reinterpret_cast<Red::worldInstancedMeshNodeEx*>(meshNode);
+                auto instanceCount = meshNodeEx->cookedRanges[nodeSetup->instanceIndex].count;
+                if (instanceCount != nodeMutation.expectedElements)
                 {
                     LogError(R"([{}] {}: The target node #{} has {} instance(s), but the mod expects {}.)",
                              ExtensionName, aSectorMod.mod, nodeMutation.nodeIndex,
-                             meshNode->worldTransformsBuffer.numElements, nodeMutation.expectedElements);
+                             instanceCount, nodeMutation.expectedElements);
                     nodeValidationPassed = false;
                     continue;
                 }
@@ -212,11 +214,11 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             else if (nodeMutation.nodeType == InstancedDestructibleNodeType)
             {
                 auto* meshNode = Red::Cast<Red::worldInstancedDestructibleMeshNode>(nodeDefinition);
-                if (meshNode->cookedInstanceTransforms.numElements != nodeMutation.expectedElements)
+                if (meshNode->instanceTransforms.Size() != nodeMutation.expectedElements)
                 {
                     LogError(R"([{}] {}: The target node #{} has {} instance(s), but the mod expects {}.)",
                              ExtensionName, aSectorMod.mod, nodeMutation.nodeIndex,
-                             meshNode->cookedInstanceTransforms.numElements, nodeMutation.expectedElements);
+                             meshNode->instanceTransforms.Size(), nodeMutation.expectedElements);
                     nodeValidationPassed = false;
                     continue;
                 }
@@ -275,11 +277,13 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             else if (nodeDeletion.nodeType == InstancedMeshNodeType)
             {
                 auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
-                if (meshNode->worldTransformsBuffer.numElements != nodeDeletion.expectedElements)
+                auto* meshNodeEx = reinterpret_cast<Red::worldInstancedMeshNodeEx*>(meshNode);
+                auto instanceCount = meshNodeEx->cookedRanges[nodeSetup->instanceIndex].count;
+                if (instanceCount != nodeDeletion.expectedElements)
                 {
                     LogError(R"([{}] {}: The target node #{} has {} instance(s), but the mod expects {}.)",
                              ExtensionName, aSectorMod.mod, nodeDeletion.nodeIndex,
-                             meshNode->worldTransformsBuffer.numElements, nodeDeletion.expectedElements);
+                             instanceCount, nodeDeletion.expectedElements);
                     nodeValidationPassed = false;
                     continue;
                 }
@@ -287,11 +291,11 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             else if (nodeDeletion.nodeType == InstancedDestructibleNodeType)
             {
                 auto* meshNode = Red::Cast<Red::worldInstancedDestructibleMeshNode>(nodeDefinition);
-                if (meshNode->cookedInstanceTransforms.numElements != nodeDeletion.expectedElements)
+                if (meshNode->instanceTransforms.Size() != nodeDeletion.expectedElements)
                 {
                     LogError(R"([{}] {}: The target node #{} has {} instance(s), but the mod expects {}.)",
                              ExtensionName, aSectorMod.mod, nodeDeletion.nodeIndex,
-                             meshNode->cookedInstanceTransforms.numElements, nodeDeletion.expectedElements);
+                             meshNode->instanceTransforms.Size(), nodeDeletion.expectedElements);
                     nodeValidationPassed = false;
                     continue;
                 }
@@ -332,7 +336,13 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             }
             else if (auto* instancedMeshDefinition = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition))
             {
-                instancedMeshDefinition->mesh.path = nodeMutation.resourcePath;
+                auto* meshNodeEx = reinterpret_cast<Red::worldInstancedMeshNodeEx*>(instancedMeshDefinition);
+                auto startIndex = meshNodeEx->cookedRanges[nodeSetup->instanceIndex].start;
+                auto instanceCount = meshNodeEx->cookedRanges[nodeSetup->instanceIndex].count;
+                for (auto i = 0; i < instanceCount; ++i)
+                {
+                    meshNodeEx->cookedInstances[startIndex + i].mesh.path = nodeMutation.resourcePath;
+                }
             }
             else if (auto* entityDefinition = Red::Cast<Red::worldEntityNode>(nodeDefinition))
             {
@@ -376,7 +386,13 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             }
             else if (auto* instancedMeshDefinition = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition))
             {
-                instancedMeshDefinition->meshAppearance = nodeMutation.appearanceName;
+                auto* meshNodeEx = reinterpret_cast<Red::worldInstancedMeshNodeEx*>(instancedMeshDefinition);
+                auto startIndex = meshNodeEx->cookedRanges[nodeSetup->instanceIndex].start;
+                auto instanceCount = meshNodeEx->cookedRanges[nodeSetup->instanceIndex].count;
+                for (auto i = 0; i < instanceCount; ++i)
+                {
+                    meshNodeEx->cookedInstances[startIndex + i].meshAppearance = nodeMutation.appearanceName;
+                }
             }
             else if (auto* entityDefinition = Red::Cast<Red::worldEntityNode>(nodeDefinition))
             {
@@ -437,20 +453,21 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             if (nodeMutation.nodeType == InstancedMeshNodeType)
             {
                 auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
-                auto* instances = std::bit_cast<Red::RenderProxyTransformData*>(&meshNode->worldTransformsBuffer.sharedDataBuffer->buffer.buffer.data);
-                auto startIndex = meshNode->worldTransformsBuffer.startIndex;
+                auto* meshNodeEx = reinterpret_cast<Red::worldInstancedMeshNodeEx*>(meshNode);
+                auto* transforms = reinterpret_cast<Red::WorldTransformBuffer*>(&meshNode->cookedWorldTransformsBuffer);
+                auto startIndex = meshNodeEx->cookedRanges[nodeSetup->instanceIndex].start;
                 for (const auto& elementMutation : nodeMutation.elementMutations)
                 {
-                    auto* instance = instances->Get(startIndex + elementMutation.elementIndex);
+                    auto* instance = transforms->Get(startIndex + elementMutation.elementIndex);
 
                     if (elementMutation.modifyPosition)
                     {
-                        instance->transform.Position = elementMutation.position;
+                        instance->translation = elementMutation.position.AsVector3();
                     }
 
                     if (elementMutation.modifyOrientation)
                     {
-                        instance->transform.Orientation = elementMutation.orientation;
+                        instance->rotation = elementMutation.orientation;
                     }
 
                     if (elementMutation.modifyScale)
@@ -464,12 +481,10 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             if (nodeMutation.nodeType == InstancedDestructibleNodeType)
             {
                 auto* meshNode = Red::Cast<Red::worldInstancedDestructibleMeshNode>(nodeDefinition);
-                auto* instances = std::bit_cast<Red::TransformBuffer*>(&meshNode->cookedInstanceTransforms.sharedDataBuffer->buffer.buffer.data);
-                auto startIndex = meshNode->cookedInstanceTransforms.startIndex;
                 auto inverseTransform = nodeSetup->transform.Inverse();
                 for (const auto& elementMutation : nodeMutation.elementMutations)
                 {
-                    auto* instance = instances->Get(startIndex + elementMutation.elementIndex);
+                    auto& instance = meshNode->instanceTransforms[elementMutation.elementIndex];
                     auto newTransform = nodeSetup->transform;
 
                     if (elementMutation.modifyPosition)
@@ -482,7 +497,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
                         newTransform.orientation = elementMutation.orientation;
                     }
 
-                    *instance = newTransform * inverseTransform;
+                    instance = newTransform * inverseTransform;
                 }
                 continue;
             }
@@ -545,11 +560,12 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             if (nodeDeletion.nodeType == InstancedMeshNodeType)
             {
                 auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
-                auto* instances = std::bit_cast<Red::RenderProxyTransformData*>(&meshNode->worldTransformsBuffer.sharedDataBuffer->buffer.buffer.data);
-                auto startIndex = meshNode->worldTransformsBuffer.startIndex;
+                auto* meshNodeEx = reinterpret_cast<Red::worldInstancedMeshNodeEx*>(meshNode);
+                auto* transforms = reinterpret_cast<Red::WorldTransformBuffer*>(&meshNode->cookedWorldTransformsBuffer);
+                auto startIndex = meshNodeEx->cookedRanges[nodeSetup->instanceIndex].start;
                 for (const auto& elementDeletion : nodeDeletion.elementDeletions)
                 {
-                    auto* instance = instances->Get(startIndex + elementDeletion.elementIndex);
+                    auto* instance = transforms->Get(startIndex + elementDeletion.elementIndex);
                     instance->scale.X = 0;
                     instance->scale.Y = 0;
                     instance->scale.Z = 0;
@@ -560,12 +576,10 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
             if (nodeDeletion.nodeType == InstancedDestructibleNodeType)
             {
                 auto* meshNode = Red::Cast<Red::worldInstancedDestructibleMeshNode>(nodeDefinition);
-                auto* instances = std::bit_cast<Red::TransformBuffer*>(&meshNode->cookedInstanceTransforms.sharedDataBuffer->buffer.buffer.data);
-                auto startIndex = meshNode->cookedInstanceTransforms.startIndex;
                 for (const auto& elementDeletion : nodeDeletion.elementDeletions)
                 {
-                    auto* instance = instances->Get(startIndex + elementDeletion.elementIndex);
-                    instance->position.Z = -2000;
+                    auto& instance = meshNode->instanceTransforms[elementDeletion.elementIndex];
+                    instance.position.Z = -2000;
                 }
                 continue;
             }
@@ -582,12 +596,13 @@ bool App::WorldStreamingExtension::PatchSector(Red::world::StreamingSector* aSec
         if (nodeDeletion.nodeType == InstancedMeshNodeType)
         {
             auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
-            auto* instances = std::bit_cast<Red::RenderProxyTransformData*>(&meshNode->worldTransformsBuffer.sharedDataBuffer->buffer.buffer.data);
-            auto startIndex = meshNode->worldTransformsBuffer.startIndex;
-            auto numElements = meshNode->worldTransformsBuffer.numElements;
+            auto* meshNodeEx = reinterpret_cast<Red::worldInstancedMeshNodeEx*>(meshNode);
+            auto* transforms = reinterpret_cast<Red::WorldTransformBuffer*>(&meshNode->cookedWorldTransformsBuffer);
+            auto startIndex = meshNodeEx->cookedRanges[nodeSetup->instanceIndex].start;
+            auto numElements = meshNodeEx->cookedRanges[nodeSetup->instanceIndex].count;
             for (auto i = 0; i < numElements; ++i)
             {
-                auto* instance = instances->Get(startIndex + i);
+                auto* instance = transforms->Get(startIndex + i);
                 instance->scale.X = 0;
                 instance->scale.Y = 0;
                 instance->scale.Z = 0;

@@ -1,7 +1,7 @@
 set_xmakever("2.5.9")
 
 set_project("ArchiveXL")
-set_version("1.27.5", {build = "%y%m%d%H%M"})
+set_version("1.28.0", {build = "%y%m%d%H%M"})
 
 set_arch("x64")
 set_languages("cxx20")
@@ -35,6 +35,7 @@ else
 end
 
 add_requires("hopscotch-map", "minhook", "spdlog", "tiltedcore", "yaml-cpp")
+add_requireconfs("tiltedcore.mimalloc", {version = "2.x", override = true}) -- mimalloc 3.x dropped mi_malloc_size used by TiltedCore
 
 target("ArchiveXL")
     set_default(true)

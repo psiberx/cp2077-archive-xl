@@ -15,19 +15,19 @@ struct __declspec(align(0x10)) CompiledNodeInstanceSetupInfo
     uint64_t globalNodeID;             // 58
     uint64_t proxyNodeID;              // 60
     ResourcePath unk68;                // 68
-    float secondaryRefPointDistance;   // 70
-    float streamingDistance;           // 74
-    uint16_t nodeIndex;                // 78
-    uint16_t unk7A;                    // 7A
-    uint16_t unk7C;                    // 7C
-    uint16_t unk7E;                    // 7E
-    uint64_t unk80;                    // 80
-    uint64_t unk88;                    // 88
+    uint64_t nodeIndex : 19;           // 70
+    uint64_t unk70_19 : 29;            // 70
+    uint64_t unk70_48 : 16;            // 70
+    float secondaryRefPointDistance;   // 78
+    float streamingDistance;           // 7C
+    uint32_t instanceIndex;            // 80
+    worldStreamingDataGroup dataGroup; // 84
+    uint8_t unk85[0x90 - 0x85];        // 85
 };
 RED4EXT_ASSERT_SIZE(CompiledNodeInstanceSetupInfo, 0x90);
 RED4EXT_ASSERT_OFFSET(CompiledNodeInstanceSetupInfo, node, 0x50);
 RED4EXT_ASSERT_OFFSET(CompiledNodeInstanceSetupInfo, globalNodeID, 0x58);
-RED4EXT_ASSERT_OFFSET(CompiledNodeInstanceSetupInfo, nodeIndex, 0x78);
+RED4EXT_ASSERT_OFFSET(CompiledNodeInstanceSetupInfo, streamingDistance, 0x7C);
 
 struct CompiledNodeInstanceSetupInfoBuffer : DataBuffer
 {
@@ -57,11 +57,12 @@ RED4EXT_ASSERT_SIZE(CompiledNodeInstanceSetupInfoBuffer, 0x28);
 struct StreamingSectorNodeBuffer
 {
     CompiledNodeInstanceSetupInfoBuffer nodeSetups; // 00
-    DynArray<Handle<worldNode>> nodes;              // 28
-    DynArray<NodeRef> nodeRefs;                     // 38
+    uint32_t setupVersion;                          // 28
+    DynArray<Handle<worldNode>> nodes;              // 30
+    DynArray<NodeRef> nodeRefs;                     // 40
 };
-RED4EXT_ASSERT_OFFSET(StreamingSectorNodeBuffer, nodes, 0x28);
-RED4EXT_ASSERT_OFFSET(StreamingSectorNodeBuffer, nodeRefs, 0x38);
+RED4EXT_ASSERT_OFFSET(StreamingSectorNodeBuffer, nodes, 0x30);
+RED4EXT_ASSERT_OFFSET(StreamingSectorNodeBuffer, nodeRefs, 0x40);
 
 struct CollisionActor
 {
@@ -162,6 +163,40 @@ struct RenderProxyTransformData : DataBuffer
     }
 };
 RED4EXT_ASSERT_SIZE(RenderProxyTransformData, 0x28);
+
+struct InstancedMeshNodeCookedData
+{
+    Box boundingBox;
+    ResourceAsyncReference<CMesh> mesh;
+    CName meshAppearance;
+    float forcedAutoHideDistance;
+    uint32_t lodLevelScales;
+    shadowsShadowCastingMode castShadows;
+    shadowsShadowCastingMode castLocalShadows;
+    RenderSceneLayerMask renderSceneLayerMask;
+    visWorldOccluderType occluderType;
+    uint8_t occluderAutoHideDistanceScale;
+    bool removeFromRainMap;
+    uint8_t unk38[0x2];
+};
+RED4EXT_ASSERT_SIZE(InstancedMeshNodeCookedData, 0x40);
+
+struct InstancedMeshNodeCookedRange
+{
+    uint16_t start;
+    uint16_t count;
+};
+RED4EXT_ASSERT_SIZE(InstancedMeshNodeCookedRange, 0x4);
+
+struct worldInstancedMeshNodeEx : world::CookedNode
+{
+    DataBuffer cookedWorldTransformsBuffer;                // 38
+    DynArray<RenderProxyTransform> transforms;             // 60
+    DynArray<InstancedMeshNodeCookedData> cookedInstances; // 60
+    DynArray<InstancedMeshNodeCookedRange> cookedRanges;   // 60
+    uint8_t version;                                       // 90
+    uint8_t unk91[0x98 - 0x91];                            // 91
+};
 }
 
 namespace Raw::StreamingSector

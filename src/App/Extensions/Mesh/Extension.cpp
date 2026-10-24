@@ -121,8 +121,8 @@ void App::MeshExtension::ProcessAppearance(Red::CMesh* aMesh, const Core::Shared
 
             auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aMesh->path);
 
-            LogInfo(R"([{}] Appearance "{}" of "{}" has been expanded using "{}".)",
-                    ExtensionName, aAppearance->name.ToString(), meshPathStr, expansionAppearance->name.ToString());
+            LogDebug(R"([{}] Appearance "{}" of "{}" has been expanded using "{}".)",
+                     ExtensionName, aAppearance->name.ToString(), meshPathStr, expansionAppearance->name.ToString());
         }
         else if (aAppearance->name != DefaultAppearanceName)
         {
@@ -206,15 +206,15 @@ void* App::MeshExtension::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMate
 {
     Raw::CMesh::LoadMaterialsAsync(aTargetMesh, aToken, aMaterialNames, a4);
 
-    if (!aTargetMesh->path || aMaterialNames.IsEmpty() || aToken.data->materials.Size() != aMaterialNames.Size() ||
-        !ContainsUnresolvedMaterials(aToken.data->materials))
+    if (!aTargetMesh->path || aMaterialNames.IsEmpty() || aToken.data->materials.Size() != aMaterialNames.Size()
+        || !HasUnresolvedMaterials(aToken.data->materials))
         return &aToken;
 
     Red::JobQueue jobQueue;
     jobQueue.Wait(aToken.job);
     jobQueue.Dispatch([targetMeshWeak = Red::AsWeakHandle(aTargetMesh), materialNames = aMaterialNames,
                        materialData = aToken.data](const Red::JobGroup& aJobGroup) {
-        if (!ContainsUnresolvedMaterials(materialData->materials))
+        if (!HasUnresolvedMaterials(materialData->materials))
             return;
 
         auto targetMesh = targetMeshWeak.Lock();
@@ -318,7 +318,7 @@ void App::MeshExtension::ProcessDynamicMaterials(const Core::SharedPtr<DynamicCo
             continue;
         }
 
-        if (aContext->targetMesh->materialEntries[materialIndex].material != s_tempMaterial)
+        if (!IsUnresolvedMaterial(aContext->targetMesh->materialEntries[materialIndex].material))
             continue;
 
         if (chunkName.hash == aContext->sourceMesh->path.hash)
@@ -334,16 +334,16 @@ void App::MeshExtension::ProcessDynamicMaterials(const Core::SharedPtr<DynamicCo
         // {
         //     const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
         //
-        //     LogInfo(R"([{}] Resolving material "{}" for "{}"...)",
-        //             ExtensionName, chunkName.ToString(), meshPathStr);
+        //     LogDebug(R"([{}] Resolving material "{}" for "{}"...)",
+        //              ExtensionName, chunkName.ToString(), meshPathStr);
         // }
         // else
         // {
         //     const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
         //     const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
         //
-        //     LogInfo(R"([{}] Resolving material "{}" for "{}" using source "{}"...)",
-        //             ExtensionName, chunkName.ToString(), meshPathStr, sourcePathStr);
+        //     LogDebug(R"([{}] Resolving material "{}" for "{}" using source "{}"...)",
+        //              ExtensionName, chunkName.ToString(), meshPathStr, sourcePathStr);
         // }
 
         auto chunk = Core::MakeShared<ChunkData>();
@@ -543,16 +543,16 @@ void App::MeshExtension::FinalizeDynamicMaterial(const Core::SharedPtr<DynamicCo
         {
             const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
 
-            LogInfo(R"([{}] Material "{}" of "{}" has been successfully instantiated.)",
-                    ExtensionName, aChunk->chunkName.ToString(), meshPathStr);
+            LogDebug(R"([{}] Material "{}" of "{}" has been successfully instantiated.)",
+                     ExtensionName, aChunk->chunkName.ToString(), meshPathStr);
         }
         else
         {
             const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
             const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
 
-            LogInfo(R"([{}] Material "{}" of "{}" has been successfully instantiated using source "{}".)",
-                    ExtensionName, aChunk->chunkName.ToString(), meshPathStr, sourcePathStr);
+            LogDebug(R"([{}] Material "{}" of "{}" has been successfully instantiated using source "{}".)",
+                     ExtensionName, aChunk->chunkName.ToString(), meshPathStr, sourcePathStr);
         }
     }
     else
@@ -573,16 +573,16 @@ void App::MeshExtension::FinalizeDynamicMaterial(const Core::SharedPtr<DynamicCo
             {
                 const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
 
-                LogInfo(R"([{}] Material "{}" of "{}" has been successfully instantiated.)",
-                        ExtensionName, aChunk->chunkName.ToString(), meshPathStr);
+                LogDebug(R"([{}] Material "{}" of "{}" has been successfully instantiated.)",
+                         ExtensionName, aChunk->chunkName.ToString(), meshPathStr);
             }
             else
             {
                 const auto meshPathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->targetMesh->path);
                 const auto sourcePathStr = s_resourcePathRegistry->ResolvePathOrHash(aContext->sourceMesh->path);
 
-                LogInfo(R"([{}] Material "{}" of "{}" has been successfully instantiated using source "{}".)",
-                        ExtensionName, aChunk->chunkName.ToString(), meshPathStr, sourcePathStr);
+                LogDebug(R"([{}] Material "{}" of "{}" has been successfully instantiated using source "{}".)",
+                         ExtensionName, aChunk->chunkName.ToString(), meshPathStr, sourcePathStr);
             }
         });
     }
@@ -933,10 +933,14 @@ void App::MeshExtension::FillFinalMaterials(const Core::SharedPtr<DynamicContext
     }
 }
 
-bool App::MeshExtension::ContainsUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials)
+bool App::MeshExtension::IsUnresolvedMaterial(const Red::Handle<Red::IMaterial>& aMaterial)
 {
-    return std::ranges::any_of(aMaterials,
-                               [](const auto& aMaterial) { return !aMaterial || aMaterial == s_tempMaterial; });
+    return !aMaterial || !aMaterial->baseMaterial.path;
+}
+
+bool App::MeshExtension::HasUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials)
+{
+    return std::ranges::any_of(aMaterials, IsUnresolvedMaterial);
 }
 
 bool App::MeshExtension::IsDynamicMesh(Red::CMesh* aMesh)

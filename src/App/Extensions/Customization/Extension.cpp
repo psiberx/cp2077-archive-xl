@@ -859,10 +859,13 @@ void App::CustomizationExtension::FixCustomizationAppearance(Red::AppearanceReso
 
         newDefinition->name = aAppearanceName;
 
-        auto meshAppearance = Red::CNamePool::Add(meshAppearanceStr.data());
-        for (auto& componentOverride : newDefinition->partsOverrides[0].componentsOverrides)
+        if (!newDefinition->partsOverrides.IsEmpty())
         {
-            componentOverride.meshAppearance = meshAppearance;
+            auto meshAppearance = Red::CNamePool::Add(meshAppearanceStr.data());
+            for (auto& componentOverride : newDefinition->partsOverrides[0].componentsOverrides)
+            {
+                componentOverride.meshAppearance = meshAppearance;
+            }
         }
 
         aResource->appearances.PushBack(newDefinition);
@@ -887,6 +890,9 @@ void App::CustomizationExtension::FixCustomizationComponents(const Red::Handle<R
                                                              Red::DynArray<Red::Handle<Red::ISerializable>>& aComponents)
 {
     if (!ResourceMetaExtension::InScope(ResourceMetaExtension::CustomizationApp, aResource->path))
+        return;
+
+    if (aDefinition->partsOverrides.IsEmpty())
         return;
 
     for (auto& override : aDefinition->partsOverrides[0].componentsOverrides)

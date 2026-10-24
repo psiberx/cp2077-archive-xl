@@ -68,7 +68,7 @@ void App::ArchiveService::OnInitializeArchives(Red::ResourceDepot* aDepot)
 
         if (!archivePaths.IsEmpty())
         {
-            Raw::ResourceDepot::LoadArchives(nullptr, group, archivePaths, loadedResources, false);
+            Raw::ResourceDepot::LoadArchives(nullptr, group, archivePaths, loadedResources, 0, 2);
         }
     }
 
@@ -83,7 +83,7 @@ void App::ArchiveService::OnInitializeArchives(Red::ResourceDepot* aDepot)
         }
 
         auto& group = ResolveArchiveGroup(aDepot, "");
-        Raw::ResourceDepot::LoadArchives(nullptr, group, archivePaths, loadedResources, false);
+        Raw::ResourceDepot::LoadArchives(nullptr, group, archivePaths, loadedResources, 0, 2);
     }
 
     for (const auto& archivePath : loadedArchives)

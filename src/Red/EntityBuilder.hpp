@@ -48,8 +48,8 @@ struct EntityBuilder
     SharedPtr<EntityBuilderRequest> request;           // A0
     Handle<Entity> entity;                             // B0
     DynArray<Handle<IComponent>> components;           // C0
-    DynArray<void*> unkD0;                             // D0
-    DynArray<void*> unkE0;                             // E0
+    DynArray<SharedPtr<ResourceToken<>>> unkD0;        // D0
+    DynArray<SharedPtr<ResourceToken<>>> unkE0;        // E0
     SharedSpinLock lock;                               // F0
     redTagList visualTags;                             // F8
     uint64_t unk108;                                   // 108

@@ -56,7 +56,7 @@ uintptr_t App::InkSpawnerExtension::OnSpawnLocal(Red::ink::WidgetLibraryResource
 {
     auto result = Raw::InkWidgetLibrary::SpawnFromLocal(aLibrary, aInstance, aItemName);
 
-    if (!aInstance)
+    if (!aInstance && !Raw::InkSpawner::ControllerInjectionEnabled::Ref())
     {
         auto* itemNameStr = aItemName.ToString();
         auto* controllerSep = strchr(itemNameStr, ControllerSeparator);
@@ -88,7 +88,8 @@ uintptr_t App::InkSpawnerExtension::OnSpawnExternal(Red::ink::WidgetLibraryResou
 
 bool App::InkSpawnerExtension::OnAsyncSpawnLocal(Red::ink::WidgetLibraryResource& aLibrary,
                                                  Red::InkSpawningInfo& aSpawningInfo,
-                                                 Red::CName aItemName)
+                                                 Red::CName aItemName,
+                                                 bool a4)
 {
     auto* itemNameStr = aItemName.ToString();
     auto* controllerSep = strchr(itemNameStr, ControllerSeparator);
@@ -98,7 +99,7 @@ bool App::InkSpawnerExtension::OnAsyncSpawnLocal(Red::ink::WidgetLibraryResource
         aItemName = Red::FNV1a64(reinterpret_cast<const uint8_t*>(itemNameStr), controllerSep - itemNameStr);
     }
 
-    return Raw::InkWidgetLibrary::AsyncSpawnFromLocal(aLibrary, aSpawningInfo, aItemName);
+    return Raw::InkWidgetLibrary::AsyncSpawnFromLocal(aLibrary, aSpawningInfo, aItemName, a4);
 }
 
 bool App::InkSpawnerExtension::OnAsyncSpawnExternal(Red::ink::WidgetLibraryResource& aLibrary,
@@ -114,12 +115,15 @@ bool App::InkSpawnerExtension::OnAsyncSpawnExternal(Red::ink::WidgetLibraryResou
 void App::InkSpawnerExtension::OnFinishAsyncSpawn(Red::InkSpawningContext& aContext,
                                                   Red::Handle<Red::ink::WidgetLibraryItemInstance>& aInstance)
 {
-    auto* itemNameStr = aContext.request->itemName.ToString();
-    auto* controllerSep = strchr(itemNameStr, ControllerSeparator);
-
-    if (controllerSep)
+    if (!Raw::InkSpawner::ControllerInjectionEnabled::Ref())
     {
-        InjectController(aInstance, controllerSep + 1);
+        auto* itemNameStr = aContext.request->itemName.ToString();
+        auto* controllerSep = strchr(itemNameStr, ControllerSeparator);
+
+        if (controllerSep)
+        {
+            InjectController(aInstance, controllerSep + 1);
+        }
     }
 }
 

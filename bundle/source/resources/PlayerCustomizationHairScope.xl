@@ -57,6 +57,15 @@ resource:
       - base\characters\head\player_base_heads\appearances\hairs\hh_048_pma__hairs_144.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_049_pma__hairs_146.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_050_pma__hairs_999.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_051_pma__hairs_083.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_052_pma__hairs_063.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_053_pma__hairs_102.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_054_pma__hairs_120.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_055_pma__hairs_084.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_056_pma__hairs_009.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_057_pma__hairs_023.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_058_pma__hairs_022.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_059_pma__hairs_020.app
     player_ma_hair_cw_01.app:
       - base\characters\head\player_base_heads\appearances\hairs\hh_000_pma__hairs_045_cyberware_01.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_001_pma__hairs_53_cyberware_01.app
@@ -86,6 +95,8 @@ resource:
       - base\characters\head\player_base_heads\appearances\hairs\hh_048_pma__hairs_144_cyberware_01.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_049_pma__hairs_146_cyberware_01.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_050_pma__hairs_999_cyberware_01.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_054_pma__hairs_120_cyberware_01.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_056_pma__hairs_009_cyberware_01.app
     player_ma_hair.mesh:
       - base\characters\common\hair\hh_006_ma__demo\hh_006_ma__demo.mesh
       - base\characters\common\hair\hh_007_ma__demo\hh_007_ma__demo.mesh
@@ -166,6 +177,18 @@ resource:
       - base\characters\common\hair\hh_146_ma__dread_undercut\hh_146_pma__dread_undercut_cyberware_01.mesh
       - base\characters\common\hair\hh_999_ma__buzz_cap\hh_999_ma__buzz_cap.mesh
       - base\characters\common\hair\hh_999_ma__buzz_cap\hh_999_pma__buzz_cap_cyberware_01.mesh
+      - base\characters\common\hair\hh_006_ma__demo\hh_006_pwa__demo_cyberware_01.mesh
+      - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_ma__ponytail_braid_01.mesh
+      - base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_ma__ponytail_base_01.mesh
+      - base\characters\common\hair\hh_063_wa_messy_bob\hh_063_ma__messy_bob.mesh
+      - base\characters\common\hair\hh_102_ma__maelstrom_mohawk\hh_102_ma__maelstrom_mohawk.mesh
+      - base\characters\common\hair\hh_120_ma__arasaka_bun\hh_120_ma__arasaka_bun_01.mesh
+      - base\characters\common\hair\hh_120_ma__arasaka_bun\hh_120_ma__arasaka_bun_knot_03.mesh
+      - base\characters\common\hair\hh_084_wa__bun_chopsticks\hh_084_ma__bun_chopsticks.mesh
+      - base\characters\common\hair\hh_084_wa__bun_chopsticks\hh_084_ma__bun_chopsticks_bun.mesh
+      - base\characters\common\hair\hh_009_ma__demo\hh_009_ma__demo.mesh
+      - base\characters\common\hair\hh_023_wa__short_messy\hh_023_ma__short_messy.mesh
+      - base\characters\common\hair\hh_022_wa__chrome_celeb\hh_022_ma__chrome_celeb.mesh
     player_ma_hat_hair.mesh:
       - base\characters\common\hair\h1_003_wa_hat__beanie_hh_01\h1_003_ma_hat__beanie_hh_01.mesh
       - base\characters\common\hair\h1_003_wa_hat__beanie_hh_02\h1_003_ma_hat__beanie_hh_02.mesh
@@ -293,6 +316,25 @@ resource:
       - base\characters\head\player_base_heads\appearances\hairs\hh_048_pwa__hairs_144.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_049_pwa__hairs_146.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_050_pwa__hairs_999.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_051_pwa__hairs_030.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_052_pwa__hairs_058.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_053_pwa__hairs_026.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_054_pwa__hairs_048.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_055_pwa__hairs_007.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_056_pwa__hairs_025.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_057_pwa__hairs_028.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_058_pwa__hairs_047.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_059_pwa__hairs_037.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_060_pwa__hairs_098.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_061_pwa__hairs_084.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_062_pwa__hairs_009.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_063_pwa__hairs_023.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_064_pwa__hairs_022.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_065_pwa__hairs_020.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_066_pwa__hairs_056.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_067_pwa__hairs_052.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_068_pwa__hairs_110.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_069_pwa__hairs_095.app
     player_wa_hair_cw_01.app:
       - base\characters\head\player_base_heads\appearances\hairs\hh_000_pwa__hairs_059_cyberware_01.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_001_pwa__hairs_033_cyberware_01.app
@@ -317,6 +359,13 @@ resource:
       - base\characters\head\player_base_heads\appearances\hairs\hh_048_pwa__hairs_144_cyberware_01.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_049_pwa__hairs_146_cyberware_01.app
       - base\characters\head\player_base_heads\appearances\hairs\hh_050_pwa__hairs_999_cyberware_01.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_053_pwa__hairs_026_cyberware_01.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_056_pwa__hairs_025_cyberware_01.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_057_pwa__hairs_028_cyberware_01.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_058_pwa__hairs_047_cyberware_01.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_059_pwa__hairs_037_cyberware_01.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_062_pwa__hairs_009_cyberware_01.app
+      - base\characters\head\player_base_heads\appearances\hairs\hh_066_pwa__hairs_056_cyberware_01.app
     player_wa_hair.mesh:
       - base\characters\common\hair\hh_006_ma__demo\hh_006_pwa__demo_cyberware_01.mesh
       - base\characters\common\hair\hh_006_ma__demo\hh_006_wa__demo.mesh
@@ -393,6 +442,27 @@ resource:
       - base\characters\common\hair\hh_151_wa__judy_variation02\hh_151_wa__judy_variation02_common.mesh
       - base\characters\common\hair\hh_999_ma__buzz_cap\hh_999_pwa__buzz_cap_cyberware_01.mesh
       - base\characters\common\hair\hh_999_ma__buzz_cap\hh_999_wa__buzz_cap.mesh
+      - base\characters\common\hair\hh_030_ma__punk_idol\hh_030_wa__punk_idol.mesh
+      - base\characters\common\hair\hh_058_wa__voodoo_01\hh_058_wa__voodoo_01.mesh
+      - base\characters\common\hair\hh_026_ma__rattail\hh_026_wa__rat_tail.mesh
+      - base\characters\common\hair\hh_048_ma__dual_braids\hh_048_wa__dual_braids.mesh
+      - base\characters\common\hair\hh_007_ma__demo\hh_007_wa__demo.mesh
+      - base\characters\common\hair\hh_025_ma__pompadour\hh_025_wa__pompadour.mesh
+      - base\characters\common\hair\hh_028_wa__corpo_bun\hh_028_wa__corpo_bun.mesh
+      - base\characters\common\hair\hh_047_wa__swirl_pomp\hh_047_wa__swirl_pomp.mesh
+      - base\characters\common\hair\hh_037_ma__gungho\hh_037_wa__gungho.mesh
+      - base\characters\common\hair\hh_098_wa__top_bun\hh_098_wa__top_bun.mesh
+      - base\characters\common\hair\hh_084_wa__bun_chopsticks\hh_084_wa__bun_chopsticks.mesh
+      - base\characters\common\hair\hh_084_wa__bun_chopsticks\hh_084_wa__bun_chopsticks_bun.mesh
+      - base\characters\common\hair\hh_009_ma__demo\hh_009_wa__demo.mesh
+      - base\characters\common\hair\hh_023_wa__short_messy\hh_023_wa__short_messy.mesh
+      - base\characters\common\hair\hh_022_wa__chrome_celeb\hh_022_wa__chrome_celeb.mesh
+      - base\characters\common\hair\hh_020_wa__mullet\hh_020_wa__mullet.mesh
+      - base\characters\common\hair\hh_056_wa__rogue_old\hh_056_wa__rogue_old_common.mesh
+      - base\characters\common\hair\hh_052_wa__clair\hh_052_wa__clair.mesh
+      - base\characters\common\hair\hh_110_wa__wizzy\hh_110_wa__wizzy.mesh
+      - base\characters\common\hair\hh_095_wa__panam\hh_095_wa__panam.mesh
+      - base\characters\common\hair\hh_095_wa__panam\hh_095_wa__panam_cap.mesh
     player_wa_hat_hair.mesh:
       - base\characters\common\hair\h1_003_wa_hat__beanie_hh_01\h1_003_wa_hat__beanie_hh_01.mesh
       - base\characters\common\hair\h1_003_wa_hat__beanie_hh_02\h1_003_wa_hat__beanie_hh_02.mesh

@@ -4,6 +4,10 @@ namespace Red::AddressLib
 {
 constexpr uint32_t Main = 240386859;
 
+constexpr uint32_t ExtensionService_Bootstrap = 1523060616;
+constexpr uint32_t ExtensionService_Shutdown = 1255673638;
+constexpr uint32_t ExtensionLoader_Configure = 660606521;
+
 constexpr uint32_t AISpotPersistentDataArray_Reserve = 3842971216;
 constexpr uint32_t AIWorkspotManager_RegisterSpots = 2515346652;
 
@@ -12,7 +16,7 @@ constexpr uint32_t AnimatedComponent_InitializeAnimations = 2855474741;
 constexpr uint32_t AppearanceChanger_ComputePlayerGarment = 3243419919;
 constexpr uint32_t AppearanceChanger_GetBaseMeshOffset = 4219677283;
 constexpr uint32_t AppearanceChanger_GetSuffixes = 63057648;
-constexpr uint32_t AppearanceChanger_GetSuffixValue = 1003499294;
+constexpr uint32_t AppearanceChanger_GetSuffixValue = 3294244838;
 constexpr uint32_t AppearanceChanger_RegisterPart = 3169139695;
 constexpr uint32_t AppearanceChanger_SelectAppearanceName = 2770550105;
 
@@ -29,6 +33,7 @@ constexpr uint32_t AppearanceResource_FindAppearanceDefinition = 549398675;
 constexpr uint32_t AttachmentSlots_InitializeSlots = 3224838039;
 constexpr uint32_t AttachmentSlots_IsSlotEmpty = 4231927464;
 constexpr uint32_t AttachmentSlots_IsSlotSpawning = 1283201918;
+constexpr uint32_t AttachmentSlots_LockedUpdate = 2050568765;
 
 constexpr uint32_t BufferReader_MakeType0 = 1299073554;
 constexpr uint32_t BufferReader_MakeType1 = 3578095989;
@@ -57,7 +62,7 @@ constexpr uint32_t CharacterCustomizationState_GetBodyAppearances2 = 56573295;
 constexpr uint32_t CharacterCustomizationState_GetArmsAppearances1 = 110771572;
 constexpr uint32_t CharacterCustomizationState_GetArmsAppearances2 = 4059182261;
 
-constexpr uint32_t CharacterCustomizationSystem_Initialize = 2341291776;
+constexpr uint32_t CharacterCustomizationSystem_Initialize = 2343126786;
 constexpr uint32_t CharacterCustomizationSystem_Uninitialize = 402202441;
 constexpr uint32_t CharacterCustomizationSystem_GetResource = 4275058446;
 constexpr uint32_t CharacterCustomizationSystem_EnsureState = 787099588;
@@ -69,7 +74,7 @@ constexpr uint32_t CharacterCustomizationSystem_InitializeOptionsFromState = 116
 constexpr uint32_t CMesh_PostLoad = 2272530537;
 constexpr uint32_t CMesh_GetAppearance = 773462733;
 constexpr uint32_t CMesh_FindAppearance = 3007126651;
-constexpr uint32_t CMesh_LoadMaterialsAsync = 701648326;
+constexpr uint32_t CMesh_LoadMaterialsAsync = 479081020;
 constexpr uint32_t CMesh_AddStubAppearance = 555290091;
 constexpr uint32_t CMesh_ShouldPreloadAppearances = 503977943;
 
@@ -92,7 +97,7 @@ constexpr uint32_t EntitySpawner_SpawnFromTemplate = 2509382878;
 constexpr uint32_t EntityTemplate_OnLoad = 2741376473;
 constexpr uint32_t EntityTemplate_FindAppearance = 36838056;
 
-constexpr uint32_t FactoryIndex_LoadFactoryAsync = 1886854234;
+constexpr uint32_t FactoryIndex_LoadFactoryAsync = 1931943018;
 constexpr uint32_t FactoryIndex_ResolveResource = 3040549301;
 
 constexpr uint32_t GameApplication_InitResourceDepot = 2923109755;
@@ -112,14 +117,15 @@ constexpr uint32_t GarmentAssemblerState_ChangeCustomItem = 956641309;
 
 constexpr uint32_t ImpostorComponent_OnAttach = 4002093843;
 
-constexpr uint32_t InkSpawner_FinishAsyncSpawn = 2698985195;
+constexpr uint32_t InkSpawner_FinishAsyncSpawn = 4097515464;
+constexpr uint32_t InkSpawner_ControllerInjectionEnabled = 2890273101;
 
-constexpr uint32_t InkWidgetLibrary_AsyncSpawnFromExternal = 1396063719;
-constexpr uint32_t InkWidgetLibrary_AsyncSpawnFromLocal = 118698863;
+constexpr uint32_t InkWidgetLibrary_AsyncSpawnFromExternal = 225197914;
+constexpr uint32_t InkWidgetLibrary_AsyncSpawnFromLocal = 2342073570;
 constexpr uint32_t InkWidgetLibrary_SpawnFromExternal = 506278179;
 constexpr uint32_t InkWidgetLibrary_SpawnFromLocal = 1158555307;
 
-constexpr uint32_t InkWorldLayer_UpdateComponents = 1693194103;
+constexpr uint32_t InkWorldLayer_UpdateComponents = 2254060789;
 
 constexpr uint32_t ItemFactoryAppearanceChangeRequest_LoadTemplate = 1291460507;
 constexpr uint32_t ItemFactoryAppearanceChangeRequest_LoadAppearance = 3392610574;
@@ -135,15 +141,17 @@ constexpr uint32_t JournalManager_TrackQuest = 3274382593;
 
 constexpr uint32_t JournalRootFolderEntry_Initialize = 1945256833;
 
-constexpr uint32_t JournalTree_ProcessJournalIndex = 837162664;
+constexpr uint32_t JournalTree_ProcessJournalIndex = 2052144225;
 
 constexpr uint32_t Localization_LoadOnScreens = 3550098299;
 constexpr uint32_t Localization_LoadSubtitles = 772484645;
 constexpr uint32_t Localization_LoadVoiceOvers = 4223669659;
 constexpr uint32_t Localization_LoadLipsyncs = 1488657506;
 
-constexpr uint32_t MappinSystem_GetMappinData = 3299551353;
-constexpr uint32_t MappinSystem_GetPoiData = 620961393;
+constexpr uint32_t LootResourceData_Read = 647500563;
+
+constexpr uint32_t MappinSystem_GetMappinData = 3603701972;
+constexpr uint32_t MappinSystem_GetPoiData = 2918455690;
 constexpr uint32_t MappinSystem_OnStreamingWorldLoaded = 140387944;
 
 constexpr uint32_t MeshAppearance_LoadMaterialSetupAsync = 1419388740;
@@ -160,20 +168,20 @@ constexpr uint32_t QuestsSystem_OnGameRestored = 2048921710;
 
 constexpr uint32_t QuestRootInstance_Start = 797843833;
 
-constexpr uint32_t ResourceDepot_InitializeArchives = 2885423437;
-constexpr uint32_t ResourceDepot_LoadArchives = 2517385486;
+constexpr uint32_t ResourceDepot_InitializeArchives = 2892763485;
+constexpr uint32_t ResourceDepot_LoadArchives = 3573367139;
 constexpr uint32_t ResourceDepot_RequestResource = 2450934495;
 constexpr uint32_t ResourceDepot_CheckResource = 43194193;
 
 constexpr uint32_t ResourceLoader_RequestResource = 2365013187; // res::ResourceLoader::IssueLoadingRequest
-constexpr uint32_t ResourceLoader_OnUpdate = 1303056161;
+constexpr uint32_t ResourceLoader_OnUpdate = 3955625134;
 
 constexpr uint32_t ResourcePath_Create = 3998356057;
 
 constexpr uint32_t ResourceSerializer_Load = 2577814646;
 constexpr uint32_t ResourceSerializer_Deserialize = 2901686778;
 constexpr uint32_t ResourceSerializer_PostLoad = 1350901460;
-constexpr uint32_t ResourceSerializer_OnDependenciesReady = 1185093671;
+constexpr uint32_t ResourceSerializer_OnDependenciesReady = 3892979844;
 constexpr uint32_t ResourceSerializer_OnResourceReady = 1147149338;
 
 constexpr uint32_t StreamingSector_PostLoad = 3972601611;
@@ -188,5 +196,5 @@ constexpr uint32_t TPPRepresentationComponent_OnItemUnequipped = 1933319146;
 constexpr uint32_t TPPRepresentationComponent_RegisterAffectedItem = 3037343626;
 constexpr uint32_t TPPRepresentationComponent_IsAffectedSlot = 678894266;
 
-constexpr uint32_t TweakDB_Load = 3602585178; // game::data::TweakDB::LoadOptimized
+constexpr uint32_t TweakDB_Load = 63182599; // game::data::TweakDB::LoadOptimized
 }

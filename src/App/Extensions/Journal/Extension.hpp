@@ -28,7 +28,7 @@ private:
         Red::worldGlobalNodeRef resolved;
     };
 
-    void OnLoadJournal(uintptr_t a1, Red::JobGroup& aJobGroup);
+    void OnLoadJournal(uintptr_t aTree, uintptr_t aIndexToken, Red::JobQueue& aJobQueue);
     void OnInitializeRoot(Red::game::JournalRootFolderEntry* aRoot, uintptr_t, uintptr_t, Red::JobQueue& aJobQueue);
     static void OnMappinDataLoaded(void* aMappinSystem, Red::worldRuntimeScene*);
     static void* OnGetMappinData(void* aMappinSystem, uint32_t aHash);
