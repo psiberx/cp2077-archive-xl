@@ -38,6 +38,7 @@ bool App::AttachmentExtension::Load()
     //HookAfter<Raw::CharacterCustomizationGenitalsController::CheckState>(&OnCheckBodyState).OrThrow();
     HookAfter<Raw::CharacterCustomizationFeetController::CheckState>(&OnCheckFeetState).OrThrow();
     HookWrap<Raw::AppearanceChanger::GetSuffixValue>(&OnGetSuffixValue).OrThrow();
+    HookWrap<Raw::AttachmentSlots::LockedUpdate>(&OnLockedSlotsUpdate).OrThrow();
 
     {
         std::unique_lock _(s_slotsMutex);
@@ -58,6 +59,7 @@ bool App::AttachmentExtension::Unload()
     // Unhook<Raw::CharacterCustomizationGenitalsController::CheckState>();
     Unhook<Raw::CharacterCustomizationFeetController::CheckState>();
     Unhook<Raw::AppearanceChanger::GetSuffixValue>();
+    Unhook<Raw::AttachmentSlots::LockedUpdate>();
 
     return true;
 }
@@ -245,13 +247,24 @@ void App::AttachmentExtension::OnCheckFeetState(Red::game::ui::CharacterCustomiz
     }
 }
 
+uintptr_t App::AttachmentExtension::OnLockedSlotsUpdate(Raw::AttachmentSlots::LockedUpdatePtr aOriginalFunc, void* a1,
+                                                       void* a2, void* a3, void* a4)
+{
+    const auto previous = s_skipVisualTagCheck;
+    s_skipVisualTagCheck = true;
+    const auto result = aOriginalFunc(a1, a2, a3, a4);
+    s_skipVisualTagCheck = previous;
+    return result;
+}
+
 bool App::AttachmentExtension::OnGetSuffixValue(Raw::AppearanceChanger::GetSuffixValuePtr aOriginalFunc,
                                                 const Red::ItemID& aItemID, uint64_t a2,
                                                 Red::Handle<Red::GameObject>& aOwner,
                                                 const Red::TweakDBID& aSuffixRecordID,
                                                 Red::CString& aResult)
 {
-    if (aOwner && a2 && aSuffixRecordID == InnerSleevesSuffix)
+    // Inside LockedUpdate the slot lock is held exclusively, so FindSlotData would wait on it forever
+    if (aOwner && a2 && aSuffixRecordID == InnerSleevesSuffix && !s_skipVisualTagCheck)
     {
         aResult = IsVisualTagActive(aOwner, TorsoSlot, HideInnerSleevesTag, aItemID.tdbid)
                       ? HideInnerSleevesSuffixValue
