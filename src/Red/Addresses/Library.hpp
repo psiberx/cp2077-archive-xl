@@ -33,7 +33,7 @@ constexpr uint32_t AppearanceResource_FindAppearanceDefinition = 549398675;
 constexpr uint32_t AttachmentSlots_InitializeSlots = 3224838039;
 constexpr uint32_t AttachmentSlots_IsSlotEmpty = 4231927464;
 constexpr uint32_t AttachmentSlots_IsSlotSpawning = 1283201918;
-constexpr uint32_t AttachmentSlots_LockedUpdate = 2050568765;
+constexpr uint32_t AttachmentSlots_UpdateWithExclusiveLock = 2050568765;
 
 constexpr uint32_t BufferReader_MakeType0 = 1299073554;
 constexpr uint32_t BufferReader_MakeType1 = 3578095989;

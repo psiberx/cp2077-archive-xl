@@ -13,4 +13,8 @@ constexpr auto IsSlotEmpty = Core::RawFunc<
 constexpr auto IsSlotSpawning = Core::RawFunc<
     /* addr = */ Red::AddressLib::AttachmentSlots_IsSlotSpawning,
     /* type = */ bool (*)(Red::game::AttachmentSlots*, Red::TweakDBID)>();
+
+constexpr auto UpdateWithExclusiveLock = Core::RawFunc<
+    /* addr = */ Red::AddressLib::AttachmentSlots_UpdateWithExclusiveLock,
+    /* type = */ void* (*)(void*, void*, void*, void*)>();
 }

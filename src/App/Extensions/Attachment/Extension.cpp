@@ -38,6 +38,7 @@ bool App::AttachmentExtension::Load()
     //HookAfter<Raw::CharacterCustomizationGenitalsController::CheckState>(&OnCheckBodyState).OrThrow();
     HookAfter<Raw::CharacterCustomizationFeetController::CheckState>(&OnCheckFeetState).OrThrow();
     HookWrap<Raw::AppearanceChanger::GetSuffixValue>(&OnGetSuffixValue).OrThrow();
+    Hook<Raw::AttachmentSlots::UpdateWithExclusiveLock>(&OnUpdateWithExclusiveLock).OrThrow();
 
     {
         std::unique_lock _(s_slotsMutex);
@@ -58,6 +59,7 @@ bool App::AttachmentExtension::Unload()
     // Unhook<Raw::CharacterCustomizationGenitalsController::CheckState>();
     Unhook<Raw::CharacterCustomizationFeetController::CheckState>();
     Unhook<Raw::AppearanceChanger::GetSuffixValue>();
+    Unhook<Raw::AttachmentSlots::UpdateWithExclusiveLock>();
 
     return true;
 }
@@ -251,7 +253,7 @@ bool App::AttachmentExtension::OnGetSuffixValue(Raw::AppearanceChanger::GetSuffi
                                                 const Red::TweakDBID& aSuffixRecordID,
                                                 Red::CString& aResult)
 {
-    if (aOwner && a2 && aSuffixRecordID == InnerSleevesSuffix)
+    if (aOwner && a2 && aSuffixRecordID == InnerSleevesSuffix && !s_skipVisualTagCheck)
     {
         aResult = IsVisualTagActive(aOwner, TorsoSlot, HideInnerSleevesTag, aItemID.tdbid)
                       ? HideInnerSleevesSuffixValue
@@ -260,6 +262,15 @@ bool App::AttachmentExtension::OnGetSuffixValue(Raw::AppearanceChanger::GetSuffi
     }
 
     return aOriginalFunc(aItemID, a2, aOwner, aSuffixRecordID, aResult);
+}
+
+void* App::AttachmentExtension::OnUpdateWithExclusiveLock(void* a1, void* a2, void* a3, void* a4)
+{
+    const auto previous = s_skipVisualTagCheck;
+    s_skipVisualTagCheck = true;
+    const auto result = Raw::AttachmentSlots::UpdateWithExclusiveLock(a1, a2, a3, a4);
+    s_skipVisualTagCheck = previous;
+    return result;
 }
 
 bool App::AttachmentExtension::IsVisualTagActive(Red::Handle<Red::Entity>& aOwner,
