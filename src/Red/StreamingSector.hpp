@@ -27,7 +27,10 @@ struct __declspec(align(0x10)) CompiledNodeInstanceSetupInfo
 RED4EXT_ASSERT_SIZE(CompiledNodeInstanceSetupInfo, 0x90);
 RED4EXT_ASSERT_OFFSET(CompiledNodeInstanceSetupInfo, node, 0x50);
 RED4EXT_ASSERT_OFFSET(CompiledNodeInstanceSetupInfo, globalNodeID, 0x58);
+RED4EXT_ASSERT_OFFSET(CompiledNodeInstanceSetupInfo, proxyNodeID, 0x60);
+RED4EXT_ASSERT_OFFSET(CompiledNodeInstanceSetupInfo, secondaryRefPointDistance, 0x78);
 RED4EXT_ASSERT_OFFSET(CompiledNodeInstanceSetupInfo, streamingDistance, 0x7C);
+RED4EXT_ASSERT_OFFSET(CompiledNodeInstanceSetupInfo, instanceIndex, 0x80);
 
 struct CompiledNodeInstanceSetupInfoBuffer : DataBuffer
 {
