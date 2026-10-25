@@ -35,6 +35,8 @@ private:
     static void OnCheckFeetState(Red::game::ui::CharacterCustomizationFeetController* aComponent,
                                  Red::CharacterBodyPartState& aLiftedState,
                                  Red::CharacterBodyPartState& aFlatState);
+    static uintptr_t OnLockedSlotsUpdate(Raw::AttachmentSlots::LockedUpdatePtr aOriginalFunc, void* a1, void* a2,
+                                         void* a3, void* a4);
     static bool OnGetSuffixValue(Raw::AppearanceChanger::GetSuffixValuePtr aOriginalFunc,
                                  const Red::ItemID& aItemID, uint64_t a2, Red::Handle<Red::GameObject>& aOwner,
                                  const Red::TweakDBID& aSuffixRecordID, Red::CString& aResult);
