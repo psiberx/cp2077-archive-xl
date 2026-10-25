@@ -337,12 +337,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::worldStreamingSector* aSecto
             else if (auto* instancedMeshDefinition = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition))
             {
                 auto* meshNodeEx = reinterpret_cast<Red::worldInstancedMeshNodeEx*>(instancedMeshDefinition);
-                auto startIndex = meshNodeEx->cookedRanges[nodeSetup->instanceIndex].start;
-                auto instanceCount = meshNodeEx->cookedRanges[nodeSetup->instanceIndex].count;
-                for (auto i = 0; i < instanceCount; ++i)
-                {
-                    meshNodeEx->cookedInstances[startIndex + i].mesh.path = nodeMutation.resourcePath;
-                }
+                meshNodeEx->cookedInstances[nodeSetup->instanceIndex].mesh.path = nodeMutation.resourcePath;
             }
             else if (auto* entityDefinition = Red::Cast<Red::worldEntityNode>(nodeDefinition))
             {
@@ -387,12 +382,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::worldStreamingSector* aSecto
             else if (auto* instancedMeshDefinition = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition))
             {
                 auto* meshNodeEx = reinterpret_cast<Red::worldInstancedMeshNodeEx*>(instancedMeshDefinition);
-                auto startIndex = meshNodeEx->cookedRanges[nodeSetup->instanceIndex].start;
-                auto instanceCount = meshNodeEx->cookedRanges[nodeSetup->instanceIndex].count;
-                for (auto i = 0; i < instanceCount; ++i)
-                {
-                    meshNodeEx->cookedInstances[startIndex + i].meshAppearance = nodeMutation.appearanceName;
-                }
+                meshNodeEx->cookedInstances[nodeSetup->instanceIndex].meshAppearance = nodeMutation.appearanceName;
             }
             else if (auto* entityDefinition = Red::Cast<Red::worldEntityNode>(nodeDefinition))
             {
