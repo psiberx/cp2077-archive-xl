@@ -7,6 +7,7 @@ constexpr uint32_t Main = 240386859;
 constexpr uint32_t ExtensionService_Bootstrap = 1523060616;
 constexpr uint32_t ExtensionService_Shutdown = 1255673638;
 constexpr uint32_t ExtensionLoader_Configure = 660606521;
+constexpr uint32_t ExtensionLoader_AddConfig = 1350506587;
 
 constexpr uint32_t AISpotPersistentDataArray_Reserve = 3842971216;
 constexpr uint32_t AIWorkspotManager_RegisterSpots = 2515346652;

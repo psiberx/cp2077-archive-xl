@@ -16,4 +16,8 @@ namespace Raw::ExtensionLoader
 constexpr auto Configure = Core::RawFunc<
     /* addr = */ Red::AddressLib::ExtensionLoader_Configure,
     /* type = */ void (*)(void* aLoader)>();
+
+constexpr auto AddConfig = Core::RawFunc<
+    /* addr = */ Red::AddressLib::ExtensionLoader_AddConfig,
+    /* type = */ void (*)(void* aLoader, void* aPath, void* aDir)>();
 }
