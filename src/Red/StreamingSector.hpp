@@ -15,14 +15,30 @@ struct __declspec(align(0x10)) CompiledNodeInstanceSetupInfo
     uint64_t globalNodeID;             // 58
     uint64_t proxyNodeID;              // 60
     ResourcePath unk68;                // 68
-    uint64_t nodeIndex : 19;           // 70
-    uint64_t unk70_19 : 29;            // 70
-    uint64_t unk70_48 : 16;            // 70
-    float secondaryRefPointDistance;   // 78
-    float streamingDistance;           // 7C
-    uint32_t instanceIndex;            // 80
-    worldStreamingDataGroup dataGroup; // 84
-    uint8_t unk85[0x90 - 0x85];        // 85
+    union
+    {
+        struct
+        {
+            uint64_t nodeIndex : 19;           // 70
+            uint64_t unk70_19 : 29;            // 70
+            uint64_t unk70_48 : 16;            // 70
+            float secondaryRefPointDistance;   // 78
+            float streamingDistance;           // 7C
+            uint32_t instanceIndex;            // 80
+            worldStreamingDataGroup dataGroup; // 84
+            uint8_t unk85[0x90 - 0x85];        // 85
+        };
+        struct
+        {
+            float secondaryRefPointDistance; // 70
+            float streamingDistance;         // 74
+            uint16_t nodeIndex;              // 78
+            uint16_t unk7A;                  // 7A
+            uint16_t unk7C;                  // 7C
+            uint64_t unk80;                  // 80
+            uint64_t unk88;                  // 88
+        } v62;
+    };
 };
 RED4EXT_ASSERT_SIZE(CompiledNodeInstanceSetupInfo, 0x90);
 RED4EXT_ASSERT_OFFSET(CompiledNodeInstanceSetupInfo, node, 0x50);
@@ -45,12 +61,12 @@ struct CompiledNodeInstanceSetupInfoBuffer : DataBuffer
                                                                 buffer.size);
     }
 
-    [[nodiscard]] CompiledNodeInstanceSetupInfo* GetInstance(int64_t aIndex) const
+    [[nodiscard]] CompiledNodeInstanceSetupInfo* Get(int64_t aIndex) const
     {
         return begin() + aIndex;
     }
 
-    uint32_t GetInstanceCount()
+    uint32_t GetCount()
     {
         return buffer.size / sizeof(CompiledNodeInstanceSetupInfo);
     }
@@ -60,10 +76,12 @@ RED4EXT_ASSERT_SIZE(CompiledNodeInstanceSetupInfoBuffer, 0x28);
 struct StreamingSectorNodeBuffer
 {
     CompiledNodeInstanceSetupInfoBuffer nodeSetups; // 00
-    uint32_t setupVersion;                          // 28
+    uint32_t version;                               // 28
     DynArray<Handle<worldNode>> nodes;              // 30
     DynArray<NodeRef> nodeRefs;                     // 40
 };
+RED4EXT_ASSERT_OFFSET(StreamingSectorNodeBuffer, nodeSetups, 0);
+RED4EXT_ASSERT_OFFSET(StreamingSectorNodeBuffer, version, 0x28);
 RED4EXT_ASSERT_OFFSET(StreamingSectorNodeBuffer, nodes, 0x30);
 RED4EXT_ASSERT_OFFSET(StreamingSectorNodeBuffer, nodeRefs, 0x40);
 

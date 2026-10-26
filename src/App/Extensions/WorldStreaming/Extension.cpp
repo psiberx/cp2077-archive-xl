@@ -156,7 +156,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::worldStreamingSector* aSecto
                                                const App::WorldSectorMod& aSectorMod)
 {
     auto& buffer = Raw::StreamingSector::NodeBuffer::Ref(aSector);
-    auto nodeCount = buffer.nodeSetups.GetInstanceCount();
+    auto nodeCount = buffer.nodeSetups.GetCount();
 
     if (nodeCount != aSectorMod.expectedNodes)
     {
@@ -169,7 +169,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::worldStreamingSector* aSecto
 
     for (const auto& nodeMutation : aSectorMod.nodeMutations)
     {
-        auto* nodeSetup = buffer.nodeSetups.GetInstance(nodeMutation.nodeIndex);
+        auto* nodeSetup = buffer.nodeSetups.Get(nodeMutation.nodeIndex);
         auto* nodeDefinition = buffer.nodes[nodeSetup->nodeIndex].instance;
 
         if (nodeMutation.nodeType != nodeDefinition->GetNativeType()->name)
@@ -228,7 +228,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::worldStreamingSector* aSecto
 
     for (const auto& nodeDeletion : aSectorMod.nodeDeletions)
     {
-        auto* nodeSetup = buffer.nodeSetups.GetInstance(nodeDeletion.nodeIndex);
+        auto* nodeSetup = buffer.nodeSetups.Get(nodeDeletion.nodeIndex);
         auto* nodeDefinition = buffer.nodes[nodeSetup->nodeIndex].instance;
 
         if (nodeDeletion.nodeType != nodeDefinition->GetNativeType()->name)
@@ -310,7 +310,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::worldStreamingSector* aSecto
 
     for (const auto& nodeMutation : aSectorMod.nodeMutations)
     {
-        auto* nodeSetup = buffer.nodeSetups.GetInstance(nodeMutation.nodeIndex);
+        auto* nodeSetup = buffer.nodeSetups.Get(nodeMutation.nodeIndex);
         auto* nodeDefinition = buffer.nodes[nodeSetup->nodeIndex].instance;
 
         if (nodeMutation.modifyPosition)
@@ -496,7 +496,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::worldStreamingSector* aSecto
 
     for (const auto& nodeDeletion : aSectorMod.nodeDeletions)
     {
-        auto* nodeSetup = buffer.nodeSetups.GetInstance(nodeDeletion.nodeIndex);
+        auto* nodeSetup = buffer.nodeSetups.Get(nodeDeletion.nodeIndex);
         auto* nodeDefinition = buffer.nodes[nodeSetup->nodeIndex].instance;
 
         if (!nodeDeletion.elementDeletions.empty())
@@ -575,14 +575,6 @@ bool App::WorldStreamingExtension::PatchSector(Red::worldStreamingSector* aSecto
             }
         }
 
-        if (nodeDeletion.nodeType == StaticMeshNodeType)
-        {
-            nodeSetup->scale.X = 0;
-            nodeSetup->scale.Y = 0;
-            nodeSetup->scale.Z = 0;
-            continue;
-        }
-
         if (nodeDeletion.nodeType == InstancedMeshNodeType)
         {
             auto* meshNode = Red::Cast<Red::worldInstancedMeshNode>(nodeDefinition);
@@ -600,24 +592,29 @@ bool App::WorldStreamingExtension::PatchSector(Red::worldStreamingSector* aSecto
             continue;
         }
 
-        if (nodeDeletion.nodeType == AdvertisementNodeType)
-        {
-            nodeSetup->scale.X = 0;
-            nodeSetup->scale.Y = 0;
-            nodeSetup->scale.Z = 0;
-            nodeSetup->node = s_dummyNode.instance;
-            continue;
-        }
-
-        nodeSetup->transform.position.Z = -2000;
         nodeSetup->scale.X = 0;
         nodeSetup->scale.Y = 0;
         nodeSetup->scale.Z = 0;
 
-        nodeSetup->globalNodeID = 0;
-        // nodeSetup->proxyNodeID = 0;
+        if (nodeDeletion.nodeType == StaticMeshNodeType)
+        {
+            continue;
+        }
 
         nodeSetup->node = s_dummyNode.instance;
+
+        if (nodeDeletion.nodeType == AdvertisementNodeType)
+        {
+            continue;
+        }
+
+        nodeSetup->transform.position.Z = -2000;
+        nodeSetup->globalNodeID = 0;
+
+        if (buffer.version >= 68)
+        {
+            nodeSetup->instanceIndex = -1;
+        }
     }
 
     return true;
