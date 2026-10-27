@@ -148,6 +148,13 @@
 #include <RED4ext/Scripting/Natives/Generated/world/AreaShapeNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/AudioTagNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/CollisionNode.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/CookedAcousticSectorNode.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/CookedCollisionNode.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/CookedGenericProxyMeshNode.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/CookedMeshNode.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/CookedNode.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/CookedStaticDecalNode.hpp>
+#include <RED4ext/Scripting/Natives/Generated/world/CookedStaticMeshNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/EffectNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/EntityNode.hpp>
 #include <RED4ext/Scripting/Natives/Generated/world/EnvironmentAreaParameters.hpp>

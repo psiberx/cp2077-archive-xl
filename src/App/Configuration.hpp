@@ -9,9 +9,13 @@ class Config
 public:
     static inline bool DebugLogging()
     {
+#ifdef NDEBUG
         Load();
 
         return s_config["logging"]["debug"].as<bool>(false);
+#else
+        return true;
+#endif
     }
 
 private:
