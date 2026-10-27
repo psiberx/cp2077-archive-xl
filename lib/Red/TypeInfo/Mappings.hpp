@@ -22,6 +22,8 @@ RTTI_MAP_TYPE_NAME(ItemID, "gameItemID");
 RTTI_MAP_TYPE_NAME(NodeRef, "NodeRef");
 RTTI_MAP_TYPE_NAME(GlobalNodeRef, "worldGlobalNodeRef");
 RTTI_MAP_TYPE_NAME(Variant, "Variant");
+RTTI_MAP_TYPE_NAME(char, "Uint8");
+RTTI_MAP_TYPE_NAME(ResourcePath, "redResourceReferenceScriptToken");
 
 RTTI_MAP_TYPE_PREFIX(DynArray, "array:");
 RTTI_MAP_TYPE_PREFIX(Handle, "handle:");
@@ -30,6 +32,5 @@ RTTI_MAP_TYPE_PREFIX(ResourceReference, "rRef:");
 RTTI_MAP_TYPE_PREFIX(ResourceAsyncReference, "raRef:");
 RTTI_MAP_TYPE_PREFIX(CurveData, "curveData:");
 
-RTTI_MAP_TYPE_NAME(char, "Uint8");
-RTTI_MAP_TYPE_NAME(ResourcePath, "redResourceReferenceScriptToken");
+RTTI_MAP_TYPE_WRAPPER(TDataBuffer, DataBuffer);
 }

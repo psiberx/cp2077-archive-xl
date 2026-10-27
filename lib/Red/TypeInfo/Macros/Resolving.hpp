@@ -21,6 +21,13 @@
         using type = A; \
     };
 
+#define RTTI_MAP_TYPE_WRAPPER(_wrapper, _type) \
+    template<typename A> \
+    struct Red::TypeProxyMapping<_wrapper<A>> : public std::true_type \
+    { \
+        using type = _type; \
+    };
+
 #define RTTI_TYPE_NAME_STR(_type) Red::GetTypeNameStr<_type>()
 
 #define RTTI_FUNC_NAME_STR(...) []() constexpr noexcept { \
