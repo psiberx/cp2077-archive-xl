@@ -321,6 +321,11 @@ bool App::AttachmentExtension::IsVisualTagActive(Red::ITransactionSystem* aTrans
         if (slotData->itemObject)
         {
             auto itemAppearance = slotData->itemObject->appearanceName;
+            if (!itemAppearance || itemAppearance == EmptyAppearanceName)
+            {
+                Raw::ItemObject::GetAppearanceName(slotData->itemObject, itemAppearance);
+            }
+
             return itemAppearance && itemAppearance != EmptyAppearanceName &&
                    aTransactionSystem->MatchVisualTag(slotData->itemObject, aVisualTag, false);
         }
