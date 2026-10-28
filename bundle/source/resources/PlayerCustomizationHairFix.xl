@@ -60,6 +60,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_006_ma__demo_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_007_ma__demo\hh_007_ma__demo.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -124,6 +125,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_007_ma__demo_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_007_ma__demo\hh_007_pma__demo_cyberware_01.mesh:
       names:
         purple_ombre_cap: purple_ombre@cap01
@@ -188,6 +190,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_007_pma__demo_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_008_ma__demo\hh_008_ma__sk8t_or_die.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -268,6 +271,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_008_ma__sk8t_or_die_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_008_ma__demo\hh_008_pma__sk8t_or_die_cyberware_01.mesh:
       names:
         brown_medium_cards_short: brown_medium@short
@@ -348,6 +352,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_008_pma__sk8t_or_die_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_011_wa__demo\hh_011_ma__demo.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -456,6 +461,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_025_ma__pompadour_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_025_ma__pompadour\hh_025_pma__pompadour_cyberware_01.mesh:
       names:
         phoenix_fire_cap: phoenix_fire@cap01
@@ -525,6 +531,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_025_pma__pompadour_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_026_ma__rattail\hh_026_ma__rat_tail.mesh:
       names:
         black_carbon_cards: black_carbon@short
@@ -596,6 +603,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_026_ma__rat_tail_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_026_ma__rattail\hh_026_pma__rat_tail_cyberware_01.mesh:
       names:
         black_carbon_cards: black_carbon@short
@@ -667,6 +675,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_026_pma__rat_tail_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_027_ma__scavenger\hh_027_ma__scavenger.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -732,6 +741,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_027_ma__scavenger_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_028_wa__corpo_bun\hh_028_ma__corpo_bun.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -796,6 +806,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_028_ma__corpo_bun_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_028_wa__corpo_bun\hh_028_pma__corpo_bun_cyberware_01.mesh:
       names:
         brown_medium_cards: brown_medium@long
@@ -860,6 +871,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_028_pma__corpo_bun_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_030_ma__punk_idol\hh_030_ma__punk_idol.mesh:
       names:
         ginger_strawberry_cards_top: ginger_strawberry@short
@@ -932,6 +944,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_030_ma__punk_idol_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_031_mb__morgan_blackhand\hh_031_ma__morgan_blackhand.mesh:
       names:
         blonde_platinum_cards: blonde_platinum@short
@@ -996,6 +1009,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_031_ma__morgan_blackhand_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_032_ma__ripper_doc\hh_032_ma__ripper_doc_common.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -1091,6 +1105,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_032_ma__ripper_doc_common_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_032_ma__ripper_doc\hh_032_pma__ripper_doc_cyberware_01.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -1204,6 +1219,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_032_pma__ripper_doc_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_035_ma__mohawk_tall\hh_035_ma__mohawk_tall.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -1269,6 +1285,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_035_ma__mohawk_tall_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_035_ma__mohawk_tall\hh_035_pma__mohawk_tall_cyberware_01.mesh:
       names:
         brown_medium_cards: brown_medium@short
@@ -1334,6 +1351,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_035_pma__mohawk_tall_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_036_ma__high_tight\hh_036_ma__high_tight.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -1398,6 +1416,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_036_ma__high_tight_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_036_ma__high_tight\hh_036_pma__high_tight_cyberware_01.mesh:
       names:
         brown_medium_cards: brown_medium@short
@@ -1462,6 +1481,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_036_pma__high_tight_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_037_ma__gungho\hh_037_ma__gungho.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -1526,6 +1546,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_037_ma__gungho_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_037_ma__gungho\hh_037_pma__gungho_cyberware_01.mesh:
       names:
         brown_medium_cards: brown_medium@short
@@ -1590,6 +1611,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_037_pma__gungho_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_039_wa__punk_shaved\hh_039_ma__punk_shaved.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -1652,6 +1674,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_039_ma__punk_shaved_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_039_wa__punk_shaved\hh_039_pma__punk_shaved_cyberware_01.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -1714,6 +1737,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_039_pma__punk_shaved_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_040_wa__pixie_bob\hh_040_ma__pixie_bob.mesh:
       names:
         liliac_cards: liliac@long
@@ -1792,6 +1816,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_040_ma__pixie_bob_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_045_ma__short_spiked\hh_045_ma__short_spiked.mesh:
       names:
         black_carbon_cards: black_carbon@short
@@ -1858,6 +1883,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_045_ma__short_spiked_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_045_ma__short_spiked\hh_045_pma__short_spiked_cyberware_01.mesh:
       names:
         black_carbon_cards: black_carbon@short
@@ -1923,6 +1949,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_045_pma__short_spiked_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_047_wa__swirl_pomp\hh_047_ma__swirl_pomp.mesh:
       names:
         liliac_cards: liliac@long
@@ -1986,6 +2013,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_047_ma__swirl_pomp_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_047_wa__swirl_pomp\hh_047_pma__swirl_pomp_cyberware_01.mesh:
       names:
         liliac_cards: liliac@long
@@ -2049,6 +2077,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_047_pma__swirl_pomp_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_048_ma__dual_braids\hh_048_ma__dual_braids.mesh:
       names:
         black_carbon_cards: black_carbon@long
@@ -2152,6 +2181,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_049_ma__thiago_common_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_051_wa__judy\hh_051_ma__judy_common.mesh:
       names:
         phoenix_fire_cap: phoenix_fire@cap
@@ -2236,6 +2266,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_051_ma__judy_common_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_051_wa__judy\hh_051_pma__judy_common_cyberware_01.mesh:
       names:
         phoenix_fire_cap: phoenix_fire@cap01
@@ -2320,6 +2351,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_051_pma__judy_common_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_053_ma__kerry_eurodyne\hh_053_ma__kerry_eurodyne_common.mesh:
       names:
         liliac_cards: liliac@short
@@ -2383,6 +2415,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_053_ma__kerry_eurodyne_common_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_053_ma__kerry_eurodyne\hh_053_pma__kerry_eurodyne_common_cyberware_01.mesh:
       names:
         goblin_green_cards: goblin_green@short
@@ -2446,6 +2479,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_053_pma__kerry_eurodyne_common_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_058_wa__voodoo_01\hh_058_ma__voodoo_01.mesh:
       names:
         purple_ombre_cards: purple_ombre@dread
@@ -2510,6 +2544,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_058_ma__voodoo_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_059_wa__voodoo_02\hh_059_ma__voodoo_02.mesh:
       names:
         red_merlot_cards: red_merlot@dread
@@ -2574,6 +2609,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_059_ma__voodoo_02_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_059_wa__voodoo_02\hh_059_pma__voodoo_02_cyberware_01.mesh:
       names:
         brown_medium_cap: brown_medium@cap01
@@ -2638,6 +2674,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_059_pma__voodoo_02_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_060_wa__voodoo_03\hh_060_ma__voodoo_03.mesh:
       names:
         red_merlot_cards: red_merlot@dread
@@ -2701,6 +2738,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_060_ma__voodoo_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_060_wa__voodoo_03\hh_060_pma__voodoo_03_cyberware_01.mesh:
       names:
         phoenix_fire_cards: phoenix_fire@dread
@@ -2764,6 +2802,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_060_pma__voodoo_03_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_061_ma__midlength_wavy\hh_061_ma__midlength_wavy.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -2865,6 +2904,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_062_ma__slick_back_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_065_wa__afro_knots\hh_065_ma__afro_knots.mesh:
       names:
         red_merlot_cards: red_merlot@dread
@@ -2927,6 +2967,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_065_ma__afro_knots_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_065_wa__afro_knots\hh_065_pma__afro_knots_cyberware_01.mesh:
       names:
         red_merlot_cards: red_merlot@dread
@@ -2989,6 +3030,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_065_pma__afro_knots_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_068_wba__animals_03\hh_068_ma__animals_03.mesh:
       names:
         black_carbon_hair_cards_dread: black_carbon@dread
@@ -3088,6 +3130,7 @@ resource:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short.mi
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_068_ma__animals_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_073_ma__nomad_01\hh_073_ma__nomad_01.mesh:
       names:
         black_carbon_cards: black_carbon@short
@@ -3252,6 +3295,7 @@ resource:
       context:
         CurlsBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_082_ma__afro_bun_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_082_ma__afro_bun\hh_082_ma__afro_bun_bun.mesh:
       names:
         ginger_strawberry_cards: ginger_strawberry@curls
@@ -3377,6 +3421,7 @@ resource:
       context:
         CurlsBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_082_pma__afro_bun_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_085_ma__takemura\hh_085_ma__takemura_common.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -3437,6 +3482,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_085_ma__takemura_common_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_089_ma__thompson\hh_089_ma__thompson_common.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -3502,6 +3548,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_089_ma__thompson_common_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_089_ma__thompson\hh_089_pma__thompson_common_cyberware_01.mesh:
       names:
         default: brown_medium@cap01
@@ -3567,6 +3614,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_089_pma__thompson_common_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_093_mba__sumo\hh_093_ma__sumo.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -3729,6 +3777,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_094_ma__saul_common_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_103_ma__maelstrom_spikes\hh_103_ma__common_spikes.mesh:
       names:
         liliac_cards: liliac@short
@@ -3850,6 +3899,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_112_ma__kicinski_player_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_113_ma__iwinski\hh_113_ma__iwinski_common.mesh:
       names:
         black_carbon_cards: black_carbon@short
@@ -3989,6 +4039,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_120_ma__arasaka_bun_common_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_120_ma__arasaka_bun\hh_120_ma__arasaka_bun_knot_02.mesh:
       names:
         black_carbon_cards: black_carbon@long
@@ -4090,6 +4141,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_120_pma__arasaka_bun_01_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_122_ma__roy\hh_122_ma__roy.mesh:
       names:
         liliac_cards: liliac@short
@@ -4160,6 +4212,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_122_ma__roy_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_140_ma__short_afro\hh_140_ma__short_afro.mesh:
       names:
         black_salt_n_pepper_afro_cap: black_salt_n_pepper@cap
@@ -4233,6 +4286,7 @@ resource:
       context:
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_140_ma__short_afro_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_140_ma__short_afro\hh_140_pma__short_afro_cyberware_01.mesh:
       names:
         black_salt_n_pepper_afro_cap: black_salt_n_pepper@cap01
@@ -4306,6 +4360,7 @@ resource:
       context:
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_140_pma__short_afro_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_141_ma__afro\hh_141_ma__afro.mesh:
       names:
         liliac_cards: liliac@beard
@@ -4371,6 +4426,7 @@ resource:
       context:
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_141_ma__afro_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_142_ma__afrohawk\hh_142_pma__afrohawk.mesh:
       names:
         green_orange_cards: green_orange@curls
@@ -4436,6 +4492,7 @@ resource:
       context:
         CurlsBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_142_pma__afrohawk_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_142_ma__afrohawk\hh_142_pma__afrohawk_cyberware_01.mesh:
       names:
         liliac_cards: liliac@curls
@@ -4501,6 +4558,7 @@ resource:
       context:
         CurlsBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_142_pma__afrohawk_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_143_ma__flat_top\hh_143_ma__flat_top.mesh:
       names:
         liliac_cards: liliac@beard
@@ -4563,6 +4621,7 @@ resource:
       context:
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_143_ma__flat_top_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_143_ma__flat_top\hh_143_pma__flat_top_cyberware_01.mesh:
       names:
         liliac_cards: liliac@beard
@@ -4625,6 +4684,7 @@ resource:
       context:
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_143_pma__flat_top_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_144_wa__afro_braid_bun\hh_144_ma__afro_braid_bun.mesh:
       names:
         ginger_copper_dreads: ginger_copper@dread
@@ -4828,6 +4888,7 @@ resource:
         CurlsBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_144_ma__afro_braid_bun_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_144_wa__afro_braid_bun\hh_144_pma__afro_braid_bun_cyberware_01.mesh:
       names:
         ginger_copper_dreads: ginger_copper@dread
@@ -5031,6 +5092,7 @@ resource:
         CurlsBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_144_pma__afro_braid_bun_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_145_ma__v_short\hh_145_ma__v_short.mesh:
       names:
         gray_gunmetal_cap: gray_gunmetal@cap
@@ -5134,6 +5196,7 @@ resource:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_145_ma__v_short_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_145_ma__v_short\hh_145_pma__v_short.mesh:
       names:
         liliac_cards: liliac@short
@@ -5237,6 +5300,7 @@ resource:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_145_pma__v_short_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_146_ma__dread_undercut\hh_146_ma__dread_undercut.mesh:
       names:
         black_carbon_cards_dreads: black_carbon@dread
@@ -5336,6 +5400,7 @@ resource:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_146_ma__dread_undercut_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_146_ma__dread_undercut\hh_146_pma__dread_undercut_cyberware_01.mesh:
       names:
         black_carbon_cards_dreads: black_carbon@dread
@@ -5435,6 +5500,7 @@ resource:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_146_pma__dread_undercut_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_999_ma__buzz_cap\hh_999_ma__buzz_cap.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -5510,6 +5576,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_999_ma__buzz_cap_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_999_ma__buzz_cap\hh_999_pma__buzz_cap_cyberware_01.mesh:
       names:
         black_salt_n_pepper_afro_cap: black_salt_n_pepper@cap01
@@ -5585,6 +5652,7 @@ resource:
         green_toxic_cap: green_toxic@cap01
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_999_pma__buzz_cap_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_006_ma__demo\hh_006_pwa__demo_cyberware_01.mesh:
       names:
         phoenix_fire_cap: phoenix_fire@cap
@@ -5645,6 +5713,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_006_pwa__demo_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_ma__ponytail_braid_01.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -5746,6 +5815,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_083_ma__ponytail_base_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_063_wa_messy_bob\hh_063_ma__messy_bob.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -5900,6 +5970,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_120_ma__arasaka_bun_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_120_ma__arasaka_bun\hh_120_ma__arasaka_bun_knot_03.mesh:
       names:
         black_carbon_cards: black_carbon@long
@@ -6000,6 +6071,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_084_ma__bun_chopsticks_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_084_wa__bun_chopsticks\hh_084_ma__bun_chopsticks_bun.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -6104,6 +6176,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_009_ma__demo_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_023_wa__short_messy\hh_023_ma__short_messy.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -6204,6 +6277,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_022_ma__chrome_celeb_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_020_wa__mullet\hh_020_ma__mullet.mesh:
       names:
         black_carbon_cards: black_carbon@long
@@ -6453,6 +6527,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_003_ma_hat__beanie_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_003_wa_hat__beanie_hh_04\h1_003_ma_hat__beanie_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -6528,6 +6603,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_003_ma_hat__beanie_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_011_ma_hat__baseball_back_hh_01\h1_011_ma_hat__baseball_back_hh_01.mesh:
       names:
         liliac_cards: liliac@short
@@ -6590,6 +6666,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_011_ma_hat__baseball_back_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_011_ma_hat__baseball_back_hh_02\h1_011_ma_hat__baseball_back_hh_02.mesh:
       names:
         liliac_cards: liliac@long
@@ -6691,6 +6768,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_011_ma_hat__baseball_back_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_011_ma_hat__baseball_back_hh_04\h1_011_ma_hat__baseball_back_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -6766,6 +6844,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_011_ma_hat__baseball_back_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_011_ma_hat__baseball_hh_01\h1_011_ma_hat__baseball_hh_01.mesh:
       names:
         liliac_cards: liliac@short
@@ -6828,6 +6907,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_011_ma_hat__baseball_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_011_ma_hat__baseball_hh_03\h1_011_ma_hat__baseball_hh_03.mesh:
       names:
         black_carbon_top: black_carbon@dread
@@ -6927,6 +7007,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_011_ma_hat__baseball_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_011_ma_hat__baseball_hh_04\h1_011_ma_hat__baseball_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -7002,6 +7083,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_011_ma_hat__baseball_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_011_wa_hat__baseball_hh_02\h1_011_ma_hat__baseball_hh_02.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -7098,6 +7180,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_012_ma_hat__googles_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_012_wa_hat__googles_hh_02\h1_012_ma_hat__googles_hh_02.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -7251,6 +7334,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_012_ma_hat__googles_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_021_ma_hat__cowboy_sheriff_hh_01\h1_021_ma_hat__cowboy_sheriff_hh_01.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -7352,6 +7436,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_021_ma_hat__cowboy_sheriff_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_021_ma_hat__cowboy_sheriff_hh_04\h1_021_ma_hat__cowboy_sheriff_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -7427,6 +7512,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_021_ma_hat__cowboy_sheriff_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_021_wa_hat__cowboy_sheriff_hh_02\h1_021_ma_hat__cowboy_sheriff_hh_02.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -7568,6 +7654,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_024_ma_hat__scavenger_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_024_ma_hat__scavenger_hh_04\h1_024_ma_hat__scavenger_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -7643,6 +7730,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_024_ma_hat__scavenger_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_024_wa_hat__scavenger_hh_02\h1_024_ma_hat__scavenger_hh_02.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -7747,6 +7835,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_032_ma_hat__asian_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_032_ma_hat__asian_hh_02\h1_032_ma_hat__asian_hh_02.mesh:
       names:
         liliac_cards: liliac@long
@@ -7808,6 +7897,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_032_ma_hat__asian_hh_02_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_032_ma_hat__asian_hh_02\h1_032_ma_hat__asian_hh_02_bun.mesh:
       names:
         liliac_cards: liliac@long
@@ -7910,6 +8000,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_032_ma_hat__asian_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_032_ma_hat__asian_hh_04\h1_032_ma_hat__asian_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -7985,6 +8076,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_032_ma_hat__asian_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_036_wa_hat__elegant_hh_01\h1_036_ma_hat__elegant_hh_01.mesh:
       names:
         liliac_cards: liliac@short
@@ -8047,6 +8139,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_036_ma_hat__elegant_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_036_wa_hat__elegant_hh_02\h1_036_ma_hat__elegant_hh_02.mesh:
       names:
         liliac_cards: liliac@long
@@ -8113,6 +8206,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_036_ma_hat__elegant_hh_02_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_036_wa_hat__elegant_hh_03\h1_036_ma_hat__elegant_hh_03.mesh:
       names:
         liliac_cards: liliac@dread
@@ -8175,6 +8269,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_036_ma_hat__elegant_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_036_wa_hat__elegant_hh_04\h1_036_ma_hat__elegant_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -8250,6 +8345,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_036_ma_hat__elegant_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_045_ma_hat__farmer_hh_01\h1_045_ma_hat__farmer_hh_01.mesh:
       names:
         liliac_cards: liliac@short
@@ -8392,6 +8488,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_045_ma_hat__farmer_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_045_ma_hat__farmer_hh_04\h1_045_ma_hat__farmer_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -8467,6 +8564,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_045_ma_hat__farmer_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_051_ma_mask__headkerchief_hh_01\h1_051_ma_mask__headkerchief_hh_01.mesh:
       names:
         liliac_cards: liliac@short
@@ -8518,6 +8616,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_051_ma_mask__headkerchief_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_051_ma_mask__headkerchief_hh_02\h1_051_ma_mask__headkerchief_hh_02.mesh:
       names:
         liliac_cards: liliac@long
@@ -8651,6 +8750,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_051_ma_mask__headkerchief_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_051_ma_mask__headkerchief_hh_04\h1_051_ma_mask__headkerchief_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -8726,6 +8826,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_051_ma_mask__headkerchief_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_060_ma_hat__bandana_kerry_01\h1_060_ma_hat__bandana_kerry_01.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -8791,6 +8892,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_060_ma_hat__bandana_kerry_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_060_ma_hat__bandana_kerry_hh_02\h1_060_ma_hat__bandana_kerry_hh_02.mesh:
       names:
         liliac_cards: liliac@long
@@ -8853,6 +8955,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_060_ma_hat__bandana_kerry_hh_02_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_060_ma_hat__bandana_kerry_hh_03\h1_060_ma_hat__bandana_kerry_hh_03.mesh:
       names:
         liliac_cards: liliac@dread
@@ -8915,6 +9018,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_060_ma_hat__bandana_kerry_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_060_ma_hat__bandana_kerry_hh_04\h1_060_ma_hat__bandana_kerry_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -8990,6 +9094,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_060_ma_hat__bandana_kerry_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_063_ma_hat__military_hh_02\h1_063_ma_hat__military_hh_02.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -9104,6 +9209,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_063_ma_hat__military_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_063_wa_hat__military_hh_01\h1_063_ma_hat__military_hh_01.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -9207,6 +9313,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_063_ma_hat__military_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_065_ma_hat__guard_hh_01\h1_065_ma_hat__guard_hh_01.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -9269,6 +9376,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_065_ma_hat__guard_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_065_ma_hat__guard_hh_02\h1_065_ma_hat__guard_hh_02.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -9372,6 +9480,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_065_ma_hat__guard_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_065_ma_hat__guard_hh_04\h1_065_ma_hat__guard_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -9447,6 +9556,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_065_ma_hat__guard_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_082_ma_hat__bandage_hh_01\h1_082_ma_hat__bandage_hh_01.mesh:
       names:
         liliac_cards: liliac@short
@@ -9546,6 +9656,7 @@ resource:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_082_ma_hat__bandage_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_082_ma_hat__bandage_hh_02\h1_082_ma_hat__bandage_hh_02.mesh:
       names:
         ginger_strawberry_cards_top: ginger_strawberry@long
@@ -9645,6 +9756,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_082_ma_hat__bandage_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_082_ma_hat__bandage_hh_04\h1_082_ma_hat__bandage_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -9720,6 +9832,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_082_ma_hat__bandage_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_ma__ponytail_bulb_01.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -9898,6 +10011,7 @@ resource:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_002_mask_ma__ikeuchi_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_03\h1_002_mask_ma__ikeuchi_hh_03.mesh:
       names:
         green_orange_cards: green_orange@dread
@@ -9961,6 +10075,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_002_mask_ma__ikeuchi_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_04\h1_002_mask_ma__ikeuchi_hh_04.mesh:
       names:
         black_salt_n_pepper_afro_cap: black_salt_n_pepper@cap
@@ -10036,6 +10151,7 @@ resource:
         green_toxic_cap: green_toxic@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_002_mask_ma__ikeuchi_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_01\h1_083_ma_hat__ushanka_hh_01.mesh:
       names:
         green_orange_cards: green_orange@short
@@ -10176,6 +10292,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_083_ma_hat__ushanka_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_04\h1_083_ma_hat__ushanka_hh_04.mesh:
       names:
         black_salt_n_pepper_afro_cap: black_salt_n_pepper@cap
@@ -10251,6 +10368,7 @@ resource:
         green_toxic_cap: green_toxic@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_083_ma_hat__ushanka_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_01\h1_084_ma_hat__bucket_hat_hh_01.mesh:
       names:
         green_orange_cards: green_orange@short
@@ -10332,6 +10450,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_084_ma_hat__bucket_hat_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_02\h1_084_ma_hat__bucket_hat_hh_02.mesh:
       names:
         green_orange_cards: green_orange@long
@@ -10465,6 +10584,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_084_ma_hat__bucket_hat_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_04\h1_084_ma_hat__bucket_hat_hh_04.mesh:
       names:
         black_salt_n_pepper_afro_cap: black_salt_n_pepper@cap
@@ -10540,6 +10660,7 @@ resource:
         green_toxic_cap: green_toxic@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_084_ma_hat__bucket_hat_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_006_ma__demo\hh_006_wa__demo.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -10600,6 +10721,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_006_wa__demo_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_008_ma__demo\hh_008_pwa__sk8t_or_die_cyberware_01.mesh:
       names:
         red_apple_cards: red_apple@short
@@ -10680,6 +10802,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_008_pwa__sk8t_or_die_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_008_ma__demo\hh_008_wa__sk8t_or_die.mesh:
       names:
         red_apple_cards: red_apple@short
@@ -10760,6 +10883,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_008_wa__sk8t_or_die_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_011_wa__demo\hh_011_wa__demo.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -10866,6 +10990,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_029_wa__misty_common_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_033_wa__player\hh_033_pwa__player_cyberware_01.mesh:
       names:
         phoenix_fire_cap: phoenix_fire@cap01
@@ -10943,6 +11068,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_033_pwa__player_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_033_wa__player\hh_033_wa__player.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -11020,6 +11146,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_033_wa__player_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_034_wa__militech_agent\hh_034_wa__militech_agent_common.mesh:
       names:
         liliac_cards: liliac@long
@@ -11084,6 +11211,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_034_wa__militech_agent_common_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_035_ma__mohawk_tall\hh_035_pwa__mohawk_tall_cyberware_01.mesh:
       names:
         brown_medium_cards: brown_medium@short
@@ -11150,6 +11278,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_035_pwa__mohawk_tall_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_035_ma__mohawk_tall\hh_035_wa__mohawk_tall.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -11216,6 +11345,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_035_wa__mohawk_tall_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_036_ma__high_tight\hh_036_pwa__high_tight_cyberware_01.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -11280,6 +11410,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_036_pwa__high_tight_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_036_ma__high_tight\hh_036_wa__high_tight.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -11344,6 +11475,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_036_wa__high_tight_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_039_wa__punk_shaved\hh_039_pwa__punk_shaved_cyberware_01.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -11406,6 +11538,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_039_pwa__punk_shaved_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_039_wa__punk_shaved\hh_039_wa__punk_shaved.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -11468,6 +11601,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_039_wa__punk_shaved_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_040_wa__pixie_bob\hh_040_wa__pixie_bob.mesh:
       names:
         liliac_cards: liliac@long
@@ -11546,6 +11680,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_040_wa__pixie_bob_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_041_wa__valentino\hh_041_pwa__valentino_cyberware_01.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -11609,6 +11744,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_041_pwa__valentino_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_041_wa__valentino\hh_041_wa__valentino.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -11672,6 +11808,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_041_wa__valentino_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_042_wa__topknots\hh_042_pwa__topknots_cyberware_01.mesh:
       names:
         red_apple_cards: red_apple@short
@@ -11741,6 +11878,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_042_pwa__topknots_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_042_wa__topknots\hh_042_wa__topknots.mesh:
       names:
         red_apple_cards: red_apple@short
@@ -11810,6 +11948,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_042_wa__topknots_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_044_wa__classic\hh_044_wa__classic.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -11876,6 +12015,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_044_wa__classic_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_045_ma__short_spiked\hh_045_pwa__short_spiked_cyberware_01.mesh:
       names:
         brown_medium_cards: brown_medium@short
@@ -11941,6 +12081,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_045_pwa__short_spiked_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_045_ma__short_spiked\hh_045_wa__short_spiked.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -12007,6 +12148,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_045_wa__short_spiked_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_049_ma__thiago\hh_049_wa__thiago_common.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -12070,6 +12212,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_049_wa__thiago_common_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_051_wa__judy\hh_051_pwa__judy_common_cyberware_01.mesh:
       names:
         phoenix_fire_cap: phoenix_fire@cap01
@@ -12154,6 +12297,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_051_pwa__judy_common_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_051_wa__judy\hh_051_wa__judy_common.mesh:
       names:
         red_apple_cards: red_apple@short
@@ -12239,6 +12383,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_051_wa__judy_common_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_054_wa__rogue_young\hh_054_pwa__rogue_young_cyberware_01.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -12302,6 +12447,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_054_pwa__rogue_young_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_054_wa__rogue_young\hh_054_wa__rogue_young_common.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -12365,6 +12511,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_054_wa__rogue_young_common_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_059_wa__voodoo_02\hh_059_pwa__voodoo_02_cyberware_01.mesh:
       names:
         red_merlot_cards: red_merlot@dread
@@ -12429,6 +12576,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_059_pwa__voodoo_02_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_059_wa__voodoo_02\hh_059_wa__voodoo_02.mesh:
       names:
         red_merlot_cards: red_merlot@dread
@@ -12493,6 +12641,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_059_wa__voodoo_02_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_060_wa__voodoo_03\hh_060_pwa__voodoo_03_cyberware_01.mesh:
       names:
         blue_steel_cards: blue_steel@dread
@@ -12556,6 +12705,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_060_pwa__voodoo_03_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_060_wa__voodoo_03\hh_060_wa__voodoo_03.mesh:
       names:
         blue_steel_cards: blue_steel@dread
@@ -12619,6 +12769,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_060_wa__voodoo_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_063_wa_messy_bob\hh_063_wa__messy_bob.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -12722,6 +12873,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_064_wa__bob_fringe_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_068_wba__animals_03\hh_068_wa__animals_03.mesh:
       names:
         black_carbon_hair_cards_dread: black_carbon@dread
@@ -12821,6 +12973,7 @@ resource:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_068_wa__animals_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_077_wa__nomad_02\hh_077_wa__nomad_02.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -13101,6 +13254,7 @@ resource:
       context:
         CurlsBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_082_pwa__afro_bun_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_082_ma__afro_bun\hh_082_wa__afro_bun.mesh:
       names:
         purple_ombre_cap: purple_ombre@cap
@@ -13187,6 +13341,7 @@ resource:
       context:
         CurlsBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_082_wa__afro_bun_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_082_ma__afro_bun\hh_082_wa__afro_bun_bun.mesh:
       names:
         ginger_strawberry_cards: ginger_strawberry@curls
@@ -13288,6 +13443,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_083_wa__ponytail_base_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_083_wa__ponytail_01\hh_083_wa__ponytail_braid_01.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -13465,6 +13621,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_085_wa__takemura_common_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_088_wa__corpo_bob\hh_088_wa__corpo_bob.mesh:
       names:
         liliac_cards: liliac@long
@@ -13569,6 +13726,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_089_pwa__thompson_common_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_089_ma__thompson\hh_089_wa__thompson_common.mesh:
       names:
         gray_gunmetal_cap: gray_gunmetal@cap
@@ -13633,6 +13791,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_089_wa__thompson_common_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_090_wa__alt\hh_090_wa__alt_player.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -13703,6 +13862,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_090_wa__alt_player_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_091_wa__dakota\hh_091_wa__dakota.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -14059,6 +14219,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_106_wa__ponytails_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_115_wa__alanah\hh_115_wa__alanah_common.mesh:
       names:
         blonde_platinum_cards_top: blonde_platinum@long
@@ -14269,6 +14430,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_121_wa__t_bug_common_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_140_ma__short_afro\hh_140_pwa__short_afro_cyberware_01.mesh:
       names:
         brown_medium_cards: brown_medium@beard
@@ -14342,6 +14504,7 @@ resource:
       context:
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_140_pwa__short_afro_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_140_ma__short_afro\hh_140_wa__short_afro.mesh:
       names:
         liliac_cards: liliac@beard
@@ -14415,6 +14578,7 @@ resource:
       context:
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_140_wa__short_afro_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_141_ma__afro\hh_141_wa__afro.mesh:
       names:
         liliac_cards: liliac@beard
@@ -14480,6 +14644,7 @@ resource:
       context:
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_141_wa__afro_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_142_ma__afrohawk\hh_142_pwa__afrohawk.mesh:
       names:
         green_orange_cards: green_orange@curls
@@ -14545,6 +14710,7 @@ resource:
       context:
         CurlsBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_142_pwa__afrohawk_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_142_ma__afrohawk\hh_142_pwa__afrohawk_cyberware_01.mesh:
       names:
         silver_rose_cards: silver_rose@curls
@@ -14610,6 +14776,7 @@ resource:
       context:
         CurlsBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_142_pwa__afrohawk_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_143_ma__flat_top\hh_143_pwa__flat_top_cyberware_01.mesh:
       names:
         blue_sky_cards: blue_sky@beard
@@ -14672,6 +14839,7 @@ resource:
       context:
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_143_pwa__flat_top_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_143_ma__flat_top\hh_143_wa__flat_top.mesh:
       names:
         liliac_cards: liliac@beard
@@ -14734,6 +14902,7 @@ resource:
       context:
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_143_wa__flat_top_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_144_wa__afro_braid_bun\hh_144_pwa__afro_braid_bun_cyberware_01.mesh:
       names:
         silver_rose_dreads: silver_rose@dread
@@ -14937,6 +15106,7 @@ resource:
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard.mi
         CurlsBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_144_pwa__afro_braid_bun_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_144_wa__afro_braid_bun\hh_144_wa__afro_braid_bun.mesh:
       names:
         ginger_copper_dreads: ginger_copper@dread
@@ -15140,6 +15310,7 @@ resource:
         CurlsBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__curls_bright.mi
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_144_wa__afro_braid_bun_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_146_ma__dread_undercut\hh_146_pwa__dread_undercut_cyberware_01.mesh:
       names:
         blue_sky_cards_dreads: blue_sky@dread
@@ -15239,6 +15410,7 @@ resource:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_146_pwa__dread_undercut_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_146_ma__dread_undercut\hh_146_wa__dread_undercut.mesh:
       names:
         black_carbon_cards_beards: black_carbon@beard
@@ -15338,6 +15510,7 @@ resource:
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_146_wa__dread_undercut_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_151_wa__judy_variation02\hh_151_pwa__judy_variation02_cyberware_01.mesh:
       names:
         red_apple_cards: red_apple@short
@@ -15422,6 +15595,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_151_pwa__judy_variation02_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_151_wa__judy_variation02\hh_151_wa__judy_variation02_common.mesh:
       names:
         red_apple_cards: red_apple@short
@@ -15506,6 +15680,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_151_wa__judy_variation02_common_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_999_ma__buzz_cap\hh_999_pwa__buzz_cap_cyberware_01.mesh:
       names:
         black_carbon_cap: black_carbon@cap01
@@ -15582,6 +15757,7 @@ resource:
         default: brown_medium@cap01
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_999_pwa__buzz_cap_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_999_ma__buzz_cap\hh_999_wa__buzz_cap.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -15657,6 +15833,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_999_wa__buzz_cap_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_030_ma__punk_idol\hh_030_wa__punk_idol.mesh:
       names:
         black_carbon_cards: black_carbon@short
@@ -15729,6 +15906,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_030_wa__punk_idol_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_058_wa__voodoo_01\hh_058_wa__voodoo_01.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -15793,6 +15971,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_058_wa__voodoo_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_026_ma__rattail\hh_026_wa__rat_tail.mesh:
       names:
         red_apple_cards: red_apple@short
@@ -15864,6 +16043,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_026_wa__rat_tail_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_048_ma__dual_braids\hh_048_wa__dual_braids.mesh:
       names:
         black_carbon_cards: black_carbon@long
@@ -15968,6 +16148,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_007_wa__demo_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_025_ma__pompadour\hh_025_wa__pompadour.mesh:
       names:
         liliac_cards: liliac@long
@@ -16037,6 +16218,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_025_wa__pompadour_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_028_wa__corpo_bun\hh_028_wa__corpo_bun.mesh:
       names:
         liliac_cards: liliac@long
@@ -16101,6 +16283,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_028_wa__corpo_bun_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_047_wa__swirl_pomp\hh_047_wa__swirl_pomp.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -16164,6 +16347,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_047_wa__swirl_pomp_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_037_ma__gungho\hh_037_wa__gungho.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -16228,6 +16412,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_037_wa__gungho_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_098_wa__top_bun\hh_098_wa__top_bun.mesh:
       names:
         liliac_cards: liliac@long
@@ -16290,6 +16475,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_098_wa__top_bun_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_084_wa__bun_chopsticks\hh_084_wa__bun_chopsticks.mesh:
       names:
         teal_ombre_cards: teal_ombre@long
@@ -16352,6 +16538,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_084_wa__bun_chopsticks_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_084_wa__bun_chopsticks\hh_084_wa__bun_chopsticks_bun.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -16456,6 +16643,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_009_wa__demo_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_023_wa__short_messy\hh_023_wa__short_messy.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -16556,6 +16744,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_022_wa__chrome_celeb_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_020_wa__mullet\hh_020_wa__mullet.mesh:
       names:
         black_carbon_cards: black_carbon@long
@@ -16656,6 +16845,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_056_wa__rogue_old_common_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_052_wa__clair\hh_052_wa__clair.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -16717,6 +16907,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_052_wa__clair_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_110_wa__wizzy\hh_110_wa__wizzy.mesh:
       names:
         hair_cards_straight: custom_chrome_celeb@long
@@ -16781,6 +16972,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_110_wa__wizzy_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_095_wa__panam\hh_095_wa__panam.mesh:
       names:
         pm_dread_dark_dbl: custom_panam_01@long
@@ -17058,6 +17250,7 @@ resource:
         lillac_ombre: liliac_ombre@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_095_wa__panam_cap_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_009_ma__demo\hh_009_wa__demo_cyberware_01.mesh:
       names:
         purple_ombre_cap: purple_ombre@cap01
@@ -17123,6 +17316,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_009_wa__demo_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_025_ma__pompadour\hh_025_pwa__pompadour_cyberware_01.mesh:
       names:
         liliac_cards: liliac@long
@@ -17192,6 +17386,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_025_pwa__pompadour_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_026_ma__rattail\hh_026_wa__rat_tail_cyberware_01.mesh:
       names:
         red_apple_cards: red_apple@short
@@ -17263,6 +17458,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_026_wa__rat_tail_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_028_wa__corpo_bun\hh_028_pwa__corpo_bun_cyberware_01.mesh:
       names:
         liliac_cards: liliac@long
@@ -17328,6 +17524,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_028_pwa__corpo_bun_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_037_ma__gungho\hh_037_pwa__gungho_cyberware_01.mesh:
       names:
         brown_medium_cards: brown_medium@short
@@ -17392,6 +17589,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_037_pwa__gungho_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_047_wa__swirl_pomp\hh_047_wa__swirl_pomp_cyberware_01.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -17455,6 +17653,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_047_wa__swirl_pomp_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\hh_056_wa__rogue_old\hh_056_wa__rogue_old_common_cyberware_01.mesh:
       names:
         green_orange_cards: green_orange@long
@@ -17516,6 +17715,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hh_056_wa__rogue_old_common_cyberware_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_003_wa_hat__beanie_hh_01\h1_003_wa_hat__beanie_hh_01.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -17726,6 +17926,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_003_wa_hat__beanie_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_003_wa_hat__beanie_hh_04\h1_003_wa_hat__beanie_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -17801,6 +18002,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_003_wa_hat__beanie_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_011_ma_hat__baseball_back_hh_01\h1_011_wa_hat__baseball_back_hh_01.mesh:
       names:
         liliac_cards: liliac@short
@@ -17863,6 +18065,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_011_wa_hat__baseball_back_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_011_ma_hat__baseball_back_hh_02\h1_011_wa_hat__baseball_back_hh_02.mesh:
       names:
         liliac_cards: liliac@long
@@ -17964,6 +18167,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_011_wa_hat__baseball_back_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_011_ma_hat__baseball_back_hh_04\h1_011_wa_hat__baseball_back_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -18039,6 +18243,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_011_wa_hat__baseball_back_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_011_ma_hat__baseball_hh_01\h1_011_wa_hat__baseball_hh_01.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -18101,6 +18306,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_011_wa_hat__baseball_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_011_ma_hat__baseball_hh_03\h1_011_wa_hat__baseball_hh_03.mesh:
       names:
         blue_steel_top: blue_steel@dread
@@ -18200,6 +18406,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_011_wa_hat__baseball_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_011_ma_hat__baseball_hh_04\h1_011_wa_hat__baseball_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -18275,6 +18482,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_011_wa_hat__baseball_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_011_wa_hat__baseball_hh_02\h1_011_wa_hat__baseball_hh_02.mesh:
       names:
         purple_ombre_cards: purple_ombre@long
@@ -18371,6 +18579,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_012_wa_hat__googles_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_012_wa_hat__googles_hh_02\h1_012_wa_hat__googles_hh_02.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -18524,6 +18733,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_012_wa_hat__googles_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_021_ma_hat__cowboy_sheriff_hh_01\h1_021_wa_hat__cowboy_sheriff_hh_01.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -18625,6 +18835,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_021_wa_hat__cowboy_sheriff_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_021_ma_hat__cowboy_sheriff_hh_04\h1_021_wa_hat__cowboy_sheriff_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -18700,6 +18911,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_021_wa_hat__cowboy_sheriff_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_021_wa_hat__cowboy_sheriff_hh_02\h1_021_wa_hat__cowboy_sheriff_hh_02.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -18841,6 +19053,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_024_wa_hat__scavenger_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_024_ma_hat__scavenger_hh_04\h1_024_wa_hat__scavenger_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -18916,6 +19129,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_024_wa_hat__scavenger_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_024_wa_hat__scavenger_hh_02\h1_024_wa_hat__scavenger_hh_02.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -19020,6 +19234,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_032_wa_hat__asian_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_032_ma_hat__asian_hh_02\h1_032_wa_hat__asian_hh_02.mesh:
       names:
         liliac_cards: liliac@long
@@ -19081,6 +19296,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_032_wa_hat__asian_hh_02_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_032_ma_hat__asian_hh_02\h1_032_wa_hat__asian_hh_02_bun.mesh:
       names:
         liliac_cards: liliac@long
@@ -19183,6 +19399,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_032_wa_hat__asian_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_032_ma_hat__asian_hh_04\h1_032_wa_hat__asian_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -19258,6 +19475,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_032_wa_hat__asian_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_036_wa_hat__elegant_hh_01\h1_036_wa_hat__elegant_hh_01.mesh:
       names:
         liliac_cards: liliac@short
@@ -19320,6 +19538,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_036_wa_hat__elegant_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_036_wa_hat__elegant_hh_02\h1_036_wa_hat__elegant_hh_02.mesh:
       names:
         liliac_cards: liliac@long
@@ -19386,6 +19605,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_036_wa_hat__elegant_hh_02_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_036_wa_hat__elegant_hh_03\h1_036_wa_hat__elegant_hh_03.mesh:
       names:
         liliac_cards: liliac@dread
@@ -19448,6 +19668,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_036_wa_hat__elegant_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_036_wa_hat__elegant_hh_04\h1_036_wa_hat__elegant_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -19523,6 +19744,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_036_wa_hat__elegant_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_045_ma_hat__farmer_hh_01\h1_045_wa_hat__farmer_hh_01.mesh:
       names:
         liliac_cards: liliac@short
@@ -19665,6 +19887,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_045_wa_hat__farmer_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_045_ma_hat__farmer_hh_04\h1_045_wa_hat__farmer_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -19740,6 +19963,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_045_wa_hat__farmer_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_051_ma_mask__headkerchief_hh_01\h1_051_wa_mask__headkerchief_hh_01.mesh:
       names:
         liliac_cards: liliac@short
@@ -19791,6 +20015,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_051_wa_mask__headkerchief_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_051_ma_mask__headkerchief_hh_02\h1_051_wa_mask__headkerchief_hh_02.mesh:
       names:
         liliac_cards: liliac@long
@@ -19924,6 +20149,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_051_wa_mask__headkerchief_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_051_ma_mask__headkerchief_hh_04\h1_051_wa_mask__headkerchief_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -19999,6 +20225,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_051_wa_mask__headkerchief_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_060_ma_hat__bandana_kerry_01\h1_060_wa_hat__bandana_kerry_01.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -20064,6 +20291,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_060_wa_hat__bandana_kerry_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_060_ma_hat__bandana_kerry_hh_02\h1_060_wa_hat__bandana_kerry_hh_02.mesh:
       names:
         liliac_cards: liliac@long
@@ -20126,6 +20354,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_060_wa_hat__bandana_kerry_hh_02_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_060_ma_hat__bandana_kerry_hh_03\h1_060_wa_hat__bandana_kerry_hh_03.mesh:
       names:
         liliac_cards: liliac@dread
@@ -20188,6 +20417,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_060_wa_hat__bandana_kerry_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_060_ma_hat__bandana_kerry_hh_04\h1_060_wa_hat__bandana_kerry_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -20263,6 +20493,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_060_wa_hat__bandana_kerry_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_063_ma_hat__military_hh_02\h1_063_wa_hat__military_hh_02.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -20377,6 +20608,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_063_wa_hat__military_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_063_wa_hat__military_hh_01\h1_063_wa_hat__military_hh_01.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -20480,6 +20712,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_063_wa_hat__military_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_065_ma_hat__guard_hh_01\h1_065_wa_hat__guard_hh_01.mesh:
       names:
         red_merlot_cards: red_merlot@short
@@ -20542,6 +20775,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_065_wa_hat__guard_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_065_ma_hat__guard_hh_02\h1_065_wa_hat__guard_hh_02.mesh:
       names:
         red_merlot_cards: red_merlot@long
@@ -20645,6 +20879,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_065_wa_hat__guard_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_065_ma_hat__guard_hh_04\h1_065_wa_hat__guard_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -20720,6 +20955,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_065_wa_hat__guard_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_082_ma_hat__bandage_hh_01\h1_082_wa_hat__bandage_hh_01.mesh:
       names:
         liliac_cards: liliac@short
@@ -20819,6 +21055,7 @@ resource:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_082_wa_hat__bandage_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_082_ma_hat__bandage_hh_02\h1_082_wa_hat__bandage_hh_02.mesh:
       names:
         ginger_strawberry_cards_top: ginger_strawberry@long
@@ -20918,6 +21155,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_082_wa_hat__bandage_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\common\hair\h1_082_ma_hat__bandage_hh_04\h1_082_wa_hat__bandage_hh_04.mesh:
       names:
         black_carbon_cap: black_carbon@cap
@@ -20993,6 +21231,7 @@ resource:
         green_orange_cap_afro: green_orange@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_082_wa_hat__bandage_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_01\h1_002_mask_wa__ikeuchi_hh_01.mesh:
       names:
         green_orange_cards: green_orange@short
@@ -21093,6 +21332,7 @@ resource:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_002_mask_wa__ikeuchi_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_03\h1_002_mask_wa__ikeuchi_hh_03.mesh:
       names:
         green_orange_cards: green_orange@dread
@@ -21156,6 +21396,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_002_mask_wa__ikeuchi_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     ep1\characters\common\hair\h1_002_mask__ikeuchi_hh_04\h1_002_mask_wa__ikeuchi_hh_04.mesh:
       names:
         black_salt_n_pepper_afro_cap: black_salt_n_pepper@cap
@@ -21231,6 +21472,7 @@ resource:
         green_toxic_cap: green_toxic@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_002_mask_wa__ikeuchi_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     ep1\characters\common\hair\h1_002_mask_wa__ikeuchi_hh_02\h1_002_mask_wa__ikeuchi_hh_02.mesh:
       names:
         lizzy_cards_straight: custom_chrome_celeb@long
@@ -21293,6 +21535,7 @@ resource:
       context:
         LongBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__long_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_002_mask_wa__ikeuchi_hh_02_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_01\h1_083_wa_hat__ushanka_hh_01.mesh:
       names:
         green_orange_cards: green_orange@short
@@ -21433,6 +21676,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_083_wa_hat__ushanka_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     ep1\characters\common\hair\h1_083_ma_hat__ushanka_hh_04\h1_083_wa_hat__ushanka_hh_04.mesh:
       names:
         black_salt_n_pepper_afro_cap: black_salt_n_pepper@cap
@@ -21508,6 +21752,7 @@ resource:
         green_toxic_cap: green_toxic@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_083_wa_hat__ushanka_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_01\h1_084_wa_hat__bucket_hat_hh_01.mesh:
       names:
         green_orange_cards: green_orange@short
@@ -21589,6 +21834,7 @@ resource:
       context:
         ShortBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__short_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_084_wa_hat__bucket_hat_hh_01_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_02\h1_084_wa_hat__bucket_hat_hh_02.mesh:
       names:
         green_orange_cards: green_orange@long
@@ -21722,6 +21968,7 @@ resource:
       context:
         DreadBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__dread_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_084_wa_hat__bucket_hat_hh_03_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     ep1\characters\common\hair\h1_084_ma_hat__bucket_hat_hh_04\h1_084_wa_hat__bucket_hat_hh_04.mesh:
       names:
         black_salt_n_pepper_afro_cap: black_salt_n_pepper@cap
@@ -21797,3 +22044,4 @@ resource:
         green_toxic_cap: green_toxic@cap
       context:
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\h1_084_wa_hat__bucket_hat_hh_04_cap.mi
+        AppearanceExpansionSource: blonde_platinum

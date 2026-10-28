@@ -188,6 +188,7 @@ function generateMeshFix(scopePath, outputPath) {
         }
 
         contextParams['CapBaseMaterial'] = baseMaterialPath
+        contextParams['AppearanceExpansionSource'] = 'blonde_platinum'
 
         baseMaterialJson = TypeHelper.JsonStringify(baseMaterialRaw)
         wkit.SaveToProject(baseMaterialPath, wkit.JsonToCR2W(baseMaterialJson))

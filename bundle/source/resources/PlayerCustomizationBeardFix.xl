@@ -366,6 +366,7 @@ resource:
       context:
         BeardBaseMaterial: base\characters\common\hair\textures\hair_profiles\_master__beard_bright.mi
         CapBaseMaterial: archive_xl\characters\common\hair\textures\hair_profiles\hb_000_pma_c__basehead_maelstrom_goatie_cap.mi
+        AppearanceExpansionSource: blonde_platinum
     base\characters\head\player_base_heads\player_man_average\h0_000_pma_c__basehead\hb_000_pma_c__basehead_patmc.mesh:
       names:
         red_merlot: red_merlot@beard
