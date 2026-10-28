@@ -112,7 +112,7 @@ concept IsOptional = Detail::Specialization<U>::value
 template<typename T>
 struct ScriptRef
 {
-    explicit ScriptRef(bool aAllocate = false)
+    explicit ScriptRef(bool aAllocate)
         : unk00(nullptr)
         , managed(false)
         , type(nullptr)
@@ -122,6 +122,30 @@ struct ScriptRef
         {
             AllocateValue();
         }
+    }
+
+    ScriptRef(T* aRef)
+        : unk00(nullptr)
+        , managed(false)
+        , type(GetType<T>())
+        , ref(aRef)
+    {
+    }
+
+    ScriptRef(T& aRef)
+        : unk00(nullptr)
+        , managed(false)
+        , type(GetType<T>())
+        , ref(&aRef)
+    {
+    }
+
+    ScriptRef()
+        : unk00(nullptr)
+        , managed(false)
+        , type(nullptr)
+        , ref(nullptr)
+    {
     }
 
     ~ScriptRef()

@@ -20,7 +20,16 @@ struct TypeProxyMapping : public std::false_type {};
 namespace Detail
 {
 template<typename T>
-concept IsTypeNameConst = std::is_same_v<std::remove_cvref_t<T>, const char*> || std::is_convertible_v<T, std::string_view>;
+struct StdCharArray : public std::false_type {};
+
+template<size_t N>
+struct StdCharArray<std::array<char, N>> : public std::true_type {};
+
+template<typename T>
+concept IsCharArray = StdCharArray<std::decay_t<T>>::value;
+
+template<typename T>
+concept IsTypeNameConst = IsCharArray<T> || std::is_same_v<std::remove_cvref_t<T>, const char*> || std::is_convertible_v<T, std::string_view>;
 
 template<typename T>
 concept HasGeneratedTypeName = requires(T*)
@@ -105,25 +114,36 @@ consteval auto RemoveMemberPrefix(std::string_view aName)
 }
 
 #if defined(__clang__)
-constexpr auto ScopedEnumPrefix = "RED4ext::";
+constexpr auto SdkStructPrefix = "RED4ext::";
+constexpr auto SdkClassPrefix = "RED4ext::";
+constexpr auto SdkEnumPrefix = "RED4ext::";
 #else
-constexpr auto ScopedEnumPrefix = "enum RED4ext::";
+constexpr auto SdkStructPrefix = "struct RED4ext::";
+constexpr auto SdkClassPrefix = "class RED4ext::";
+constexpr auto SdkEnumPrefix = "enum RED4ext::";
 #endif
-constexpr auto ScopedEnumPrefixLength = std::char_traits<char>::length(ScopedEnumPrefix);
+constexpr auto SdkStructPrefixLength = std::char_traits<char>::length(SdkStructPrefix);
+constexpr auto SdkClassPrefixLength = std::char_traits<char>::length(SdkClassPrefix);
+constexpr auto SdkEnumPrefixLength = std::char_traits<char>::length(SdkEnumPrefix);
 
 template<typename T>
-consteval bool IsScopedEnumName(const std::string_view& aName)
+consteval bool IsScopedClassName(const std::string_view& aName, auto aPrefix)
 {
-    return aName.starts_with(ScopedEnumPrefix);
-    return std::is_enum_v<T> && aName.starts_with(ScopedEnumPrefix);
+    return std::is_class_v<T> && aName.starts_with(aPrefix);
 }
 
-template<size_t N>
-consteval auto ExtractScopedEnumName(const char* aName)
+template<typename T>
+consteval bool IsScopedEnumName(const std::string_view& aName, auto aPrefix)
 {
-    std::array<char, N - ScopedEnumPrefixLength + 1> result{};
+    return std::is_enum_v<T> && aName.starts_with(aPrefix);
+}
 
-    for (size_t i = ScopedEnumPrefixLength, j = 0; i < N; ++i)
+template<size_t N, size_t P>
+consteval auto ExtractScopedName(const char* aName)
+{
+    std::array<char, N - P + 1> result{};
+
+    for (size_t i = P, j = 0; i < N; ++i)
     {
         if (aName[i] != ':')
         {
@@ -133,6 +153,33 @@ consteval auto ExtractScopedEnumName(const char* aName)
     }
 
     return result;
+}
+
+template<typename T>
+consteval auto ResolveBaseTypeNameStr()
+{
+    using U = std::remove_cvref_t<T>;
+
+    constexpr auto fullName = nameof::nameof_full_type<U>();
+
+    if constexpr (Detail::IsScopedClassName<U>(fullName, Detail::SdkStructPrefix))
+    {
+        return Detail::ExtractScopedName<fullName.size(), Detail::SdkStructPrefixLength>(fullName.data());
+    }
+    else if constexpr (Detail::IsScopedClassName<U>(fullName, Detail::SdkClassPrefix))
+    {
+        return Detail::ExtractScopedName<fullName.size(), Detail::SdkClassPrefixLength>(fullName.data());
+    }
+    else if constexpr (Detail::IsScopedEnumName<U>(fullName, Detail::SdkEnumPrefix))
+    {
+        return Detail::ExtractScopedName<fullName.size(), Detail::SdkEnumPrefixLength>(fullName.data());
+    }
+    else
+    {
+        constexpr auto name = nameof::nameof_short_type<U>();
+
+        return Detail::MakeConstStr<name.size()>(name.data());
+    }
 }
 }
 
@@ -162,7 +209,11 @@ consteval auto GetTypeNameStr()
     {
         constexpr auto name = Detail::ResolveTypeNameBuilder<U>();
 
-        if constexpr (std::is_same_v<std::remove_cvref_t<decltype(name)>, const char*>)
+        if constexpr (Detail::IsCharArray<std::remove_cvref_t<decltype(name)>>)
+        {
+            return name;
+        }
+        else if constexpr (std::is_same_v<std::remove_cvref_t<decltype(name)>, const char*>)
         {
             constexpr auto length = std::char_traits<char>::length(name);
 
@@ -173,16 +224,16 @@ consteval auto GetTypeNameStr()
             return Detail::MakeConstStr<name.size()>(name.data());
         }
     }
-    else if constexpr (Detail::HasTypeNameMapping<U>)
+    else if constexpr (Detail::HasGeneratedTypeName<U>)
     {
-        constexpr auto name = TypeNameMapping<U>::name;
+        constexpr auto name = U::NAME;
         constexpr auto length = std::char_traits<char>::length(name);
 
         return Detail::MakeConstStr<length>(name);
     }
-    else if constexpr (Detail::HasGeneratedTypeName<U>)
+    else if constexpr (Detail::HasTypeNameMapping<U>)
     {
-        constexpr auto name = U::NAME;
+        constexpr auto name = TypeNameMapping<U>::name;
         constexpr auto length = std::char_traits<char>::length(name);
 
         return Detail::MakeConstStr<length>(name);
@@ -201,19 +252,7 @@ consteval auto GetTypeNameStr()
     }
     else
     {
-        constexpr auto fullName = nameof::nameof_full_type<U>();
-        constexpr auto isScopedEnum = Detail::IsScopedEnumName<U>(fullName);
-
-        if constexpr (isScopedEnum)
-        {
-            return Detail::ExtractScopedEnumName<fullName.size()>(fullName.data());
-        }
-        else
-        {
-            constexpr auto name = nameof::detail::pretty_name(fullName);
-
-            return Detail::MakeConstStr<name.size()>(name.data());
-        }
+        return Detail::ResolveBaseTypeNameStr<T>();
     }
 }
 

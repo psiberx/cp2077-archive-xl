@@ -17,7 +17,7 @@
 #define X_RTTI_FORCE_REGISTRAR(...)
 #endif
 
-#define X_RTTI_TYPENAME(...) ::nameof::nameof_short_type<__VA_ARGS__>()
+#define X_RTTI_TYPENAME(...) Red::Detail::ResolveBaseTypeNameStr<__VA_ARGS__>()
 
 #define X_RTTI_NAME_SV(...) []() constexpr noexcept { \
   constexpr auto _name = ::nameof::detail::pretty_name(#__VA_ARGS__); \
