@@ -610,21 +610,21 @@ bool App::WorldStreamingExtension::PatchSector(Red::worldStreamingSector* aSecto
 
                 for (const auto& elementMutation : nodeMutation.elementMutations)
                 {
-                    auto& transform = meshNode->cookedWorldTransformsBuffer[startIndex + elementMutation.elementIndex];
+                    auto& instanceTransform = meshNode->cookedWorldTransformsBuffer[startIndex + elementMutation.elementIndex];
 
                     if (elementMutation.modifyPosition)
                     {
-                        transform.translation = elementMutation.position.AsVector3();
+                        instanceTransform.transform.Position = elementMutation.position;
                     }
 
                     if (elementMutation.modifyOrientation)
                     {
-                        transform.rotation = elementMutation.orientation;
+                        instanceTransform.transform.Orientation = elementMutation.orientation;
                     }
 
                     if (elementMutation.modifyScale)
                     {
-                        transform.scale = elementMutation.scale;
+                        instanceTransform.scale = elementMutation.scale;
                     }
                 }
                 continue;
@@ -637,7 +637,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::worldStreamingSector* aSecto
 
                 for (const auto& elementMutation : nodeMutation.elementMutations)
                 {
-                    auto& instance = meshNode->instanceTransforms[elementMutation.elementIndex];
+                    auto& instanceTransform = meshNode->instanceTransforms[elementMutation.elementIndex];
                     auto newTransform = nodeSetup.transform;
 
                     if (elementMutation.modifyPosition)
@@ -650,7 +650,7 @@ bool App::WorldStreamingExtension::PatchSector(Red::worldStreamingSector* aSecto
                         newTransform.orientation = elementMutation.orientation;
                     }
 
-                    instance = newTransform * inverseTransform;
+                    instanceTransform = newTransform * inverseTransform;
                 }
                 continue;
             }
