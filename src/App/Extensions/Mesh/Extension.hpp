@@ -89,6 +89,8 @@ private:
     static void OnFindAppearance(Red::Handle<Red::mesh::MeshAppearance>& aAppearance, Red::CMesh* aMesh, Red::CName aName);
     static void* OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMaterialsToken& aToken,
                                  const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4);
+    static void* LoadMaterialsWithMissingEntries(Red::CMesh* aTargetMesh, Red::MeshMaterialsToken& aToken,
+                                                 const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4);
     static void OnAddStubAppearance(Red::CMesh* aMesh);
     static bool OnPreloadAppearances(Red::CMesh* aMesh);
 
@@ -128,5 +130,7 @@ private:
     inline static Red::Handle<Red::CMaterialInstance> s_tempMaterial;
     inline static Red::SharedSpinLock s_stateLock;
     inline static Core::SharedPtr<ResourcePathRegistry> s_resourcePathRegistry;
+    inline static Core::Set<Red::ResourcePath> s_missingMaterialsReported;
+    inline static std::mutex s_missingMaterialsLock;
 };
 }

@@ -204,6 +204,12 @@ bool App::MeshExtension::OnPreloadAppearances(Red::CMesh* aMesh)
 void* App::MeshExtension::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMaterialsToken& aToken,
                                           const Red::DynArray<Red::CName>& aMaterialNames, uint8_t a4)
 {
+    if (aTargetMesh->path && !aMaterialNames.IsEmpty() && !HasMeshState(aTargetMesh))
+    {
+        if (auto* result = LoadMaterialsWithMissingEntries(aTargetMesh, aToken, aMaterialNames, a4))
+            return result;
+    }
+
     Raw::CMesh::LoadMaterialsAsync(aTargetMesh, aToken, aMaterialNames, a4);
 
     if (!aTargetMesh->path || aMaterialNames.IsEmpty() || aToken.data->materials.Size() != aMaterialNames.Size()
@@ -273,6 +279,94 @@ void* App::MeshExtension::OnLoadMaterials(Red::CMesh* aTargetMesh, Red::MeshMate
         });
 
         targetMeshState->lastJob = std::move(jobQueue.Capture());
+    });
+
+    aToken.job = std::move(jobQueue.Capture());
+
+    return &aToken;
+}
+
+// Since patch 2.5, CMesh::LoadMaterialsAsync falls back to engine\materials\fallback.remt for the whole request
+// when any requested chunk material has no entry in the mesh, so every chunk of the mesh renders invisible.
+// Load the valid materials with the missing names substituted, then put an empty material into the missing slots.
+void* App::MeshExtension::LoadMaterialsWithMissingEntries(Red::CMesh* aTargetMesh, Red::MeshMaterialsToken& aToken,
+                                                          const Red::DynArray<Red::CName>& aMaterialNames,
+                                                          uint8_t a4)
+{
+    Core::Vector<uint32_t> missingSlots;
+    Red::CName substituteName;
+
+    {
+        std::shared_lock _(Raw::CMesh::MaterialLock::Ref(aTargetMesh));
+
+        for (uint32_t slot = 0; slot < aMaterialNames.Size(); ++slot)
+        {
+            const auto materialName = aMaterialNames[slot];
+            const auto found = std::ranges::any_of(aTargetMesh->materialEntries, [materialName](const auto& aEntry) {
+                return aEntry.name == materialName;
+            });
+
+            if (!found)
+            {
+                missingSlots.push_back(slot);
+            }
+            else if (!substituteName)
+            {
+                substituteName = materialName;
+            }
+        }
+
+        if (missingSlots.empty())
+            return nullptr;
+
+        if (!substituteName)
+        {
+            if (aTargetMesh->materialEntries.IsEmpty())
+                return nullptr;
+
+            substituteName = aTargetMesh->materialEntries[0].name;
+        }
+    }
+
+    // Kept alive until the load job has finished in case the engine reads the names asynchronously
+    auto substitutedNames = Core::MakeShared<Red::DynArray<Red::CName>>(aMaterialNames);
+    for (const auto slot : missingSlots)
+    {
+        (*substitutedNames)[slot] = substituteName;
+    }
+
+    Raw::CMesh::LoadMaterialsAsync(aTargetMesh, aToken, *substitutedNames, a4);
+
+    bool firstReport;
+    {
+        std::unique_lock _(s_missingMaterialsLock);
+        firstReport = s_missingMaterialsReported.insert(aTargetMesh->path).second;
+    }
+
+    if (firstReport)
+    {
+        std::string missingList;
+        for (const auto slot : missingSlots)
+        {
+            if (!missingList.empty())
+                missingList.append(", ");
+            missingList.append(aMaterialNames[slot].ToString());
+        }
+
+        LogWarning(R"([{}] Mesh "{}" uses undefined chunk materials [{}], they will be rendered empty.)", ExtensionName,
+                   s_resourcePathRegistry->ResolvePathOrHash(aTargetMesh->path), missingList);
+    }
+
+    Red::JobQueue jobQueue;
+    jobQueue.Wait(aToken.job);
+    jobQueue.Dispatch([materialData = aToken.data, missingSlots = std::move(missingSlots), substitutedNames]() {
+        for (const auto slot : missingSlots)
+        {
+            if (slot < materialData->materials.Size())
+            {
+                materialData->materials[slot] = s_dummyMaterial;
+            }
+        }
     });
 
     aToken.job = std::move(jobQueue.Capture());
