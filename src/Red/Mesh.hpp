@@ -63,6 +63,10 @@ constexpr auto LoadMaterialAsync = Core::RawFunc<
 namespace Raw::MeshAppearance
 {
 using Owner = Core::OffsetPtr<0x50, Red::CMesh*>;
+using MaterialMap = Core::OffsetPtr<0x68, Red::Map<Red::CName, Red::Handle<Red::IMaterial>>>;
+using MaterialJob = Core::OffsetPtr<0x90, Red::JobHandle>;
+using MaterialLock = Core::OffsetPtr<0x98, Red::SharedSpinLock>;
+using ForceCache = Core::OffsetPtr<0xA0, bool>;
 
 constexpr auto LoadMaterialSetupAsync = Core::RawFunc<
     /* addr = */ Red::AddressLib::MeshAppearance_LoadMaterialSetupAsync,

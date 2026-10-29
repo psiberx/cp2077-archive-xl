@@ -92,8 +92,7 @@ private:
     static void OnAddStubAppearance(Red::CMesh* aMesh);
     static bool OnPreloadAppearances(Red::CMesh* aMesh);
 
-    static void ProcessAppearance(Red::CMesh* aMesh, const Core::SharedPtr<MeshState>& aMeshState,
-                                  const Red::Handle<Red::meshMeshAppearance>& aAppearance);
+    static void ProcessAppearance(Red::CMesh* aMesh, const Red::Handle<Red::meshMeshAppearance>& aAppearance);
     static void ProcessDynamicMaterials(const Core::SharedPtr<DynamicContext>& aContext,
                                         const Red::JobGroup& aJobGroup);
     static void FinalizeDynamicMaterial(const Core::SharedPtr<DynamicContext>& aContext,
@@ -116,6 +115,7 @@ private:
                                                                  const Core::SharedPtr<MeshState>& aState);
     static bool IsUnresolvedMaterial(const Red::Handle<Red::IMaterial>& aMaterial);
     static bool HasUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials);
+    static void FillMissingMaterials(Red::CMesh* aMesh, const Red::Handle<Red::meshMeshAppearance>& aAppearance);
 
     static Core::SharedPtr<MeshState> AcquireMeshState(Red::CMesh* aMesh);
     static Core::SharedPtr<MeshState> FindMeshState(Red::CMesh* aMesh);
