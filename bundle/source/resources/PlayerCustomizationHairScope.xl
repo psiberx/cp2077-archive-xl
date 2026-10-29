@@ -462,8 +462,6 @@ resource:
       - base\characters\common\hair\hh_056_wa__rogue_old\hh_056_wa__rogue_old_common.mesh
       - base\characters\common\hair\hh_052_wa__clair\hh_052_wa__clair.mesh
       - base\characters\common\hair\hh_110_wa__wizzy\hh_110_wa__wizzy.mesh
-      - base\characters\common\hair\hh_095_wa__panam\hh_095_wa__panam.mesh
-      - base\characters\common\hair\hh_095_wa__panam\hh_095_wa__panam_cap.mesh
       - base\characters\common\hair\hh_009_ma__demo\hh_009_wa__demo_cyberware_01.mesh
       - base\characters\common\hair\hh_025_ma__pompadour\hh_025_pwa__pompadour_cyberware_01.mesh
       - base\characters\common\hair\hh_026_ma__rattail\hh_026_wa__rat_tail_cyberware_01.mesh
