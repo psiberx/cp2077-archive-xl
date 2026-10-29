@@ -113,6 +113,7 @@ private:
     static std::pair<Red::ResourcePath, bool> ExpandResourcePath(Red::ResourcePath aPath,
                                                                  const Core::SharedPtr<ChunkData>& aChunk,
                                                                  const Core::SharedPtr<MeshState>& aState);
+    static bool IsDummyMaterial(const Red::Handle<Red::IMaterial>& aMaterial);
     static bool IsUnresolvedMaterial(const Red::Handle<Red::IMaterial>& aMaterial);
     static bool HasUnresolvedMaterials(const Red::DynArray<Red::Handle<Red::IMaterial>>& aMaterials);
     static void FillMissingMaterials(Red::CMesh* aMesh, const Red::Handle<Red::meshMeshAppearance>& aAppearance);

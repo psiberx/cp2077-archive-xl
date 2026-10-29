@@ -333,7 +333,7 @@ void App::MeshExtension::ProcessDynamicMaterials(const Core::SharedPtr<DynamicCo
         chunk->templateName = chunkName;
         chunk->sourceIndex = aContext->sourceState->GetMaterialEntryIndex(chunkName);
 
-        if (chunk->sourceIndex < 0 || IsUnresolvedMaterial(aContext->sourceMesh->materialEntries[chunk->sourceIndex].material))
+        if (chunk->sourceIndex < 0 || IsDummyMaterial(aContext->sourceMesh->materialEntries[chunk->sourceIndex].material))
         {
             auto chunkMaterialNameStr = std::string_view(chunkName.ToString());
             auto templateNamePos = chunkMaterialNameStr.find(TemplateMaterialMarker);
@@ -912,6 +912,11 @@ void App::MeshExtension::FillFinalMaterials(const Core::SharedPtr<DynamicContext
             aContext->materialData->materials[chunkIndex] = {};
         }
     }
+}
+
+bool App::MeshExtension::IsDummyMaterial(const Red::Handle<Red::IMaterial>& aMaterial)
+{
+    return aMaterial && !aMaterial->baseMaterial.path;
 }
 
 bool App::MeshExtension::IsUnresolvedMaterial(const Red::Handle<Red::IMaterial>& aMaterial)
