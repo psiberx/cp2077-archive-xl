@@ -1070,7 +1070,7 @@ struct SystemBuilder
 
         gameInstance->systemMap.Insert(systemType, systemInstance);
         gameInstance->systemImplementations.Insert(systemType, systemType);
-        gameInstance->systemInstances.EmplaceBack(systemInstance);
+        gameInstance->systemInstances.EmplaceBack(Red::Cast<Red::IScriptable>(systemInstance));
     }
 
     static inline Handle<TSystem> BuildSystem()
