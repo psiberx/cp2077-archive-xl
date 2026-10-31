@@ -631,7 +631,7 @@ public:
         auto* type = ResolveType<Value>();
         auto* prop = CProperty::Create(type, aName, nullptr, static_cast<uint32_t>(offset), nullptr, aFlags);
 
-        props.PushBack(prop);
+        RegisterPropery(prop);
 
         return prop;
     }
@@ -642,7 +642,7 @@ public:
         auto* type = ResolveType<TProperty>();
         auto* prop = CProperty::Create(type, aName, nullptr, aOffset, nullptr, aFlags);
 
-        props.PushBack(prop);
+        RegisterPropery(prop);
 
         return prop;
     }
@@ -661,6 +661,26 @@ public:
         RegisterFunction(func);
 
         return func;
+    }
+
+    void RegisterPropery(CProperty* aProp)
+    {
+        auto propExists = false;
+
+        for (auto& existingProp : props)
+        {
+            if (existingProp->name == aProp->name)
+            {
+                existingProp = aProp;
+                propExists = true;
+                break;
+            }
+        }
+
+        if (!propExists)
+        {
+            props.PushBack(aProp);
+        }
     }
 
     void RegisterFunction(CClassFunction* aFunc)
