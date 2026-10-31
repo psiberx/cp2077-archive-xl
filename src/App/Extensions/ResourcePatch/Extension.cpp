@@ -81,6 +81,10 @@ bool App::ResourcePatchExtension::Unload()
     Unhook<Raw::GarmentAssembler::ExtractComponentsJob>();
     Unhook<Raw::PersistencySystem::SetPersistentStateData>();
 
+    s_patches.clear();
+    s_targetPatches.clear();
+    s_dynamicPatches.clear();
+
     return true;
 }
 
