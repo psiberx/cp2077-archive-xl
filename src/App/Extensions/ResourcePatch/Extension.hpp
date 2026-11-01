@@ -114,9 +114,11 @@ private:
     static const Core::Vector<PatchInstancePtr>& GetPatchList(Red::ResourcePath aTargetPath);
     static bool IsPatchResource(Red::ResourcePath aPath);
 
-    inline static Core::Map<Red::ResourcePath, Core::Vector<PatchInstancePtr>> s_patches;
-    inline static Core::Map<Red::ResourcePath, Core::Vector<PatchInstancePtr>> s_targetPatches;
-    inline static Core::Map<Red::ResourcePath, PatchInstancePtr> s_dynamicPatches;
+    // The maps are never destroyed. At DLL unload, the destructor of a patch resource
+    // can use an engine system that does not exist anymore.
+    inline static auto& s_patches = *new Core::Map<Red::ResourcePath, Core::Vector<PatchInstancePtr>>();
+    inline static auto& s_targetPatches = *new Core::Map<Red::ResourcePath, Core::Vector<PatchInstancePtr>>();
+    inline static auto& s_dynamicPatches = *new Core::Map<Red::ResourcePath, PatchInstancePtr>();
     inline static Core::SharedPtr<ResourcePathRegistry> s_resourcePathRegistry;
 };
 }
