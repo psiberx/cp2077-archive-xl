@@ -121,14 +121,14 @@ constexpr auto InitializeAppOption = Core::RawFunc<
     /* type = */ void (*)(Red::gameuiICharacterCustomizationSystem* aSystem,
                           Red::game::ui::CharacterCustomizationPart aPartType,
                           Red::Handle<Red::game::ui::CharacterCustomizationOption>& aOption,
-                          Red::SortedUniqueArray<Red::CName>& aStateOptions,
+                          Red::Map<Red::CName, Red::CName>& aStateOptions,
                           Red::Map<Red::CName, Red::Handle<Red::game::ui::CharacterCustomizationOption>>& aUiSlots)>();
 
 constexpr auto InitializeMorphOption = Core::RawFunc<
     /* addr = */ Red::AddressLib::CharacterCustomizationSystem_InitializeMorphOption,
     /* type = */ void (*)(Red::gameuiICharacterCustomizationSystem* aSystem,
                           Red::Handle<Red::game::ui::CharacterCustomizationOption>& aOption,
-                          Red::SortedUniqueArray<Red::CName>& aStateOptions,
+                          Red::Map<Red::CName, Red::CName>& aStateOptions,
                           Red::Map<Red::CName, Red::Handle<Red::game::ui::CharacterCustomizationOption>>& aUiSlots)>();
 
 constexpr auto InitializeSwitcherOption = Core::RawFunc<

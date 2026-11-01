@@ -48,11 +48,11 @@ private:
     void OnInitAppOption(CustomizationSystem* aSystem,
                          CustomizationPart aPartType,
                          CustomizationStateOption& aOption,
-                         Red::SortedUniqueArray<Red::CName>& aStateOptions,
+                         Red::Map<Red::CName, Red::CName>& aStateOptions,
                          Red::Map<Red::CName, CustomizationStateOption>& aUiSlots);
     void OnInitMorphOption(CustomizationSystem* aSystem,
                            CustomizationStateOption& aOption,
-                           Red::SortedUniqueArray<Red::CName>& aStateOptions,
+                           Red::Map<Red::CName, Red::CName>& aStateOptions,
                            Red::Map<Red::CName, CustomizationStateOption>& aUiSlots);
     void OnInitSwitcherOption(CustomizationSystem* aSystem,
                               CustomizationPart aPartType,

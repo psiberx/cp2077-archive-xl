@@ -97,32 +97,32 @@ void App::CustomizationExtension::OnPrepareResource(App::CustomizationSystem* aS
 void App::CustomizationExtension::OnInitAppOption(App::CustomizationSystem* aSystem,
                                                   App::CustomizationPart aPartType,
                                                   App::CustomizationStateOption& aOption,
-                                                  Red::SortedUniqueArray<Red::CName>& aStateOptions,
+                                                  Red::Map<Red::CName, Red::CName>& aStateOptions,
                                                   Red::Map<Red::CName, App::CustomizationStateOption>& aUiSlots)
 {
-    bool found = aStateOptions.Find(aOption->info->name) != aStateOptions.end();
+    bool found = aStateOptions.Get(aOption->info->name) != nullptr;
 
     if (!found && !aOption->info->hidden && aOption->info->enabled)
     {
         if (IsCustomEntryName(aOption->info->name))
         {
-            aStateOptions.Emplace(aOption->info->name);
+            aStateOptions.Insert(aOption->info->name, {});
         }
     }
 }
 
 void App::CustomizationExtension::OnInitMorphOption(App::CustomizationSystem* aSystem,
                                                     App::CustomizationStateOption& aOption,
-                                                    Red::SortedUniqueArray<Red::CName>& aStateOptions,
+                                                    Red::Map<Red::CName, Red::CName>& aStateOptions,
                                                     Red::Map<Red::CName, App::CustomizationStateOption>& aUiSlots)
 {
-    bool found = aStateOptions.Find(aOption->info->name) != aStateOptions.end();
+    bool found = aStateOptions.Get(aOption->info->name) != nullptr;
 
     if (!found && !aOption->info->hidden && aOption->info->enabled)
     {
         if (IsCustomEntryName(aOption->info->name))
         {
-            aStateOptions.Emplace(aOption->info->name);
+            aStateOptions.Insert(aOption->info->name, {});
         }
     }
 }
