@@ -26,7 +26,7 @@ constexpr auto AggregatedHeadAppearanceName = Red::CName("AppearanceName1");
 constexpr auto DummyAppearancePartPath = Red::ResourcePath(R"(#non_existing_part.ent)");
 
 Red::SharedSpinLock s_dynamicTagsLock;
-Core::Map<uint64_t, Core::Vector<Red::CName>> s_dynamicTagsCache;
+Core::Map<uint64_t, Core::Set<Red::CName>> s_dynamicTagsCache;
 }
 
 std::string_view App::GarmentExtension::GetName()
@@ -331,7 +331,7 @@ void App::GarmentExtension::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset*
         }
     }
 
-    Core::Vector<Red::CName> dynamicTags;
+    Core::Set<Red::CName> dynamicTags;
 
     auto loader = Red::ResourceLoader::Get();
     auto entityToken = loader->FindToken<Red::ent::EntityTemplate>(aEntityPath);
@@ -360,7 +360,7 @@ void App::GarmentExtension::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset*
     {
         for (const auto& tag : entityTemplate->visualTagsSchema->visualTags.tags)
         {
-            dynamicTags.push_back(tag);
+            dynamicTags.insert(tag);
         }
     }
 
@@ -420,7 +420,12 @@ void App::GarmentExtension::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset*
 
     for (const auto& tag : appearanceDefinition->visualTags.tags)
     {
-        dynamicTags.push_back(tag);
+        dynamicTags.insert(tag);
+    }
+
+    for (const auto& tag : appearanceDefinition->inheritedVisualTags.tags)
+    {
+        dynamicTags.insert(tag);
     }
 
     for (const auto& tag : dynamicTags)
@@ -689,6 +694,14 @@ void App::GarmentExtension::RegisterComponentOverrides(Core::SharedPtr<EntitySta
                                                        Red::Handle<Red::AppearanceDefinition>& aApperance)
 {
     RegisterComponentOverrides(aEntityState, aHash, aApperance->partsOverrides);
+
+    for (const auto& visualTag : aApperance->inheritedVisualTags.tags)
+    {
+        for (auto& [componentName, chunkMask] : s_tagManager->GetOverrides(visualTag))
+        {
+            aEntityState->AddChunkMaskOverride(aHash, componentName, chunkMask.mask, chunkMask.set);
+        }
+    }
 
     for (const auto& visualTag : aApperance->visualTags.tags)
     {
