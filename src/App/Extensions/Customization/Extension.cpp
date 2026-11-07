@@ -444,10 +444,13 @@ void App::CustomizationExtension::MergeCustomOptions(Red::DynArray<Customization
 
             if (targetOption->GetNativeType() != sourceOption->GetNativeType())
             {
-                LogWarning("[{}] Option \"{}\" can't be merged: expected {}, got {}.",
-                           ExtensionName, targetOption->name.ToString(),
-                           targetOption->GetNativeType()->GetName().ToString(),
-                           sourceOption->GetNativeType()->GetName().ToString());
+                if (!isWildcardSlot && !isWildcardLink)
+                {
+                    LogWarning("[{}] Option \"{}\" can't be merged: expected {}, got {}.",
+                               ExtensionName, targetOption->name.ToString(),
+                               targetOption->GetNativeType()->GetName().ToString(),
+                               sourceOption->GetNativeType()->GetName().ToString());
+                }
                 continue;
             }
 
