@@ -13,6 +13,7 @@ constexpr auto TorsoSlot = Red::TweakDBID("AttachmentSlots.Torso");
 constexpr auto ChestSlot = Red::TweakDBID("AttachmentSlots.Chest");
 constexpr auto LegsSlot = Red::TweakDBID("AttachmentSlots.Legs");
 constexpr auto FeetSlot = Red::TweakDBID("AttachmentSlots.Feet");
+constexpr auto HandsSlot = Red::TweakDBID("AttachmentSlots.Hands");
 constexpr auto TPPAffectedSlots = {HeadSlot, FaceSlot};
 
 constexpr auto InnerSleevesSuffix = Red::TweakDBID("itemsFactoryAppearanceSuffix.Partial");
@@ -44,6 +45,8 @@ bool App::AttachmentExtension::Load()
         std::unique_lock _(s_slotsMutex);
         s_dependentSlots[TorsoSlot].insert(ChestSlot);
         s_dependentSlots[FeetSlot].insert(LegsSlot);
+        s_dependentSlots[HandsSlot].insert(ChestSlot);
+        s_dependentSlots[HandsSlot].insert(TorsoSlot);
     }
 
     return true;
