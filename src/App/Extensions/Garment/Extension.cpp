@@ -62,7 +62,8 @@ bool App::GarmentExtension::Load()
     s_emptyAppearance->appearanceName = DefaultAppearanceName;
     s_emptyAppearance->appearanceResource = EmptyAppearancePath;
 
-    s_dynamicAppearance = Core::MakeShared<DynamicAppearanceController>(Core::Resolve<ResourcePathRegistry>());
+    s_resourcePathRegistry = Core::Resolve<ResourcePathRegistry>();
+    s_dynamicAppearance = Core::MakeShared<DynamicAppearanceController>(s_resourcePathRegistry);
     s_stateManager = Core::MakeUnique<OverrideStateManager>(s_dynamicAppearance);
     s_tagManager = Core::MakeShared<OverrideTagManager>();
 
@@ -332,17 +333,32 @@ void App::GarmentExtension::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset*
     }
 
     Core::Set<Red::CName> dynamicTags;
+    Red::Handle<Red::entEntityTemplate> entityTemplate;
+    Red::Handle<Red::appearanceAppearanceResource> appearanceResource;
 
     auto loader = Red::ResourceLoader::Get();
-    auto entityToken = loader->FindToken<Red::ent::EntityTemplate>(aEntityPath);
 
-    if (!entityToken)
+    entityTemplate = loader->bank->GetResource<Red::entEntityTemplate>(aEntityPath);
+
+    if (!entityTemplate)
     {
-        entityToken = loader->LoadAsync<Red::ent::EntityTemplate>(aEntityPath);
-        Red::WaitForResource(entityToken, std::chrono::milliseconds(500));
-    }
+        auto entityToken = loader->FindToken<Red::ent::EntityTemplate>(aEntityPath);
 
-    auto entityTemplate = entityToken->Get();
+        if (!entityToken)
+        {
+            entityToken = loader->LoadAsync<Red::entEntityTemplate>({.path = aEntityPath, .updateCache = true});
+
+            if (!entityToken->IsFinished())
+            {
+                const auto pathStr = s_resourcePathRegistry->ResolvePathOrHash(aEntityPath);
+                LogDebug("[{}] Visual tags requested for unloaded resource \"{}\".", ExtensionName, pathStr);
+
+                Red::WaitForResource(entityToken, std::chrono::milliseconds(500));
+            }
+        }
+
+        entityTemplate = entityToken->Get();
+    }
 
     if (!entityTemplate)
     {
@@ -364,9 +380,9 @@ void App::GarmentExtension::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset*
         }
     }
 
-    auto appearanceTemplate = OnResolveAppearance(entityTemplate, aAppearanceName);
+    auto entityAppearance = OnResolveAppearance(entityTemplate, aAppearanceName);
 
-    if (!appearanceTemplate)
+    if (!entityAppearance)
     {
         for (const auto& tag : dynamicTags)
         {
@@ -378,16 +394,28 @@ void App::GarmentExtension::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset*
         return;
     }
 
-    auto appearancePath = appearanceTemplate->appearanceResource.path;
-    auto appearanceToken = loader->FindToken<Red::appearance::AppearanceResource>(appearancePath);
+    auto appearancePath = entityAppearance->appearanceResource.path;
+    appearanceResource = loader->bank->GetResource<Red::appearanceAppearanceResource>(appearancePath);
 
-    if (!appearanceToken)
+    if (!appearanceResource)
     {
-        appearanceToken = loader->LoadAsync<Red::appearance::AppearanceResource>(appearancePath);
-        Red::WaitForResource(appearanceToken, std::chrono::milliseconds(500));
-    }
+        auto appearanceToken = loader->FindToken<Red::appearanceAppearanceResource>(appearancePath);
 
-    auto appearanceResource = appearanceToken->Get();
+        if (!appearanceToken)
+        {
+            appearanceToken = loader->LoadAsync<Red::appearanceAppearanceResource>({.path = appearancePath,
+                                                                                    .updateCache = true});
+            if (!appearanceToken->IsFinished())
+            {
+                const auto pathStr = s_resourcePathRegistry->ResolvePathOrHash(appearancePath);
+                LogDebug("[{}] Visual tags requested for unloaded resource \"{}\".", ExtensionName, pathStr);
+
+                Red::WaitForResource(appearanceToken, std::chrono::milliseconds(500));
+            }
+        }
+
+        appearanceResource = appearanceToken->Get();
+    }
 
     if (!appearanceResource)
     {
@@ -402,9 +430,8 @@ void App::GarmentExtension::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset*
     }
 
     Red::Handle<Red::AppearanceDefinition> appearanceDefinition;
-    Raw::AppearanceResource::FindAppearance(appearanceResource, &appearanceDefinition,
-                                            appearanceTemplate->appearanceName, 0, 0);
-    OnResolveDefinition(appearanceResource, &appearanceDefinition, appearanceTemplate->appearanceName, 0, 0);
+    Raw::AppearanceResource::FindAppearance(appearanceResource, &appearanceDefinition, entityAppearance->appearanceName, 0, 0);
+    OnResolveDefinition(appearanceResource, &appearanceDefinition, entityAppearance->appearanceName, 0, 0);
 
     if (!appearanceDefinition)
     {
@@ -433,8 +460,10 @@ void App::GarmentExtension::OnGetVisualTags(Red::AppearanceNameVisualTagsPreset*
         aFinalTags.Add(tag);
     }
 
-    std::unique_lock _(s_dynamicTagsLock);
-    s_dynamicTagsCache.insert_or_assign(cacheKey, std::move(dynamicTags));
+    {
+        std::unique_lock _(s_dynamicTagsLock);
+        s_dynamicTagsCache.insert_or_assign(cacheKey, std::move(dynamicTags));
+    }
 }
 
 void App::GarmentExtension::OnFindState(uintptr_t, Red::GarmentAssemblerState* aState,

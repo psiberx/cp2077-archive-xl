@@ -116,6 +116,7 @@ private:
                                           Red::Handle<Red::AppearanceDefinition>& aDefinition);
 
     static inline Core::UniquePtr<Red::TemplateAppearance> s_emptyAppearance;
+    inline static Core::SharedPtr<ResourcePathRegistry> s_resourcePathRegistry;
     static inline Core::SharedPtr<DynamicAppearanceController> s_dynamicAppearance;
     static inline Core::UniquePtr<OverrideStateManager> s_stateManager;
     static inline Core::SharedPtr<OverrideTagManager> s_tagManager;
