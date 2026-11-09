@@ -14,5 +14,7 @@
 /src/App/Project.hpp
 /src/App/Version.rc
 /tools/wkit/layout.xml
-__pycache__
+~$*
+*.local.md
+*.log
 CMakeLists.txt

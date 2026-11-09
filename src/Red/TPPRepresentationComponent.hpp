@@ -2,7 +2,7 @@
 
 namespace Raw::TPPRepresentationComponent
 {
-using SlotListener = Core::OffsetPtr<0x148, Red::Handle<Red::game::IAttachmentSlotsListener>>;
+using SlotListener = Core::OffsetPtr<0x158, Red::Handle<Red::game::IAttachmentSlotsListener>>;
 
 constexpr auto OnAttach = Core::RawFunc<
     /* addr = */ Red::AddressLib::TPPRepresentationComponent_OnAttach,

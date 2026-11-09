@@ -232,7 +232,7 @@ void App::AttachmentExtension::OnCheckFeetState(Red::game::ui::CharacterCustomiz
     if (aLiftedState != Red::CharacterBodyPartState::Visible)
     {
         auto transactionSystem = Red::GetGameSystem<Red::ITransactionSystem>();
-        if (transactionSystem->IsSlotSpawning(aComponent->owner, FeetSlot))
+        if (transactionSystem->IsSlotEmptySpawningItem(aComponent->owner, FeetSlot))
         {
             aLiftedState = Red::CharacterBodyPartState::Visible;
             aFlatState = Red::CharacterBodyPartState::Hidden;
