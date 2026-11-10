@@ -60,6 +60,10 @@ void App::ExtensionService::OnBootstrap()
         m_loader->OnTweakDBReady();
     }).OrThrow();
 
+    HookOnceBefore<Raw::CBaseEngine::Shutdown>([&]() {
+        m_loader->Unload();
+    }).OrThrow();
+
     Hook<Raw::ExtensionService::Bootstrap>(+[](void*) {}).OrThrow();
     Hook<Raw::ExtensionService::Shutdown>(+[](void*) {}).OrThrow();
     Hook<Raw::ExtensionLoader::Configure>(+[](void*) {}).OrThrow();
@@ -69,7 +73,6 @@ void App::ExtensionService::OnBootstrap()
 
 void App::ExtensionService::OnShutdown()
 {
-    m_loader->Unload();
     m_loader = nullptr;
 }
 

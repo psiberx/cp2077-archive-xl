@@ -19,7 +19,7 @@ public:
         if constexpr (std::is_base_of_v<ConfigurableExtension, T>)
             m_configurables.emplace_back(module);
 
-        m_modules.emplace_back(module);
+        m_extensions.emplace_back(module);
     }
 
     void Configure();
@@ -32,7 +32,7 @@ public:
 private:
     bool AddConfig(const std::filesystem::path& aPath, const std::filesystem::path& aDir, bool aSilent = false);
 
-    Core::Vector<Core::SharedPtr<Extension>> m_modules;
+    Core::Vector<Core::SharedPtr<Extension>> m_extensions;
     Core::Vector<Core::SharedPtr<ConfigurableExtension>> m_configurables;
     std::filesystem::path m_bundleDir;
     std::wstring m_customConfigExt;

@@ -17,8 +17,10 @@ void App::ExtensionLoader::Configure()
     {
         LogInfo("Discovering archive extensions...");
 
-        for (const auto& module : m_configurables)
-            module->ResetConfigs();
+        for (const auto& extension : m_configurables)
+        {
+            extension->ResetConfigs();
+        }
 
         Core::Vector<std::filesystem::path> configDirs;
         Core::Vector<std::filesystem::path> configFiles;
@@ -125,8 +127,10 @@ bool App::ExtensionLoader::AddConfig(const std::filesystem::path& aPath, const s
         const auto name = aPath.filename().string();
         const auto config = YAML::Load(file);
 
-        for (const auto& module : m_configurables)
-            success &= module->AddConfig(name, config);
+        for (const auto& extension : m_configurables)
+        {
+            success &= extension->AddConfig(name, config);
+        }
     }
     catch (const std::exception& ex)
     {
@@ -147,53 +151,53 @@ void App::ExtensionLoader::Load()
     if (m_loaded)
         return;
 
-    for (const auto& module : m_modules)
+    for (const auto& extension : m_extensions)
     {
         try
         {
-            module->Load();
+            extension->Load();
         }
         catch (const std::exception& ex)
         {
-            LogError("[{}] {}", module->GetName(), ex.what());
-            module->Unload();
+            LogError("[{}] {}", extension->GetName(), ex.what());
+            extension->Unload();
         }
         catch (...)
         {
-            LogError("[{}] Failed to load. An unknown error has occurred.", module->GetName());
-            module->Unload();
+            LogError("[{}] Failed to load. An unknown error has occurred.", extension->GetName());
+            extension->Unload();
         }
     }
 
-    for (const auto& module : m_configurables)
+    for (const auto& extension : m_configurables)
     {
         try
         {
-            module->Configure();
+            extension->Configure();
         }
         catch (const std::exception& ex)
         {
-            LogError("[{}] {}", module->GetName(), ex.what());
+            LogError("[{}] {}", extension->GetName(), ex.what());
         }
         catch (...)
         {
-            LogError("[{}] Failed to configure. An unknown error has occurred.", module->GetName());
+            LogError("[{}] Failed to configure. An unknown error has occurred.", extension->GetName());
         }
     }
 
-    for (const auto& module : m_configurables)
+    for (const auto& extension : m_configurables)
     {
         try
         {
-            module->PostConfigure();
+            extension->PostConfigure();
         }
         catch (const std::exception& ex)
         {
-            LogError("[{}] {}", module->GetName(), ex.what());
+            LogError("[{}] {}", extension->GetName(), ex.what());
         }
         catch (...)
         {
-            LogError("[{}] Failed to configure. An unknown error has occurred.", module->GetName());
+            LogError("[{}] Failed to configure. An unknown error has occurred.", extension->GetName());
         }
     }
 
@@ -205,21 +209,21 @@ void App::ExtensionLoader::OnDepotReady()
     if (!m_loaded)
         return;
 
-    for (const auto& module : m_modules)
+    for (const auto& extension : m_extensions)
     {
         try
         {
-            module->OnDepotReady();
+            extension->OnDepotReady();
         }
         catch (const std::exception& ex)
         {
-            LogError("[{}] {}", module->GetName(), ex.what());
-            module->Unload();
+            LogError("[{}] {}", extension->GetName(), ex.what());
+            extension->Unload();
         }
         catch (...)
         {
-            LogError("[{}] Failed to apply post load effects. An unknown error has occurred.", module->GetName());
-            module->Unload();
+            LogError("[{}] Failed to apply post load effects. An unknown error has occurred.", extension->GetName());
+            extension->Unload();
         }
     }
 }
@@ -229,21 +233,21 @@ void App::ExtensionLoader::OnTweakDBReady()
     if (!m_loaded)
         return;
 
-    for (const auto& module : m_modules)
+    for (const auto& extension : m_extensions)
     {
         try
         {
-            module->OnTweakDBReady();
+            extension->OnTweakDBReady();
         }
         catch (const std::exception& ex)
         {
-            LogError("[{}] {}", module->GetName(), ex.what());
-            module->Unload();
+            LogError("[{}] {}", extension->GetName(), ex.what());
+            extension->Unload();
         }
         catch (...)
         {
-            LogError("[{}] Failed to apply TweakDB changes. An unknown error has occurred.", module->GetName());
-            module->Unload();
+            LogError("[{}] Failed to apply TweakDB changes. An unknown error has occurred.", extension->GetName());
+            extension->Unload();
         }
     }
 }
@@ -253,19 +257,19 @@ void App::ExtensionLoader::Unload()
     if (!m_loaded)
         return;
 
-    for (const auto& module : m_modules)
+    for (const auto& extension : m_extensions)
     {
         try
         {
-            module->Unload();
+            extension->Unload();
         }
         catch (const std::exception& ex)
         {
-            LogError("[{}] {}", module->GetName(), ex.what());
+            LogError("[{}] {}", extension->GetName(), ex.what());
         }
         catch (...)
         {
-            LogError("[{}] Failed to unload. An unknown error has occurred.", module->GetName());
+            LogError("[{}] Failed to unload. An unknown error has occurred.", extension->GetName());
         }
     }
 
@@ -277,53 +281,53 @@ void App::ExtensionLoader::Reload()
     if (!m_loaded)
         return;
 
-    for (const auto& module : m_configurables)
+    for (const auto& extension : m_configurables)
     {
         try
         {
-            module->Configure();
+            extension->Configure();
         }
         catch (const std::exception& ex)
         {
-            LogError("[{}] {}", module->GetName(), ex.what());
+            LogError("[{}] {}", extension->GetName(), ex.what());
         }
         catch (...)
         {
-            LogError("[{}] Failed to configure. An unknown error has occurred.", module->GetName());
+            LogError("[{}] Failed to configure. An unknown error has occurred.", extension->GetName());
         }
     }
 
-    for (const auto& module : m_configurables)
+    for (const auto& extension : m_configurables)
     {
         try
         {
-            module->PostConfigure();
+            extension->PostConfigure();
         }
         catch (const std::exception& ex)
         {
-            LogError("[{}] {}", module->GetName(), ex.what());
+            LogError("[{}] {}", extension->GetName(), ex.what());
         }
         catch (...)
         {
-            LogError("[{}] Failed to configure. An unknown error has occurred.", module->GetName());
+            LogError("[{}] Failed to configure. An unknown error has occurred.", extension->GetName());
         }
     }
 
-    for (const auto& module : m_configurables)
+    for (const auto& extension : m_configurables)
     {
         try
         {
-            module->Reload();
+            extension->Reload();
         }
         catch (const std::exception& ex)
         {
-            LogError("[{}] {}", module->GetName(), ex.what());
-            module->Unload();
+            LogError("[{}] {}", extension->GetName(), ex.what());
+            extension->Unload();
         }
         catch (...)
         {
-            LogError("[{}] Failed to reload. An unknown error has occurred.", module->GetName());
-            module->Unload();
+            LogError("[{}] Failed to reload. An unknown error has occurred.", extension->GetName());
+            extension->Unload();
         }
     }
 }
