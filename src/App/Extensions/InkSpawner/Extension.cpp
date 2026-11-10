@@ -83,7 +83,7 @@ uintptr_t App::InkSpawnerExtension::OnSpawnExternal(Red::inkWidgetLibraryResourc
 {
     if (!aExternalPath || aLibrary->path == aExternalPath)
     {
-        return false;
+        return reinterpret_cast<uintptr_t>(aInstance.GetPtr());
     }
 
     if (auto externalLibrary = ResolveDependency(aLibrary, aExternalPath))
