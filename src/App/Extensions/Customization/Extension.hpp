@@ -67,8 +67,8 @@ private:
                             uintptr_t a3);
     void OnChangeAppearances(AppearanceChangerSystem& aSystem,
                             CustomizationPuppet& aPuppet,
-                            Red::Range<Red::AppearanceDescriptor>& aOldApp,
-                            Red::Range<Red::AppearanceDescriptor>& aNewApp,
+                            Red::Span<Red::AppearanceDescriptor>& aOldApp,
+                            Red::Span<Red::AppearanceDescriptor>& aNewApp,
                             uintptr_t a5,
                             uint8_t a6);
 

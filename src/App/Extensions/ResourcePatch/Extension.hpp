@@ -4,7 +4,6 @@
 #include "App/Extensions/ResourcePatch/Config.hpp"
 #include "App/Shared/ResourcePathRegistry.hpp"
 #include "Red/AppearanceResource.hpp"
-#include "Red/Common.hpp"
 #include "Red/EntityBuilder.hpp"
 #include "Red/EntityTemplate.hpp"
 #include "Red/GarmentAssembler.hpp"

@@ -2,7 +2,6 @@
 
 #include "App/Shared/ResourcePathRegistry.hpp"
 #include "Red/EntityTemplate.hpp"
-#include "Red/ResourcePath.hpp"
 
 namespace App
 {

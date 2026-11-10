@@ -45,7 +45,7 @@ constexpr auto Deserialize = Core::RawFunc<
                           Red::DynArray<Red::Handle<Red::ISerializable>>& aResults, uint64_t a8)>();
 
 constexpr auto PostLoad = Core::RawFunc<
-    /* addr = */ Red::AddressLib::ResourceSerializer_PostLoad,
+    /* addr = */ Red::AddressLib::ResourceSerializer_ExecutePostLoad,
     /* type = */ void (*)(void* aSerializer, Red::ResourceSerializerRequest& aRequest, Red::JobQueue& aJobQueue)>();
 
 constexpr auto OnDependenciesReady = Core::RawFunc<

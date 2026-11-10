@@ -8,8 +8,7 @@ namespace Detail
 {
 constexpr bool IsFakeStatic(CName aTypeName)
 {
-    constexpr auto TDBIDHelper = Red::CName("gamedataTDBIDHelper");
-    return aTypeName == TDBIDHelper;
+    return aTypeName == Red::CName("gamedataTDBIDHelper");
 }
 
 using CallFunction_t = bool (*)(IFunction*, IScriptable* aContext, CStackFrame* aFrame, void* aRet, void* aRetType);
@@ -100,18 +99,18 @@ inline bool CallFunctionWithArgs(Red::CStackFrame* aFrame, CBaseFunction* aFunc,
 
     if (!aFunc->flags.isStatic)
     {
-        const auto& func = reinterpret_cast<CClassFunction*>(aFunc);
+        const auto& memberFunc = reinterpret_cast<CClassFunction*>(aFunc);
 
-        if (!IsFakeStatic(func->parent->name))
+        if (!IsFakeStatic(memberFunc->parent->name))
         {
-            if (!aContext || !aContext->GetType()->IsA(func->parent))
+            if (!aContext || !aContext->GetType()->IsA(memberFunc->parent))
                 return false;
         }
-        else
-        {
-            static char s_dummyContext[sizeof(IScriptable)]{};
-            aContext = reinterpret_cast<IScriptable*>(&s_dummyContext);
-        }
+        // else
+        // {
+        //     static char s_dummyContext[sizeof(IScriptable)]{};
+        //     aContext = reinterpret_cast<IScriptable*>(&s_dummyContext);
+        // }
     }
 
     CStack stack(aContext);
@@ -168,51 +167,111 @@ inline bool CallFunctionWithArgs(Red::CStackFrame* aFrame, CBaseFunction* aFunc,
 
     return CallFunctionWithStack(aFrame, aFunc, stack);
 }
+
+inline HashMap<uint64_t, CBaseFunction*> resolvedFunctionMap{Memory::DefaultAllocator::Get()};
+inline SharedSpinLock resolvedFunctionLock;
+
+constexpr uint64_t CombineHash(uint64_t a, uint64_t b)
+{
+    constexpr uint64_t magic = 0xC6A4A7935BD1E995;
+    return magic * ((magic * ((magic * b) ^ ((magic * b) >> 47))) ^ a);
+}
+
+inline std::pair<CBaseFunction*, bool> GetResolvedFunction(uint64_t aScope, uint64_t aKey)
+{
+    if (aScope)
+    {
+        aKey = CombineHash(aKey, aScope);
+    }
+
+    std::shared_lock _(resolvedFunctionLock);
+    const auto it = resolvedFunctionMap.Get(aKey);
+
+    if (it != nullptr)
+    {
+        return {*it, true};
+    }
+    else
+    {
+        return {nullptr, false};
+    }
+}
+
+inline void PutResolvedFunction(uint64_t aScope, uint64_t aKey, CBaseFunction* aFunc)
+{
+    if (aScope)
+    {
+        aKey = CombineHash(aKey, aScope);
+    }
+
+    std::unique_lock _(resolvedFunctionLock);
+    resolvedFunctionMap.InsertOrAssign(aKey, aFunc);
+}
+}
+
+inline CBaseFunction* GetFunction(CName aName)
+{
+    auto [resolvedFunc, wasResolved] = Detail::GetResolvedFunction(0, aName);
+
+    if (wasResolved)
+    {
+        resolvedFunc = CRTTISystem::Get()->GetFunction(aName);
+
+        Detail::PutResolvedFunction(0, aName, resolvedFunc);
+    }
+
+    return resolvedFunc;
 }
 
 inline CBaseFunction* GetFunction(CClass* aType, CName aName, bool aMember = true, bool aStatic = true)
 {
-    if (aType)
+    if (!aType)
+    {
+        return nullptr;
+    }
+
+    auto [resolvedFunc, wasResolved] = Detail::GetResolvedFunction(aType->name, aName);
+
+    if (!wasResolved)
     {
         if (aMember || Detail::IsFakeStatic(aType->name))
         {
-            for (auto func : aType->funcs)
+            for (auto memberFunc : aType->funcs)
             {
-                if (func->shortName == aName || func->fullName == aName)
+                if (memberFunc->shortName == aName || memberFunc->fullName == aName)
                 {
-                    return func;
+                    resolvedFunc = memberFunc;
+                    break;
                 }
             }
         }
 
-        if (aStatic)
+        if (!resolvedFunc && aStatic)
         {
-            for (auto func : aType->staticFuncs)
+            for (auto staticFunc : aType->staticFuncs)
             {
-                if (func->shortName == aName || func->fullName == aName)
+                if (staticFunc->shortName == aName || staticFunc->fullName == aName)
                 {
-                    return func;
+                    resolvedFunc = staticFunc;
+                    break;
                 }
             }
         }
 
-        if (aType->parent)
+        if (!resolvedFunc && aType->parent)
         {
-            return GetFunction(aType->parent, aName, aMember, aStatic);
+            resolvedFunc = GetFunction(aType->parent, aName, aMember, aStatic);
         }
+
+        Detail::PutResolvedFunction(aType->name, aName, resolvedFunc);
     }
 
-    return nullptr;
+    return resolvedFunc;
 }
 
 inline CBaseFunction* GetFunction(CName aType, CName aName, bool aMember = true, bool aStatic = true)
 {
     return GetFunction(GetClass(aType), aName, aMember, aStatic);
-}
-
-inline CBaseFunction* GetFunction(CName aName)
-{
-    return CRTTISystem::Get()->GetFunction(aName);
 }
 
 inline CBaseFunction* GetMemberFunction(IScriptable* aContext, CName aName)

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Red/Common.hpp"
 #include "Red/EntityTemplate.hpp"
 #include "Red/GarmentAssembler.hpp"
 
@@ -111,8 +110,8 @@ constexpr auto ChangeAppearances = Core::RawFunc<
     /* addr = */ Red::AddressLib::AppearanceChangeSystem_ChangeAppearance2,
     /* type = */ void (*)(Red::world::RuntimeSystemEntityAppearanceChanger& aSystem,
                           Red::Handle<Red::game::Puppet>& aTarget,
-                          Red::Range<Red::AppearanceDescriptor>& aOldApp,
-                          Red::Range<Red::AppearanceDescriptor>& aNewApp,
+                          Red::Span<Red::AppearanceDescriptor>& aOldApp,
+                          Red::Span<Red::AppearanceDescriptor>& aNewApp,
                           uintptr_t a5,
                           uint8_t a6)>();
 }
@@ -129,10 +128,6 @@ using ItemRecord = Core::OffsetPtr<0x160, Red::gamedataTweakDBRecord*>;
 constexpr auto LoadAppearance = Core::RawFunc<
     /* addr = */ Red::AddressLib::ItemFactoryRequest_LoadAppearance,
     /* type = */ bool (*)(Red::ItemFactoryRequest* aRequest)>();
-
-// constexpr auto ApplyAppearance = Core::RawFunc<
-//     /* addr = */ Red::AddressLib::ItemFactoryRequest_ApplyAppearance,
-//     /* type = */ bool (*)(Red::ItemFactoryRequest* aRequest)>();
 };
 
 namespace Raw::ItemFactoryAppearanceChangeRequest
@@ -150,8 +145,4 @@ constexpr auto LoadTemplate = Core::RawFunc<
 constexpr auto LoadAppearance = Core::RawFunc<
     /* addr = */ Red::AddressLib::ItemFactoryAppearanceChangeRequest_LoadAppearance,
     /* type = */ bool (*)(Red::ItemFactoryAppearanceChangeRequest* aRequest)>();
-
-// constexpr auto ApplyAppearance = Core::RawFunc<
-//     /* addr = */ Red::AddressLib::ItemFactoryAppearanceChangeRequest_ApplyAppearance,
-//     /* type = */ bool (*)(Red::ItemFactoryAppearanceChangeRequest* aRequest)>();
 }

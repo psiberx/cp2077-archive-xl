@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Red/TagList.hpp"
-
 namespace Red
 {
 using AppearanceNameVisualTagsPreset = game::AppearanceNameVisualTagsPreset;

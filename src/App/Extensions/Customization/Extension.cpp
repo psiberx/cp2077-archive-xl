@@ -170,13 +170,13 @@ void App::CustomizationExtension::OnChangeAppearance(App::AppearanceChangerSyste
 
 void App::CustomizationExtension::OnChangeAppearances(App::AppearanceChangerSystem& aSystem,
                                                       App::CustomizationPuppet& aPuppet,
-                                                      Red::Range<Red::AppearanceDescriptor>& aOldApp,
-                                                      Red::Range<Red::AppearanceDescriptor>& aNewApp,
+                                                      Red::Span<Red::AppearanceDescriptor>& aOldApp,
+                                                      Red::Span<Red::AppearanceDescriptor>& aNewApp,
                                                       uintptr_t a5, uint8_t a6)
 {
     if (/*m_customizationActive &&*/ !m_customAppOverrides.empty())
     {
-        if (aOldApp)
+        if (!aOldApp.IsEmpty())
         {
             for (auto& app : aOldApp)
             {
@@ -184,7 +184,7 @@ void App::CustomizationExtension::OnChangeAppearances(App::AppearanceChangerSyst
             }
         }
 
-        if (aNewApp)
+        if (!aNewApp.IsEmpty())
         {
             for (auto& app : aNewApp)
             {

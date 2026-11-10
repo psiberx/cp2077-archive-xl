@@ -1,15 +1,16 @@
 #include "ResourcePathRegistry.hpp"
 #include "App/Project.hpp"
-#include "Red/SharedStorage.hpp"
+#include "Red/Shared/ResourcePath.hpp"
+#include "Red/Shared/SharedStorage.hpp"
 
 namespace
 {
-constexpr auto SharedName = Red::CName("ResourcePathRegistryV3" BUILD_SUFFIX);
+constexpr auto SharedInstanceName = Red::CName("ResourcePathRegistryV3" BUILD_SUFFIX);
 }
 
 App::ResourcePathRegistry::ResourcePathRegistry(const std::filesystem::path& aPreloadPath)
 {
-    s_instance = Red::AcquireSharedInstance<SharedName, SharedInstance>();
+    s_instance = Red::AcquireSharedInstance<SharedInstanceName, SharedInstance>();
     s_preloadPath = aPreloadPath;
 }
 
@@ -46,10 +47,20 @@ void App::ResourcePathRegistry::OnBootstrap()
 
 void App::ResourcePathRegistry::OnCreatePath(Red::ResourcePath* aPath, Red::StringView* aPathStr)
 {
-    if (aPathStr && *aPathStr)
+    if (!aPath || !aPathStr || !*aPathStr)
+        return;
+
+    *aPath = Red::ResourcePath{aPathStr->Data(), aPathStr->Length()};
+
+    {
+        std::shared_lock _(s_instance->m_lock);
+        if (s_instance->m_map.contains(*aPath))
+            return;
+    }
+
     {
         std::scoped_lock _(s_instance->m_lock);
-        s_instance->m_map[*aPath] = {aPathStr->Data(), aPathStr->Length()};
+        s_instance->m_map[*aPath] = std::string{aPathStr->Data(), aPathStr->Length()};
     }
 }
 
@@ -59,7 +70,7 @@ std::string App::ResourcePathRegistry::ResolvePath(Red::ResourcePath aPath)
         return {};
 
     std::shared_lock _(s_instance->m_lock);
-    const auto& it = s_instance->m_map.find(aPath);
+    const auto it = s_instance->m_map.find(aPath);
 
     if (it == s_instance->m_map.end())
         return {};
@@ -84,7 +95,7 @@ Red::ResourcePath App::ResourcePathRegistry::RegisterPath(const std::string& aPa
     if (aPathStr.empty())
         return {};
 
-    auto path = Red::ResourcePath(aPathStr.data());
+    auto path = Red::ResourcePath{aPathStr.data(), aPathStr.size()};
 
     RegisterPath(path, aPathStr);
 
