@@ -59,7 +59,7 @@ template<typename T>
 concept IsScriptableSystem = std::is_base_of_v<ScriptableSystem, T>;
 
 template<typename T>
-concept IsType = std::is_base_of_v<CBaseRTTIType, T>;
+concept IsType = std::is_base_of_v<rtti::IType, T>;
 
 template<typename T>
 concept IsTypeOrVoid = IsType<T> or std::is_void_v<T>;

@@ -189,8 +189,8 @@ inline void ExtractArgs(C* aContext, CStackFrame* aFrame, std::tuple<Args...>& a
 }
 
 template<typename R>
-inline void AssignReturnValue(R* aRetValue, CBaseRTTIType* aRetValueType,
-                              FinalRetType<R>* aRetBuffer, CBaseRTTIType* aRetBufferType)
+inline void AssignReturnValue(R* aRetValue, rtti::IType* aRetValueType,
+                              FinalRetType<R>* aRetBuffer, rtti::IType* aRetBufferType)
 {
     if (aRetBuffer)
     {
@@ -214,7 +214,7 @@ inline ScriptingFunction_t<void*> MakeNativeFunction()
 
     static const auto s_retType = !std::is_void_v<R> ? ResolveType<FinalRetType<R>>() : nullptr;
 
-    auto f = [](C* aContext, CStackFrame* aFrame, R* aRet, CBaseRTTIType* aRetType) -> void
+    auto f = [](C* aContext, CStackFrame* aFrame, R* aRet, rtti::IType* aRetType) -> void
     {
         Args args;
         ExtractArgs(aContext, aFrame, args);
@@ -261,7 +261,7 @@ inline ScriptingFunction_t<void*> MakeNativeGetter()
 
     static const auto s_retType = ResolveType<Value>();
 
-    auto f = [](Context* aContext, CStackFrame* aFrame, Value* aRet, CBaseRTTIType* aRetType) -> void
+    auto f = [](Context* aContext, CStackFrame* aFrame, Value* aRet, rtti::IType* aRetType) -> void
     {
         ++aFrame->code;
         AssignReturnValue(&(aContext->*AProperty), s_retType, aRet, aRetType);
@@ -337,7 +337,7 @@ concept IsNativeFunctionPtr = Detail::IsFunctionPtr<F>
     && std::is_pointer_v<typename Detail::FunctionPtr<F>::template argument_type<3>>
     && Detail::IsTypeOrVoid<std::remove_pointer_t<typename Detail::FunctionPtr<F>::template argument_type<3>>>;
 
-inline std::string MakeScriptTypeName(CBaseRTTIType* aType)
+inline std::string MakeScriptTypeName(rtti::IType* aType)
 {
     switch (aType->GetType())
     {

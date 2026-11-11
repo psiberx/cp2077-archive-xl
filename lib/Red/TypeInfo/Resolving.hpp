@@ -272,7 +272,7 @@ template<CName AType>
 class TypeLocator
 {
 public:
-    static inline CBaseRTTIType* Get() noexcept
+    static inline rtti::IType* Get() noexcept
     {
         if (!s_resolved)
         {
@@ -367,7 +367,7 @@ public:
         return s_type;
     }
 
-    operator CBaseRTTIType*() const noexcept
+    operator rtti::IType*() const noexcept
     {
         return Get();
     }
@@ -392,7 +392,7 @@ public:
         return GetArray();
     }
 
-    [[nodiscard]] inline CBaseRTTIType* operator->() const noexcept
+    [[nodiscard]] inline rtti::IType* operator->() const noexcept
     {
         return Get();
     }
@@ -412,7 +412,7 @@ private:
         }
     }
 
-    static inline CBaseRTTIType* s_type;
+    static inline rtti::IType* s_type;
     static inline bool s_resolved;
 };
 
@@ -422,20 +422,20 @@ class ClassLocator : public TypeLocator<GetTypeName<T>()>
 };
 
 template<CName AType>
-inline CBaseRTTIType* GetType() noexcept
+inline rtti::IType* GetType() noexcept
 {
     return TypeLocator<AType>::Get();
 }
 
 template<typename TType>
-inline CBaseRTTIType* GetType() noexcept
+inline rtti::IType* GetType() noexcept
 {
     constexpr auto name = GetTypeName<TType>();
 
     return TypeLocator<name>::Get();
 }
 
-inline CBaseRTTIType* GetType(CName aTypeName)
+inline rtti::IType* GetType(CName aTypeName)
 {
     return CRTTISystem::Get()->GetType(aTypeName);
 }
@@ -513,7 +513,7 @@ inline CName ResolveTypeName()
 }
 
 template<typename T>
-inline CBaseRTTIType* ResolveType()
+inline rtti::IType* ResolveType()
 {
     static const auto s_name = ResolveTypeName<T>();
     return CRTTISystem::Get()->GetType(s_name);
@@ -585,7 +585,7 @@ inline bool IsInstanceOf(const WeakHandle<ISerializable>& aObject)
     return aObject && aObject.instance->GetType()->IsA(Red::GetClass<T>());
 }
 
-inline bool IsCompatible(CBaseRTTIType* aLhsType, CBaseRTTIType* aRhsType, void* aRhsValue = nullptr)
+inline bool IsCompatible(rtti::IType* aLhsType, rtti::IType* aRhsType, void* aRhsValue = nullptr)
 {
     if (!aLhsType || !aRhsType)
         return false;

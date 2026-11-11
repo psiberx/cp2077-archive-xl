@@ -94,8 +94,8 @@ inline const SharedPtr<ResourceToken<T>>& Cast(const SharedPtr<ResourceToken<U>>
     return *reinterpret_cast<const SharedPtr<ResourceToken<T>>*>(&aToken);
 }
 
-template<std::derived_from<CResource> T, typename W>
-inline Handle<T> FetchResource(ResourcePath aPath, const W& aTimeout = std::chrono::milliseconds(0))
+template<std::derived_from<CResource> T, typename W = std::chrono::milliseconds>
+inline Handle<T> FetchResource(ResourcePath aPath, const W& aTimeout = 0)
 {
     auto loader = ResourceLoader::Get();
     auto resource = loader->bank->GetResource<T>(aPath);
@@ -133,5 +133,24 @@ inline Handle<T> FetchCachedResource(ResourcePath aPath)
     }
 
     return resource;
+}
+
+template<std::derived_from<CResource> T, typename W = std::chrono::milliseconds>
+inline ResourceTokenPtr<T> FetchResourceToken(ResourcePath aPath, const W& aTimeout = 0)
+{
+    auto loader = ResourceLoader::Get();
+    auto token = loader->FindToken<T>(aPath);
+
+    if (!token)
+    {
+        token = loader->LoadAsync<T>({.path = aPath, .updateCache = true});
+
+        if (!token->IsFinished() && aTimeout != W::zero())
+        {
+            WaitForResource(token, aTimeout);
+        }
+    }
+
+    return token;
 }
 }

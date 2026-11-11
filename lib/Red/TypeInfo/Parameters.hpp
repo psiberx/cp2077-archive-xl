@@ -212,11 +212,11 @@ struct ScriptRef
         }
     }
 
-    void* unk00;         // 00 - VFT
-    bool managed;        // 08 - Actually a pointer, but never used
-    CBaseRTTIType* type; // 10
-    T* ref;              // 18
-    CName name;          // 20
+    void* unk00;       // 00 - VFT
+    bool managed;      // 08 - Actually a pointer, but never used
+    rtti::IType* type; // 10
+    T* ref;            // 18
+    CName name;        // 20
 };
 
 template<typename T, typename U = std::remove_cvref_t<T>>
