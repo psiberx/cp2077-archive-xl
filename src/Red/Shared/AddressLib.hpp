@@ -197,6 +197,7 @@ constexpr uint32_t InkWidgetContext_Clone = 3823045541;
 
 constexpr uint32_t InkWidgetLibrary_AsyncSpawnFromExternal = 3860807819;
 constexpr uint32_t InkWidgetLibrary_AsyncSpawnFromLocal = 2342073570;
+constexpr uint32_t InkWidgetLibrary_FindExternalLibrary = 2756653218;
 constexpr uint32_t InkWidgetLibrary_SpawnFromExternal = 506278179;
 constexpr uint32_t InkWidgetLibrary_SpawnFromLocal = 1158555307;
 constexpr uint32_t InkWidgetLibrary_SpawnRoot = 3160221133;
@@ -342,6 +343,9 @@ constexpr uint32_t RuntimeSystemWeather_SetWeatherByIndex = 2987664085;
 constexpr uint32_t RuntimeSystemWeather_SetWeatherByName = 2334794340;
 
 constexpr uint32_t RuntimeSystemWorldStreaming_LoadWorldJob = 2872059340;
+
+constexpr uint32_t SerializableMap_Instance = 2558660817;
+constexpr uint32_t SerializableMap_CollectSerializables = 2056396508;
 
 constexpr uint32_t ScriptBinder_CreateBitfield = 487007291;
 constexpr uint32_t ScriptBinder_CreateClass = 1040327137;
