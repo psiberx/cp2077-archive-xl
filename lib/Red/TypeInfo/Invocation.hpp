@@ -213,7 +213,7 @@ inline CBaseFunction* GetFunction(CName aName)
 {
     auto [resolvedFunc, wasResolved] = Detail::GetResolvedFunction(0, aName);
 
-    if (wasResolved)
+    if (!wasResolved)
     {
         resolvedFunc = CRTTISystem::Get()->GetFunction(aName);
 
