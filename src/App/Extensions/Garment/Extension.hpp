@@ -67,19 +67,19 @@ private:
     static void OnReassembleAppearance(Red::Entity*, uintptr_t, uintptr_t, uintptr_t, uintptr_t, uintptr_t);
     static void OnGameDetach();
 
-    static void RegisterOffsetOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
+    static void RegisterOffsetOverrides(const Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
                                       Red::Handle<Red::AppearanceDefinition>& aApperance, int32_t aOffset);
-    static void UnregisterOffsetOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash);
+    static void UnregisterOffsetOverrides(const Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash);
 
-    static void RegisterComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
+    static void RegisterComponentOverrides(const Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
                                            Red::Handle<Red::AppearanceDefinition>& aApperance);
-    static void RegisterComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
+    static void RegisterComponentOverrides(const Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash,
                                            Red::DynArray<Red::AppearancePartOverrides>& aOverrides);
-    static void UnregisterComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash);
+    static void UnregisterComponentOverrides(const Core::SharedPtr<EntityState>& aEntityState, uint64_t aHash);
 
-    static void UpdatePartAttributes(Core::SharedPtr<EntityState>& aEntityState,
+    static void UpdatePartAttributes(const Core::SharedPtr<EntityState>& aEntityState,
                                      Red::Handle<Red::AppearanceDefinition>& aApperance);
-    static void UpdatePartAssignments(Core::SharedPtr<EntityState>& aEntityState,
+    static void UpdatePartAssignments(const Core::SharedPtr<EntityState>& aEntityState,
                                       Red::DynArray<Red::Handle<Red::IComponent>>& aComponents,
                                       Red::DynArray<Red::ResourcePath>& aPartResources);
     static void UpdatePartAssignments(Red::DynArray<Red::Handle<Red::IComponent>>& aComponents,
@@ -88,31 +88,31 @@ private:
     static bool PrepareDynamicAppearanceName(Red::WeakHandle<Red::Entity>& aEntity,
                                              Red::ResourceTokenPtr<Red::EntityTemplate>& aTemplateToken,
                                              Red::CName& aAppearanceName);
-    static void SelectDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState,
+    static void SelectDynamicAppearance(const Core::SharedPtr<EntityState>& aEntityState,
                                         DynamicAppearanceName& aSelector,
                                         Red::EntityTemplate* aResource,
                                         Red::TemplateAppearance*& aAppearance);
-    static void SelectDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState,
+    static void SelectDynamicAppearance(const Core::SharedPtr<EntityState>& aEntityState,
                                         DynamicAppearanceName& aSelector,
                                         Red::AppearanceResource* aResource,
                                         Red::Handle<Red::AppearanceDefinition>& aDefinition);
 
-    static void ApplyDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState);
-    static void ApplyDynamicAppearance(Core::SharedPtr<EntityState>& aEntityState,
+    static void ApplyDynamicAppearance(const Core::SharedPtr<EntityState>& aEntityState);
+    static void ApplyDynamicAppearance(const Core::SharedPtr<EntityState>& aEntityState,
                                         Red::DynArray<Red::Handle<Red::IComponent>>& aComponents);
-    static void ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState, bool aForceUpdate);
-    static void ApplyComponentOverrides(Core::SharedPtr<EntityState>& aEntityState,
+    static void ApplyComponentOverrides(const Core::SharedPtr<EntityState>& aEntityState, bool aForceUpdate);
+    static void ApplyComponentOverrides(const Core::SharedPtr<EntityState>& aEntityState,
                                         Red::DynArray<Red::Handle<Red::IComponent>>& aComponents, bool aForceUpdate);
-    static void ApplyOffsetOverrides(Core::SharedPtr<EntityState>& aEntityState, Red::DynArray<int32_t>& aOffsets,
+    static void ApplyOffsetOverrides(const Core::SharedPtr<EntityState>& aEntityState, Red::DynArray<int32_t>& aOffsets,
                                      Red::DynArray<Red::ResourcePath>& aResourcePaths);
 
-    static void UpdateDynamicAttributes(Core::SharedPtr<EntityState>& aEntityState);
-    static void UpdateDynamicAttributes(Core::SharedPtr<EntityState>& aEntityState, Red::TweakDBID aEquippedItemID);
+    static void UpdateDynamicAttributes(const Core::SharedPtr<EntityState>& aEntityState);
+    static void UpdateDynamicAttributes(const Core::SharedPtr<EntityState>& aEntityState, Red::TweakDBID aEquippedItemID);
     static void UpdateDynamicAttributes();
 
     static bool IsUniqueAppearanceName(Red::CName aName);
 
-    static void PatchHeadGarmentOverrides(Core::SharedPtr<EntityState>& aEntityState,
+    static void PatchHeadGarmentOverrides(const Core::SharedPtr<EntityState>& aEntityState,
                                           Red::Handle<Red::AppearanceDefinition>& aDefinition);
 
     static inline Core::UniquePtr<Red::TemplateAppearance> s_emptyAppearance;
@@ -120,7 +120,7 @@ private:
     static inline Core::SharedPtr<DynamicAppearanceController> s_dynamicAppearance;
     static inline Core::UniquePtr<OverrideStateManager> s_stateManager;
     static inline Core::SharedPtr<OverrideTagManager> s_tagManager;
+    static inline Red::SharedSpinLock s_templateAppearancesLock;
     static inline bool s_garmentOffsetsEnabled;
-    static inline Red::SharedSpinLock s_mutex;
 };
 }

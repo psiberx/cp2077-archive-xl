@@ -22,15 +22,15 @@ public:
     void AddHidingChunkMaskOverride(uint64_t aHash, uint64_t aChunkMask);
     void AddShowingChunkMaskOverride(uint64_t aHash, uint64_t aChunkMask);
     bool RemoveChunkMaskOverride(uint64_t aHash);
-    uint64_t GetOverriddenChunkMask(uint64_t aOriginalMask);
-    uint64_t GetHidingChunkMask();
-    uint64_t GetShowingChunkMask();
+    [[nodiscard]] uint64_t GetOverriddenChunkMask(uint64_t aOriginalMask) const;
+    [[nodiscard]] uint64_t GetHidingChunkMask() const;
+    [[nodiscard]] uint64_t GetShowingChunkMask() const;
     [[nodiscard]] bool HasOverriddenChunkMask() const;
     [[nodiscard]] bool ChangesChunkMask() const;
 
     void AddAppearanceOverride(uint64_t aHash, Red::CName aAppearance);
     bool RemoveAppearanceOverride(uint64_t aHash);
-    Red::CName GetAppearanceOverridde();
+    [[nodiscard]] Red::CName GetAppearanceOverridde() const;
     [[nodiscard]] bool HasAppearanceOverriddes() const;
     [[nodiscard]] bool ChangesAppearance() const;
 
@@ -60,7 +60,7 @@ public:
 
     void AddOffsetOverride(uint64_t aHash, int32_t aOffset);
     bool RemoveOffsetOverride(uint64_t aHash);
-    int32_t GetOverriddenOffset();
+    [[nodiscard]] int32_t GetOverriddenOffset() const;
 
     void LinkToAppearance(DynamicAppearanceName aAppearance);
     [[nodiscard]] const DynamicAppearanceName& GetActiveAppearance() const;
@@ -80,22 +80,14 @@ class EntityState
 public:
     EntityState(Red::Entity* aEntity, Core::SharedPtr<DynamicAppearanceController> aDynamicAppearance) noexcept;
     EntityState(const EntityState&) = delete;
-    EntityState(EntityState&&) noexcept = default;
+    EntityState(EntityState&&) = delete;
     ~EntityState();
 
     [[nodiscard]] const char* GetName() const;
     [[nodiscard]] Red::Entity* GetEntity() const;
     [[nodiscard]] bool IsValid() const;
 
-    [[nodiscard]] const Core::Map<Red::CName, Core::SharedPtr<ComponentState>>& GetComponentStates() const;
-    [[nodiscard]] const Core::SharedPtr<ComponentState>& GetComponentState(Red::CName aComponentName);
-    [[nodiscard]] const Core::SharedPtr<ComponentState>& FindComponentState(Red::CName aComponentName) const;
-
-    [[nodiscard]] const Core::Map<Red::ResourcePath, Core::SharedPtr<ResourceState>>& GetResourceStates() const;
-    [[nodiscard]] const Core::SharedPtr<ResourceState>& GetResourceState(Red::ResourcePath aResourcePath);
-    [[nodiscard]] const Core::SharedPtr<ResourceState>& FindResourceState(Red::ResourcePath aResourcePath) const;
-
-    [[nodiscard]] const Core::Set<Red::CName>& GetPartComponentNames(Red::ResourcePath aResourcePath) const;
+    [[nodiscard]] Core::Set<Red::CName> GetPartComponentNames(Red::ResourcePath aResourcePath) const;
 
     bool ApplyChunkMaskOverride(const Red::Handle<Red::IComponent>& aComponent);
     void AddChunkMaskOverride(uint64_t aHash, Red::CName aComponentName, uint64_t aChunkMask, bool aShow = false);
@@ -147,16 +139,24 @@ private:
     bool ApplyDynamicAppearance(const Red::Handle<Red::IComponent>& aComponent, const DynamicPartList& aVariant,
                                 bool aSetAppearance);
 
-    Red::ResourcePath GetOriginalResource(ComponentWrapper& aComponent);
-    Red::CName GetOriginalAppearance(ComponentWrapper& aComponent);
-    uint64_t GetOriginalChunkMask(ComponentWrapper& aComponent);
+    Core::SharedPtr<ComponentState> GetComponentState(Red::CName aComponentName);
+    Core::SharedPtr<ComponentState> FindComponentState(Red::CName aComponentName) const;
+
+    Core::SharedPtr<ResourceState> GetResourceState(Red::ResourcePath aResourcePath);
+    Core::SharedPtr<ResourceState> FindResourceState(Red::ResourcePath aResourcePath) const;
+
+    Red::ResourcePath GetOriginalResource(const ComponentWrapper& aComponent);
+    Red::CName GetOriginalAppearance(const ComponentWrapper& aComponent);
+    uint64_t GetOriginalChunkMask(const ComponentWrapper& aComponent);
 
     std::string m_name;
     Red::Entity* m_entity;
     Red::WeakHandle<Red::Entity> m_entityWeak;
+    mutable Red::SharedSpinLock m_stateLock;
     Core::Map<Red::CName, Core::SharedPtr<ComponentState>> m_componentStates;
     Core::Map<Red::ResourcePath, Core::SharedPtr<ResourceState>> m_resourceStates;
     Core::Map<Red::ResourcePath, Core::Set<Red::CName>> m_partComponents;
+    mutable Red::SharedSpinLock m_originalLock;
     Core::Map<uint64_t, Red::ResourcePath> m_originalResources;
     Core::Map<uint64_t, Red::CName> m_originalAppearances;
     Core::Map<uint64_t, uint64_t> m_originalChunkMasks;
@@ -169,14 +169,14 @@ class OverrideStateManager
 public:
     explicit OverrideStateManager(Core::SharedPtr<DynamicAppearanceController> aDynamicAppearance);
 
-    Core::SharedPtr<EntityState>& GetFirstEntityState();
-    Core::SharedPtr<EntityState>& GetEntityState(uint64_t aContext);
-    Core::SharedPtr<EntityState>& GetEntityState(Red::Entity* aEntity);
+    [[nodiscard]] Core::SharedPtr<EntityState> GetFirstEntityState();
+    [[nodiscard]] Core::SharedPtr<EntityState> GetEntityState(uint64_t aContext);
+    [[nodiscard]] Core::SharedPtr<EntityState> GetEntityState(Red::Entity* aEntity);
 
-    Core::SharedPtr<EntityState>& FindEntityState(Red::Entity* aEntity);
-    Core::SharedPtr<EntityState>& FindEntityState(Red::ResourcePath aPath);
-    Core::SharedPtr<EntityState>& FindEntityState(Red::GarmentProcessingContext* aProcessor);
-    Core::SharedPtr<EntityState>& FindEntityState(uintptr_t aPointer);
+    [[nodiscard]] Core::SharedPtr<EntityState> FindEntityState(Red::Entity* aEntity);
+    [[nodiscard]] Core::SharedPtr<EntityState> FindEntityState(Red::ResourcePath aPath);
+    [[nodiscard]] Core::SharedPtr<EntityState> FindEntityState(Red::GarmentProcessingContext* aProcessor);
+    [[nodiscard]] Core::SharedPtr<EntityState> FindEntityState(uintptr_t aPointer);
 
     void ClearStates();
 
@@ -186,6 +186,7 @@ public:
     void UpdateDynamicAttributes();
 
 private:
+    Red::SharedSpinLock m_lock;
     Core::Map<Red::Entity*, Core::SharedPtr<EntityState>> m_entityStates;
     Core::Map<Red::ResourcePath, Core::SharedPtr<EntityState>> m_entityStatesByPath;
     Core::Map<Red::GarmentProcessingContext*, Core::SharedPtr<EntityState>> m_entityStatesByProcessor;

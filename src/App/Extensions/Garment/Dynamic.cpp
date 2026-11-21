@@ -341,17 +341,12 @@ bool App::DynamicAppearanceController::MatchReference(const DynamicAppearanceRef
 
     if (!aReference.conditions.empty())
     {
-        const auto stateIt = m_states.find(aEntity);
+        const auto state = EnsureState(aEntity);
 
-        if (stateIt == m_states.end())
+        if (!state)
             return false;
 
-        const auto& state = stateIt.value();
-
-        if (!state.valid)
-            CollectStateData(aEntity);
-
-        if (!aReference.Match(state.conditions, aApperance.overrides))
+        if (!aReference.Match(state->conditions, aApperance.overrides))
             return false;
     }
 
@@ -364,17 +359,12 @@ Red::CString App::DynamicAppearanceController::ResolveString(Red::Entity* aEntit
     if (!IsDynamicValue(aString))
         return aString;
 
-    const auto stateIt = m_states.find(aEntity);
+    const auto state = EnsureState(aEntity);
 
-    if (stateIt == m_states.end())
+    if (!state)
         return aString;
 
-    const auto& state = stateIt.value();
-
-    if (!state.valid)
-        CollectStateData(aEntity);
-
-    const auto result = ProcessString(state.values, aVariant, aString.c_str());
+    const auto result = ProcessString(state->values, aVariant, aString.c_str());
 
     if (!result.valid)
         return aString;
@@ -393,17 +383,12 @@ Red::CName App::DynamicAppearanceController::ResolveName(Red::Entity* aEntity, c
     if (!IsDynamicValue(nameStr))
         return aName;
 
-    const auto stateIt = m_states.find(aEntity);
+    const auto state = EnsureState(aEntity);
 
-    if (stateIt == m_states.end())
+    if (!state)
         return aName;
 
-    const auto& state = stateIt.value();
-
-    if (!state.valid)
-        CollectStateData(aEntity);
-
-    const auto result = ProcessString(state.values, aVariant, nameStr);
+    const auto result = ProcessString(state->values, aVariant, nameStr);
 
     if (!result.valid)
         return aName;
@@ -422,17 +407,12 @@ Red::ResourcePath App::DynamicAppearanceController::ResolvePath(Red::Entity* aEn
     if (!IsDynamicValue(pathStr))
         return aPath;
 
-    const auto stateIt = m_states.find(aEntity);
+    const auto state = EnsureState(aEntity);
 
-    if (stateIt == m_states.end())
+    if (!state)
         return aPath;
 
-    const auto& state = stateIt.value();
-
-    if (!state.valid)
-        CollectStateData(aEntity);
-
-    auto result = ProcessString(state.values, aVariant, pathStr.data());
+    auto result = ProcessString(state->values, aVariant, pathStr.data());
 
     if (!result.valid)
         return aPath;
@@ -456,7 +436,7 @@ Red::ResourcePath App::DynamicAppearanceController::ResolvePath(Red::Entity* aEn
 
         if (!fallbackAttrs.empty())
         {
-            auto fallbackState = state.values;
+            auto fallbackState = state->values;
 
             const auto n = fallbackAttrs.size();
             const auto k = 1 << n;
@@ -467,8 +447,8 @@ Red::ResourcePath App::DynamicAppearanceController::ResolvePath(Red::Entity* aEn
                 {
                     const auto& attr = fallbackAttrs[j];
                     fallbackState[attr].value = s_fallbackVariants[i][j]
-                                                    ? state.defaults.at(attr).value
-                                                    : state.values.at(attr).value;
+                                                    ? state->defaults.at(attr).value
+                                                    : state->values.at(attr).value;
                 }
 
                 auto fallback = ProcessString(fallbackState, aVariant, pathStr.data());
@@ -609,54 +589,100 @@ App::DynamicAppearanceController::DynamicString App::DynamicAppearanceController
     return result;
 }
 
-void App::DynamicAppearanceController::CollectStateData(Red::Entity* aEntity)
-{
-    auto& state = m_states[aEntity];
-
-    if (state.defaults.empty())
-    {
-        state.defaults[BodyTypeAttr] = {DefaultBodyTypeAttrValue, DefaultBodyTypeSuffixValue};
-        state.defaults[FeetStateAttr] = {DefaultFeetStateAttrValue, DefaultFeetStateSuffixValue};
-    }
-
-    state.values[GenderAttr] = GetSuffixData(aEntity, GenderSuffix, state.equippedItemID);
-    state.values[CameraAttr] = GetSuffixData(aEntity, CameraSuffix, state.equippedItemID);
-    state.values[BodyTypeAttr] = GetSuffixData(aEntity, BodyTypeSuffix, state.equippedItemID);
-    state.values[ArmsStateAttr] = GetSuffixData(aEntity, ArmsStateSuffix, state.equippedItemID);
-    state.values[FeetStateAttr] = GetSuffixData(aEntity, FeetStateSuffix, state.equippedItemID);
-    state.values[InnerSleevesAttr] = GetSuffixData(aEntity, InnerSleevesSuffix, state.equippedItemID);
-    state.values[HairTypeAttr] = GetSuffixData(aEntity, HairTypeSuffix, state.equippedItemID);
-
-    auto custimizationData = GetCustomizationData(aEntity);
-    state.values[SkinColorAttr] = {custimizationData.skinColor};
-    state.values[HairColorAttr] = {custimizationData.hairColor};
-    state.values[EyesColorAttr] = {custimizationData.eyesColor};
-    state.values[NailsColorAttr] = {custimizationData.nailsColor};
-
-    state.conditions.clear();
-    for (const auto& [attributeName, attributeData] : state.values)
-    {
-        if (!attributeData.value.empty())
-        {
-            uint64_t condition = Red::FNV1a64(attributeData.value.data(), Red::FNV1a64(ConditionEqual, attributeName));
-            state.conditions.insert(condition);
-        }
-    }
-
-    state.equippedItemID.value = 0;
-    state.valid = true;
-}
-
 void App::DynamicAppearanceController::UpdateState(Red::Entity* aEntity, Red::TweakDBID aEquippedItemID)
 {
+    std::unique_lock _(m_lock);
+
     auto& state = m_states[aEntity];
-    state.equippedItemID = aEquippedItemID;
-    state.valid = false;
+
+    if (!state)
+    {
+        state = Core::MakeShared<EntityState>();
+    }
+
+    state->equippedItemID = aEquippedItemID;
+    state->valid = false;
 }
 
 void App::DynamicAppearanceController::RemoveState(Red::Entity* aEntity)
 {
+    std::unique_lock _(m_lock);
+
     m_states.erase(aEntity);
+}
+
+App::DynamicAppearanceController::LockedState App::DynamicAppearanceController::EnsureState(Red::Entity* aEntity)
+{
+    EntityStatePtr state;
+    Red::TweakDBID equippedItemID;
+
+    {
+        std::shared_lock lock(m_lock);
+
+        const auto stateIt = m_states.find(aEntity);
+
+        if (stateIt == m_states.end())
+            return {};
+
+        state = stateIt.value();
+
+        if (state->valid)
+            return {std::move(lock), state};
+
+        equippedItemID = state->equippedItemID;
+    }
+
+    auto data = CollectEntityData(aEntity, equippedItemID);
+
+    {
+        std::unique_lock _(m_lock);
+
+        state->values = std::move(data);
+
+        if (state->defaults.empty())
+        {
+            state->defaults[BodyTypeAttr] = {DefaultBodyTypeAttrValue, DefaultBodyTypeSuffixValue};
+            state->defaults[FeetStateAttr] = {DefaultFeetStateAttrValue, DefaultFeetStateSuffixValue};
+        }
+
+        state->conditions.clear();
+        for (const auto& [attributeName, attributeData] : state->values)
+        {
+            if (!attributeData.value.empty())
+            {
+                uint64_t condition = Red::FNV1a64(attributeData.value.data(), Red::FNV1a64(ConditionEqual, attributeName));
+                state->conditions.insert(condition);
+            }
+        }
+
+        state->equippedItemID.value = 0;
+        state->valid = true;
+    }
+
+    return {m_lock, state};
+}
+
+App::DynamicAttributeList App::DynamicAppearanceController::CollectEntityData(Red::Entity* aEntity,
+                                                                              Red::TweakDBID aEquippedItemID) const
+{
+    DynamicAttributeList data;
+
+    data[GenderAttr] = GetSuffixData(aEntity, GenderSuffix, aEquippedItemID);
+    data[CameraAttr] = GetSuffixData(aEntity, CameraSuffix, aEquippedItemID);
+    data[BodyTypeAttr] = GetSuffixData(aEntity, BodyTypeSuffix, aEquippedItemID);
+    data[ArmsStateAttr] = GetSuffixData(aEntity, ArmsStateSuffix, aEquippedItemID);
+    data[FeetStateAttr] = GetSuffixData(aEntity, FeetStateSuffix, aEquippedItemID);
+    data[InnerSleevesAttr] = GetSuffixData(aEntity, InnerSleevesSuffix, aEquippedItemID);
+    data[HairTypeAttr] = GetSuffixData(aEntity, HairTypeSuffix, aEquippedItemID);
+
+    auto custimization = GetCustomizationData(aEntity);
+
+    data[SkinColorAttr] = {custimization.skinColor};
+    data[HairColorAttr] = {custimization.hairColor};
+    data[EyesColorAttr] = {custimization.eyesColor};
+    data[NailsColorAttr] = {custimization.nailsColor};
+
+    return data;
 }
 
 App::DynamicAttributeData App::DynamicAppearanceController::GetSuffixData(Red::Entity* aEntity,

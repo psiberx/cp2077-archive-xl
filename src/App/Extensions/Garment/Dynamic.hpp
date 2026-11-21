@@ -134,6 +134,8 @@ private:
         bool valid{false};
     };
 
+    using EntityStatePtr = Core::SharedPtr<EntityState>;
+
     struct CustomizationData
     {
         bool isMale;
@@ -143,12 +145,52 @@ private:
         Red::CName nailsColor;
     };
 
-    void CollectStateData(Red::Entity* aEntity);
+    class LockedState
+    {
+    public:
+        LockedState() noexcept = default;
+
+        LockedState(Red::SharedSpinLock& aLock, EntityStatePtr aState) noexcept
+            : m_lock(aLock)
+            , m_state(std::move(aState))
+        {
+        }
+
+        LockedState(std::shared_lock<Red::SharedSpinLock>&& aLock, EntityStatePtr aState) noexcept
+            : m_lock(std::move(aLock))
+            , m_state(std::move(aState))
+        {
+        }
+
+        [[nodiscard]] explicit operator bool() const noexcept
+        {
+            return m_state != nullptr;
+        }
+
+        [[nodiscard]] const EntityState& operator*() const noexcept
+        {
+            return *m_state;
+        }
+
+        [[nodiscard]] const EntityState* operator->() const noexcept
+        {
+            return m_state.get();
+        }
+
+    private:
+        std::shared_lock<Red::SharedSpinLock> m_lock;
+        const EntityStatePtr m_state;
+    };
+
+    LockedState EnsureState(Red::Entity* aEntity);
+
+    DynamicAttributeList CollectEntityData(Red::Entity* aEntity, Red::TweakDBID aEquippedItemID) const;
     DynamicAttributeData GetSuffixData(Red::Entity* aEntity, Red::TweakDBID aSuffixID,
                                        Red::TweakDBID aEquippedItemID) const;
     CustomizationData GetCustomizationData(Red::Entity* aEntity) const;
 
-    Core::Map<Red::Entity*, EntityState> m_states;
+    mutable Red::SharedSpinLock m_lock;
+    Core::Map<Red::Entity*, EntityStatePtr> m_states;
     Core::SharedPtr<ResourcePathRegistry> m_pathRegistry;
 };
 }

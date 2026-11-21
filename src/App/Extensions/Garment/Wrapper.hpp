@@ -19,7 +19,7 @@ public:
 
     [[nodiscard]] bool IsMeshComponent() const;
     [[nodiscard]] bool IsGarmentComponent() const;
-    [[nodiscard]] uint64_t GetUniqueId();
+    [[nodiscard]] uint64_t GetUniqueId() const;
 
     [[nodiscard]] bool IsEnabled() const;
     bool SetEnabled(bool isEnabled) const;

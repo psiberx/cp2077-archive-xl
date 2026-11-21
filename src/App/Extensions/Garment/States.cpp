@@ -1,15 +1,8 @@
 #include "States.hpp"
-#include "Red/Entity.hpp"
-#include "Red/Mesh.hpp"
 
 namespace
 {
 constexpr auto DefaultAppearanceName = Red::CName("default");
-
-Core::SharedPtr<App::EntityState> s_nullEntityState;
-Core::SharedPtr<App::ComponentState> s_nullComponentState;
-Core::SharedPtr<App::ResourceState> s_nullResourceState;
-Core::Set<Red::CName> s_nullComponentSet;
 }
 
 App::ComponentState::ComponentState(Red::CName aName) noexcept
@@ -26,7 +19,7 @@ const char* App::ComponentState::GetName() const
 
 bool App::ComponentState::IsOverridden() const
 {
-    return HasOverriddenChunkMask() || HasAppearanceOverriddes();
+    return !m_hidingChunkMasks.empty() || !m_showingChunkMasks.empty() || !m_appearanceNames.empty();
 }
 
 void App::ComponentState::AddHidingChunkMaskOverride(uint64_t aHash, uint64_t aChunkMask)
@@ -61,7 +54,7 @@ bool App::ComponentState::RemoveChunkMaskOverride(uint64_t aHash)
     return true;
 }
 
-uint64_t App::ComponentState::GetOverriddenChunkMask(uint64_t aOriginalMask)
+uint64_t App::ComponentState::GetOverriddenChunkMask(uint64_t aOriginalMask) const
 {
     uint64_t finalChunkMask = aOriginalMask;
 
@@ -74,7 +67,7 @@ uint64_t App::ComponentState::GetOverriddenChunkMask(uint64_t aOriginalMask)
     return finalChunkMask;
 }
 
-uint64_t App::ComponentState::GetHidingChunkMask()
+uint64_t App::ComponentState::GetHidingChunkMask() const
 {
     uint64_t finalChunkMask = ~0ull;
 
@@ -84,7 +77,7 @@ uint64_t App::ComponentState::GetHidingChunkMask()
     return finalChunkMask;
 }
 
-uint64_t App::ComponentState::GetShowingChunkMask()
+uint64_t App::ComponentState::GetShowingChunkMask() const
 {
     uint64_t finalChunkMask = 0ull;
 
@@ -121,7 +114,7 @@ bool App::ComponentState::RemoveAppearanceOverride(uint64_t aHash)
     return m_appearanceNames.erase(aHash);
 }
 
-Red::CName App::ComponentState::GetAppearanceOverridde()
+Red::CName App::ComponentState::GetAppearanceOverridde() const
 {
     if (m_appearanceNames.empty())
         return DefaultAppearanceName;
@@ -184,7 +177,7 @@ bool App::ResourceState::RemoveOffsetOverride(uint64_t aHash)
     return m_overridenOffsets.erase(aHash);
 }
 
-int32_t App::ResourceState::GetOverriddenOffset()
+int32_t App::ResourceState::GetOverriddenOffset() const
 {
     return !m_overridenOffsets.empty() ? m_overridenOffsets.begin()->second :  0;
 }
@@ -251,15 +244,10 @@ bool App::EntityState::IsValid() const
     return !m_entityWeak.Expired();
 }
 
-const Core::Map<Red::CName, Core::SharedPtr<App::ComponentState>>& App::EntityState::GetComponentStates() const
-{
-    return m_componentStates;
-}
-
-const Core::SharedPtr<App::ComponentState>& App::EntityState::GetComponentState(const Red::CName aComponentName)
+Core::SharedPtr<App::ComponentState> App::EntityState::GetComponentState(const Red::CName aComponentName)
 {
     if (!aComponentName)
-        return s_nullComponentState;
+        return {};
 
     auto it = m_componentStates.find(aComponentName);
 
@@ -269,28 +257,23 @@ const Core::SharedPtr<App::ComponentState>& App::EntityState::GetComponentState(
     return it.value();
 }
 
-const Core::SharedPtr<App::ComponentState>& App::EntityState::FindComponentState(const Red::CName aComponentName) const
+Core::SharedPtr<App::ComponentState> App::EntityState::FindComponentState(const Red::CName aComponentName) const
 {
     if (!aComponentName)
-        return s_nullComponentState;
+        return {};
 
-    const auto& it = m_componentStates.find(aComponentName);
+    const auto it = m_componentStates.find(aComponentName);
 
     if (it == m_componentStates.end())
-        return s_nullComponentState;
+        return {};
 
     return it.value();
 }
 
-const Core::Map<Red::ResourcePath, Core::SharedPtr<App::ResourceState>>& App::EntityState::GetResourceStates() const
-{
-    return m_resourceStates;
-}
-
-const Core::SharedPtr<App::ResourceState>& App::EntityState::GetResourceState(Red::ResourcePath aResourcePath)
+Core::SharedPtr<App::ResourceState> App::EntityState::GetResourceState(Red::ResourcePath aResourcePath)
 {
     if (!aResourcePath)
-        return s_nullResourceState;
+        return {};
 
     auto it = m_resourceStates.find(aResourcePath);
 
@@ -300,35 +283,41 @@ const Core::SharedPtr<App::ResourceState>& App::EntityState::GetResourceState(Re
     return it.value();
 }
 
-const Core::SharedPtr<App::ResourceState>& App::EntityState::FindResourceState(Red::ResourcePath aResourcePath) const
+Core::SharedPtr<App::ResourceState> App::EntityState::FindResourceState(Red::ResourcePath aResourcePath) const
 {
     if (!aResourcePath)
-        return s_nullResourceState;
+        return {};
 
-    const auto& it = m_resourceStates.find(aResourcePath);
+    const auto it = m_resourceStates.find(aResourcePath);
 
     if (it == m_resourceStates.end())
-        return s_nullResourceState;
+        return {};
 
     return it.value();
 }
 
-const Core::Set<Red::CName>& App::EntityState::GetPartComponentNames(Red::ResourcePath aResourcePath) const
+Core::Set<Red::CName> App::EntityState::GetPartComponentNames(Red::ResourcePath aResourcePath) const
 {
     if (!aResourcePath)
-        return s_nullComponentSet;
+        return {};
 
-    const auto& it = m_partComponents.find(aResourcePath);
+    std::shared_lock _(m_stateLock);
+
+    const auto it = m_partComponents.find(aResourcePath);
 
     if (it == m_partComponents.end())
-        return s_nullComponentSet;
+        return {};
 
     return it.value();
 }
 
 void App::EntityState::AddChunkMaskOverride(uint64_t aHash, Red::CName aComponentName, uint64_t aChunkMask, bool aShow)
 {
-    if (auto& componentState = GetComponentState(aComponentName))
+    std::unique_lock _(m_stateLock);
+
+    auto componentState = GetComponentState(aComponentName);
+
+    if (componentState)
     {
         if (aShow)
             componentState->AddShowingChunkMaskOverride(aHash, aChunkMask);
@@ -339,6 +328,8 @@ void App::EntityState::AddChunkMaskOverride(uint64_t aHash, Red::CName aComponen
 
 void App::EntityState::RemoveChunkMaskOverrides(uint64_t aHash)
 {
+    std::unique_lock _(m_stateLock);
+
     for (auto& [_, componentState] : m_componentStates)
     {
         componentState->RemoveChunkMaskOverride(aHash);
@@ -349,7 +340,11 @@ void App::EntityState::AddAppearanceOverride(uint64_t aHash, Red::CName aCompone
 {
     if (aAppearance && aAppearance != DefaultAppearanceName)
     {
-        if (auto& componentState = GetComponentState(aComponentName))
+        std::unique_lock _(m_stateLock);
+
+        auto componentState = GetComponentState(aComponentName);
+
+        if (componentState)
         {
             componentState->AddAppearanceOverride(aHash, aAppearance);
         }
@@ -358,6 +353,8 @@ void App::EntityState::AddAppearanceOverride(uint64_t aHash, Red::CName aCompone
 
 void App::EntityState::RemoveAppearanceOverrides(uint64_t aHash)
 {
+    std::unique_lock _(m_stateLock);
+
     for (auto& [_, componentState] : m_componentStates)
     {
         componentState->RemoveAppearanceOverride(aHash);
@@ -366,7 +363,11 @@ void App::EntityState::RemoveAppearanceOverrides(uint64_t aHash)
 
 void App::EntityState::AddOffsetOverride(uint64_t aHash, Red::ResourcePath aResourcePath, int32_t aOffset)
 {
-    if (auto& resourceState = GetResourceState(aResourcePath))
+    std::unique_lock _(m_stateLock);
+
+    auto resourceState = GetResourceState(aResourcePath);
+
+    if (resourceState)
     {
         resourceState->AddOffsetOverride(aHash, aOffset);
     }
@@ -374,6 +375,8 @@ void App::EntityState::AddOffsetOverride(uint64_t aHash, Red::ResourcePath aReso
 
 void App::EntityState::RemoveOffsetOverrides(uint64_t aHash)
 {
+    std::unique_lock _(m_stateLock);
+
     for (auto& [_, resourceState] : m_resourceStates)
     {
         resourceState->RemoveOffsetOverride(aHash);
@@ -390,17 +393,25 @@ void App::EntityState::RemoveAllOverrides(uint64_t aHash)
 void App::EntityState::LinkComponentToPart(Red::Handle<Red::IComponent>& aComponent, Red::ResourcePath aResource)
 {
     auto componentRef = m_dynamicAppearance->ParseReference(aComponent->name);
-    if (auto& componentState = GetComponentState(componentRef.name))
+
+    std::unique_lock _(m_stateLock);
+
+    auto componentState = GetComponentState(componentRef.name);
+
+    if (componentState)
     {
         componentState->LinkToPart(aResource);
-
         m_partComponents[aResource].insert(aComponent->name);
     }
 }
 
 void App::EntityState::LinkPartToAppearance(Red::ResourcePath aResource, DynamicAppearanceName& aAppearance)
 {
-    if (auto& resourceState = GetResourceState(aResource))
+    std::unique_lock _(m_stateLock);
+
+    auto resourceState = GetResourceState(aResource);
+
+    if (resourceState)
     {
         resourceState->LinkToAppearance(aAppearance);
     }
@@ -408,9 +419,15 @@ void App::EntityState::LinkPartToAppearance(Red::ResourcePath aResource, Dynamic
 
 void App::EntityState::LinkPartToAppearance(Red::ResourcePath aResource, Red::CName aAppearance)
 {
-    if (auto& resourceState = GetResourceState(aResource))
+    auto appearance = m_dynamicAppearance->ParseAppearance(aAppearance);
+
+    std::unique_lock _(m_stateLock);
+
+    auto resourceState = GetResourceState(aResource);
+
+    if (resourceState)
     {
-        resourceState->LinkToAppearance(m_dynamicAppearance->ParseAppearance(aAppearance));
+        resourceState->LinkToAppearance(std::move(appearance));
     }
 }
 
@@ -444,6 +461,7 @@ bool App::EntityState::SelectDynamicAppearance(App::DynamicAppearanceName& aSele
 
         baseAppearance = &aResource->appearances[baseAppearanceIndex];
 
+        aAppearance->name = aSelector.value;
         aAppearance->appearanceResource = baseAppearance->appearanceResource;
         aAppearance->appearanceName = baseAppearance->appearanceName
                                          ? baseAppearance->appearanceName
@@ -451,8 +469,6 @@ bool App::EntityState::SelectDynamicAppearance(App::DynamicAppearanceName& aSele
 
         m_dynamicAppearance->MarkDynamicAppearanceName(aAppearance->appearanceName, aSelector);
     }
-
-    aAppearance->name = aAppearance->appearanceName;
 
     return true;
 }
@@ -547,17 +563,25 @@ void App::EntityState::ToggleConditionalComponents(Red::DynArray<Red::Handle<Red
             continue;
         }
 
-        const auto& componentState = FindComponentState(componentRef.name);
+        DynamicAppearanceName activeAppearance;
 
-        if (!componentState || !componentState->IsFromAppearancePart())
-            continue;
+        {
+            std::shared_lock _(m_stateLock);
 
-        const auto& resourceState = FindResourceState(componentState->GetAppearancePart());
+            const auto& componentState = FindComponentState(componentRef.name);
 
-        if (!resourceState /*|| !resourceState->IsDynamicPart()*/)
-            continue;
+            if (!componentState || !componentState->IsFromAppearancePart())
+                continue;
 
-        component->isEnabled = m_dynamicAppearance->MatchReference(componentRef, m_entity, resourceState->GetActiveAppearance());
+            const auto& resourceState = FindResourceState(componentState->GetAppearancePart());
+
+            if (!resourceState /*|| !resourceState->IsDynamicPart()*/)
+                continue;
+
+            activeAppearance = resourceState->GetActiveAppearance();
+        }
+
+        component->isEnabled = m_dynamicAppearance->MatchReference(componentRef, m_entity, activeAppearance);
 
         if (component->isEnabled)
         {
@@ -597,29 +621,47 @@ bool App::EntityState::ApplyDynamicAppearance(const Red::Handle<Red::IComponent>
         return false;
 
     const auto componentRef = m_dynamicAppearance->ParseReference(aComponent->name);
-    const auto& componentState = FindComponentState(componentRef.name);
 
-    if (!componentState || !componentState->IsFromAppearancePart())
-        return false;
+    DynamicPartList variantParts;
+    bool setAppearance = false;
 
-    const auto& resourceState = FindResourceState(componentState->GetAppearancePart());
+    {
+        std::shared_lock _(m_stateLock);
 
-    if (!resourceState /*|| !resourceState->IsDynamicPart()*/)
-        return false;
+        const auto componentState = FindComponentState(componentRef.name);
 
-    return ApplyDynamicAppearance(aComponent, resourceState->GetActiveVariantParts(),
-                                  !componentState->ChangesAppearance());
+        if (!componentState || !componentState->IsFromAppearancePart())
+            return false;
+
+        const auto resourceState = FindResourceState(componentState->GetAppearancePart());
+
+        if (!resourceState /*|| !resourceState->IsDynamicPart()*/)
+            return false;
+
+        variantParts = resourceState->GetActiveVariantParts();
+        setAppearance = !componentState->ChangesAppearance();
+    }
+
+    return ApplyDynamicAppearance(aComponent, variantParts, setAppearance);
 }
 
 bool App::EntityState::ApplyDynamicAppearance(const Red::Handle<Red::IComponent>& aComponent,
                                               Red::ResourcePath aResource)
 {
-    const auto& resourceState = FindResourceState(aResource);
+    DynamicPartList variantParts;
 
-    if (!resourceState /*|| !resourceState->IsDynamicPart()*/)
-        return false;
+    {
+        std::shared_lock _(m_stateLock);
 
-    return ApplyDynamicAppearance(aComponent, resourceState->GetActiveVariantParts(), true);
+        const auto resourceState = FindResourceState(aResource);
+
+        if (!resourceState /*|| !resourceState->IsDynamicPart()*/)
+            return false;
+
+        variantParts = resourceState->GetActiveVariantParts();
+    }
+
+    return ApplyDynamicAppearance(aComponent, variantParts, true);
 }
 
 bool App::EntityState::ApplyDynamicAppearance(const Red::Handle<Red::IComponent>& aComponent,
@@ -671,34 +713,44 @@ bool App::EntityState::ApplyAppearanceOverride(const Red::Handle<Red::IComponent
     }
 
     auto componentRef = m_dynamicAppearance->ParseReference(aComponent->name);
-    auto componentState = FindComponentState(componentRef.name);
+    auto prefixName = m_prefixResolver->GetPrefix(aComponent->name);
 
-    if (!componentState)
+    Red::CName finalAppearance;
+    DynamicPartList activeVariant;
+
     {
-        componentState = FindComponentState(m_prefixResolver->GetPrefix(aComponent->name));
+        std::shared_lock _(m_stateLock);
+
+        auto componentState = FindComponentState(componentRef.name);
 
         if (!componentState)
         {
+            componentState = FindComponentState(prefixName);
+
+            if (!componentState)
+            {
+                return false;
+            }
+        }
+
+        if (componentState->HasAppearanceOverriddes())
+        {
+            finalAppearance = componentState->GetAppearanceOverridde();
+        }
+        else if (componentState->ChangesAppearance())
+        {
+            finalAppearance = GetOriginalAppearance(component);
+        }
+
+        if (!finalAppearance)
+        {
             return false;
         }
+
+        const auto resourceState = FindResourceState(componentState->GetAppearancePart());
+        activeVariant = resourceState->GetActiveVariantParts();
     }
 
-    Red::CName finalAppearance;
-
-    if (componentState->HasAppearanceOverriddes())
-    {
-        finalAppearance = componentState->GetAppearanceOverridde();
-    }
-    else if (componentState->ChangesAppearance())
-    {
-        finalAppearance = GetOriginalAppearance(component);
-    }
-
-    if (!finalAppearance)
-        return false;
-
-    const auto& resourceState = FindResourceState(componentState->GetAppearancePart());
-    const auto& activeVariant = resourceState->GetActiveVariantParts();
     finalAppearance = m_dynamicAppearance->ResolveName(m_entity, activeVariant, finalAppearance);
 
     return finalAppearance && component.SetAppearanceName(finalAppearance) && component.RefreshAppearance();
@@ -715,26 +767,44 @@ bool App::EntityState::ApplyChunkMaskOverride(const Red::Handle<Red::IComponent>
         return false;
 
     auto componentRef = m_dynamicAppearance->ParseReference(aComponent->name);
-    auto& componentState = FindComponentState(componentRef.name);
-    auto& prefixState = FindComponentState(m_prefixResolver->GetPrefix(aComponent->name));
+    auto prefixName = m_prefixResolver->GetPrefix(aComponent->name);
 
-    if ((!componentState || !componentState->ChangesChunkMask())
-        && (!prefixState || !prefixState->ChangesChunkMask()))
-        return false;
+    uint64_t finalChunkMask = 0;
 
-    uint64_t finalChunkMask = GetOriginalChunkMask(component);
+    {
+        std::shared_lock _(m_stateLock);
 
-    if (componentState)
-        finalChunkMask |= componentState->GetShowingChunkMask();
+        auto componentState = FindComponentState(componentRef.name);
+        auto prefixState = FindComponentState(prefixName);
 
-    if (prefixState)
-        finalChunkMask |= prefixState->GetShowingChunkMask();
+        if ((!componentState || !componentState->ChangesChunkMask())
+            && (!prefixState || !prefixState->ChangesChunkMask()))
+        {
+            return false;
+        }
 
-    if (componentState)
-        finalChunkMask &= componentState->GetHidingChunkMask();
+        finalChunkMask = GetOriginalChunkMask(component);
 
-    if (prefixState)
-        finalChunkMask &= prefixState->GetHidingChunkMask();
+        if (componentState)
+        {
+            finalChunkMask |= componentState->GetShowingChunkMask();
+        }
+
+        if (prefixState)
+        {
+            finalChunkMask |= prefixState->GetShowingChunkMask();
+        }
+
+        if (componentState)
+        {
+            finalChunkMask &= componentState->GetHidingChunkMask();
+        }
+
+        if (prefixState)
+        {
+            finalChunkMask &= prefixState->GetHidingChunkMask();
+        }
+    }
 
     return component.SetChunkMask(finalChunkMask);
 }
@@ -754,7 +824,9 @@ bool App::EntityState::ApplyOffsetOverrides(const Red::DynArray<Red::ResourcePat
 
 int32_t App::EntityState::GetOffsetOverride(Red::ResourcePath aResourcePath) const
 {
-    auto& resourceState = FindResourceState(aResourcePath);
+    std::shared_lock _(m_stateLock);
+
+    auto resourceState = FindResourceState(aResourcePath);
 
     if (!resourceState)
         return 0;
@@ -762,37 +834,79 @@ int32_t App::EntityState::GetOffsetOverride(Red::ResourcePath aResourcePath) con
     return resourceState->GetOverriddenOffset();
 }
 
-Red::ResourcePath App::EntityState::GetOriginalResource(ComponentWrapper& aComponent)
+Red::ResourcePath App::EntityState::GetOriginalResource(const ComponentWrapper& aComponent)
 {
-    auto componentId = aComponent.GetUniqueId();
-    auto it = m_originalResources.find(componentId);
+    const auto componentId = aComponent.GetUniqueId();
 
-    if (it == m_originalResources.end())
-        it = m_originalResources.emplace(componentId, aComponent.GetResourcePath()).first;
+    {
+        std::shared_lock _(m_originalLock);
 
-    return it.value();
+        const auto it = m_originalResources.find(componentId);
+        if (it != m_originalResources.end())
+        {
+            return it.value();
+        }
+    }
+
+    const auto value = aComponent.GetResourcePath();
+
+    {
+        std::shared_lock _(m_originalLock);
+
+        m_originalResources.emplace(componentId, value);
+    }
+
+    return value;
 }
 
-Red::CName App::EntityState::GetOriginalAppearance(ComponentWrapper& aComponent)
+Red::CName App::EntityState::GetOriginalAppearance(const ComponentWrapper& aComponent)
 {
-    auto componentId = aComponent.GetUniqueId();
-    auto it = m_originalAppearances.find(componentId);
+    const auto componentId = aComponent.GetUniqueId();
 
-    if (it == m_originalAppearances.end())
-        it = m_originalAppearances.emplace(componentId, aComponent.GetAppearanceName()).first;
+    {
+        std::shared_lock _(m_originalLock);
 
-    return it.value();
+        const auto it = m_originalAppearances.find(componentId);
+        if (it != m_originalAppearances.end())
+        {
+            return it.value();
+        }
+    }
+
+    const auto value = aComponent.GetAppearanceName();
+
+    {
+        std::shared_lock _(m_originalLock);
+
+        m_originalAppearances.emplace(componentId, value);
+    }
+
+    return value;
 }
 
-uint64_t App::EntityState::GetOriginalChunkMask(ComponentWrapper& aComponent)
+uint64_t App::EntityState::GetOriginalChunkMask(const ComponentWrapper& aComponent)
 {
-    auto componentId = aComponent.GetUniqueId();
-    auto it = m_originalChunkMasks.find(componentId);
+    const auto componentId = aComponent.GetUniqueId();
 
-    if (it == m_originalChunkMasks.end())
-        it = m_originalChunkMasks.emplace(componentId, aComponent.GetChunkMask()).first;
+    {
+        std::shared_lock _(m_originalLock);
 
-    return it.value();
+        const auto it = m_originalChunkMasks.find(componentId);
+        if (it != m_originalChunkMasks.end())
+        {
+            return it.value();
+        }
+    }
+
+    const auto value = aComponent.GetChunkMask();
+
+    {
+        std::shared_lock _(m_originalLock);
+
+        m_originalChunkMasks.emplace(componentId, value);
+    }
+
+    return value;
 }
 
 App::OverrideStateManager::OverrideStateManager(Core::SharedPtr<DynamicAppearanceController> aDynamicAppearance)
@@ -800,95 +914,118 @@ App::OverrideStateManager::OverrideStateManager(Core::SharedPtr<DynamicAppearanc
 {
 }
 
-Core::SharedPtr<App::EntityState>& App::OverrideStateManager::GetFirstEntityState()
+Core::SharedPtr<App::EntityState> App::OverrideStateManager::GetFirstEntityState()
 {
+    std::shared_lock _(m_lock);
+
     if (m_entityStates.empty())
-        return s_nullEntityState;
+        return {};
 
     return m_entityStates.begin().value();
 }
 
-Core::SharedPtr<App::EntityState>& App::OverrideStateManager::GetEntityState(uint64_t aContext)
+Core::SharedPtr<App::EntityState> App::OverrideStateManager::GetEntityState(uint64_t aContext)
 {
     return GetEntityState(reinterpret_cast<Red::Entity*>(aContext));
 }
 
-Core::SharedPtr<App::EntityState>& App::OverrideStateManager::GetEntityState(Red::Entity* aEntity)
+Core::SharedPtr<App::EntityState> App::OverrideStateManager::GetEntityState(Red::Entity* aEntity)
 {
     if (!aEntity)
-        return s_nullEntityState;
+        return {};
 
-    auto it = m_entityStates.find(aEntity);
-
-    if (it == m_entityStates.end())
     {
-        it = m_entityStates.emplace(aEntity, Core::MakeShared<EntityState>(aEntity, m_dynamicAppearance)).first;
+        std::shared_lock _(m_lock);
+
+        auto it = m_entityStates.find(aEntity);
+        if (it != m_entityStates.end())
+        {
+            return it.value();
+        }
+    }
+
+    auto state = Core::MakeShared<EntityState>(aEntity, m_dynamicAppearance);
+
+    {
+        std::unique_lock _(m_lock);
+
+        m_entityStates.emplace(aEntity, state);
 
         auto dynamicPath = std::to_string(aEntity->templatePath.hash) + "_0.app";
         for (char i = '0'; i < '3'; ++i)
         {
             *(dynamicPath.end() - 5) = i;
-            m_entityStatesByPath.emplace(dynamicPath.c_str(), it.value());
+            m_entityStatesByPath.emplace(dynamicPath.c_str(), state);
         }
     }
 
-    return it.value();
+    return state;
 }
 
-Core::SharedPtr<App::EntityState>& App::OverrideStateManager::FindEntityState(Red::Entity* aEntity)
+Core::SharedPtr<App::EntityState> App::OverrideStateManager::FindEntityState(Red::Entity* aEntity)
 {
     if (!aEntity)
-        return s_nullEntityState;
+        return {};
+
+    std::shared_lock _(m_lock);
 
     auto it = m_entityStates.find(aEntity);
 
     if (it == m_entityStates.end())
-        return s_nullEntityState;
+        return {};
 
     return it.value();
 }
 
-Core::SharedPtr<App::EntityState>& App::OverrideStateManager::FindEntityState(Red::ResourcePath aPath)
+Core::SharedPtr<App::EntityState> App::OverrideStateManager::FindEntityState(Red::ResourcePath aPath)
 {
     if (!aPath)
-        return s_nullEntityState;
+        return {};
+
+    std::shared_lock _(m_lock);
 
     auto it = m_entityStatesByPath.find(aPath);
 
     if (it == m_entityStatesByPath.end())
-        return s_nullEntityState;
+        return {};
 
     return it.value();
 }
 
-Core::SharedPtr<App::EntityState>& App::OverrideStateManager::FindEntityState(Red::GarmentProcessingContext* aProcessor)
+Core::SharedPtr<App::EntityState> App::OverrideStateManager::FindEntityState(Red::GarmentProcessingContext* aProcessor)
 {
     if (!aProcessor)
-        return s_nullEntityState;
+        return {};
+
+    std::shared_lock _(m_lock);
 
     auto it = m_entityStatesByProcessor.find(aProcessor);
 
     if (it == m_entityStatesByProcessor.end())
-        return s_nullEntityState;
+        return {};
 
     return it.value();
 }
 
-Core::SharedPtr<App::EntityState>& App::OverrideStateManager::FindEntityState(uintptr_t aPointer)
+Core::SharedPtr<App::EntityState> App::OverrideStateManager::FindEntityState(uintptr_t aPointer)
 {
     if (!aPointer)
-        return s_nullEntityState;
+        return {};
+
+    std::shared_lock _(m_lock);
 
     auto it = m_entityStatesByPointer.find(aPointer);
 
     if (it == m_entityStatesByPointer.end())
-        return s_nullEntityState;
+        return {};
 
     return it.value();
 }
 
 void App::OverrideStateManager::ClearStates()
 {
+    std::unique_lock _(m_lock);
+
     m_entityStates.clear();
     m_entityStatesByPath.clear();
     m_entityStatesByProcessor.clear();
@@ -897,6 +1034,8 @@ void App::OverrideStateManager::ClearStates()
 
 void App::OverrideStateManager::LinkEntityToAssembler(Red::Entity* aEntity, Red::GarmentProcessingContext* aProcessor)
 {
+    std::unique_lock _(m_lock);
+
     auto it = m_entityStates.find(aEntity);
 
     if (it != m_entityStates.end())
@@ -907,16 +1046,11 @@ void App::OverrideStateManager::LinkEntityToAssembler(Red::Entity* aEntity, Red:
 
 void App::OverrideStateManager::LinkEntityToPointer(Red::Entity* aEntity, uintptr_t aPointer)
 {
-    auto it = m_entityStates.find(aEntity);
+    auto entityState = GetEntityState(aEntity);
 
-    if (it != m_entityStates.end())
-    {
-        m_entityStatesByPointer[aPointer] = it.value();
-    }
-    else
-    {
-        m_entityStatesByPointer[aPointer] = GetEntityState(aEntity);
-    }
+    std::unique_lock _(m_lock);
+
+    m_entityStatesByPointer[aPointer] = entityState;
 }
 
 void App::OverrideStateManager::LinkComponentToPart(Red::Handle<Red::IComponent>& aComponent,
@@ -924,26 +1058,37 @@ void App::OverrideStateManager::LinkComponentToPart(Red::Handle<Red::IComponent>
 {
     Core::Vector<Red::Entity*> expired;
 
-    for (auto& [entityKey, entityState] : m_entityStates)
     {
-        if (entityState->IsValid())
+        std::shared_lock _(m_lock);
+
+        for (auto& [entityKey, entityState] : m_entityStates)
         {
-            entityState->LinkComponentToPart(aComponent, aResource);
-        }
-        else
-        {
-            expired.push_back(entityKey);
+            if (entityState->IsValid())
+            {
+                entityState->LinkComponentToPart(aComponent, aResource);
+            }
+            else
+            {
+                expired.push_back(entityKey);
+            }
         }
     }
 
-    for (const auto& entityKey : expired)
+    if (!expired.empty())
     {
-        m_entityStates.erase(entityKey);
+        std::unique_lock _(m_lock);
+
+        for (const auto& entityKey : expired)
+        {
+            m_entityStates.erase(entityKey);
+        }
     }
 }
 
 void App::OverrideStateManager::UpdateDynamicAttributes()
 {
+    std::shared_lock _(m_lock);
+
     for (auto& [_, entityState] : m_entityStates)
     {
         if (entityState->IsValid())

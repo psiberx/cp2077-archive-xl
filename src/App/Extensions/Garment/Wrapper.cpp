@@ -83,7 +83,6 @@ inline Red::ResourceReference<Red::CMesh> GetComponentMeshReference(Red::ent::Mo
 App::ComponentWrapper::ComponentWrapper(Red::IComponent* aComponent)
     : m_component(aComponent)
     , m_componentType(ComponentType::Unsupported)
-    , m_uniqueId(0)
 {
     const auto rttiType = m_component->GetType();
 
@@ -103,6 +102,10 @@ App::ComponentWrapper::ComponentWrapper(Red::IComponent* aComponent)
     {
         m_componentType = ComponentType::SkinnedMeshComponent;
     }
+
+    m_uniqueId = m_component->name;
+    m_uniqueId = Red::FNV1a64(reinterpret_cast<const uint8_t*>(&m_component->appearanceName), sizeof(uint64_t), m_uniqueId);
+    m_uniqueId = Red::FNV1a64(reinterpret_cast<const uint8_t*>(&m_component->appearancePath), sizeof(uint64_t), m_uniqueId);
 }
 
 App::ComponentWrapper::ComponentWrapper(const Red::Handle<Red::IComponent>& aComponent)
@@ -121,16 +124,8 @@ bool App::ComponentWrapper::IsGarmentComponent() const
            m_componentType == ComponentType::MorphTargetSkinnedMeshComponent;
 }
 
-uint64_t App::ComponentWrapper::GetUniqueId()
+uint64_t App::ComponentWrapper::GetUniqueId() const
 {
-    if (!m_uniqueId)
-    {
-        // Component Name + Appearance Name + Appearance Resource Path
-        m_uniqueId = m_component->name;
-        m_uniqueId = Red::FNV1a64(reinterpret_cast<const uint8_t*>(&m_component->appearanceName), sizeof(uint64_t), m_uniqueId);
-        m_uniqueId = Red::FNV1a64(reinterpret_cast<const uint8_t*>(&m_component->appearancePath), sizeof(uint64_t), m_uniqueId);
-    }
-
     return m_uniqueId;
 }
 
