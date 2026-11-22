@@ -123,20 +123,23 @@ void App::GarmentExtension::OnLoadAppearanceResource(Red::ItemFactoryRequest* aR
         appearanceName = Red::GetFlatValue<Red::CName>({itemRecord->recordID, ".appearanceName"});
     }
 
-    if (PrepareDynamicAppearanceName(entityWeak, templateToken, appearanceName))
+    if (const auto entity = entityWeak.Lock())
     {
-        if (auto entityState = s_stateManager->GetEntityState(entityWeak.instance))
+        if (PrepareDynamicAppearanceName(entity, templateToken, appearanceName))
         {
+            if (auto entityState = s_stateManager->GetEntityState(entity))
+            {
 #ifndef NDEBUG
-            LogDebug("[{}] [event=LoadAppearanceResource entity={}]", ExtensionName, entityState->GetName());
+                LogDebug("[{}] [event=LoadAppearanceResource entity={}]", ExtensionName, entityState->GetName());
 #endif
-            if (itemRecord)
-            {
-                UpdateDynamicAttributes(entityState, itemRecord->recordID);
-            }
-            else
-            {
-                UpdateDynamicAttributes(entityState);
+                if (itemRecord)
+                {
+                    UpdateDynamicAttributes(entityState, itemRecord->recordID);
+                }
+                else
+                {
+                    UpdateDynamicAttributes(entityState);
+                }
             }
         }
     }
@@ -154,20 +157,23 @@ void App::GarmentExtension::OnChangeAppearanceResource(Red::ItemFactoryAppearanc
         appearanceName = Red::GetFlatValue<Red::CName>({itemRecord->recordID, ".appearanceName"});
     }
 
-    if (PrepareDynamicAppearanceName(entityWeak, templateToken, appearanceName))
+    if (const auto entity = entityWeak.Lock())
     {
-        if (auto entityState = s_stateManager->GetEntityState(entityWeak.instance))
+        if (PrepareDynamicAppearanceName(entity, templateToken, appearanceName))
         {
+            if (auto entityState = s_stateManager->GetEntityState(entityWeak.instance))
+            {
 #ifndef NDEBUG
-            LogDebug("[{}] [event=ChangeAppearanceResource entity={}]", ExtensionName, entityState->GetName());
+                LogDebug("[{}] [event=ChangeAppearanceResource entity={}]", ExtensionName, entityState->GetName());
 #endif
-            if (itemRecord)
-            {
-                UpdateDynamicAttributes(entityState, itemRecord->recordID);
-            }
-            else
-            {
-                UpdateDynamicAttributes(entityState);
+                if (itemRecord)
+                {
+                    UpdateDynamicAttributes(entityState, itemRecord->recordID);
+                }
+                else
+                {
+                    UpdateDynamicAttributes(entityState);
+                }
             }
         }
     }
@@ -530,7 +536,7 @@ void App::GarmentExtension::OnChangeCustomItem(Red::GarmentAssemblerState* aStat
 }
 
 void App::GarmentExtension::OnRemoveItem(uintptr_t, Red::WeakHandle<Red::Entity>& aEntityWeak,
-                                              Red::GarmentItemRemoveRequest& aRequest)
+                                         Red::GarmentItemRemoveRequest& aRequest)
 {
     if (auto entity = aEntityWeak.Lock())
     {
@@ -656,7 +662,7 @@ void App::GarmentExtension::OnComputeGarment(uintptr_t, Red::Handle<Red::Entity>
         ApplyComponentOverrides(entityState, aData->components, false);
         ApplyOffsetOverrides(entityState, aOffsets, aData->resources);
 
-        PatchHeadGarmentOverrides(entityState, aData->definition);
+        // PatchHeadGarmentOverrides(entityState, aData->definition);
     }
 }
 
@@ -768,15 +774,15 @@ void App::GarmentExtension::UpdatePartAssignments(const Core::SharedPtr<App::Ent
     }
 }
 
-bool App::GarmentExtension::PrepareDynamicAppearanceName(Red::WeakHandle<Red::Entity>& aEntity,
+bool App::GarmentExtension::PrepareDynamicAppearanceName(const Red::Handle<Red::Entity>& aEntity,
                                                          Red::ResourceTokenPtr<Red::EntityTemplate>& aTemplateToken,
                                                          Red::CName& aAppearanceName)
 {
-    if (IsUniqueAppearanceName(aAppearanceName) &&
+    if (aEntity && IsUniqueAppearanceName(aAppearanceName) &&
         s_dynamicAppearance->SupportsDynamicAppearance(aTemplateToken->resource) &&
         s_dynamicAppearance->IsDynamicAppearanceName(aAppearanceName))
     {
-        s_dynamicAppearance->MarkDynamicAppearanceName(aAppearanceName, aEntity.instance);
+        s_dynamicAppearance->MarkDynamicAppearanceName(aAppearanceName, aEntity);
         return true;
     }
 
@@ -930,13 +936,15 @@ void App::GarmentExtension::PatchHeadGarmentOverrides(const Core::SharedPtr<Enti
     if (aDefinition->name != AggregatedHeadAppearanceName)
         return;
 
+    Red::appearanceAppearancePartOverrides partOverrideFix;
+
     for (const auto& part : aDefinition->partsValues)
     {
         for (const auto& componentName : aEntityState->GetPartComponentNames(part.resource.path))
         {
             bool hasComponentOverride = false;
 
-            for (auto& partOverride : aDefinition->partsOverrides)
+            for (const auto& partOverride : aDefinition->partsOverrides)
             {
                 if (partOverride.partResource.path
                     && partOverride.partResource.path != part.resource.path
@@ -966,13 +974,16 @@ void App::GarmentExtension::PatchHeadGarmentOverrides(const Core::SharedPtr<Enti
                 componentOverride.chunkMask = std::numeric_limits<uint64_t>::max();
                 componentOverride.acceptDismemberment = true;
 
-                Red::appearanceAppearancePartOverrides partOverride;
-                partOverride.partResource = DummyAppearancePartPath;
-                partOverride.componentsOverrides.PushBack(std::move(componentOverride));
-
-                aDefinition->partsOverrides.PushBack(std::move(partOverride));
+                partOverrideFix.componentsOverrides.PushBack(std::move(componentOverride));
             }
         }
+    }
+
+    if (!partOverrideFix.componentsOverrides.IsEmpty())
+    {
+        partOverrideFix.partResource = DummyAppearancePartPath;
+
+        aDefinition->partsOverrides.PushBack(std::move(partOverrideFix));
     }
 }
 

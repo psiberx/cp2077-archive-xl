@@ -78,13 +78,14 @@ private:
 class EntityState
 {
 public:
-    EntityState(Red::Entity* aEntity, Core::SharedPtr<DynamicAppearanceController> aDynamicAppearance) noexcept;
+    EntityState(const Red::Handle<Red::Entity>& aEntity,
+                Core::SharedPtr<DynamicAppearanceController> aDynamicAppearance) noexcept;
     EntityState(const EntityState&) = delete;
     EntityState(EntityState&&) = delete;
     ~EntityState();
 
     [[nodiscard]] const char* GetName() const;
-    [[nodiscard]] Red::Entity* GetEntity() const;
+    [[nodiscard]] Red::Handle<Red::Entity> GetEntity() const;
     [[nodiscard]] bool IsValid() const;
 
     [[nodiscard]] Core::Set<Red::CName> GetPartComponentNames(Red::ResourcePath aResourcePath) const;
@@ -150,7 +151,6 @@ private:
     uint64_t GetOriginalChunkMask(const ComponentWrapper& aComponent);
 
     std::string m_name;
-    Red::Entity* m_entity;
     Red::WeakHandle<Red::Entity> m_entityWeak;
     mutable Red::SharedSpinLock m_stateLock;
     Core::Map<Red::CName, Core::SharedPtr<ComponentState>> m_componentStates;

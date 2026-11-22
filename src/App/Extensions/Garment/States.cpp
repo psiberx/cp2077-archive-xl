@@ -58,11 +58,15 @@ uint64_t App::ComponentState::GetOverriddenChunkMask(uint64_t aOriginalMask) con
 {
     uint64_t finalChunkMask = aOriginalMask;
 
-    for (const auto& [_, hidingChunkMask] : m_hidingChunkMasks)
+    for (const auto& hidingChunkMask : m_hidingChunkMasks | std::views::values)
+    {
         finalChunkMask &= hidingChunkMask;
+    }
 
-    for (const auto& [_, showingChunkMask] : m_showingChunkMasks)
+    for (const auto& showingChunkMask : m_showingChunkMasks | std::views::values)
+    {
         finalChunkMask |= showingChunkMask;
+    }
 
     return finalChunkMask;
 }
@@ -71,8 +75,10 @@ uint64_t App::ComponentState::GetHidingChunkMask() const
 {
     uint64_t finalChunkMask = ~0ull;
 
-    for (const auto& [_, hidingChunkMask] : m_hidingChunkMasks)
+    for (const auto& hidingChunkMask : m_hidingChunkMasks | std::views::values)
+    {
         finalChunkMask &= hidingChunkMask;
+    }
 
     return finalChunkMask;
 }
@@ -81,8 +87,10 @@ uint64_t App::ComponentState::GetShowingChunkMask() const
 {
     uint64_t finalChunkMask = 0ull;
 
-    for (const auto& [_, showingChunkMask] : m_showingChunkMasks)
+    for (const auto& showingChunkMask : m_showingChunkMasks | std::views::values)
+    {
         finalChunkMask |= showingChunkMask;
+    }
 
     return finalChunkMask;
 }
@@ -212,10 +220,9 @@ const App::DynamicTagList& App::ResourceState::GetActiveVariantOverrides() const
     return m_appearance.overrides;
 }
 
-App::EntityState::EntityState(Red::Entity* aEntity,
+App::EntityState::EntityState(const Red::Handle<Red::Entity>& aEntity,
                               Core::SharedPtr<DynamicAppearanceController> aDynamicAppearance) noexcept
-    : m_entity(aEntity)
-    , m_entityWeak(Red::AsWeakHandle(aEntity))
+    : m_entityWeak(aEntity)
     , m_dynamicAppearance(std::move(aDynamicAppearance))
     , m_prefixResolver(ComponentPrefixResolver::Get())
 {
@@ -226,7 +233,7 @@ App::EntityState::EntityState(Red::Entity* aEntity,
 
 App::EntityState::~EntityState()
 {
-    m_dynamicAppearance->RemoveState(m_entity);
+    m_dynamicAppearance->RemoveState(m_entityWeak);
 }
 
 const char* App::EntityState::GetName() const
@@ -234,9 +241,9 @@ const char* App::EntityState::GetName() const
     return m_name.c_str();
 }
 
-Red::Entity* App::EntityState::GetEntity() const
+Red::Handle<Red::Entity> App::EntityState::GetEntity() const
 {
-    return m_entity;
+    return m_entityWeak.Lock();
 }
 
 bool App::EntityState::IsValid() const
@@ -330,7 +337,7 @@ void App::EntityState::RemoveChunkMaskOverrides(uint64_t aHash)
 {
     std::unique_lock _(m_stateLock);
 
-    for (auto& [_, componentState] : m_componentStates)
+    for (const auto& componentState : m_componentStates | std::views::values)
     {
         componentState->RemoveChunkMaskOverride(aHash);
     }
@@ -355,7 +362,7 @@ void App::EntityState::RemoveAppearanceOverrides(uint64_t aHash)
 {
     std::unique_lock _(m_stateLock);
 
-    for (auto& [_, componentState] : m_componentStates)
+    for (const auto& componentState : m_componentStates | std::views::values)
     {
         componentState->RemoveAppearanceOverride(aHash);
     }
@@ -377,7 +384,7 @@ void App::EntityState::RemoveOffsetOverrides(uint64_t aHash)
 {
     std::unique_lock _(m_stateLock);
 
-    for (auto& [_, resourceState] : m_resourceStates)
+    for (const auto& resourceState : m_resourceStates | std::views::values)
     {
         resourceState->RemoveOffsetOverride(aHash);
     }
@@ -433,12 +440,18 @@ void App::EntityState::LinkPartToAppearance(Red::ResourcePath aResource, Red::CN
 
 void App::EntityState::UpdateDynamicAttributes()
 {
-    m_dynamicAppearance->UpdateState(m_entity);
+    if (const auto entity = m_entityWeak.Lock())
+    {
+        m_dynamicAppearance->UpdateState(entity);
+    }
 }
 
 void App::EntityState::UpdateDynamicAttributes(Red::TweakDBID aEquippedItemID)
 {
-    m_dynamicAppearance->UpdateState(m_entity, aEquippedItemID);
+    if (const auto entity = m_entityWeak.Lock())
+    {
+        m_dynamicAppearance->UpdateState(entity, aEquippedItemID);
+    }
 }
 
 bool App::EntityState::SelectDynamicAppearance(App::DynamicAppearanceName& aSelector, Red::EntityTemplate* aResource,
@@ -476,6 +489,13 @@ bool App::EntityState::SelectDynamicAppearance(App::DynamicAppearanceName& aSele
 bool App::EntityState::SelectDynamicAppearance(DynamicAppearanceName& aSelector, Red::AppearanceResource* aResource,
                                                Red::Handle<Red::AppearanceDefinition>& aDefinition)
 {
+    const auto entity = m_entityWeak.Lock();
+
+    if (!entity)
+    {
+        return false;
+    }
+
     int8_t maxWeight = -1;
     int8_t numCandidates = 0;
     Red::Handle<Red::AppearanceDefinition> match;
@@ -494,7 +514,7 @@ bool App::EntityState::SelectDynamicAppearance(DynamicAppearanceName& aSelector,
                     match = definition;
                 }
             }
-            else if (m_dynamicAppearance->MatchReference(appearanceRef, m_entity, aSelector))
+            else if (m_dynamicAppearance->MatchReference(appearanceRef, entity, aSelector))
             {
                 if (maxWeight < appearanceRef.weight)
                 {
@@ -550,6 +570,13 @@ bool App::EntityState::SelectDynamicAppearance(DynamicAppearanceName& aSelector,
 
 void App::EntityState::ToggleConditionalComponents(Red::DynArray<Red::Handle<Red::IComponent>>& aComponents)
 {
+    const auto entity = m_entityWeak.Lock();
+
+    if (!entity)
+    {
+        return;
+    }
+
     Core::Map<Red::CName, WeightedComponentGroup> groups;
 
     for (auto& component : aComponents)
@@ -581,7 +608,7 @@ void App::EntityState::ToggleConditionalComponents(Red::DynArray<Red::Handle<Red
             activeAppearance = resourceState->GetActiveAppearance();
         }
 
-        component->isEnabled = m_dynamicAppearance->MatchReference(componentRef, m_entity, activeAppearance);
+        component->isEnabled = m_dynamicAppearance->MatchReference(componentRef, entity, activeAppearance);
 
         if (component->isEnabled)
         {
@@ -595,7 +622,7 @@ void App::EntityState::ToggleConditionalComponents(Red::DynArray<Red::Handle<Red
         }
     }
 
-    for (auto& [_, group] : groups)
+    for (const auto& group : groups | std::views::values)
     {
         if (group.maxWeight > 0 && group.matches.size() > 1)
         {
@@ -669,29 +696,39 @@ bool App::EntityState::ApplyDynamicAppearance(const Red::Handle<Red::IComponent>
                                               bool aSetAppearance)
 {
     ComponentWrapper componentWrapper(aComponent);
+
+    if (!componentWrapper.IsMeshComponent())
+    {
+        return false;
+    }
+
+    const auto entity = m_entityWeak.Lock();
+
+    if (!entity)
+    {
+        return false;
+    }
+
     auto updated = false;
 
-    if (componentWrapper.IsMeshComponent())
+    const auto originalResource = GetOriginalResource(componentWrapper);
+    const auto finalResource = m_dynamicAppearance->ResolvePath(entity, aVariant, originalResource);
+
+    if (finalResource != originalResource && finalResource != componentWrapper.GetResourcePath())
     {
-        const auto originalResource = GetOriginalResource(componentWrapper);
-        const auto finalResource = m_dynamicAppearance->ResolvePath(m_entity, aVariant, originalResource);
+        componentWrapper.SetResourcePath(finalResource);
+        updated = true;
+    }
 
-        if (finalResource != originalResource && finalResource != componentWrapper.GetResourcePath())
+    if (aSetAppearance)
+    {
+        const auto originalAppearance = GetOriginalAppearance(componentWrapper);
+        const auto finalAppearance = m_dynamicAppearance->ResolveName(entity, aVariant, originalAppearance);
+
+        if (finalAppearance != originalAppearance && finalAppearance != componentWrapper.GetAppearanceName())
         {
-            componentWrapper.SetResourcePath(finalResource);
+            componentWrapper.SetAppearanceName(finalAppearance);
             updated = true;
-        }
-
-        if (aSetAppearance)
-        {
-            const auto originalAppearance = GetOriginalAppearance(componentWrapper);
-            const auto finalAppearance = m_dynamicAppearance->ResolveName(m_entity, aVariant, originalAppearance);
-
-            if (finalAppearance != originalAppearance && finalAppearance != componentWrapper.GetAppearanceName())
-            {
-                componentWrapper.SetAppearanceName(finalAppearance);
-                updated = true;
-            }
         }
     }
 
@@ -708,6 +745,13 @@ bool App::EntityState::ApplyAppearanceOverride(const Red::Handle<Red::IComponent
     ComponentWrapper component(aComponent);
 
     if (!component.IsMeshComponent())
+    {
+        return false;
+    }
+
+    const auto entity = m_entityWeak.Lock();
+
+    if (!entity)
     {
         return false;
     }
@@ -751,7 +795,7 @@ bool App::EntityState::ApplyAppearanceOverride(const Red::Handle<Red::IComponent
         activeVariant = resourceState->GetActiveVariantParts();
     }
 
-    finalAppearance = m_dynamicAppearance->ResolveName(m_entity, activeVariant, finalAppearance);
+    finalAppearance = m_dynamicAppearance->ResolveName(entity, activeVariant, finalAppearance);
 
     return finalAppearance && component.SetAppearanceName(finalAppearance) && component.RefreshAppearance();
 }
@@ -932,7 +976,9 @@ Core::SharedPtr<App::EntityState> App::OverrideStateManager::GetEntityState(uint
 Core::SharedPtr<App::EntityState> App::OverrideStateManager::GetEntityState(Red::Entity* aEntity)
 {
     if (!aEntity)
+    {
         return {};
+    }
 
     {
         std::shared_lock _(m_lock);
@@ -944,7 +990,14 @@ Core::SharedPtr<App::EntityState> App::OverrideStateManager::GetEntityState(Red:
         }
     }
 
-    auto state = Core::MakeShared<EntityState>(aEntity, m_dynamicAppearance);
+    const auto entity = Red::AsHandle(aEntity);
+
+    if (!entity)
+    {
+        return {};
+    }
+
+    auto state = Core::MakeShared<EntityState>(entity, m_dynamicAppearance);
 
     {
         std::unique_lock _(m_lock);
@@ -1089,7 +1142,7 @@ void App::OverrideStateManager::UpdateDynamicAttributes()
 {
     std::shared_lock _(m_lock);
 
-    for (auto& [_, entityState] : m_entityStates)
+    for (const auto& entityState : m_entityStates | std::views::values)
     {
         if (entityState->IsValid())
         {

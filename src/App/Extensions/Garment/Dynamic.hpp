@@ -92,28 +92,28 @@ public:
 
     [[nodiscard]] DynamicAppearanceName ParseAppearance(Red::CName aAppearance) const;
     [[nodiscard]] DynamicAppearanceRef ParseReference(Red::CName aReference) const;
-    [[nodiscard]] bool MatchReference(const DynamicAppearanceRef& aReference, Red::Entity* aEntity,
+    [[nodiscard]] bool MatchReference(const DynamicAppearanceRef& aReference, const Red::Handle<Red::Entity>& aEntity,
                                       const DynamicAppearanceName& aAppearance);
-    [[nodiscard]] Red::CString ResolveString(Red::Entity* aEntity, const DynamicPartList& aVariant,
+    [[nodiscard]] Red::CString ResolveString(const Red::Handle<Red::Entity>& aEntity, const DynamicPartList& aVariant,
                                              const Red::CString& aString);
-    [[nodiscard]] Red::CName ResolveName(Red::Entity* aEntity, const DynamicPartList& aVariant,
+    [[nodiscard]] Red::CName ResolveName(const Red::Handle<Red::Entity>& aEntity, const DynamicPartList& aVariant,
                                          Red::CName aName);
-    [[nodiscard]] Red::ResourcePath ResolvePath(Red::Entity* aEntity, const DynamicPartList& aVariant,
-                                                Red::ResourcePath aPath);
+    [[nodiscard]] Red::ResourcePath ResolvePath(const Red::Handle<Red::Entity>& aEntity,
+                                                const DynamicPartList& aVariant, Red::ResourcePath aPath);
 
-    void UpdateState(Red::Entity* aEntity, Red::TweakDBID aEquippedItemID = {});
-    void RemoveState(Red::Entity* aEntity);
+    void UpdateState(const Red::Handle<Red::Entity>& aEntity, Red::TweakDBID aEquippedItemID = {});
+    void RemoveState(const Red::WeakHandle<Red::Entity>& aEntity);
 
     bool SupportsDynamicAppearance(const Red::EntityTemplate* aTemplate);
     bool IsDynamicAppearanceName(Red::CName aAppearanceName);
-    void MarkDynamicAppearanceName(Red::CName& aAppearanceName, Red::Entity* aEntity);
+    void MarkDynamicAppearanceName(Red::CName& aAppearanceName, const Red::Handle<Red::Entity>& aEntity);
     void MarkDynamicAppearanceName(Red::CName& aAppearanceName, DynamicAppearanceName& aSelector);
     std::string_view GetBaseAppearanceName(Red::CName aAppearanceName);
 
     [[nodiscard]] std::string GetPathString(Red::ResourcePath aPath) const;
     [[nodiscard]] std::string GetPathStringOrHash(Red::ResourcePath aPath) const;
 
-    static bool IsMale(Red::Entity* aEntity);
+    static bool IsMale(const Red::Handle<Red::Entity>& aEntity);
 
     [[nodiscard]] bool IsDynamicValue(const char* aValue) const;
     [[nodiscard]] bool IsDynamicValue(const std::string& aValue) const;
@@ -182,12 +182,12 @@ private:
         const EntityStatePtr m_state;
     };
 
-    LockedState EnsureState(Red::Entity* aEntity);
+    LockedState EnsureState(const Red::Handle<Red::Entity>& aEntity);
 
-    DynamicAttributeList CollectEntityData(Red::Entity* aEntity, Red::TweakDBID aEquippedItemID) const;
-    DynamicAttributeData GetSuffixData(Red::Entity* aEntity, Red::TweakDBID aSuffixID,
+    DynamicAttributeList CollectEntityData(const Red::Handle<Red::Entity>& aEntity, Red::TweakDBID aEquippedItemID) const;
+    DynamicAttributeData GetSuffixData(const Red::Handle<Red::GameObject>& aPuppet, Red::TweakDBID aSuffixID,
                                        Red::TweakDBID aEquippedItemID) const;
-    CustomizationData GetCustomizationData(Red::Entity* aEntity) const;
+    CustomizationData GetCustomizationData(const Red::Handle<Red::Entity>& aEntity) const;
 
     mutable Red::SharedSpinLock m_lock;
     Core::Map<Red::Entity*, EntityStatePtr> m_states;

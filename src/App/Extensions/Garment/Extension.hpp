@@ -85,7 +85,7 @@ private:
     static void UpdatePartAssignments(Red::DynArray<Red::Handle<Red::IComponent>>& aComponents,
                                       Red::ResourcePath aPartResource);
 
-    static bool PrepareDynamicAppearanceName(Red::WeakHandle<Red::Entity>& aEntity,
+    static bool PrepareDynamicAppearanceName(const Red::Handle<Red::Entity>& aEntityWeak,
                                              Red::ResourceTokenPtr<Red::EntityTemplate>& aTemplateToken,
                                              Red::CName& aAppearanceName);
     static void SelectDynamicAppearance(const Core::SharedPtr<EntityState>& aEntityState,

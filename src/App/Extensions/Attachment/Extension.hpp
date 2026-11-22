@@ -36,13 +36,13 @@ private:
                                  Red::CharacterBodyPartState& aLiftedState,
                                  Red::CharacterBodyPartState& aFlatState);
     static bool OnGetSuffixValue(Raw::AppearanceChanger::GetSuffixValuePtr aOriginalFunc,
-                                 const Red::ItemID& aItemID, uint64_t a2, Red::Handle<Red::GameObject>& aOwner,
+                                 const Red::ItemID& aItemID, uint64_t a2, const Red::Handle<Red::GameObject>& aOwner,
                                  const Red::TweakDBID& aSuffixRecordID, Red::CString& aResult);
     static void* OnUpdateWithExclusiveLock(void*, void*, void*, void*);
 
-    static bool IsVisualTagActive(Red::Handle<Red::Entity>& aOwner, Red::TweakDBID aBaseSlotID, Red::CName aVisualTag,
-                                  Red::TweakDBID aEquippedItemID = {});
-    static bool IsVisualTagActive(Red::ITransactionSystem* aTransactionSystem, Red::Handle<Red::Entity>& aOwner,
+    static bool IsVisualTagActive(const Red::Handle<Red::Entity>& aOwner, Red::TweakDBID aBaseSlotID,
+                                  Red::CName aVisualTag, Red::TweakDBID aEquippedItemID = {});
+    static bool IsVisualTagActive(Red::ITransactionSystem* aTransactionSystem, const Red::Handle<Red::Entity>& aOwner,
                                   Red::TweakDBID aSlotID, Red::CName aVisualTag, Red::TweakDBID aEquippedItemID);
 
     static inline thread_local bool s_skipVisualTagCheck = false;

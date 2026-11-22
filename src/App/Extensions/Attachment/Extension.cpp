@@ -252,7 +252,7 @@ void App::AttachmentExtension::OnCheckFeetState(Red::game::ui::CharacterCustomiz
 
 bool App::AttachmentExtension::OnGetSuffixValue(Raw::AppearanceChanger::GetSuffixValuePtr aOriginalFunc,
                                                 const Red::ItemID& aItemID, uint64_t a2,
-                                                Red::Handle<Red::GameObject>& aOwner,
+                                                const Red::Handle<Red::GameObject>& aOwner,
                                                 const Red::TweakDBID& aSuffixRecordID,
                                                 Red::CString& aResult)
 {
@@ -276,7 +276,7 @@ void* App::AttachmentExtension::OnUpdateWithExclusiveLock(void* a1, void* a2, vo
     return result;
 }
 
-bool App::AttachmentExtension::IsVisualTagActive(Red::Handle<Red::Entity>& aOwner,
+bool App::AttachmentExtension::IsVisualTagActive(const Red::Handle<Red::Entity>& aOwner,
                                                  Red::TweakDBID aBaseSlotID, Red::CName aVisualTag,
                                                  Red::TweakDBID aEquippedItemID)
 {
@@ -306,7 +306,7 @@ bool App::AttachmentExtension::IsVisualTagActive(Red::Handle<Red::Entity>& aOwne
 }
 
 bool App::AttachmentExtension::IsVisualTagActive(Red::ITransactionSystem* aTransactionSystem,
-                                                 Red::Handle<Red::Entity>& aOwner,
+                                                 const Red::Handle<Red::Entity>& aOwner,
                                                  Red::TweakDBID aSlotID, Red::CName aVisualTag,
                                                  Red::TweakDBID aEquippedItemID)
 {

@@ -289,7 +289,7 @@ bool App::PuppetStateHandler::IsMale()
 {
     if (!m_gender)
     {
-        m_gender = DynamicAppearanceController::IsMale(m_puppetWeak.instance)
+        m_gender = DynamicAppearanceController::IsMale(m_puppetWeak.Lock())
             ? MaleGenderName
             : FemaleGenderName;
     }

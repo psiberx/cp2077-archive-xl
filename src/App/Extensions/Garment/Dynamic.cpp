@@ -330,13 +330,21 @@ App::DynamicAppearanceRef App::DynamicAppearanceController::ParseReference(Red::
     return DynamicAppearanceRef(aReference);
 }
 
-bool App::DynamicAppearanceController::MatchReference(const DynamicAppearanceRef& aReference, Red::Entity* aEntity,
+bool App::DynamicAppearanceController::MatchReference(const DynamicAppearanceRef& aReference,
+                                                      const Red::Handle<Red::Entity>& aEntity,
                                                       const DynamicAppearanceName& aApperance)
 {
+    if (!aEntity)
+    {
+        return false;
+    }
+
     if (!aReference.variants.empty() )
     {
         if (!aReference.Match(aApperance.variant))
+        {
             return false;
+        }
     }
 
     if (!aReference.conditions.empty())
@@ -344,81 +352,110 @@ bool App::DynamicAppearanceController::MatchReference(const DynamicAppearanceRef
         const auto state = EnsureState(aEntity);
 
         if (!state)
+        {
             return false;
+        }
 
         if (!aReference.Match(state->conditions, aApperance.overrides))
+        {
             return false;
+        }
     }
 
     return true;
 }
 
-Red::CString App::DynamicAppearanceController::ResolveString(Red::Entity* aEntity, const App::DynamicPartList& aVariant,
+Red::CString App::DynamicAppearanceController::ResolveString(const Red::Handle<Red::Entity>& aEntity,
+                                                             const App::DynamicPartList& aVariant,
                                                              const Red::CString& aString)
 {
     if (!IsDynamicValue(aString))
+    {
         return aString;
+    }
 
     const auto state = EnsureState(aEntity);
 
     if (!state)
+    {
         return aString;
+    }
 
     const auto result = ProcessString(state->values, aVariant, aString.c_str());
 
     if (!result.valid)
+    {
         return aString;
+    }
 
     if (result.optional && result.missed)
+    {
         return {};
+    }
 
     return result.value.data();
 }
 
-Red::CName App::DynamicAppearanceController::ResolveName(Red::Entity* aEntity, const DynamicPartList& aVariant,
-                                                         Red::CName aName)
+Red::CName App::DynamicAppearanceController::ResolveName(const Red::Handle<Red::Entity>& aEntity,
+                                                         const DynamicPartList& aVariant, Red::CName aName)
 {
     const auto nameStr = aName.ToString();
 
     if (!IsDynamicValue(nameStr))
+    {
         return aName;
+    }
 
     const auto state = EnsureState(aEntity);
 
     if (!state)
+    {
         return aName;
+    }
 
     const auto result = ProcessString(state->values, aVariant, nameStr);
 
     if (!result.valid)
+    {
         return aName;
+    }
 
     if (result.optional && result.missed)
+    {
         return {};
+    }
 
     return Red::CNamePool::Add(result.value.data());
 }
 
-Red::ResourcePath App::DynamicAppearanceController::ResolvePath(Red::Entity* aEntity, const DynamicPartList& aVariant,
+Red::ResourcePath App::DynamicAppearanceController::ResolvePath(const Red::Handle<Red::Entity>& aEntity, const DynamicPartList& aVariant,
                                                                 Red::ResourcePath aPath)
 {
     const auto pathStr = GetPathString(aPath);
 
     if (!IsDynamicValue(pathStr))
+    {
         return aPath;
+    }
 
     const auto state = EnsureState(aEntity);
 
     if (!state)
+    {
         return aPath;
+    }
 
     auto result = ProcessString(state->values, aVariant, pathStr.data());
 
     if (!result.valid)
+    {
         return aPath;
+    }
 
     if (result.optional && result.missed)
+    {
         return {};
+    }
 
     Red::ResourcePath resultPath = result.value.data();
     m_pathRegistry->RegisterPath(resultPath, result.value);
@@ -481,7 +518,9 @@ App::DynamicAppearanceController::DynamicString App::DynamicAppearanceController
     DynamicString result{};
 
     if (!aInput || !*aInput)
+    {
         return result;
+    }
 
     char buffer[MaxLength + 1];
     char* out = buffer;
@@ -589,8 +628,14 @@ App::DynamicAppearanceController::DynamicString App::DynamicAppearanceController
     return result;
 }
 
-void App::DynamicAppearanceController::UpdateState(Red::Entity* aEntity, Red::TweakDBID aEquippedItemID)
+void App::DynamicAppearanceController::UpdateState(const Red::Handle<Red::Entity>& aEntity,
+                                                   Red::TweakDBID aEquippedItemID)
 {
+    if (!aEntity)
+    {
+        return;
+    }
+
     std::unique_lock _(m_lock);
 
     auto& state = m_states[aEntity];
@@ -604,15 +649,26 @@ void App::DynamicAppearanceController::UpdateState(Red::Entity* aEntity, Red::Tw
     state->valid = false;
 }
 
-void App::DynamicAppearanceController::RemoveState(Red::Entity* aEntity)
+void App::DynamicAppearanceController::RemoveState(const Red::WeakHandle<Red::Entity>& aEntity)
 {
+    if (!aEntity.instance)
+    {
+        return;
+    }
+
     std::unique_lock _(m_lock);
 
-    m_states.erase(aEntity);
+    m_states.erase(aEntity.instance);
 }
 
-App::DynamicAppearanceController::LockedState App::DynamicAppearanceController::EnsureState(Red::Entity* aEntity)
+App::DynamicAppearanceController::LockedState App::DynamicAppearanceController::EnsureState(
+    const Red::Handle<Red::Entity>& aEntity)
 {
+    if (!aEntity)
+    {
+        return {};
+    }
+
     EntityStatePtr state;
     Red::TweakDBID equippedItemID;
 
@@ -662,18 +718,20 @@ App::DynamicAppearanceController::LockedState App::DynamicAppearanceController::
     return {m_lock, state};
 }
 
-App::DynamicAttributeList App::DynamicAppearanceController::CollectEntityData(Red::Entity* aEntity,
+App::DynamicAttributeList App::DynamicAppearanceController::CollectEntityData(const Red::Handle<Red::Entity>& aEntity,
                                                                               Red::TweakDBID aEquippedItemID) const
 {
     DynamicAttributeList data;
 
-    data[GenderAttr] = GetSuffixData(aEntity, GenderSuffix, aEquippedItemID);
-    data[CameraAttr] = GetSuffixData(aEntity, CameraSuffix, aEquippedItemID);
-    data[BodyTypeAttr] = GetSuffixData(aEntity, BodyTypeSuffix, aEquippedItemID);
-    data[ArmsStateAttr] = GetSuffixData(aEntity, ArmsStateSuffix, aEquippedItemID);
-    data[FeetStateAttr] = GetSuffixData(aEntity, FeetStateSuffix, aEquippedItemID);
-    data[InnerSleevesAttr] = GetSuffixData(aEntity, InnerSleevesSuffix, aEquippedItemID);
-    data[HairTypeAttr] = GetSuffixData(aEntity, HairTypeSuffix, aEquippedItemID);
+    auto puppet = Red::Cast<Red::GameObject>(aEntity);
+
+    data[GenderAttr] = GetSuffixData(puppet, GenderSuffix, aEquippedItemID);
+    data[CameraAttr] = GetSuffixData(puppet, CameraSuffix, aEquippedItemID);
+    data[BodyTypeAttr] = GetSuffixData(puppet, BodyTypeSuffix, aEquippedItemID);
+    data[ArmsStateAttr] = GetSuffixData(puppet, ArmsStateSuffix, aEquippedItemID);
+    data[FeetStateAttr] = GetSuffixData(puppet, FeetStateSuffix, aEquippedItemID);
+    data[InnerSleevesAttr] = GetSuffixData(puppet, InnerSleevesSuffix, aEquippedItemID);
+    data[HairTypeAttr] = GetSuffixData(puppet, HairTypeSuffix, aEquippedItemID);
 
     auto custimization = GetCustomizationData(aEntity);
 
@@ -685,18 +743,21 @@ App::DynamicAttributeList App::DynamicAppearanceController::CollectEntityData(Re
     return data;
 }
 
-App::DynamicAttributeData App::DynamicAppearanceController::GetSuffixData(Red::Entity* aEntity,
+App::DynamicAttributeData App::DynamicAppearanceController::GetSuffixData(const Red::Handle<Red::GameObject>& aPuppet,
                                                                           Red::TweakDBID aSuffixID,
                                                                           Red::TweakDBID aEquippedItemID) const
 {
     DynamicAttributeData data{};
 
+    if (!aPuppet)
+    {
+        return data;
+    }
+
     if (Red::RecordExists(aSuffixID))
     {
-        auto* handle = reinterpret_cast<Red::Handle<Red::GameObject>*>(&aEntity->ref);
-
         Red::CString suffixValue;
-        (~Raw::AppearanceChanger::GetSuffixValue)({aEquippedItemID}, 1ull, *handle, aSuffixID, suffixValue);
+        (~Raw::AppearanceChanger::GetSuffixValue)({aEquippedItemID}, 1ull, aPuppet, aSuffixID, suffixValue);
 
         data.suffix = suffixValue.c_str();
     }
@@ -714,9 +775,14 @@ App::DynamicAttributeData App::DynamicAppearanceController::GetSuffixData(Red::E
 }
 
 App::DynamicAppearanceController::CustomizationData App::DynamicAppearanceController::GetCustomizationData(
-    Red::Entity* aEntity) const
+    const Red::Handle<Red::Entity>& aEntity) const
 {
     CustomizationData data{};
+
+    if (!aEntity)
+    {
+        return data;
+    }
 
     for (const auto& component : aEntity->components | std::views::reverse)
     {
@@ -775,17 +841,20 @@ App::DynamicAppearanceController::CustomizationData App::DynamicAppearanceContro
     return data;
 }
 
-bool App::DynamicAppearanceController::IsMale(Red::Entity* aEntity)
+bool App::DynamicAppearanceController::IsMale(const Red::Handle<Red::Entity>& aEntity)
 {
-    for (const auto& component : aEntity->components | std::views::reverse)
+    if (aEntity)
     {
-        switch (component->name)
+        for (const auto& component : aEntity->components | std::views::reverse)
         {
-        case MaleBodyComponent:
-            return true;
-        case FemaleBodyComponent1:
-        case FemaleBodyComponent2:
-            return false;
+            switch (component->name)
+            {
+            case MaleBodyComponent:
+                return true;
+            case FemaleBodyComponent1:
+            case FemaleBodyComponent2:
+                return false;
+            }
         }
     }
 
@@ -841,7 +910,8 @@ bool App::DynamicAppearanceController::IsDynamicAppearanceName(Red::CName aAppea
     return appearanceName.find(VariantMarker) != std::string::npos;
 }
 
-void App::DynamicAppearanceController::MarkDynamicAppearanceName(Red::CName& aAppearanceName, Red::Entity* aEntity)
+void App::DynamicAppearanceController::MarkDynamicAppearanceName(Red::CName& aAppearanceName,
+                                                                 const Red::Handle<Red::Entity>& aEntity)
 {
     std::string_view appearanceName = aAppearanceName.ToString();
 
@@ -861,7 +931,7 @@ void App::DynamicAppearanceController::MarkDynamicAppearanceName(Red::CName& aAp
     }
 
     dynamicName += ContextMarker;
-    dynamicName += std::to_string(reinterpret_cast<uint64_t>(aEntity));
+    dynamicName += std::to_string(reinterpret_cast<uint64_t>(aEntity.instance));
 
     aAppearanceName = Red::CNamePool::Add(dynamicName.c_str());
 }
