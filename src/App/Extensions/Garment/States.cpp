@@ -712,8 +712,7 @@ bool App::EntityState::ApplyAppearanceOverride(const Red::Handle<Red::IComponent
         return false;
     }
 
-    auto componentRef = m_dynamicAppearance->ParseReference(aComponent->name);
-    auto prefixName = m_prefixResolver->GetPrefix(aComponent->name);
+    const auto componentRef = m_dynamicAppearance->ParseReference(aComponent->name);
 
     Red::CName finalAppearance;
     DynamicPartList activeVariant;
@@ -725,6 +724,7 @@ bool App::EntityState::ApplyAppearanceOverride(const Red::Handle<Red::IComponent
 
         if (!componentState)
         {
+            const auto prefixName = m_prefixResolver->GetPrefix(aComponent->name);
             componentState = FindComponentState(prefixName);
 
             if (!componentState)
