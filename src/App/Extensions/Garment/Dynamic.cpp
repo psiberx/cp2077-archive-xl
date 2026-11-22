@@ -10,6 +10,8 @@
 
 namespace
 {
+constexpr auto ExtensionName = "GarmentOverride";
+
 constexpr auto DynamicAppearanceTag = Red::CName("DynamicAppearance");
 
 constexpr auto ContextMarker = '%';
@@ -425,6 +427,24 @@ Red::ResourcePath App::DynamicAppearanceController::ResolvePath(Red::Entity* aEn
 
     if (!Red::ResourceDepot::Get()->ResourceExists(resultPath))
     {
+        auto tryFallback = [&](const DynamicAttributeList& aFallbackState) {
+            auto fallback = ProcessString(aFallbackState, aVariant, pathStr.data());
+            if (!fallback.valid)
+                return false;
+
+            Red::ResourcePath fallbackPath = fallback.value.data();
+            if (!Red::ResourceDepot::Get()->ResourceExists(fallbackPath))
+                return false;
+
+            m_pathRegistry->RegisterPath(fallbackPath, fallback.value);
+
+            ResourceLinkExtension::RegisterLink(resultPath, fallbackPath);
+
+            result = std::move(fallback);
+            resultPath = fallbackPath;
+            return true;
+        };
+
         Core::Vector<Red::CName> fallbackAttrs;
         for (const auto attr : s_fallbackAttrs)
         {
@@ -451,20 +471,43 @@ Red::ResourcePath App::DynamicAppearanceController::ResolvePath(Red::Entity* aEn
                                                     : state->values.at(attr).value;
                 }
 
-                auto fallback = ProcessString(fallbackState, aVariant, pathStr.data());
-                if (fallback.valid)
+                if (tryFallback(fallbackState))
+                    break;
+            }
+        }
+
+        if (!Red::ResourceDepot::Get()->ResourceExists(resultPath) && result.attributes.contains(BodyTypeAttr)
+            && !aVariant.contains(BodyTypeAttr))
+        {
+            const auto missingPath = resultPath;
+            const auto missingStr = result.value;
+            auto fallbackState = state->values;
+
+            for (const auto& bodyType : PuppetStateExtension::GetBodyTypes())
+            {
+                fallbackState[BodyTypeAttr].value = Str::SnakeCase(bodyType.ToString());
+
+                if (tryFallback(fallbackState))
+                    break;
+            }
+
+            bool firstReport;
+            {
+                std::unique_lock _(m_reportedLock);
+                firstReport = m_reportedPaths.insert(missingPath).second;
+            }
+
+            if (firstReport)
+            {
+                if (resultPath != missingPath)
                 {
-                    auto fallbackPath = fallback.value.data();
-                    if (Red::ResourceDepot::Get()->ResourceExists(fallbackPath))
-                    {
-                        m_pathRegistry->RegisterPath(fallbackPath, fallback.value);
-
-                        ResourceLinkExtension::RegisterLink(resultPath, fallbackPath);
-
-                        result = fallback;
-                        resultPath = fallbackPath;
-                        break;
-                    }
+                    LogWarning("[{}] Resource \"{}\" doesn't exist, using \"{}\" instead.",
+                               ExtensionName, missingStr, result.value);
+                }
+                else
+                {
+                    LogWarning("[{}] Resource \"{}\" doesn't exist and no other body variant is available.",
+                               ExtensionName, missingStr);
                 }
             }
         }

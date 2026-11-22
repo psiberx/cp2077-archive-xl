@@ -1,6 +1,7 @@
 #pragma once
 
 #include "App/Shared/ResourcePathRegistry.hpp"
+#include "Core/Logging/LoggingAgent.hpp"
 #include "Red/EntityTemplate.hpp"
 
 namespace App
@@ -76,7 +77,7 @@ using DynamicAttributeList = Core::Map<Red::CName, DynamicAttributeData>;
 Red::CName ExtractDynamicName(const char* aName, size_t aOffset, bool aRegister = false);
 Red::CName ExtractDynamicName(const char* aName, size_t aOffset, size_t aSize, bool aRegister = false);
 
-class DynamicAppearanceController
+class DynamicAppearanceController : public Core::LoggingAgent
 {
 public:
     struct DynamicString
@@ -192,5 +193,7 @@ private:
     mutable Red::SharedSpinLock m_lock;
     Core::Map<Red::Entity*, EntityStatePtr> m_states;
     Core::SharedPtr<ResourcePathRegistry> m_pathRegistry;
+    Red::SharedSpinLock m_reportedLock;
+    Core::Set<Red::ResourcePath> m_reportedPaths;
 };
 }
