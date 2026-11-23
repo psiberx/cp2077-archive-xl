@@ -107,8 +107,8 @@ public:
                                   Red::TemplateAppearance*& aAppearance);
     bool SelectDynamicAppearance(DynamicAppearanceName& aSelector, Red::AppearanceResource* aResource,
                                  Red::Handle<Red::AppearanceDefinition>& aDefinition);
-    void ToggleConditionalComponents(Red::DynArray<Red::Handle<Red::IComponent>>& aComponents);
-    bool ApplyDynamicAppearance(const Red::Handle<Red::IComponent>& aComponent);
+    void ToggleConditionalComponents(const Red::DynArray<Red::Handle<Red::IComponent>>& aComponents);
+    void ApplyDynamicAppearance(const Red::DynArray<Red::Handle<Red::IComponent>>& aComponents);
     bool ApplyDynamicAppearance(const Red::Handle<Red::IComponent>& aComponent, Red::ResourcePath aResource);
     void LinkComponentToPart(Red::Handle<Red::IComponent>& aComponent, Red::ResourcePath aResource);
     void LinkPartToAppearance(Red::ResourcePath aResource, DynamicAppearanceName& aAppearance);
@@ -122,13 +122,13 @@ private:
     struct WeightedAppearanceMatch
     {
         int8_t weight;
-        Red::Handle<Red::AppearanceDefinition>& definition;
+        const Red::Handle<Red::AppearanceDefinition>& definition;
     };
 
     struct WeightedComponentMatch
     {
         int8_t weight;
-        Red::Handle<Red::IComponent>& component;
+        const Red::Handle<Red::IComponent>& component;
     };
 
     struct WeightedComponentGroup
@@ -137,8 +137,8 @@ private:
         Core::Vector<WeightedComponentMatch> matches;
     };
 
-    bool ApplyDynamicAppearance(const Red::Handle<Red::IComponent>& aComponent, const DynamicPartList& aVariant,
-                                bool aSetAppearance);
+    bool ApplyDynamicAppearance(const ComponentWrapper& aComponentWrapper, const Red::Handle<Red::Entity>& aEntity,
+                                const DynamicPartList& aVariant, bool aSetAppearance);
 
     Core::SharedPtr<ComponentState> GetComponentState(Red::CName aComponentName);
     Core::SharedPtr<ComponentState> FindComponentState(Red::CName aComponentName) const;

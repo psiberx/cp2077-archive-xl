@@ -568,7 +568,7 @@ bool App::EntityState::SelectDynamicAppearance(DynamicAppearanceName& aSelector,
     return false;
 }
 
-void App::EntityState::ToggleConditionalComponents(Red::DynArray<Red::Handle<Red::IComponent>>& aComponents)
+void App::EntityState::ToggleConditionalComponents(const Red::DynArray<Red::Handle<Red::IComponent>>& aComponents)
 {
     const auto entity = m_entityWeak.Lock();
 
@@ -579,8 +579,13 @@ void App::EntityState::ToggleConditionalComponents(Red::DynArray<Red::Handle<Red
 
     Core::Map<Red::CName, WeightedComponentGroup> groups;
 
-    for (auto& component : aComponents)
+    for (const auto& component : aComponents)
     {
+        if (component->owner != entity)
+        {
+            continue;
+        }
+
         auto componentRef = m_dynamicAppearance->ParseReference(component->name);
 
         if (!componentRef.isConditional)
@@ -642,39 +647,81 @@ void App::EntityState::ToggleConditionalComponents(Red::DynArray<Red::Handle<Red
     }
 }
 
-bool App::EntityState::ApplyDynamicAppearance(const Red::Handle<Red::IComponent>& aComponent)
+void App::EntityState::ApplyDynamicAppearance(const Red::DynArray<Red::Handle<Red::IComponent>>& aComponents)
 {
-    if (!aComponent->isEnabled)
-        return false;
+    const auto entity = m_entityWeak.Lock();
 
-    const auto componentRef = m_dynamicAppearance->ParseReference(aComponent->name);
-
-    DynamicPartList variantParts;
-    bool setAppearance = false;
-
+    if (!entity)
     {
-        std::shared_lock _(m_stateLock);
-
-        const auto componentState = FindComponentState(componentRef.name);
-
-        if (!componentState || !componentState->IsFromAppearancePart())
-            return false;
-
-        const auto resourceState = FindResourceState(componentState->GetAppearancePart());
-
-        if (!resourceState /*|| !resourceState->IsDynamicPart()*/)
-            return false;
-
-        variantParts = resourceState->GetActiveVariantParts();
-        setAppearance = !componentState->ChangesAppearance();
+        return;
     }
 
-    return ApplyDynamicAppearance(aComponent, variantParts, setAppearance);
+    for (const auto& component : aComponents)
+    {
+        if (!component->isEnabled || component->owner != entity)
+        {
+            continue;
+        }
+
+        ComponentWrapper componentWrapper(component);
+
+        if (!componentWrapper.IsMeshComponent())
+        {
+            continue;
+        }
+
+        const auto componentRef = m_dynamicAppearance->ParseReference(component->name);
+
+        DynamicPartList variantParts;
+        bool setAppearance = false;
+
+        {
+            std::shared_lock _(m_stateLock);
+
+            const auto componentState = FindComponentState(componentRef.name);
+
+            if (!componentState || !componentState->IsFromAppearancePart())
+            {
+                continue;
+            }
+
+            const auto resourceState = FindResourceState(componentState->GetAppearancePart());
+
+            if (!resourceState /*|| !resourceState->IsDynamicPart()*/)
+            {
+                continue;
+            }
+
+            variantParts = resourceState->GetActiveVariantParts();
+            setAppearance = !componentState->ChangesAppearance();
+        }
+
+        ApplyDynamicAppearance(componentWrapper, entity, variantParts, setAppearance);
+    }
 }
 
 bool App::EntityState::ApplyDynamicAppearance(const Red::Handle<Red::IComponent>& aComponent,
                                               Red::ResourcePath aResource)
 {
+    const auto entity = m_entityWeak.Lock();
+
+    if (!entity)
+    {
+        return false;
+    }
+
+    if (!aComponent->isEnabled || aComponent->owner != entity)
+    {
+        return false;
+    }
+
+    ComponentWrapper componentWrapper(aComponent);
+
+    if (!componentWrapper.IsMeshComponent())
+    {
+        return false;
+    }
+
     DynamicPartList variantParts;
 
     {
@@ -688,46 +735,33 @@ bool App::EntityState::ApplyDynamicAppearance(const Red::Handle<Red::IComponent>
         variantParts = resourceState->GetActiveVariantParts();
     }
 
-    return ApplyDynamicAppearance(aComponent, variantParts, true);
+    return ApplyDynamicAppearance(componentWrapper, entity, variantParts, true);
 }
 
-bool App::EntityState::ApplyDynamicAppearance(const Red::Handle<Red::IComponent>& aComponent,
+bool App::EntityState::ApplyDynamicAppearance(const ComponentWrapper& aComponentWrapper,
+                                              const Red::Handle<Red::Entity>& aEntity,
                                               const DynamicPartList& aVariant,
                                               bool aSetAppearance)
 {
-    ComponentWrapper componentWrapper(aComponent);
-
-    if (!componentWrapper.IsMeshComponent())
-    {
-        return false;
-    }
-
-    const auto entity = m_entityWeak.Lock();
-
-    if (!entity)
-    {
-        return false;
-    }
-
     auto updated = false;
 
-    const auto originalResource = GetOriginalResource(componentWrapper);
-    const auto finalResource = m_dynamicAppearance->ResolvePath(entity, aVariant, originalResource);
+    const auto originalResource = GetOriginalResource(aComponentWrapper);
+    const auto finalResource = m_dynamicAppearance->ResolvePath(aEntity, aVariant, originalResource);
 
-    if (finalResource != originalResource && finalResource != componentWrapper.GetResourcePath())
+    if (finalResource != originalResource && finalResource != aComponentWrapper.GetResourcePath())
     {
-        componentWrapper.SetResourcePath(finalResource);
+        aComponentWrapper.SetResourcePath(finalResource);
         updated = true;
     }
 
     if (aSetAppearance)
     {
-        const auto originalAppearance = GetOriginalAppearance(componentWrapper);
-        const auto finalAppearance = m_dynamicAppearance->ResolveName(entity, aVariant, originalAppearance);
+        const auto originalAppearance = GetOriginalAppearance(aComponentWrapper);
+        const auto finalAppearance = m_dynamicAppearance->ResolveName(aEntity, aVariant, originalAppearance);
 
-        if (finalAppearance != originalAppearance && finalAppearance != componentWrapper.GetAppearanceName())
+        if (finalAppearance != originalAppearance && finalAppearance != aComponentWrapper.GetAppearanceName())
         {
-            componentWrapper.SetAppearanceName(finalAppearance);
+            aComponentWrapper.SetAppearanceName(finalAppearance);
             updated = true;
         }
     }

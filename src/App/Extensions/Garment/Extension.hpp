@@ -97,10 +97,8 @@ private:
                                         Red::AppearanceResource* aResource,
                                         Red::Handle<Red::AppearanceDefinition>& aDefinition);
 
-    static void ApplyDynamicAppearance(const Core::SharedPtr<EntityState>& aEntityState);
     static void ApplyDynamicAppearance(const Core::SharedPtr<EntityState>& aEntityState,
                                         Red::DynArray<Red::Handle<Red::IComponent>>& aComponents);
-    static void ApplyComponentOverrides(const Core::SharedPtr<EntityState>& aEntityState, bool aForceUpdate);
     static void ApplyComponentOverrides(const Core::SharedPtr<EntityState>& aEntityState,
                                         Red::DynArray<Red::Handle<Red::IComponent>>& aComponents, bool aForceUpdate);
     static void ApplyOffsetOverrides(const Core::SharedPtr<EntityState>& aEntityState, Red::DynArray<int32_t>& aOffsets,

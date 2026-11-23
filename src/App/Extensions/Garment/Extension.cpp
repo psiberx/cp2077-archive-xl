@@ -600,23 +600,24 @@ void App::GarmentExtension::OnProcessGarmentMesh(Raw::GarmentAssembler::ProcessM
 #ifndef NDEBUG
             LogDebug("[{}] [event=ProcessGarmentMesh entity={} comp={}]", ExtensionName, entityState->GetName(), aComponent->name.ToString());
 #endif
-            // if (aMeshToken->IsFailed())
-            // {
-                auto meshToken = ComponentWrapper(aComponent).LoadResourceToken(false);
-                if (meshToken->IsFinished())
-                {
+            auto meshToken = ComponentWrapper(aComponent).LoadResourceToken(false);
+            if (meshToken->IsFinished())
+            {
+                aCallback(aProcessor, aIndex, aPartTemplate, meshToken, aComponent, aJobGroup);
+            }
+            else
+            {
+                Red::JobQueue jobQueue{aJobGroup};
+                jobQueue.Wait(meshToken->job);
+                jobQueue.Dispatch([aCallback, aProcessor, aIndex, aPartTemplate, meshToken, aComponent](const Red::JobGroup& aJobGroup) {
                     aCallback(aProcessor, aIndex, aPartTemplate, meshToken, aComponent, aJobGroup);
-                }
-                else
-                {
-                    Red::JobQueue jobQueue{aJobGroup};
-                    jobQueue.Wait(meshToken->job);
-                    jobQueue.Dispatch([aCallback, aProcessor, aIndex, aPartTemplate, meshToken, aComponent](const Red::JobGroup& aJobGroup) {
-                        aCallback(aProcessor, aIndex, aPartTemplate, meshToken, aComponent, aJobGroup);
-                    });
-                }
-                return;
-            // }
+                });
+            }
+            return;
+        }
+        else if (aMeshToken->IsFailed())
+        {
+            // TODO: Safe mesh fallback?
         }
     }
 
@@ -678,8 +679,11 @@ void App::GarmentExtension::OnReassembleAppearance(Red::Entity* aEntity, uintptr
 
         UpdateDynamicAttributes(entityState);
 
-        ApplyDynamicAppearance(entityState);
-        ApplyComponentOverrides(entityState, true);
+        if (const auto entity = entityState->GetEntity())
+        {
+            ApplyDynamicAppearance(entityState, entity->components);
+            ApplyComponentOverrides(entityState, entity->components, true);
+        }
     }
 }
 
@@ -809,21 +813,7 @@ void App::GarmentExtension::ApplyDynamicAppearance(const Core::SharedPtr<EntityS
                                                    Red::DynArray<Red::Handle<Red::IComponent>>& aComponents)
 {
     aEntityState->ToggleConditionalComponents(aComponents);
-
-    for (auto& component : aComponents)
-    {
-        aEntityState->ApplyDynamicAppearance(component);
-    }
-}
-
-void App::GarmentExtension::ApplyDynamicAppearance(const Core::SharedPtr<EntityState>& aEntityState)
-{
-    ApplyDynamicAppearance(aEntityState, aEntityState->GetEntity()->components);
-}
-
-void App::GarmentExtension::ApplyComponentOverrides(const Core::SharedPtr<EntityState>& aEntityState, bool aForceUpdate)
-{
-    ApplyComponentOverrides(aEntityState, aEntityState->GetEntity()->components, aForceUpdate);
+    aEntityState->ApplyDynamicAppearance(aComponents);
 }
 
 void App::GarmentExtension::ApplyComponentOverrides(const Core::SharedPtr<EntityState>& aEntityState,
