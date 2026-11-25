@@ -254,12 +254,16 @@ bool App::EntityState::IsValid() const
 Core::SharedPtr<App::ComponentState> App::EntityState::GetComponentState(const Red::CName aComponentName)
 {
     if (!aComponentName)
+    {
         return {};
+    }
 
     auto it = m_componentStates.find(aComponentName);
 
     if (it == m_componentStates.end())
+    {
         it = m_componentStates.emplace(aComponentName, Core::MakeShared<ComponentState>(aComponentName)).first;
+    }
 
     return it.value();
 }
@@ -267,12 +271,16 @@ Core::SharedPtr<App::ComponentState> App::EntityState::GetComponentState(const R
 Core::SharedPtr<App::ComponentState> App::EntityState::FindComponentState(const Red::CName aComponentName) const
 {
     if (!aComponentName)
+    {
         return {};
+    }
 
     const auto it = m_componentStates.find(aComponentName);
 
     if (it == m_componentStates.end())
+    {
         return {};
+    }
 
     return it.value();
 }
@@ -280,12 +288,16 @@ Core::SharedPtr<App::ComponentState> App::EntityState::FindComponentState(const 
 Core::SharedPtr<App::ResourceState> App::EntityState::GetResourceState(Red::ResourcePath aResourcePath)
 {
     if (!aResourcePath)
+    {
         return {};
+    }
 
     auto it = m_resourceStates.find(aResourcePath);
 
     if (it == m_resourceStates.end())
+    {
         it = m_resourceStates.emplace(aResourcePath, Core::MakeShared<ResourceState>(aResourcePath)).first;
+    }
 
     return it.value();
 }
@@ -293,12 +305,16 @@ Core::SharedPtr<App::ResourceState> App::EntityState::GetResourceState(Red::Reso
 Core::SharedPtr<App::ResourceState> App::EntityState::FindResourceState(Red::ResourcePath aResourcePath) const
 {
     if (!aResourcePath)
+    {
         return {};
+    }
 
     const auto it = m_resourceStates.find(aResourcePath);
 
     if (it == m_resourceStates.end())
+    {
         return {};
+    }
 
     return it.value();
 }
@@ -306,14 +322,18 @@ Core::SharedPtr<App::ResourceState> App::EntityState::FindResourceState(Red::Res
 Core::Set<Red::CName> App::EntityState::GetPartComponentNames(Red::ResourcePath aResourcePath) const
 {
     if (!aResourcePath)
+    {
         return {};
+    }
 
     std::shared_lock _(m_stateLock);
 
     const auto it = m_partComponents.find(aResourcePath);
 
     if (it == m_partComponents.end())
+    {
         return {};
+    }
 
     return it.value();
 }
@@ -327,9 +347,13 @@ void App::EntityState::AddChunkMaskOverride(uint64_t aHash, Red::CName aComponen
     if (componentState)
     {
         if (aShow)
+        {
             componentState->AddShowingChunkMaskOverride(aHash, aChunkMask);
+        }
         else
+        {
             componentState->AddHidingChunkMaskOverride(aHash, aChunkMask);
+        }
     }
 }
 
@@ -399,6 +423,15 @@ void App::EntityState::RemoveAllOverrides(uint64_t aHash)
 
 void App::EntityState::LinkComponentToPart(Red::Handle<Red::IComponent>& aComponent, Red::ResourcePath aResource)
 {
+    {
+        std::shared_lock _(m_stateLock);
+
+        if (!FindResourceState(aResource))
+        {
+            return;
+        }
+    }
+
     auto componentRef = m_dynamicAppearance->ParseReference(aComponent->name);
 
     std::unique_lock _(m_stateLock);
@@ -581,11 +614,6 @@ void App::EntityState::ToggleConditionalComponents(const Red::DynArray<Red::Hand
 
     for (const auto& component : aComponents)
     {
-        if (component->owner != entity)
-        {
-            continue;
-        }
-
         auto componentRef = m_dynamicAppearance->ParseReference(component->name);
 
         if (!componentRef.isConditional)
@@ -600,15 +628,19 @@ void App::EntityState::ToggleConditionalComponents(const Red::DynArray<Red::Hand
         {
             std::shared_lock _(m_stateLock);
 
-            const auto& componentState = FindComponentState(componentRef.name);
+            const auto componentState = FindComponentState(componentRef.name);
 
             if (!componentState || !componentState->IsFromAppearancePart())
+            {
                 continue;
+            }
 
-            const auto& resourceState = FindResourceState(componentState->GetAppearancePart());
+            const auto resourceState = FindResourceState(componentState->GetAppearancePart());
 
             if (!resourceState /*|| !resourceState->IsDynamicPart()*/)
+            {
                 continue;
+            }
 
             activeAppearance = resourceState->GetActiveAppearance();
         }
@@ -658,11 +690,6 @@ void App::EntityState::ApplyDynamicAppearance(const Red::DynArray<Red::Handle<Re
 
     for (const auto& component : aComponents)
     {
-        if (!component->isEnabled || component->owner != entity)
-        {
-            continue;
-        }
-
         ComponentWrapper componentWrapper(component);
 
         if (!componentWrapper.IsMeshComponent())
@@ -710,11 +737,6 @@ bool App::EntityState::ApplyDynamicAppearance(const Red::Handle<Red::IComponent>
         return false;
     }
 
-    if (!aComponent->isEnabled || aComponent->owner != entity)
-    {
-        return false;
-    }
-
     ComponentWrapper componentWrapper(aComponent);
 
     if (!componentWrapper.IsMeshComponent())
@@ -730,7 +752,9 @@ bool App::EntityState::ApplyDynamicAppearance(const Red::Handle<Red::IComponent>
         const auto resourceState = FindResourceState(aResource);
 
         if (!resourceState /*|| !resourceState->IsDynamicPart()*/)
+        {
             return false;
+        }
 
         variantParts = resourceState->GetActiveVariantParts();
     }
@@ -826,6 +850,12 @@ bool App::EntityState::ApplyAppearanceOverride(const Red::Handle<Red::IComponent
         }
 
         const auto resourceState = FindResourceState(componentState->GetAppearancePart());
+
+        if (!resourceState)
+        {
+            return false;
+        }
+
         activeVariant = resourceState->GetActiveVariantParts();
     }
 
@@ -907,7 +937,9 @@ int32_t App::EntityState::GetOffsetOverride(Red::ResourcePath aResourcePath) con
     auto resourceState = FindResourceState(aResourcePath);
 
     if (!resourceState)
+    {
         return 0;
+    }
 
     return resourceState->GetOverriddenOffset();
 }

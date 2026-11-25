@@ -127,7 +127,7 @@ void App::GarmentExtension::OnLoadAppearanceResource(Red::ItemFactoryRequest* aR
     {
         if (PrepareDynamicAppearanceName(entity, templateToken, appearanceName))
         {
-            if (auto entityState = s_stateManager->GetEntityState(entity))
+            if (const auto entityState = s_stateManager->GetEntityState(entity))
             {
 #ifndef NDEBUG
                 LogDebug("[{}] [event=LoadAppearanceResource entity={}]", ExtensionName, entityState->GetName());
@@ -161,7 +161,7 @@ void App::GarmentExtension::OnChangeAppearanceResource(Red::ItemFactoryAppearanc
     {
         if (PrepareDynamicAppearanceName(entity, templateToken, appearanceName))
         {
-            if (auto entityState = s_stateManager->GetEntityState(entityWeak.instance))
+            if (const auto entityState = s_stateManager->GetEntityState(entityWeak.instance))
             {
 #ifndef NDEBUG
                 LogDebug("[{}] [event=ChangeAppearanceResource entity={}]", ExtensionName, entityState->GetName());
@@ -197,7 +197,7 @@ Red::TemplateAppearance* App::GarmentExtension::OnResolveAppearance(Red::EntityT
         {
             if (selector.context)
             {
-                if (auto entityState = s_stateManager->GetEntityState(selector.context))
+                if (const auto entityState = s_stateManager->GetEntityState(selector.context))
                 {
                     SelectDynamicAppearance(entityState, selector, aTemplate, appearance);
                     return appearance;
@@ -205,7 +205,7 @@ Red::TemplateAppearance* App::GarmentExtension::OnResolveAppearance(Red::EntityT
             }
             else
             {
-                if (auto entityState = s_stateManager->GetFirstEntityState())
+                if (const auto entityState = s_stateManager->GetFirstEntityState())
                 {
                     SelectDynamicAppearance(entityState, selector, aTemplate, appearance);
                     return appearance;
@@ -247,14 +247,14 @@ void App::GarmentExtension::OnResolveDefinition(Red::AppearanceResource* aResour
         {
             if (selector.context)
             {
-                if (auto entityState = s_stateManager->GetEntityState(selector.context))
+                if (const auto entityState = s_stateManager->GetEntityState(selector.context))
                 {
                     SelectDynamicAppearance(entityState, selector, aResource, *aDefinition);
                 }
             }
             else
             {
-                if (auto entityState = s_stateManager->GetFirstEntityState())
+                if (const auto entityState = s_stateManager->GetFirstEntityState())
                 {
                     SelectDynamicAppearance(entityState, selector, aResource, *aDefinition);
                 }
@@ -473,7 +473,7 @@ void App::GarmentExtension::OnFindState(uintptr_t, Red::GarmentAssemblerState* a
 
 void App::GarmentExtension::OnAddItem(Red::GarmentAssemblerState* aState, Red::GarmentItemAddRequest& aRequest)
 {
-    if (auto entityState = s_stateManager->FindEntityState(aState->unk00))
+    if (const auto entityState = s_stateManager->FindEntityState(aState->unk00))
     {
 #ifndef NDEBUG
         LogDebug("[{}] [event=AddItem entity={} item={} app={}]",
@@ -489,7 +489,7 @@ void App::GarmentExtension::OnAddItem(Red::GarmentAssemblerState* aState, Red::G
 void App::GarmentExtension::OnAddCustomItem(Red::GarmentAssemblerState* aState,
                                             Red::GarmentItemAddCustomRequest& aRequest)
 {
-    if (auto entityState = s_stateManager->FindEntityState(aState->unk00))
+    if (const auto entityState = s_stateManager->FindEntityState(aState->unk00))
     {
 #ifndef NDEBUG
         LogDebug("[{}] [event=AddCustomItem entity={} item={} app={}]",
@@ -505,7 +505,7 @@ void App::GarmentExtension::OnAddCustomItem(Red::GarmentAssemblerState* aState,
 
 void App::GarmentExtension::OnChangeItem(Red::GarmentAssemblerState* aState, Red::GarmentItemChangeRequest& aRequest)
 {
-    if (auto entityState = s_stateManager->FindEntityState(aState->unk00))
+    if (const auto entityState = s_stateManager->FindEntityState(aState->unk00))
     {
 #ifndef NDEBUG
         LogDebug("[{}] [event=ChangeItem entity={} item={} app={}]",
@@ -521,7 +521,7 @@ void App::GarmentExtension::OnChangeItem(Red::GarmentAssemblerState* aState, Red
 void App::GarmentExtension::OnChangeCustomItem(Red::GarmentAssemblerState* aState,
                                                     Red::GarmentItemChangeCustomRequest& aRequest)
 {
-    if (auto entityState = s_stateManager->FindEntityState(aState->unk00))
+    if (const auto entityState = s_stateManager->FindEntityState(aState->unk00))
     {
 #ifndef NDEBUG
         LogDebug("[{}] [event=ChangeCustomItem entity={} item={} app={}]",
@@ -540,7 +540,7 @@ void App::GarmentExtension::OnRemoveItem(uintptr_t, Red::WeakHandle<Red::Entity>
 {
     if (auto entity = aEntityWeak.Lock())
     {
-        if (auto entityState = s_stateManager->GetEntityState(entity))
+        if (const auto entityState = s_stateManager->GetEntityState(entity))
         {
 #ifndef NDEBUG
             LogDebug("[{}] [event=RemoveItem entity={} item={}]",
@@ -564,13 +564,15 @@ void App::GarmentExtension::OnRegisterPart(uintptr_t, Red::Handle<Red::EntityTem
     UpdatePartAssignments(aComponentStorage->components, aPart->path);
 }
 
-uintptr_t App::GarmentExtension::OnProcessGarment(Red::SharedPtr<Red::GarmentProcessingContext>& aProcessor, uintptr_t a2,
-                                                       uintptr_t a3, Red::GarmentLoadingParams* aParams)
+uintptr_t App::GarmentExtension::OnProcessGarment(Red::SharedPtr<Red::GarmentProcessingContext>& aProcessor,
+                                                  uintptr_t a2, uintptr_t a3, Red::GarmentLoadingParams* aParams)
 {
     if (!aParams)
+    {
         return Raw::GarmentAssembler::ProcessGarment(aProcessor, a2, a3, aParams);
+    }
 
-    if (auto entityState = s_stateManager->FindEntityState(aParams->entity))
+    if (const auto entityState = s_stateManager->FindEntityState(aParams->entity))
     {
 #ifndef NDEBUG
         LogDebug("[{}] [event=ProcessGarment entity={}]", ExtensionName, entityState->GetName());
@@ -664,7 +666,7 @@ void App::GarmentExtension::OnComputeGarment(uintptr_t, Red::Handle<Red::Entity>
                                              Red::SharedPtr<Red::GarmentProcessingContext>& aData,
                                              uintptr_t, uintptr_t, uintptr_t, bool)
 {
-    if (auto entityState = s_stateManager->FindEntityState(aEntity))
+    if (const auto entityState = s_stateManager->FindEntityState(aEntity))
     {
 #ifndef NDEBUG
         LogDebug("[{}] [event=ComputeGarment entity={}]",
@@ -685,7 +687,7 @@ void App::GarmentExtension::OnComputeGarment(uintptr_t, Red::Handle<Red::Entity>
 void App::GarmentExtension::OnReassembleAppearance(Red::Entity* aEntity, uintptr_t, uintptr_t, uintptr_t, uintptr_t,
                                                    uintptr_t)
 {
-    if (auto entityState = s_stateManager->FindEntityState(aEntity))
+    if (const auto entityState = s_stateManager->FindEntityState(aEntity))
     {
 #ifndef NDEBUG
         LogDebug("[{}] [event=ReassembleAppearance entity={}]",

@@ -164,6 +164,8 @@ private:
     Core::SharedPtr<ComponentPrefixResolver> m_prefixResolver;
 };
 
+using EntityStatePtr = Core::SharedPtr<EntityState>;
+
 class OverrideStateManager
 {
 public:
