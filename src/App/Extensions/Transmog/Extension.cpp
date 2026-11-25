@@ -1,5 +1,6 @@
 #include "Extension.hpp"
 #include "App/Extensions/Garment/Dynamic.hpp"
+#include "Red/AppearanceResource.hpp"
 #include "Red/FactoryIndex.hpp"
 #include "Red/TweakDB.hpp"
 
@@ -86,6 +87,7 @@ void* App::TransmogExtension::OnSelectAppearance(Red::CName* aOut,
             auto appearanceName = Red::GetFlatValue<Red::CName>({aItemRecord->recordID, ".appearanceName"});
             if (appearanceName)
             {
+                std::shared_lock _(*Raw::AppearanceResource::Mutex(aAppearanceResource));
                 for (const auto& appearanceDefinition : aAppearanceResource->appearances)
                 {
                     if (appearanceDefinition->name == appearanceName)
@@ -101,6 +103,7 @@ void* App::TransmogExtension::OnSelectAppearance(Red::CName* aOut,
             if (visualTags && visualTags->Size() == 1)
             {
                 auto& appearanceName = visualTags->Data()[0];
+                std::shared_lock _(*Raw::AppearanceResource::Mutex(aAppearanceResource));
                 for (const auto& appearanceDefinition : aAppearanceResource->appearances)
                 {
                     if (appearanceDefinition->name == appearanceName)

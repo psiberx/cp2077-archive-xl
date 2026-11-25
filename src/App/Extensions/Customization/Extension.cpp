@@ -783,8 +783,12 @@ void App::CustomizationExtension::FixCustomizationAppearance(Red::AppearanceReso
                                                              Red::Handle<Red::AppearanceDefinition>* aDefinition,
                                                              Red::CName aAppearanceName)
 {
-    if (aResource->appearances.IsEmpty())
-        return;
+    {
+        std::shared_lock _(*Raw::AppearanceResource::Mutex(aResource));
+
+        if (aResource->appearances.IsEmpty())
+            return;
+    }
 
     if (!ResourceMetaExtension::InScope(ResourceMetaExtension::CustomizationApp, aResource->path))
         return;

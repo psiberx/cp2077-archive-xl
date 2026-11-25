@@ -533,26 +533,29 @@ bool App::EntityState::SelectDynamicAppearance(DynamicAppearanceName& aSelector,
     int8_t numCandidates = 0;
     Red::Handle<Red::AppearanceDefinition> match;
 
-    for (auto& definition : aResource->appearances)
     {
-        auto appearanceRef = m_dynamicAppearance->ParseReference(definition->name);
-        if (appearanceRef.name == aSelector.name)
+        std::shared_lock _(*Raw::AppearanceResource::Mutex(aResource));
+        for (auto& definition : aResource->appearances)
         {
-            ++numCandidates;
-            if (!appearanceRef.isConditional)
+            auto appearanceRef = m_dynamicAppearance->ParseReference(definition->name);
+            if (appearanceRef.name == aSelector.name)
             {
-                if (maxWeight < 0)
+                ++numCandidates;
+                if (!appearanceRef.isConditional)
                 {
-                    maxWeight = 0;
-                    match = definition;
+                    if (maxWeight < 0)
+                    {
+                        maxWeight = 0;
+                        match = definition;
+                    }
                 }
-            }
-            else if (m_dynamicAppearance->MatchReference(appearanceRef, entity, aSelector))
-            {
-                if (maxWeight < appearanceRef.weight)
+                else if (m_dynamicAppearance->MatchReference(appearanceRef, entity, aSelector))
                 {
-                    maxWeight = appearanceRef.weight;
-                    match = definition;
+                    if (maxWeight < appearanceRef.weight)
+                    {
+                        maxWeight = appearanceRef.weight;
+                        match = definition;
+                    }
                 }
             }
         }
@@ -1029,7 +1032,9 @@ Core::SharedPtr<App::EntityState> App::OverrideStateManager::GetFirstEntityState
     std::shared_lock _(m_lock);
 
     if (m_entityStates.empty())
+    {
         return {};
+    }
 
     return m_entityStates.begin().value();
 }
