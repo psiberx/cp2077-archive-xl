@@ -579,9 +579,14 @@ uintptr_t App::GarmentExtension::OnProcessGarment(Red::SharedPtr<Red::GarmentPro
         UpdateDynamicAttributes(entityState);
     }
 
-    auto result = Raw::GarmentAssembler::ProcessGarment(aProcessor, a2, a3, aParams);
+    uintptr_t result;
 
-    s_stateManager->LinkEntityToAssembler(aParams->entity, aProcessor);
+    {
+        std::unique_lock _(s_garmentProcessingLock);
+
+        result = Raw::GarmentAssembler::ProcessGarment(aProcessor, a2, a3, aParams);
+        s_stateManager->LinkEntityToAssembler(aParams->entity, aProcessor);
+    }
 
     return result;
 }
@@ -593,32 +598,42 @@ void App::GarmentExtension::OnProcessGarmentMesh(Raw::GarmentAssembler::ProcessM
                                                  const Red::Handle<Red::IComponent>& aComponent,
                                                  const Red::JobGroup& aJobGroup)
 {
-    if (auto entityState = s_stateManager->FindEntityState(aProcessor))
+    EntityStatePtr entityState;
+
     {
-        if (entityState->ApplyDynamicAppearance(aComponent, aPartTemplate->path))
-        {
+        std::shared_lock _(s_garmentProcessingLock);
+
+        entityState = s_stateManager->FindEntityState(aProcessor);
+    }
+
+    if (entityState && entityState->ApplyDynamicAppearance(aComponent, aPartTemplate->path))
+    {
 #ifndef NDEBUG
-            LogDebug("[{}] [event=ProcessGarmentMesh entity={} comp={}]", ExtensionName, entityState->GetName(), aComponent->name.ToString());
+        LogDebug("[{}] [event=ProcessGarmentMesh entity={} comp={}]", ExtensionName, entityState->GetName(), aComponent->name.ToString());
 #endif
-            auto meshToken = ComponentWrapper(aComponent).LoadResourceToken(false);
-            if (meshToken->IsFinished())
-            {
-                aCallback(aProcessor, aIndex, aPartTemplate, meshToken, aComponent, aJobGroup);
-            }
-            else
-            {
-                Red::JobQueue jobQueue{aJobGroup};
-                jobQueue.Wait(meshToken->job);
-                jobQueue.Dispatch([aCallback, aProcessor, aIndex, aPartTemplate, meshToken, aComponent](const Red::JobGroup& aJobGroup) {
-                    aCallback(aProcessor, aIndex, aPartTemplate, meshToken, aComponent, aJobGroup);
-                });
-            }
-            return;
-        }
-        else if (aMeshToken->IsFailed())
+        auto meshToken = ComponentWrapper(aComponent).LoadResourceToken(false);
+        if (meshToken->IsFinished())
         {
-            // TODO: Safe mesh fallback?
+            aCallback(aProcessor, aIndex, aPartTemplate, meshToken, aComponent, aJobGroup);
         }
+        else
+        {
+            Red::JobQueue jobQueue{aJobGroup};
+            jobQueue.Wait(meshToken->job);
+            jobQueue.Dispatch([aCallback, aProcessor, aIndex, aPartTemplate, meshToken, aComponent](const Red::JobGroup& aJobGroup) {
+                aCallback(aProcessor, aIndex, aPartTemplate, meshToken, aComponent, aJobGroup);
+            });
+        }
+        return;
+    }
+
+    if (!aMeshToken->IsFinished() || aMeshToken->IsFailed())
+    {
+        const auto meshPath = s_resourcePathRegistry->ResolvePathOrHash(aMeshToken->path);
+        const auto partPath = s_resourcePathRegistry->ResolvePathOrHash(aPartTemplate->path);
+
+        LogWarning(R"([{}] Mesh "{}" failed to load for component "{}" of "{}" and will crash the game when used.)",
+                   ExtensionName, meshPath, aComponent->name.ToString(), partPath);
     }
 
     aCallback(aProcessor, aIndex, aPartTemplate, aMeshToken, aComponent, aJobGroup);

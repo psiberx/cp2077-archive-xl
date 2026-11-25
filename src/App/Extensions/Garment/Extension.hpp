@@ -118,6 +118,7 @@ private:
     static inline Core::SharedPtr<DynamicAppearanceController> s_dynamicAppearance;
     static inline Core::UniquePtr<OverrideStateManager> s_stateManager;
     static inline Core::SharedPtr<OverrideTagManager> s_tagManager;
+    static inline Red::SharedSpinLock s_garmentProcessingLock;
     static inline Red::SharedSpinLock s_templateAppearancesLock;
     static inline bool s_garmentOffsetsEnabled;
 };
