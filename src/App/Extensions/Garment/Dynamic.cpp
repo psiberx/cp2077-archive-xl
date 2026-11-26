@@ -331,7 +331,7 @@ App::DynamicAppearanceRef App::DynamicAppearanceController::ParseReference(Red::
 }
 
 bool App::DynamicAppearanceController::MatchReference(const DynamicAppearanceRef& aReference,
-                                                      const Red::Handle<Red::Entity>& aEntity,
+                                                      const Red::WeakHandle<Red::Entity>& aEntity,
                                                       const DynamicAppearanceName& aApperance)
 {
     if (!aEntity)
@@ -365,7 +365,7 @@ bool App::DynamicAppearanceController::MatchReference(const DynamicAppearanceRef
     return true;
 }
 
-Red::CString App::DynamicAppearanceController::ResolveString(const Red::Handle<Red::Entity>& aEntity,
+Red::CString App::DynamicAppearanceController::ResolveString(const Red::WeakHandle<Red::Entity>& aEntity,
                                                              const App::DynamicPartList& aVariant,
                                                              const Red::CString& aString)
 {
@@ -396,7 +396,7 @@ Red::CString App::DynamicAppearanceController::ResolveString(const Red::Handle<R
     return result.value.data();
 }
 
-Red::CName App::DynamicAppearanceController::ResolveName(const Red::Handle<Red::Entity>& aEntity,
+Red::CName App::DynamicAppearanceController::ResolveName(const Red::WeakHandle<Red::Entity>& aEntity,
                                                          const DynamicPartList& aVariant, Red::CName aName)
 {
     const auto nameStr = aName.ToString();
@@ -428,7 +428,8 @@ Red::CName App::DynamicAppearanceController::ResolveName(const Red::Handle<Red::
     return Red::CNamePool::Add(result.value.data());
 }
 
-Red::ResourcePath App::DynamicAppearanceController::ResolvePath(const Red::Handle<Red::Entity>& aEntity, const DynamicPartList& aVariant,
+Red::ResourcePath App::DynamicAppearanceController::ResolvePath(const Red::WeakHandle<Red::Entity>& aEntity,
+                                                                const DynamicPartList& aVariant,
                                                                 Red::ResourcePath aPath)
 {
     const auto pathStr = GetPathString(aPath);
@@ -628,17 +629,17 @@ App::DynamicAppearanceController::DynamicString App::DynamicAppearanceController
     return result;
 }
 
-void App::DynamicAppearanceController::UpdateState(const Red::Handle<Red::Entity>& aEntity,
+void App::DynamicAppearanceController::UpdateState(const Red::WeakHandle<Red::Entity>& aEntity,
                                                    Red::TweakDBID aEquippedItemID)
 {
-    if (!aEntity)
+    if (!aEntity.instance)
     {
         return;
     }
 
     std::unique_lock _(m_lock);
 
-    auto& state = m_states[aEntity];
+    auto& state = m_states[aEntity.instance];
 
     if (!state)
     {
@@ -662,33 +663,52 @@ void App::DynamicAppearanceController::RemoveState(const Red::WeakHandle<Red::En
 }
 
 App::DynamicAppearanceController::LockedState App::DynamicAppearanceController::EnsureState(
-    const Red::Handle<Red::Entity>& aEntity)
+    const Red::WeakHandle<Red::Entity>& aEntity)
 {
-    if (!aEntity)
+    if (!aEntity.instance)
     {
         return {};
     }
 
     EntityStatePtr state;
+    Red::Handle<Red::Entity> entity;
     Red::TweakDBID equippedItemID;
 
     {
         std::shared_lock lock(m_lock);
 
-        const auto stateIt = m_states.find(aEntity);
+        const auto stateIt = m_states.find(aEntity.instance);
 
         if (stateIt == m_states.end())
+        {
             return {};
+        }
 
         state = stateIt.value();
 
         if (state->valid)
+        {
             return {std::move(lock), state};
+        }
+
+        entity = aEntity.Lock();
+
+        if (!entity)
+        {
+            if (!state->values.empty())
+            {
+                return {std::move(lock), state};
+            }
+            else
+            {
+                return {};
+            }
+        }
 
         equippedItemID = state->equippedItemID;
     }
 
-    auto data = CollectEntityData(aEntity, equippedItemID);
+    auto data = CollectEntityData(entity, equippedItemID);
 
     {
         std::unique_lock _(m_lock);

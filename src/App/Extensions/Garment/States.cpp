@@ -522,13 +522,6 @@ bool App::EntityState::SelectDynamicAppearance(App::DynamicAppearanceName& aSele
 bool App::EntityState::SelectDynamicAppearance(DynamicAppearanceName& aSelector, Red::AppearanceResource* aResource,
                                                Red::Handle<Red::AppearanceDefinition>& aDefinition)
 {
-    const auto entity = m_entityWeak.Lock();
-
-    if (!entity)
-    {
-        return false;
-    }
-
     int8_t maxWeight = -1;
     int8_t numCandidates = 0;
     Red::Handle<Red::AppearanceDefinition> match;
@@ -549,7 +542,7 @@ bool App::EntityState::SelectDynamicAppearance(DynamicAppearanceName& aSelector,
                         match = definition;
                     }
                 }
-                else if (m_dynamicAppearance->MatchReference(appearanceRef, entity, aSelector))
+                else if (m_dynamicAppearance->MatchReference(appearanceRef, m_entityWeak, aSelector))
                 {
                     if (maxWeight < appearanceRef.weight)
                     {
@@ -606,13 +599,6 @@ bool App::EntityState::SelectDynamicAppearance(DynamicAppearanceName& aSelector,
 
 void App::EntityState::ToggleConditionalComponents(const Red::DynArray<Red::Handle<Red::IComponent>>& aComponents)
 {
-    const auto entity = m_entityWeak.Lock();
-
-    if (!entity)
-    {
-        return;
-    }
-
     Core::Map<Red::CName, WeightedComponentGroup> groups;
 
     for (const auto& component : aComponents)
@@ -648,7 +634,7 @@ void App::EntityState::ToggleConditionalComponents(const Red::DynArray<Red::Hand
             activeAppearance = resourceState->GetActiveAppearance();
         }
 
-        component->isEnabled = m_dynamicAppearance->MatchReference(componentRef, entity, activeAppearance);
+        component->isEnabled = m_dynamicAppearance->MatchReference(componentRef, m_entityWeak, activeAppearance);
 
         if (component->isEnabled)
         {
@@ -684,13 +670,6 @@ void App::EntityState::ToggleConditionalComponents(const Red::DynArray<Red::Hand
 
 void App::EntityState::ApplyDynamicAppearance(const Red::DynArray<Red::Handle<Red::IComponent>>& aComponents)
 {
-    const auto entity = m_entityWeak.Lock();
-
-    if (!entity)
-    {
-        return;
-    }
-
     for (const auto& component : aComponents)
     {
         ComponentWrapper componentWrapper(component);
@@ -726,20 +705,13 @@ void App::EntityState::ApplyDynamicAppearance(const Red::DynArray<Red::Handle<Re
             setAppearance = !componentState->ChangesAppearance();
         }
 
-        ApplyDynamicAppearance(componentWrapper, entity, variantParts, setAppearance);
+        ApplyDynamicAppearance(componentWrapper, variantParts, setAppearance);
     }
 }
 
 bool App::EntityState::ApplyDynamicAppearance(const Red::Handle<Red::IComponent>& aComponent,
                                               Red::ResourcePath aResource)
 {
-    const auto entity = m_entityWeak.Lock();
-
-    if (!entity)
-    {
-        return false;
-    }
-
     ComponentWrapper componentWrapper(aComponent);
 
     if (!componentWrapper.IsMeshComponent())
@@ -762,18 +734,16 @@ bool App::EntityState::ApplyDynamicAppearance(const Red::Handle<Red::IComponent>
         variantParts = resourceState->GetActiveVariantParts();
     }
 
-    return ApplyDynamicAppearance(componentWrapper, entity, variantParts, true);
+    return ApplyDynamicAppearance(componentWrapper, variantParts, true);
 }
 
 bool App::EntityState::ApplyDynamicAppearance(const ComponentWrapper& aComponentWrapper,
-                                              const Red::Handle<Red::Entity>& aEntity,
-                                              const DynamicPartList& aVariant,
-                                              bool aSetAppearance)
+                                              const DynamicPartList& aVariant, bool aSetAppearance)
 {
     auto updated = false;
 
     const auto originalResource = GetOriginalResource(aComponentWrapper);
-    const auto finalResource = m_dynamicAppearance->ResolvePath(aEntity, aVariant, originalResource);
+    const auto finalResource = m_dynamicAppearance->ResolvePath(m_entityWeak, aVariant, originalResource);
 
     if (finalResource != originalResource && finalResource != aComponentWrapper.GetResourcePath())
     {
@@ -784,7 +754,7 @@ bool App::EntityState::ApplyDynamicAppearance(const ComponentWrapper& aComponent
     if (aSetAppearance)
     {
         const auto originalAppearance = GetOriginalAppearance(aComponentWrapper);
-        const auto finalAppearance = m_dynamicAppearance->ResolveName(aEntity, aVariant, originalAppearance);
+        const auto finalAppearance = m_dynamicAppearance->ResolveName(m_entityWeak, aVariant, originalAppearance);
 
         if (finalAppearance != originalAppearance && finalAppearance != aComponentWrapper.GetAppearanceName())
         {
@@ -806,13 +776,6 @@ bool App::EntityState::ApplyAppearanceOverride(const Red::Handle<Red::IComponent
     ComponentWrapper component(aComponent);
 
     if (!component.IsMeshComponent())
-    {
-        return false;
-    }
-
-    const auto entity = m_entityWeak.Lock();
-
-    if (!entity)
     {
         return false;
     }
@@ -862,7 +825,7 @@ bool App::EntityState::ApplyAppearanceOverride(const Red::Handle<Red::IComponent
         activeVariant = resourceState->GetActiveVariantParts();
     }
 
-    finalAppearance = m_dynamicAppearance->ResolveName(entity, activeVariant, finalAppearance);
+    finalAppearance = m_dynamicAppearance->ResolveName(m_entityWeak, activeVariant, finalAppearance);
 
     return finalAppearance && component.SetAppearanceName(finalAppearance) && component.RefreshAppearance();
 }

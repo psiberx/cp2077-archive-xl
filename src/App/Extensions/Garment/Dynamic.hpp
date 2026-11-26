@@ -92,16 +92,17 @@ public:
 
     [[nodiscard]] DynamicAppearanceName ParseAppearance(Red::CName aAppearance) const;
     [[nodiscard]] DynamicAppearanceRef ParseReference(Red::CName aReference) const;
-    [[nodiscard]] bool MatchReference(const DynamicAppearanceRef& aReference, const Red::Handle<Red::Entity>& aEntity,
+    [[nodiscard]] bool MatchReference(const DynamicAppearanceRef& aReference,
+                                      const Red::WeakHandle<Red::Entity>& aEntity,
                                       const DynamicAppearanceName& aAppearance);
-    [[nodiscard]] Red::CString ResolveString(const Red::Handle<Red::Entity>& aEntity, const DynamicPartList& aVariant,
-                                             const Red::CString& aString);
-    [[nodiscard]] Red::CName ResolveName(const Red::Handle<Red::Entity>& aEntity, const DynamicPartList& aVariant,
+    [[nodiscard]] Red::CString ResolveString(const Red::WeakHandle<Red::Entity>& aEntity,
+                                             const DynamicPartList& aVariant, const Red::CString& aString);
+    [[nodiscard]] Red::CName ResolveName(const Red::WeakHandle<Red::Entity>& aEntity, const DynamicPartList& aVariant,
                                          Red::CName aName);
-    [[nodiscard]] Red::ResourcePath ResolvePath(const Red::Handle<Red::Entity>& aEntity,
+    [[nodiscard]] Red::ResourcePath ResolvePath(const Red::WeakHandle<Red::Entity>& aEntity,
                                                 const DynamicPartList& aVariant, Red::ResourcePath aPath);
 
-    void UpdateState(const Red::Handle<Red::Entity>& aEntity, Red::TweakDBID aEquippedItemID = {});
+    void UpdateState(const Red::WeakHandle<Red::Entity>& aEntity, Red::TweakDBID aEquippedItemID = {});
     void RemoveState(const Red::WeakHandle<Red::Entity>& aEntity);
 
     bool SupportsDynamicAppearance(const Red::EntityTemplate* aTemplate);
@@ -182,7 +183,7 @@ private:
         const EntityStatePtr m_state;
     };
 
-    LockedState EnsureState(const Red::Handle<Red::Entity>& aEntity);
+    LockedState EnsureState(const Red::WeakHandle<Red::Entity>& aEntity);
 
     DynamicAttributeList CollectEntityData(const Red::Handle<Red::Entity>& aEntity, Red::TweakDBID aEquippedItemID) const;
     DynamicAttributeData GetSuffixData(const Red::Handle<Red::GameObject>& aPuppet, Red::TweakDBID aSuffixID,

@@ -137,8 +137,8 @@ private:
         Core::Vector<WeightedComponentMatch> matches;
     };
 
-    bool ApplyDynamicAppearance(const ComponentWrapper& aComponentWrapper, const Red::Handle<Red::Entity>& aEntity,
-                                const DynamicPartList& aVariant, bool aSetAppearance);
+    bool ApplyDynamicAppearance(const ComponentWrapper& aComponentWrapper, const DynamicPartList& aVariant,
+                                bool aSetAppearance);
 
     Core::SharedPtr<ComponentState> GetComponentState(Red::CName aComponentName);
     Core::SharedPtr<ComponentState> FindComponentState(Red::CName aComponentName) const;

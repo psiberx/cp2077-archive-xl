@@ -26,7 +26,7 @@ Red::CString App::Facade::ResolveDynamicAppearanceString(const Red::WeakHandle<R
     auto controller = GarmentExtension::GetDynamicAppearanceController();
     auto appearance = DynamicAppearanceName(aAppearance);
 
-    return controller->ResolveString(aPuppet.Lock(), appearance.parts, aString);
+    return controller->ResolveString(aPuppet, appearance.parts, aString);
 }
 
 Red::CString App::Facade::ResolveDynamicAppearancePath(const Red::WeakHandle<Red::GameObject>& aPuppet,
@@ -38,7 +38,7 @@ Red::CString App::Facade::ResolveDynamicAppearancePath(const Red::WeakHandle<Red
     auto appearance = DynamicAppearanceName(aAppearance);
     auto path = pathRegistry->RegisterPath(aPath.c_str());
 
-    path = controller->ResolvePath(aPuppet.Lock(), appearance.parts, path);
+    path = controller->ResolvePath(aPuppet, appearance.parts, path);
 
     return pathRegistry->ResolvePath(path);
 }
